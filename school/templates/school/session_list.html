@@ -1,0 +1,59 @@
+{% extends "core/app_base_admin.html" %}
+{% load i18n humanize static admin_list %}
+
+{% block page_title %}
+<title> {% trans "Levels" %} - {{ service.project_name }} </title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <style>
+        #level-list {margin-top: 2em}
+        #level-list li {background: transparent; border-left: none; border-right: none; border-radius: 0}
+        #level-list .actions {bottom: 12px; position: absolute; right: 20px}
+    </style>
+{% endblock %}
+
+{% block breadcrumb_location %}
+    <li>{% trans "Levels" %}</li>
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content" class="no-edge-panel-right">
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <a class="btn btn-sm btn-primary" href="{% url 'ikwen:change_level' %}" style="width: 160px">{% trans "Add new" %}</a>
+                <ul id="level-list" class="list-group">
+                    {% for level in level_list %}
+                        {% url 'ikwen:change_level' level.id as level_url %}
+                        <li class="list-group-item ik-li" id="{{ level.id }}" data-id="{{ level.id }}">
+                            <div class="select subtle-shade">
+                                <i class="glyphicon glyphicon-ok"></i>
+                            </div>
+                            <a href="{{ level_url }}">{{ level.name }}</a>
+                            <div class="actions">
+                                <i class="action icon trash" title="{% trans "Delete item" %}"></i>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+            ikwen.deleteEndpoint = '{% url 'school:level_list' %}?action=delete';
+            $('div#admin-nav .levels').addClass('active');
+            $('.form-row').addClass('form-group');
+            $('.form-row input, .form-row select, .form-row textarea').addClass('form-control input-sm');
+            $('.form-row textarea').addClass('form-control input-sm');
+            {% if request.GET.success %}
+                ikwen.showFloatingNotice('{% trans "Level info successfully updated." %}', '', 6);
+            {% endif %}
+        })()
+    </script>
+{% endblock %}

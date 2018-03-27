@@ -1,0 +1,28 @@
+{#{% extends "core/base_admin.html" %}#}
+{#{% load i18n static %}#}
+{##}
+{#{% block app_admin_nav %}#}
+{#    <ul class="nav nav-pills nav-stacked">#}
+{#        <li role="presentation" class="levels">#}
+{#            {% url 'school:level_list' as level_list_url %}#}
+{#            <a href="{{ level_list_url }}">{% trans "Levels" %}</a>#}
+{#        </li>#}
+{#        <li role="presentation" class="classrooms">#}
+{#            {% url 'school:classroom_list' as classroom_list_url %}#}
+{#            <a href="{{ classroom_list_url }}">{% trans "Classrooms" %}</a>#}
+{#        </li>#}
+{#        <li role="presentation" class="subjects">#}
+{#            {% url 'school:subject_list' as subject_list_url %}#}
+{#            <a href="{{ subject_list_url }}">{% trans "Subjects" %}</a>#}
+{#        </li>#}
+{#        <li role="presentation" class="teachers">#}
+{#            {% url 'school:teacher_list' as teacher_list_url %}#}
+{#            <a href="{{ teacher_list_url }}">{% trans "Teachers" %}</a>#}
+{#        </li>#}
+{#        <li role="presentation" class="session">#}
+{#            {% url 'school:session_list' as session_list_url %}#}
+{#            <a href="{{ session_list_url }}">{% trans "Sessions" %}</a>#}
+{#        </li>#}
+{#    </ul>#}
+{#{% endblock %}#}
+{#{% block basic_nav %}{% endblock %}#}

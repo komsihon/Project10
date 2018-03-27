@@ -1,0 +1,72 @@
+- model: core.application
+  pk: 56eb6d04b37b3370e4fc0c21
+  fields:
+    name: Foulassi
+    slug: foulassi
+    version: 1
+    logo: app_logos/ikwen-app-logo.png
+    url: http://www.ikwen-app-1.com
+    base_monthly_cost: 5000
+
+- model: core.service
+  pk: 56eb6d04b37b3379b531b101
+  fields:
+    member: 56eb6d04b37b3379b531e012
+    app: 56eb6d04b37b3370e4fc0c21
+    project_name: College Mbakop
+    project_name_slug: collegembakop
+    url: http://collegembakop.foulassi.com
+    domain: collegembakop.foulassi.com
+    database: test_ikwen_umbrella
+    api_signature: api-signature-1
+    monthly_cost: 6000
+    version: Full
+    status: Active
+    expiry: 2035-01-01T00:00:00.120Z
+
+- model: foulassi.School
+  fields:
+    service: 56eb6d04b37b3379b531b101
+    company_name: College Mbakop
+    contact_email: contact@ikwen.com
+    logo: logos/some_logo.png
+
+- model: billing.invoicingconfig
+  fields:
+    name: Default
+
+- model: billing.paymentmean
+  pk: 5880870e4fc0c229da8da3d1
+  fields:
+    name: PayPal
+    slug: paypal
+    credentials: '{"username":"pp_user","password":"pp_pwd","signature":"pp_sgn","merchant_id":"pp_mid"}'
+    action_url_name: shopping:paypal_set_checkout
+    logo: logo.png
+    watermark: watermark.png
+
+- model: billing.paymentmean
+  pk: 5880870e4fc0c229da8da3d2
+  fields:
+    name: Mobile Money
+    slug: jumbopay-momo
+    credentials: '{"api_key":"c18c884c0a3fcc756f81e0b28d636208"}'
+    action_url_name: billing:momo_set_checkout
+    logo: logo.png
+    watermark: watermark.png
+
+- model: cashout.cashoutmethod
+  pk: 56b38781b37b33199e17dab1
+  fields:
+    name: Mobile Money
+    slug: mobile-money
+    type: MobileMoney
+
+- model: cashout.cashoutaddress
+  pk: 5637b33199e17dab1b38781a
+  fields:
+    service: 56eb6d04b37b3379b531b102
+    method: 56b38781b37b33199e17dab1
+    account_number: 677422485
+    name: Kom Sihon
+

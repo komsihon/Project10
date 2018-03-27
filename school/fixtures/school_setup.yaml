@@ -1,0 +1,109 @@
+- model: school.level
+  pk: 58d89d0b531e011b37b33471
+  fields:
+    name: 6ème
+    subject_fk_list: [59441ee04fc0c24f09e9d6da, 59441ee04fc0c24f09e9d6db, 59441ee04fc0c24f09e9d6dc]
+
+- model: school.level
+  pk: 58d89d0b531e011b37b33472
+  fields:
+    name: 5ème
+
+- model: school.level
+  pk: 58d89d0b531e011b37b33473
+  fields:
+    name: 4ème
+
+- model: school.level
+  pk: 58d89d0b531e011b37b33474
+  fields:
+    name: 3ème
+
+- model: school.level
+  pk: 58d89d0b531e011b37b33475
+  fields:
+    name: 2nde
+
+- model: school.level
+  pk: 58d89d0b531e011b37b33476
+  fields:
+    name: 1ère
+
+- model: school.level
+  pk: 58d89d0b531e011b37b33477
+  fields:
+    name: Tle
+
+- model: school.classroom
+  pk: 60e011bd0b53137b33471d81
+  fields:
+    name: 4
+    level: 58d89d0b531e011b37b33471
+    professor: 56eb6d04b37b3379b531e013
+
+- model: school.classroom
+  pk: 60e011bd0b53137b33471d82
+  fields:
+    name: 3
+    level: 58d89d0b531e011b37b33471
+    professor: 56eb6d04b37b3379b531e014
+
+- model: school.subject
+  pk: 59441ee04fc0c24f09e9d6da
+  fields:
+    name: Maths
+
+- model: school.subject
+  pk: 59441ee04fc0c24f09e9d6db
+  fields:
+    name: Physique
+
+- model: school.subject
+  pk: 59441ee04fc0c24f09e9d6dc
+  fields:
+    name: Nature
+
+- model: school.subject
+  pk: 59441ee04fc0c24f09e9d6dd
+  fields:
+    name: English
+
+- model: school.subject
+  pk: 59441ee04fc0c24f09e9d6de
+  fields:
+    name: German
+
+- model: school.subject
+  pk: 59441ee04fc0c24f09e9d6df
+  fields:
+    name: Spanish
+
+- model: school.session
+  pk: 58b217ec25de1dd789524fc1
+  fields:
+    name: 1ère Séquence
+
+- model: school.session
+  pk: 58b217ec25de1dd789524fc2
+  fields:
+    name: 2ème Séquence
+
+- model: school.session
+  pk: 58b217ec25de1dd789524fc3
+  fields:
+    name: 3ème Séquence
+
+- model: school.session
+  pk: 58b217ec25de1dd789524fc4
+  fields:
+    name: 4ème Séquence
+
+- model: school.session
+  pk: 58b217ec25de1dd789524fc5
+  fields:
+    name: 5ème Séquence
+
+- model: school.session
+  pk: 58b217ec25de1dd789524fc6
+  fields:
+    name: 6ème Séquence
