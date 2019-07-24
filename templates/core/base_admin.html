@@ -1,0 +1,336 @@
+{% extends "core/base_bs.html" %}
+{% load i18n humanize static auth_tokens %}
+{% block meta %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/apple-icon-180x180.png">
+    <link rel="shortcut icon" type="image/png" sizes="192x192" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link href="{% static 'ikwen/css/admin.css' %}" media="screen" rel="stylesheet" type="text/css" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi.css' %}" />
+{% endblock %}
+
+{% block selection_control %}
+    <div id="selection-control" class="container-fluid has-shade">
+        <div class="clear-selection" title="{% trans "Clear selection" %}"></div>
+        <div class="select-count">
+            <strong class="value">1</strong> {% trans "Selected" %}
+        </div>
+        {% block selection_actions %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+    <div id="app-nav" class="container-fluid">
+        <div class="cta app-logo pull-left">
+            <img src="{{ settings.IKWEN_MEDIA_URL }}app_logos/{{ service.app.slug }}-logo.png" class="img-responsive" />
+        </div>
+        <span class="cta app-name" style="width: 80px">{{ service.app.name|upper }}</span>
+        <div class="school-year-list">
+            <span style="float: left">-</span>
+            <div class="dropdown">
+                <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="target">
+                        <span>2018</span><span class="hidden-xs"> - 2019</span>
+                    </span>
+                    <span class="caret"></span>
+                </span>
+                <ul class="dropdown-menu" aria-labelledby="period">
+                    <li data-stage="" data-target="yesterday"><a>2017 - 2018</a></li>
+                    <li data-stage="" data-target="last_week"><a>2016 - 2017</a></li>
+                </ul>
+            </div>
+        </div>
+        <ol class="breadcrumb">
+            {% url 'ikwen:staff_router' as admin_home_url %}
+            <li><a href="{{ admin_home_url }}">{{ service.project_name }}</a></li>
+            {% block breadcrumb_location %}{% endblock %}
+        </ol>
+        <a href="{% url 'home' %}" class="go-to-website pull-right" title="{% trans "Go to public website" %}">
+            <i class="glyphicon glyphicon-globe"></i>
+            <span class="hidden-xs" style="font-weight: 400">{% trans "Go to website" %}</span>
+        </a>
+        {% if perms.ik_manage_school %}
+        <a href="{% url 'event_list' %}" class="pull-right" title="{% trans "Events" %}" style="margin-right: 20px">
+            <i class="glyphicon glyphicon-bell"></i>
+            {% if event_count %}
+                <span class="label label-danger" style="margin: 12px 0 0 -7px">{{ event_count }}</span>
+            {% endif %}
+        </a>
+        <div class="actions dropdown" title="{% trans "Send SMS or Mail to all parents" %}" style="cursor: pointer; float: right; margin-right: 20px">
+            <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <i class="action fa fa-bullhorn text-muted"></i>
+            </span>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="period">
+                <li>
+                    {% if sms_sending_in_progress %}
+                        <a href="javascript:;" title="{% trans "SMS Sending in progress" %}">
+                            <div class="progress" role="progressbar">
+                                <div class="progress-bar sms" style="width: 15%"></div>
+                            </div>
+                        </a>
+                    {% else %}
+                        <a href="javascript:;" class="show-send-sms"
+                           data-classroom="{{ classroom }}"
+                           data-size="{{ classroom.size }}">{% trans "Send SMS" %}</a>
+                    {% endif %}
+                </li>
+                <li>
+                    {% if mail_sending_in_progress %}
+                        <a href="javascript:;" title="{% trans "Mail Sending in progress" %}">
+                            <div class="progress" role="progressbar">
+                                <div class="progress-bar mail" style="width: 15%"></div>
+                            </div>
+                        </a>
+                    {% else %}
+                        <a href="javascript:;" class="show-send-mail"
+                           data-classroom="{{ classroom }}"
+                           data-size="{{ classroom.size }}">{% trans "Send Mail" %}</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block header_brand %}
+<a class="navbar-brand hidden-xs" href="{{ settings.IKWEN_BASE_URL }}"><strong>ikwen</strong></a>
+<strong class="navbar-brand visible-xs">ikwen</strong>
+{% endblock %}
+
+{% block content %}
+    {% if request.GET.splash %}
+        {% include 'foulassi/snippets/splash_screen.html' %}
+    {% endif %}
+    <div id="container" class="admin edge-panel-left-container">
+        {% block admin_nav %}
+            <div id="admin-nav" class="edge-panel-left">
+                <div class="wrapper">
+                    <div class="stage">
+                        <div class="menu">
+                            {% block app_admin_nav %}{% endblock %}
+                            {% if perms.accesscontrol.sudo %}
+                                {% block basic_nav %}
+                                    <div class="divider"></div>
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li role="presentation" class="flatpages">
+                                            {% url 'ikwen:flatpage_list' as flatpage_list_url %}
+                                            <a href="{{ flatpage_list_url }}">{% trans "Pages" %}</a>
+                                        </li>
+                                        <li role="presentation" class="theming">
+                                            <a href="{% url 'theming:theme_list' %}">
+                                                {% trans "Theming" %}
+                                            </a>
+                                        </li>
+                                        <li role="presentation" class="community">
+                                            {% url 'ikwen:community' as community_url %}
+                                            <a href="{{ community_url }}">{% trans "Community" %}</a>
+                                        </li>
+                                    </ul>
+                                {% endblock %}
+                                {% block sudo_nav %}
+                                    <div class="divider"></div>
+                                    <ul class="nav nav-pills nav-stacked">
+                                        {% if config.is_pro_version %}
+                                        <li role="presentation" class="payment-means">
+                                            <a href="{% url 'billing:payment_mean_list' %}">
+                                                {% trans "Payment means" %}
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        {% if app_modules %}
+                                        <li role="presentation" class="modules">
+                                            <a href="{% url 'ikwen:module_list' %}">{% trans "Modules" %}</a>
+                                        </li>
+                                        {% endif %}
+                                        <li role="presentation" class="configuration">
+                                            {% url 'ikwen:configuration' as configuration_url %}
+                                            <a href="{{ configuration_url }}">{% trans "Configuration" %}</a>
+                                        </li>
+                                        <li role="presentation" class="invoices">
+                                            {% url 'billing:invoice_list' as invoice_list_url %}
+                                            <a href="{{ invoice_list_url|ikwenize }}"
+                                               target="_blank">{% trans 'Invoices' %}</a>
+                                        </li>
+                                        <li role="presentation" class="service-info">
+                                            {% url 'ikwen:service_detail' service.id as service_detail_url %}
+                                            <a href="{{ service_detail_url }}">{% trans "Info & Billing" %}</a>
+                                        </li>
+                                    </ul>
+                                {% endblock %}
+                            {% endif %}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+        {% block admin_content %}{% endblock %}
+        <div class="clear"></div>
+    </div>
+    {% include 'foulassi/snippets/send_message_modals.html' %}
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        &copy; {{ year }} <a href="http://www.ikwen.com"><strong>ikwen</strong></a>. {% trans "All rights reserved." %} -
+        <a href="http://www.ikwen.com/legalMentions" style="text-decoration: underline">{% trans "Legal mentions" %}</a>
+    </footer>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/js/jquery-ui.js' %}"></script>
+    <script>
+        (function() {
+            $('#admin-nav, #admin-content, #object-detail').scroll(function() {
+                if ($(this).scrollTop() > 0) {
+                    if ($(this).find('.ceil').length > 0) return;
+                    $('#app-nav').addClass('has-shade')
+                } else {
+                    $('#app-nav').removeClass('has-shade')
+                }
+            });
+            if ($(window).width() < 768) {
+                $('.tiles .ik-li a').each(function() {
+                    if ($(this).parents('.ik-li').find('.actions').length === 0) return;
+                    if ($(this).parents('.actions').length === 0) $(this).removeAttr('href');
+                });
+                var position = $('#admin-content').scrollTop(),
+                    navHeight = $('#navbar').height(),
+                    appNavHeight = $('#app-nav').height(),
+                    appNavMT = $('#app-nav').css('margin-top'),
+                    stagePadding = navHeight + appNavHeight;
+                $('#admin-content').scroll(function() {
+                    var scroll = $(this).scrollTop();
+                    if (scroll > position) {
+                        $('#navbar').css('top', '-' + navHeight + 'px');
+                        $('#app-nav').css('margin-top', 0);
+                        $('#container.admin').css('padding-top', 0)
+                    } else if (scroll < position) {
+                        $('#navbar').css('top', 0);
+                        $('#app-nav').css('margin-top', appNavMT);
+                        $('#container.admin').css('padding-top', stagePadding + 'px')
+                    }
+                    position = $('#admin-content').scrollTop();
+                });
+            }
+            $('body').on('click', '.ik-li', function() {
+                if ($(this).find('> .select').length <= 0) return;
+                $(this).toggleClass('selected');
+                var id = $(this).data('id'),
+                    count = $('.ik-li.selected').length;
+                if (count > 0) {
+                    var selected = [];
+                    $('.ik-li.selected').each(function() {
+                        selected.push($(this).data('id'));
+                    }).data('id');
+                    $('#selection-control').addClass('visible').data('selection', selected.join(','));
+                    $('div#selection-control .select-count .value').text(count);
+                }
+                else $('#selection-control').removeClass('visible');
+            }).on('click', 'li .trash', function() {
+                var selection = $(this).parents('li').data('id'),
+                    modelName = $(this).parents('li').data('model-name'),
+                    deleteEndpoint = $(this).parents('ul').data('delete-endpoint');
+                deleteSelection(selection, modelName, deleteEndpoint);
+            }).on('click', '.pagination .page', function() {
+                var query = window.location.search,
+                    page = $(this).data('val');
+                if (query && query !== '?') query += '&format=html_results&page=' + page;
+                else query = 'format=html_results&page=' + page;
+                $('div#results .spinner').fadeIn();
+                $('div#admin-content .stage').load('', query);
+            });
+
+            $('#admin-content').on('click', '#admin-tools .glyphicon-search', function() {
+                if ($(window).width() < 768) {
+                    $(this).hide();
+                    $('div#admin-tools .tool, div#admin-tools .glyphicon').hide();
+                    $('.tool.search').show().focus();
+                    $('.hide-search').show();
+                }
+            }).on('click', '#admin-tools .glyphicon-filter', function() {
+                if ($(window).width() < 768) {
+                    $(this).hide();
+                    $('div#admin-tools .tool, div#admin-tools .glyphicon').hide();
+                    $('.tool.filter').show().find('.widget').click();
+                    $('.hide-filter').show()
+                }
+            }).on('click', '#admin-tools .back', function() {
+                $('div#admin-tools .glyphicon:not(.back)').show();
+                $(this).hide();
+                $('div#admin-tools .tool').hide();
+            });
+
+            $('div#selection-control .clear-selection').click(function() {
+                $('.ik-li').removeClass('selected');
+                $('#selection-control').removeClass('visible');
+            });
+            $('div#selection-control .trash').click(function() {
+                var selection = $('#selection-control').data('selection');
+                deleteSelection(selection);
+            });
+            function deleteSelection(selection, modelName, deleteEndpoint) {
+                if (!confirm("{% trans "Confirm deletion ?" %}")) return;
+                $('body, div#selection-control .trash').css('cursor', 'wait');
+                var params = {action: 'delete', selection: selection},
+                endpoint = deleteEndpoint ? deleteEndpoint : ikwen.deleteEndpoint;
+                if (modelName) params.model_name = modelName;
+                $.getJSON(endpoint, params, function(data) {
+                    $('body, div#selection-control .trash').css('cursor', '');
+                    var list = selection.split(',');
+                    if (data.deleted) for (var i=0; i<data.deleted.length; i++) $('#' + data.deleted[i]).remove();
+                    $('#selection-control').removeClass('visible');
+                    ikwen.showFloatingNotice(data.message, '', 6);
+                })
+            }
+            var searchDescriptor = [{endpoint: '{{ request.path }}'}],
+                filterDescriptor = {
+                    endpoint: '{{ request.META.get_full_path }}',
+                    resultTplSelector: '#results li.ik-li'
+                },
+                htmlFilterDescriptor = {resultPanelSelector: '#results'};
+            ikwen.setupHTMLResultsSearch('#context-search', '#results', searchDescriptor);
+            ikwen.setupFilter('#results', filterDescriptor);
+            ikwen.setupHTMLResultsFilter(htmlFilterDescriptor);
+            $('footer').appendTo('#admin-nav .wrapper').show();
+            $('.show-send-sms').click(function() {
+                var classroom = $(this).data('classroom'),
+                    size = $(this).data('size'),
+                    title;
+                if (classroom) {
+                    title = "{% blocktrans %}SMS to parents of{% endblocktrans %} " + classroom;
+                } else {
+                    title = "{% blocktrans %}SMS to all parents{% endblocktrans %}";
+                }
+
+                $('.sms-counters').show();
+                $('div#send-sms-modal .modal-title').text(title);
+                $('#send-sms-modal').modal('show');
+            });
+            $('.show-send-mail').click(function() {
+                var classroom = $(this).data('classroom'),
+                    size = $(this).data('size'),
+                    title;
+                if (classroom) {
+                    title = "{% blocktrans %}Mail to parents of{% endblocktrans %} " + classroom;
+                } else {
+                    title = "{% blocktrans %}Mail to all parents{% endblocktrans %}";
+                }
+                $('div#send-mail-modal .modal-title').text(title);
+                $('div#send-mail-modal .mail-credits-needed').text(size);
+                $('#send-mail-modal').modal('show');
+            });
+        })()
+    </script>
+{% endblock %}

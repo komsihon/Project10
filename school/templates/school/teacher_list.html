@@ -1,0 +1,56 @@
+{% extends 'core/object_list_base.html' %}
+{% load i18n humanize static auth_tokens %}
+
+{% block head_js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/swiper/js/swiper.jquery.min.js' %}"></script>
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content">
+        <div class="container-fluid">
+            <div id="admin-tools" class="ceil bottom-shade-xs">
+                <form id="admin-tools-form" onsubmit="return false">
+                    <div>
+                        <i class="glyphicon glyphicon-search"></i>
+                        <i class="glyphicon glyphicon-menu-left hide-search back"></i>
+                        <input type="text" id="context-search" class="tool search form-input input-sm" placeholder="{% blocktrans %}Search {{ verbose_name }}{% endblocktrans %}"/>
+                    </div>
+                </form>
+            </div>
+            <div id="results">
+                <div id="student-list" class="tab-pane active" role="tabpanel" style="padding-bottom: 90px">
+                    <ul class="people object-list">
+                    {% for obj in teacher_nonrel_perm_list %}
+                        {% with teacher=obj.user %}
+                        <li id="{{ teacher.id }}" class="member {{ teacher.get_status }}" data-id="{{ teacher.id }}" data-status="{{ teacher.get_status }}"
+                            data-permissions="{% for perm in obj.permission_fk_list %},{{ perm }}{% endfor %}">
+                            {% url 'school:teacher_detail' teacher.id as member_url %}
+                        {% if user.photo and user.photo.name %}
+                            <a href="{{ member_url }}" class="photo" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ teacher.photo.small_name }})"></a>
+                        {% else %}
+                            <a href="{{ member_url }}" class="photo" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></a>
+                        {% endif %}
+                            <div class="info">
+                                <a href="{{ member_url}}" class="full_name">{{ teacher.full_name }}</a>
+                                <p class="about">{{ teacher.phone }}, {{ teacher.email }}</p>
+                            </div>
+                        </li>
+                        {% endwith %}
+                    {% endfor %}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+
+        })()
+    </script>
+{% endblock %}

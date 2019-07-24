@@ -1,0 +1,26 @@
+{% load i18n static %}
+<div class="splash-screen">
+    <div class="logo">
+        <img />
+    </div>
+    <div class="widgets">
+        <div class="gauge">
+            <div class="fill"></div>
+        </div>
+        <p class="catchy">{% trans "Connected School Management Platform !" %}</p>
+    </div>
+</div>
+<script>
+    (function() {
+        var imageUrl = "{% static 'foulassi/img/foulassi_splash.png' %}",
+            img = new Image();
+        img.onload = function() {
+            $('.splash-screen img').attr('src', imageUrl);
+        };
+        img.src = imageUrl;
+        $('.splash-screen img').animate({height: '100%'}, 'slow');
+        $('.splash-screen .fill').animate({width: '100%'}, 2000, 'linear', function() {
+            $('.splash-screen').delay(1500).fadeOut('slow');
+        });
+    })()
+</script>

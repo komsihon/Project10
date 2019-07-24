@@ -1,0 +1,505 @@
+{% extends "core/app_base_admin.html" %}
+{% load i18n humanize static admin_list index %}
+
+{% block page_title %}
+<title>{% trans "Dashboard" %}</title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'ikwen/css/dashboard.css' %}" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi.css' %}" />
+{% endblock %}
+
+{% block breadcrumb_location %}
+    <li>{% trans 'Dashboard' %}</li>
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content">
+        <div class="container-fluid">
+            <div class="discipline">
+                <div class="section-title performances">
+                    <div>
+                        <span style="float: left">{% trans "Discipline" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</span>
+                        <div class="dropdown" style="cursor: pointer; float: left; margin-left: 15px">
+                            <span class="dropdown-toggle" id="period" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span class="target">{% trans "Yesterday" %}</span>
+                                <span class="caret"></span>
+                            </span>
+                            <ul class="performances-filter dropdown-menu" aria-labelledby="period">
+                                <li data-stage="#discipline-report" data-target="yesterday" style="display: none"><a>{% trans "Yesterday" %}</a></li>
+                                <li data-stage="#discipline-report" data-target="last_week"><a>{% trans "Last week" %}</a></li>
+                                <li data-stage="#discipline-report" data-target="last_28_days"><a>{% trans "Last 28 days" %}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="discipline-report" class="row performances" style="clear: both">
+                    {% for obj in discipline_report %}
+                    <div class="col-sm-6">
+                        <div class="subtle-shade">
+                            <header>
+                                <h5>{{ obj.item }}</h5>
+                                <div class="clear"></div>
+                            </header>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="figure-lg yesterday">{{ obj.report.yesterday.summary.total }}</div>
+                                    <div class="figure-lg last_week tpl">{{ obj.report.last_week.summary.total }}</div>
+                                    <div class="figure-lg last_28_days tpl">{{ obj.report.last_28_days.summary.total }}</div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <ul class="report overview yesterday">
+                                        {% for student in obj.report.yesterday.student_list %}
+                                        <li>
+                                            <a href="{% url 'school:student_detail' student.id %}">{{ student }}</a>({{ student.classroom }})
+                                            <span>{{ student.total }}</span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <ul class="report overview last_week tpl">
+                                        {% for student in obj.report.last_week.student_list %}
+                                        <li>
+                                            <a href="{% url 'school:student_detail' student.id %}">{{ student }}</a>({{ student.classroom }})
+                                            <span>{{ student.total }}</span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <ul class="report overview last_28_days tpl">
+                                        {% for student in obj.report.last_28_days.student_list %}
+                                        <li>
+                                            <a href="{% url 'school:student_detail' student.id %}">{{ student }}</a>({{ student.classroom }})
+                                            <span>{{ student.total }}</span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="text-right" style="margin-top: 10px">
+                                <a href="{% url 'reporting:discipline_detail' %}">See All</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="classes">
+                <div class="section-title performances">
+                    <div>
+                        <span style="float: left">{% trans "Classes" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</span>
+                        <div class="dropdown" style="cursor: pointer; float: left; margin-left: 15px">
+                            <span class="dropdown-toggle" id="filter-classes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                {% if settings.DEBUG %}
+                                    <span class="target">{% trans "Today" %}</span>
+                                {% else %}
+                                    <span class="target">{% trans "Yesterday" %}</span>
+                                {% endif %}
+                                <span class="caret"></span>
+                            </span>
+                            <ul class="performances-filter dropdown-menu" aria-labelledby="filter-classes">
+                                {% if settings.DEBUG %}
+                                    <li data-target="today" style="display: none"><a>{% trans "Today" %}</a></li>
+                                    <li data-target="yesterday"><a>{% trans "Yesterday" %}</a></li>
+                                {% else %}
+                                    <li data-target="yesterday" style="display: none"><a>{% trans "Yesterday" %}</a></li>
+                                {% endif %}
+                                <li data-target="last_week"><a>{% trans "Last week" %}</a></li>
+                                <li data-target="last_28_days"><a>{% trans "Last 28 days" %}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="classes-report" class="row performances" style="clear: both">
+                    <div class="col-sm-6">
+                        <div class="subtle-shade">
+                            <header>
+                                <h5>{% trans "Hours done" %}</h5>
+                                <div class="clear"></div>
+                            </header>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    {% if settings.DEBUG %}
+                                        <div class="figure-lg today">{{ classes_report.today.hours }}</div>
+                                        <div class="figure-lg yesterday tpl">{{ classes_report.yesterday.hours }}</div>
+                                    {% else %}
+                                        <div class="figure-lg yesterday">{{ classes_report.yesterday.hours }}</div>
+                                    {% endif %}
+                                    <div class="figure-lg last_week tpl">{{ classes_report.last_week.hours }}</div>
+                                    <div class="figure-lg last_28_days tpl">{{ classes_report.last_28_days.hours }}</div>
+                                </div>
+                            </div>
+                            <div class="text-right see-all">
+                                <a href="javascript:;">See All</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="subtle-shade">
+                            <header>
+                                <h5>{% trans "Lessons done" %}</h5>
+                                <div class="clear"></div>
+                            </header>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="figure-lg yesterday">{{ classes_report.yesterday.count }}</div>
+                                    <div class="figure-lg last_week tpl">{{ classes_report.last_week.count }}</div>
+                                    <div class="figure-lg last_28_days tpl">{{ classes_report.last_28_days.count }}</div>
+                                </div>
+                            </div>
+                            <div class="text-right see-all">
+                                <a href="javascript:;">See All</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scores">
+                <div class="section-title performances">
+                    <div>
+                        <span style="float: left">{% trans "Scores" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</span>
+                        <div class="dropdown" style="cursor: pointer; float: left; margin-left: 15px">
+                            <span class="chosen-filter dropdown-toggle" id="filter-scores" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span class="target">{{ selected_session.name }}</span>
+                                {% if all_session_list|length > 1 %}<span class="caret"></span>{% endif %}
+                            </span>
+                            <ul class="performances-filter dropdown-menu{% if all_session_list|length == 1 %} hidden{% endif %}" aria-labelledby="filter-scores">
+                                {% for session in all_session_list %}
+                                    <li data-stage="#scores-report"
+                                        data-target="session{% if not session.session_group %}-group{% endif %}-{{ session.order_number }}"
+                                        {% if forloop.counter0 == 0 %} style="display: none"{% endif %}>
+                                        {% if session.session_group %}
+                                            <a> {{ session.name }} </a>
+                                        {% else %}
+                                            <a> <strong>{{ session.name }}</strong> </a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="scores-report" class="row performances" style="clear: both">
+                    <div class="col-sm-12">
+                        <div class="subtle-shade">
+                            <div class="scores-report-grid">
+                                <div class="col-sm-1 hidden-xs">
+                                    <header>
+                                        <h5 style="float: left">{% trans "Gender" %}</h5>
+                                        <div class="clear"></div>
+                                    </header>
+                                    <ul class="overview">
+                                        <li>{% trans "Boys" %}</li>
+                                        <li>{% trans "Girls" %}</li>
+                                        <li>{% trans "Total" %}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    <header>
+                                        <h5>{% trans "Registered" %}</h5>
+                                        <div class="clear"></div>
+                                    </header>
+                                    {% for i in range_session %}
+                                    <ul class="report overview session-{{ i }}{% if i != selected_session_order_number %} tpl{% endif %}">
+                                        <li>
+                                            <span class="visible-xs">{% trans "Boys" %}</span>
+                                            <span>{{ session_report.boys_participation_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Girls" %}</span>
+                                            <span>{{ session_report.girls_participation_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Total" %}</span>
+                                            <span>{{ session_report.participation_history|index:i }}</span>
+                                        </li>
+                                    </ul>
+                                    {% endfor %}
+                                    {% for i in range_session_group %}
+                                    <ul class="report overview session-group-{{ i }} tpl">
+                                        <li>
+                                            <span class="visible-xs">{% trans "Boys" %}</span>
+                                            <span>{{ session_group_report.boys_participation_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Girls" %}</span>
+                                            <span>{{ session_group_report.girls_participation_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Total" %}</span>
+                                            <span>{{ session_group_report.participation_history|index:i }}</span>
+                                        </li>
+                                    </ul>
+                                    {% endfor %}
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    <header>
+                                        <h5>{% trans "Present" %}</h5>
+                                        <div class="clear"></div>
+                                    </header>
+                                    {% for i in range_session %}
+                                    <ul class="report overview session-{{ i }}{% if i != selected_session_order_number %} tpl{% endif %}">
+                                        <li>
+                                            <span class="visible-xs">{% trans "Boys" %}</span>
+                                            <span>{{ session_report.boys_participation_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Girls" %}</span>
+                                            <span>{{ session_report.girls_participation_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Total" %}</span>
+                                            <span>{{ session_report.participation_history|index:i }}</span>
+                                        </li>
+                                    </ul>
+                                    {% endfor %}
+                                    {% for i in range_session_group %}
+                                    <ul class="report overview session-group-{{ i }} tpl">
+                                        <li>
+                                            <span class="visible-xs">{% trans "Boys" %}</span>
+                                            <span>{{ session_group_report.boys_participation_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Girls" %}</span>
+                                            <span>{{ session_group_report.girls_participation_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Total" %}</span>
+                                            <span>{{ session_group_report.participation_history|index:i }}</span>
+                                        </li>
+                                    </ul>
+                                    {% endfor %}
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-sm-1 col-lg-2 text-right">
+                                    <header>
+                                        <h5>{% trans "N>=10" %}</h5>
+                                        <div class="clear"></div>
+                                    </header>
+                                    {% for i in range_session %}
+                                    <ul class="report overview session-{{ i }}{% if i != selected_session_order_number %} tpl{% endif %}">
+                                        <li>
+                                            <span class="visible-xs">{% trans "Boys" %}</span>
+                                            <span>{{ session_report.boys_success_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Girls" %}</span>
+                                            <span>{{ session_report.girls_success_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Total" %}</span>
+                                            <span>{{ session_report.success_history|index:i }}</span>
+                                        </li>
+                                    </ul>
+                                    {% endfor %}
+                                    {% for i in range_session_group %}
+                                    <ul class="report overview session-group-{{ i }} tpl">
+                                        <li>
+                                            <span class="visible-xs">{% trans "Boys" %}</span>
+                                            <span>{{ session_group_report.boys_success_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Girls" %}</span>
+                                            <span>{{ session_group_report.girls_success_history|index:i }}</span>
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Total" %}</span>
+                                            <span>{{ session_group_report.success_history|index:i }}</span>
+                                        </li>
+                                    </ul>
+                                    {% endfor %}
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    <header>
+                                        <h5>{% trans "% Success" %}</h5>
+                                        <div class="clear"></div>
+                                    </header>
+                                    {% for i in range_session %}
+                                    <ul class="report overview session-{{ i }}{% if i != selected_session_order_number %} tpl{% endif %}">
+                                        <li>
+                                            <span class="visible-xs">{% trans "Boys" %}</span>
+                                            {% with boys_success_percent=session_report.boys_success_percent_history|index:i %}
+                                                <span>{{ boys_success_percent|floatformat:"2" }}</span>
+                                            {% endwith %}
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Girls" %}</span>
+                                            {% with girls_success_percent=session_report.girls_success_percent_history|index:i %}
+                                                <span>{{ girls_success_percent|floatformat:"2" }}</span>
+                                            {% endwith %}
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Total" %}</span>
+                                            {% with success_percent=session_report.success_percent_history|index:i %}
+                                                <span>{{ success_percent|floatformat:"2" }}</span>
+                                            {% endwith %}
+                                        </li>
+                                    </ul>
+                                    {% endfor %}
+                                    {% for i in range_session_group %}
+                                    <ul class="report overview session-group-{{ i }} tpl">
+                                        <li>
+                                            <span class="visible-xs">{% trans "Boys" %}</span>
+                                            {% with boys_success_percent=session_group_report.boys_success_percent_history|index:i %}
+                                                <span>{{ boys_success_percent|floatformat:"2" }}</span>
+                                            {% endwith %}
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Girls" %}</span>
+                                            {% with girls_success_percent=session_group_report.girls_success_percent_history|index:i %}
+                                                <span>{{ girls_success_percent|floatformat:"2" }}</span>
+                                            {% endwith %}
+                                        </li>
+                                        <li>
+                                            <span class="visible-xs">{% trans "Total" %}</span>
+                                            {% with success_percent=session_group_report.success_percent_history|index:i %}
+                                                <span>{{ success_percent|floatformat:"2" }}</span>
+                                            {% endwith %}
+                                        </li>
+                                    </ul>
+                                    {% endfor %}
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-sm-4 col-lg-3">
+                                    <header>
+                                        <h5 style="float: left">{% trans "Best score" %}</h5>
+                                        <div class="clear"></div>
+                                    </header>
+                                    {% for i in range_session %}
+                                    <ul class="report overview session-{{ i }}{% if i != selected_session_order_number %} tpl{% endif %}">
+                                        {% with boys_highest_score=session_report.boys_highest_score_history|index:i %}
+                                        <li class="best-score">
+                                            <span class="gender visible-xs">{% trans "Boys" %}</span>
+                                            {% with student=boys_highest_score.student %}
+                                                {% url 'school:student_detail' student.id as student_url %}
+                                                <a href="{{ student_url }}">{{ student|truncatechars:"27" }}</a>
+                                            {% endwith %}
+                                            <span>{{ boys_highest_score.value }}</span>
+                                        </li>
+                                        {% endwith %}
+                                        {% with girls_highest_score=session_report.girls_highest_score_history|index:i %}
+                                        <li class="best-score">
+                                            <span class="gender visible-xs">{% trans "Girls" %}</span>
+                                            {% with student=girls_highest_score.student %}
+                                                {% url 'school:student_detail' student.id as student_url %}
+                                                <a href="{{ student_url }}">{{ student|truncatechars:"27" }}</a>
+                                            {% endwith %}
+                                            <span>{{ girls_highest_score.value }}</span>
+                                        </li>
+                                        {% endwith %}
+                                    </ul>
+                                    {% endfor %}
+                                    {% for i in range_session_group %}
+                                    <ul class="report overview session-group-{{ i }} tpl">
+                                        {% with boys_highest_score=session_group_report.boys_highest_score_history|index:i %}
+                                        <li class="best-score">
+                                            <span class="gender visible-xs">{% trans "Boys" %}</span>
+                                            {% with student=boys_highest_score.student %}
+                                                {% url 'school:student_detail' student.id as student_url %}
+                                                <a href="{{ student_url }}">{{ student|truncatechars:"27" }}</a>
+                                            {% endwith %}
+                                            <span>{{ boys_highest_score.value }}</span>
+                                        </li>
+                                        {% endwith %}
+                                        {% with girls_highest_score=session_group_report.girls_highest_score_history|index:i %}
+                                        <li class="best-score">
+                                            <span class="gender visible-xs">{% trans "Girls" %}</span>
+                                            {% with student=girls_highest_score.student %}
+                                                {% url 'school:student_detail' student.id as student_url %}
+                                                <a href="{{ student_url }}">{{ student|truncatechars:"27" }}</a>
+                                            {% endwith %}
+                                            <span>{{ girls_highest_score.value }}</span>
+                                        </li>
+                                        {% endwith %}
+                                    </ul>
+                                    {% endfor %}
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="text-right see-all">
+                                <a href="javascript:;">{% trans "See All" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="billing">
+                <div class="section-title performances">
+                    <div>
+                        <span style="float: left">{% trans "Billing" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+{#                        <div class="dropdown" style="cursor: pointer; float: left; margin-left: 15px">#}
+{#                            <span class="chosen-filter dropdown-toggle" id="filter-billing" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">#}
+{#                                <span class="target">{% trans "Classroom" %}</span>#}
+{#                                <span class="caret"></span>#}
+{#                            </span>#}
+{#                            <ul class="performances-filter dropdown-menu" aria-labelledby="filter-billing">#}
+{#                                <li data-target="today" style="display: none"><a>{% trans "Today" %}</a></li>#}
+{#                                <li data-target="yesterday"><a>{% trans "Yesterday" %}</a></li>#}
+{#                                <li data-target="last_week"><a>{% trans "Last week" %}</a></li>#}
+{#                                <li data-target="last_28_days"><a>{% trans "Last 28 days" %}</a></li>#}
+{#                            </ul>#}
+{#                        </div>#}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="row performances" style="clear: both">
+                    <div class="col-sm-6">
+                        <div class="subtle-shade">
+                            <header>
+                                <h5>{% trans "Pending invoices" %}</h5>
+                                <div class="clear"></div>
+                            </header>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="figure-lg">{{ pending_invoice_data.count }}</div>
+                                    <div class="figure">
+                                        <span style="font-size: 1.3em">{{ pending_invoice_data.amount|floatformat:"0"|intcomma }}</span>
+                                        <span style="font-size: .9em" class="text-muted">{{ currency_symbol }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <ul class="report overview">
+                                        {% for obj in pending_invoice_data.list %}
+                                        <li>
+                                            <a href="{% url 'school:classroom_detail' obj.classroom.id %}">{{ obj.classroom }}</a>
+                                            <span>{{ obj.count }}</span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="text-right see-all">
+                                <a href="javascript:;">See All</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+            $('div#admin-nav .dashboard').addClass('active');
+            $('.performances-filter').on('click', 'li', function () {
+                var stage = $(this).data('stage'),
+                    target = $(this).data('target'),
+                    targetLabel = $(this).find('a').text();
+                $(stage + ' .report, ' + stage + ' .figure-lg').hide();
+                $(stage + ' .report.' + target).show();
+                $(stage + ' .figure-lg.' + target).show();
+                $(this).parents('.dropdown').find('.target').text(targetLabel);
+                $(this).parents('.dropdown').find('li').show();
+                $(this).hide();
+            });
+        })()
+    </script>
+{% endblock %}

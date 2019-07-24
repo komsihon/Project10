@@ -1,0 +1,45 @@
+/**
+    Document   : foulassi-kids
+    Created on : June 09, 2019, 13:49
+    Contributors     : Kom Sihon
+    Description:
+        Foulassi admin styles for the social platform part
+*/
+
+#app-nav {display: none;overflow: hidden;height: 0;}
+#content {min-height: 90vh}
+.search-kid {padding: 0 15px;margin: 5vh 0;}
+.kid {height: 195px}
+#content h3 {text-align: center; margin-bottom: 21px}
+.suggestion-list .btn {min-width: 90px; margin-left: 5px}
+.kid .status-bullet {height: 10px; position: absolute; right: 2.5vh; top: 3.3vh; width: 10px}
+.img-circle {width: 100%; height: 100%}
+#modal-confirm-accept .modal-body, #modal-confirm-refuse .modal-body {padding-top: 0}
+#modal-confirm-accept h3, #modal-confirm-refuse h3 {margin-top: -15px}
+#modal-confirm-accept .notice, #modal-confirm-refuse .notice {margin-bottom: 42px}
+#admin-nav .ik-li .info {width: 167px;}
+.title-brand {font-weight: 600;padding: 0 10px;font-size: 21px}
+.title-brand:hover {text-decoration:none}
+.pending-invoices .payment-start {margin-top: 2vh; min-width: 150px}
+
+@media (max-width: 767px) {
+    .title-brand {margin-top: 3vh;display: block;}
+    div#container.admin {padding-top: 55px;}
+    #student-details .basic {clear: both;padding-top: 15px;}
+    .ik-li:not(.selected):hover .actions {right: 15px;}
+    .img-circle {margin-top: 4vh}
+    .kid .status-bullet {right: 2.5vh; top: 6vh}
+}
+
+@media (min-width: 768px) {
+    .search-kid {margin: 8vh 0 5vh;}
+    .kid-list {margin-top: 6vh;}
+    div#container.admin {padding-top: 65px}
+    .img-circle {margin-top: 1vh}
+}
+@media (min-width: 992px) {
+    .title-brand {margin-top: -2px;}
+}
+@media (min-width: 1200px) {
+    .kid {height: 210px}
+}

@@ -1,39 +1,52 @@
-{% extends "core/app_base_admin.html" %}
+{% extends "core/change_object_base.html" %}
 {% load i18n humanize staticfiles admin_list %}
-
-{% block page_title %}
-<title> {% if level %}{{ level.name }}{% else %}{% trans "New level" %}{% endif %} - {{ service.project_name }} </title>
-{% endblock %}
-
-{% block head_style %}
-    {{ block.super }}
-    <style>
-        body {background: #f6f6f6}
-        #context-search {clear: both; margin: 10px 0 6px 0;}
-        #context-search input {width: 270px}
-        #stage section {box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .15)}
-    </style>
-{% endblock %}
-
-{% block breadcrumb_location %}
-    <li>{% url 'school:level_list' as level_list_url %}
-        <a href="{{ level_list_url }}">{% trans "Levels" %}</a>
-    </li>
-    {% if level %}
-        <li>{{ level.name }}</li>
-    {% else %}
-        <li>{% trans 'New' %}</li>
-    {% endif %}
-{% endblock %}
 
 {% block admin_content %}
     <div id="admin-content" class="change-form">
         <div class="container-fluid">
-            {% url 'school:change_level' as change_level_url %}
             {% if errors %}<p class="alert alert-danger">{{ errors }}</p>{% endif %}
-            <form id="submit-level" class="admin-form" method="post" action="{{ change_level_url }}">{% csrf_token %}
-                <input type="hidden" name="level_id" value="{{ level.id }}" />
+            <form id="submit-level" class="admin-form" method="post">{% csrf_token %}
                 {% include 'core/snippets/model_admin_form.html' %}
+                <formset>
+                    <legend>{% trans "Subjects" %}</legend>
+                    <p class="row acronyms">
+                        <span class="col-sm-3 col-lg-2">{% trans "Coef." %} = {% trans "Coefficient" %}</span>
+                        <span class="col-sm-3 col-lg-2">{% trans "LD" %} = {% trans "Lessons Due" %}</span>
+                        <span class="col-sm-3 col-lg-2">{% trans "Hours Due" %} = {% trans "Hours Due" %}</span>
+                    </p>
+                    <input type="hidden" id="subjects" name="subjects" />
+                    {% for subject in subject_list %}
+                        <div class="subject checkbox tile col-xs-6 col-sm-4 col-lg-3">
+                            <label for="squaredThree">
+                                 <input type="checkbox" value="{{ subject.id }}"
+                                        {% if subject.is_active %}checked{% endif %}><strong>{{ subject.name }}</strong>
+                            </label>
+                            <div>
+                                <span>{% trans "Grp" %}</span>
+                                <select class="form-control input-sm group" title="Group">
+                                    {% for gp in range_1_4 %}
+                                        <option{% if subject.group == gp %} selected{% endif %}>{{ gp }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <span>{% trans "Coef." %}</span>
+                                <input type="text" class="form-control input-sm coefficient"
+                                       value="{{ subject.coefficient }}" placeholder="{% trans "Coefficient" %}"/>
+                            </div>
+                            <div>
+                                <span>{% trans "LD" %}</span>
+                                <input type="text" class="form-control input-sm lessons-due"
+                                       value="{{ subject.lessons_due }}" placeholder="{% trans "Lessons due" %}"/>
+                            </div>
+                            <div>
+                                <span>{% trans "HD" %}</span>
+                                <input type="text" class="form-control input-sm hours-due"
+                                       value="{{ subject.hours_due }}" placeholder="{% trans "Hours due" %}"/>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </formset>
                 <div class="form-group col-xs-12 col-sm-4 col-md-3" style="clear: both; padding-top: 15px">
                     <button class="btn btn-sm btn-primary btn-block">{% trans "Save" %}</button>
                 </div>
@@ -44,19 +57,54 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript">
+    <script>
         (function() {
-            $('div#admin-nav .levels').addClass('active');
-            $('.form-row').addClass('form-group');
-            $('.form-row input, .form-row select, .form-row textarea').addClass('form-control input-sm');
-            $('.form-row textarea').addClass('form-control input-sm');
-            {% if request.GET.success %}
-                {% if level %}
-                    ikwen.showFloatingNotice('{% trans "Level successfully updated." %}', '', 6);
-                {% else %}
-                    ikwen.showFloatingNotice('{% trans "Level successfully added." %}', '', 6);
-                {% endif %}
-            {% endif %}
+            $('.coefficient').click(function() {
+               $(this).parents('.subject').find('input[type=checkbox]').prop('checked', true);
+            });
+            $('form#submit-level').submit(function() {
+                var doSubmit = true,
+                    subjects = [];
+                $('.coefficient, .lessons-due, .hours-due').removeClass('input-error');
+                $('.subject').each(function() {
+                    var $checkbox = $(this).find('input[type=checkbox]');
+                    if ($checkbox.prop('checked')) {
+                        var subjectId = $checkbox.val(),
+                            $group = $(this).find('.group'),
+                            $coefficient = $(this).find('.coefficient'),
+                            $lessonsDue = $(this).find('.lessons-due'),
+                            $hoursDue = $(this).find('.hours-due'),
+                            group = parseInt($group.val()),
+                            coefficient = parseInt($coefficient.val()),
+                            lessonsDue = parseInt($lessonsDue.val()),
+                            hoursDue = parseInt($hoursDue.val());
+                        if (isNaN(group)) {
+                            $group.addClass('input-error');
+                            doSubmit = false;
+                        }
+                        if (isNaN(coefficient)) {
+                            $coefficient.addClass('input-error');
+                            doSubmit = false;
+                        }
+                        if (isNaN(lessonsDue)) {
+                            $lessonsDue.addClass('input-error');
+                            doSubmit = false;
+                        }
+                        if (isNaN(hoursDue)) {
+                            $hoursDue.addClass('input-error');
+                            doSubmit = false;
+                        }
+                        var item = subjectId + ':' + group + ':' + coefficient + ':' + lessonsDue + ':' + hoursDue;
+                        subjects.push(item);
+                    }
+                });
+                $('#subjects').val(subjects.join(','));
+                if (!doSubmit) {
+                    var notice = "{% trans "Some fields are incorrect. Please check and fix." %}";
+                    ikwen.showFloatingNotice(notice, '', 6);
+                }
+                return doSubmit;
+            });
         })()
     </script>
 {% endblock %}

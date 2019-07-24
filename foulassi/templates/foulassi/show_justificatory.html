@@ -1,0 +1,28 @@
+{% extends 'school/change_justificatory.html' %}
+{% load i18n humanize static auth_tokens %}
+
+{% block page_title %}
+<title> {{ obj }} - {{ service.project_name }} </title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}" />
+{% endblock %}
+
+{% block admin_nav %}
+    {% include 'foulassi/snippets/kid_list_nav.html' %}
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content" class="change-form">
+        <div class="admin-form">
+            <div class="container-fluid">
+                {% include 'core/snippets/model_admin_form.html' %}
+                {% with image=obj.image image_field_name='image' read_only_img='yes' %}
+                    {% include 'core/snippets/uploader_single.html' %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

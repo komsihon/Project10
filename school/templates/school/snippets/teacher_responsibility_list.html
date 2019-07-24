@@ -1,0 +1,19 @@
+
+<div role="tabpanel" class="tab-pane container active" id="{{ subject.id }}" style="padding-top: 1px">
+    {% for level in level_classroom_list %}
+    <div class="level">
+        <h3>{{ level.name }}</h3>
+        <div class="classroom-list tiles" style="margin-top: 0">
+            {% for classroom in level.classroom_list %}
+            <div class="checkbox tile col-sm-4 col-md-2">
+                <label for="squaredThree">
+                     <input type="checkbox" class="subject" value="{{ classroom.id }}"
+                            {% if classroom.is_assigned %}disabled{% endif %}>{{ classroom }}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    {% endfor %}
+</div>

@@ -6,7 +6,7 @@ class LevelAdmin(admin.ModelAdmin):
 
 
 class ClassroomAdmin(admin.ModelAdmin):
-    fields = ('level', 'name', 'tuition_fees', )
+    fields = ('level', 'name', 'tuition_fees', 'professor')
 
 
 class SubjectAdmin(admin.ModelAdmin):
@@ -14,4 +14,16 @@ class SubjectAdmin(admin.ModelAdmin):
 
 
 class SessionAdmin(admin.ModelAdmin):
-    fields = ('name', )
+    fields = ('session_group', 'name', 'starts_on', 'ends_on')
+
+
+class SessionGroupAdmin(admin.ModelAdmin):
+    fields = ('name', 'starts_on', 'ends_on', )
+
+
+class DisciplineItemAdmin(admin.ModelAdmin):
+    fields = ('name', 'unit', )
+
+
+class JustificatoryAdmin(admin.ModelAdmin):
+    fields = ('details', )

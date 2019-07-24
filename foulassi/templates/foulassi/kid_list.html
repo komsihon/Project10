@@ -1,0 +1,217 @@
+{% extends "core/base_bs.html" %}
+{% load i18n static cache %}
+{% block meta %}
+    {% include 'core/snippets/favicon.html' %}
+    <meta property="description" content="{{ config.short_description }}" />
+    <meta property="og:title" content="{{ service.project_name }}" />
+    <meta property="og:image" content="{% get_media_prefix %}{{ config.logo.name }}" />
+    <meta property="og:description" content="{{ config.short_description }}" />
+    <meta property="og:url" content="{{ service.url }}" />
+    <meta property="og:site_name" content="{{ service.domain|upper }}" />
+{% endblock %}
+
+{% block page_title %}<title>{{ service.project_name }} - Foulassi</title>{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="container">
+{#        {% cache 600 kid_list user.username %}#}
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+{#            <div class="search-kid">#}
+{#                <label for="customer-name" class="sr-only">{% trans "Search kid" %}</label>#}
+{#                <div class="col-sm-8 col-sm-offset-2">#}
+{#                    <input id="customer-name" class="form-control" type="text"#}
+{#                           placeholder="{% trans "Search kid" %}" autocomplete="off"/>#}
+{#                    <div class="results customers has-shade" style="display: none" data-min-search-chars="2">#}
+{#                        {% include 'core/snippets/spinner.html' %}#}
+{#                        <ul style="padding-left: 0">#}
+{#                            <li class="member tpl" style="display: none">#}
+{#                                <div style="display: block">#}
+{#                                    <span class="photo logo bg-img" style="background-image: url({% static 'ikwen/img/no_photo.png' %})"></span>#}
+{#                                    <div style="float: left; margin-left: 30px">#}
+{#                                        <span class="full_name"></span>#}
+{#                                        <p class="about short_description"></p>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                        <div class="clearfix"></div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="clearfix"></div>#}
+{#            </div>#}
+            {% if suggestion_list %}
+            <div class="suggestion-list">
+                <h3>{% trans "Suggestions" %}</h3>
+                <ul class="people object-list" style="padding-left: 0">
+                    {% for student in suggestion_list %}
+                        {% url 'foulassi:kid_detail' student.school.ikwen_name student.id as student_url %}
+                        <li id="{{ student.id }}" class="ik-li member" data-id="{{ student.id }}"
+                            data-url="{{ student_url }}" data-img-url="{{ settings.IKWEN_MEDIA_URL }}{{ student.photo.small_name }}">
+                            {% if student.photo.name %}
+                                <a href="javascript:;" class="photo" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ student.photo.small_name }})"></a>
+                            {% else %}
+                                <a href="javascript:;" class="photo" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></a>
+                            {% endif %}
+                            <span class="hidden tags">{{ student.tags }}</span>
+                            <div class="info">
+                                <a href="javascript:;" class="full_name">{{ student }}</a>
+                                <p class="text-muted" style="font-size: .9em">
+                                    {{ student.school.config.company_name }}
+                                </p>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-sm btn-default show-modal-refuse">{% trans "Cancel" %}</button>
+                                <button class="btn btn-sm btn-primary show-modal-accept">{% trans "Accept" %}</button>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            {% endif %}
+            {% if kid_list %}
+            <div class="kid-list">
+                <h3 class="title">{% trans "Your kids" %}</h3>
+                {% for student in kid_list %}
+                <div class="col-xs-6 col-sm-3 kid">
+                    <div class="text-center">
+                        {% url 'foulassi:kid_detail' student.school.ikwen_name student.id as student_url %}
+                        <a href="{{ student_url }}">
+{#                        <a {% if student.kid_fees_paid %}href="{{ student_url }}"{% else %}href="javascript:;"{% endif %}>#}
+                            {% if student.photo.name %}
+                                <img class="img-circle img-thumbnail" src="{% get_media_prefix %}{{ student.photo.small_name }}">
+                            {% else %}
+                                <img class="img-circle img-thumbnail" src="{% static 'ikwen/img/login-avatar.jpg' %}">
+                            {% endif %}
+                            <span>{{ student }}</span>
+{#                            <span class="status-bullet danger"></span>#}
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                {% endfor %}
+                <div class="col-xs-6 col-sm-3 kid tpl">
+                    <div class="text-center">
+                        <a>
+                            <img class="img-circle img-thumbnail" src="{% static 'ikwen/img/login-avatar.jpg' %}">
+                            <span class="kid-name"></span>
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            {% endif %}
+        </div>
+{#        {% endcache %}#}
+        <div class="clearfix"></div>
+    </div>
+    <div class="modal fade" id="modal-confirm-accept" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-header" style="border-bottom: none">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <h3 class="col-xs-12">OK,</h3>
+                    <p class="col-xs-12 notice"></p>
+                    <div class="actions">
+                        <div class="col-xs-12 col-sm-4">
+                            <button class="btn btn-default btn-sm btn-block"
+                                    data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <button class="btn btn-success btn-sm btn-block accept-suggestion"
+                                    data-dismiss="modal" aria-label="Close">{% trans "Yes, add" %}</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-confirm-refuse" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-header" style="border-bottom: none">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <h3 class="col-xs-12">Hmmm,</h3>
+                    <p class="col-xs-12 notice"></p>
+                    <div class="actions">
+                        <div class="col-xs-12 col-sm-4">
+                            <button class="btn btn-default btn-sm btn-block"
+                                    data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <button class="btn btn-danger btn-sm btn-block refuse-suggestion"
+                                    data-dismiss="modal" aria-label="Close">{% trans "Yes, remove" %}</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        (function() {
+            var studentId, name, imageUrl, url;
+            $('.show-modal-accept').click(function() {
+                var _$student = $(this).parents('.ik-li');
+                    studentId = _$student.data('id');
+                    name = _$student.find('.full_name').text();
+                    imageUrl = _$student.data('img-url');
+                    url = _$student.data('url');
+                var notice = "{% trans "Add" %} <strong>" + name + "</strong> to your kid list ?";
+                $('#modal-confirm-accept .notice').html(notice);
+                $('#modal-confirm-accept').modal('show');
+            });
+            $('.show-modal-refuse').click(function() {
+                var _$student = $(this).parents('.ik-li');
+                    studentId = _$student.data('id');
+                    name = _$student.find('.full_name').text();
+                var notice = "{% trans "Don't add" %} <strong>" + name + "</strong> to your kid list ?";
+                $('#modal-confirm-refuse .notice').html(notice);
+                $('#modal-confirm-refuse').modal('show');
+            });
+            $('.accept-suggestion').click(function() {
+                $.getJSON('', {action: 'accept_suggestion', student_id: studentId}, function(resp) {
+                    if (resp.success) {
+                        var $kid = $('.kid-list .kid.tpl').clone().removeClass('tpl');
+                        $kid.find('a').attr('href', url);
+                        $kid.find('.kid-name').text(name);
+                        $kid.find('img').attr('src', imageUrl);
+                        $kid.insertAfter('.kid-list .title');
+                        /*if (kidFeesPaid) $kid.find('a').attr('href', url);
+                        else {
+                            $kid.data('toggle', 'modal');
+                            $kid.data('target', '#modal-pay-kid-fees');
+                            $('#modal-pay-kid-fees').modal('show');
+                        }*/
+                        $('#modal-confirm-accept').modal('hide');
+                        $('#' + studentId).remove();
+                        if ($('.suggestion-list .people li').length === 0) $('.suggestion-list').remove();
+                    }
+                })
+            });
+            $('.refuse-suggestion').click(function() {
+                $.getJSON('', {action: 'refuse_suggestion', student_id: studentId}, function(resp) {
+                    if (resp.success) {
+                        $('#modal-confirm-refuse').modal('hide');
+                        $('#' + studentId).remove()
+                        if ($('.suggestion-list .people li').length === 0) $('.suggestion-list').remove();
+                    }
+                })
+            })
+        })()
+    </script>
+{% endblock %}

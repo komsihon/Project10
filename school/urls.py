@@ -1,8 +1,12 @@
 
 from django.conf.urls import patterns, url
-from django.contrib.auth.decorators import permission_required
-from ikwen_foulassi.school.views import LevelList, ChangeLevel, SubjectList, ChangeSubject, ClassroomList, \
-    AddClassroom, ClassroomDetail, ChangeStudent, ChangeSession
+from django.contrib.auth.decorators import permission_required, user_passes_test
+from ikwen_foulassi.school.student.views import ChangeStudent, StudentDetail, ChangeJustificatory
+from ikwen_foulassi.school.classroom.views import ClassroomList, ChangeClassroom, ClassroomDetail, upload_student_file
+from ikwen_foulassi.school.views import LevelList, ChangeLevel, SubjectList, ChangeSubject, ChangeSession, \
+    SessionList, DisciplineItemList, ChangeDisciplineItem, TeacherList, TeacherDetail, SessionGroupList, \
+    ChangeSessionGroup, close_session
+from ikwen_foulassi.foulassi.utils import access_classroom
 
 urlpatterns = patterns(
     '',
@@ -15,17 +19,38 @@ urlpatterns = patterns(
     url(r'^subject/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_school')(ChangeSubject.as_view()),
         name='change_subject'),
 
-    url(r'^sessions/$', permission_required('school.ik_manage_school')(LevelList.as_view()), name='session_list'),
+    url(r'^sessions/$', permission_required('school.ik_manage_school')(SessionList.as_view()), name='session_list'),
     url(r'^session/$', permission_required('school.ik_manage_school')(ChangeSession.as_view()), name='change_session'),
     url(r'^session/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_school')(ChangeSession.as_view()),
         name='change_session'),
 
-    url(r'^classrooms/$', permission_required('school.ik_manage_school')(ClassroomList.as_view()), name='classroom_list'),
-    url(r'^classroom/$', permission_required('school.ik_manage_school')(AddClassroom.as_view()), name='add_classroom'),
-    url(r'^classroom/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_school')(ClassroomDetail.as_view()),
+    url(r'^sessionGroups/$', permission_required('school.ik_manage_school')(SessionGroupList.as_view()), name='sessiongroup_list'),
+    url(r'^sessionGroup/$', permission_required('school.ik_manage_school')(ChangeSessionGroup.as_view()), name='change_sessiongroup'),
+    url(r'^sessionGroup/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_school')(ChangeSessionGroup.as_view()),
+        name='change_sessiongroup'),
+
+    url(r'^discipline/$', permission_required('school.ik_manage_school')(DisciplineItemList.as_view()), name='disciplineitem_list'),
+    url(r'^disciplineItem/$', permission_required('school.ik_manage_school')(ChangeDisciplineItem.as_view()), name='change_disciplineitem'),
+    url(r'^disciplineItem/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_school')(ChangeDisciplineItem.as_view()),
+        name='change_disciplineitem'),
+
+    url(r'^classrooms/$', user_passes_test(access_classroom)(ClassroomList.as_view()), name='classroom_list'),
+    url(r'^classroom/$', permission_required('school.ik_manage_school')(ChangeClassroom.as_view()), name='change_classroom'),
+    url(r'^classroom/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_school')(ChangeClassroom.as_view()),
+        name='change_classroom'),
+    url(r'^classroomDetail/(?P<object_id>[-\w]+)/$', user_passes_test(access_classroom)(ClassroomDetail.as_view()),
         name='classroom_detail'),
 
-    url(r'^student/$', permission_required('school.ik_manage_student')(ChangeStudent.as_view()), name='change_student'),
-    url(r'^student/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_student')(ChangeStudent.as_view()),
-        name='change_student'),
+    url(r'^upload_student_file/$', permission_required('school.ik_manage_student')(upload_student_file), name='upload_student_file'),
+    url(r'^newStudent/(?P<classroom_id>[-\w]+)/$', permission_required('school.ik_manage_student')(ChangeStudent.as_view()), name='change_student'),
+    url(r'^student/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_student')(StudentDetail.as_view()),
+        name='student_detail'),
+    url(r'^justificatory/$', permission_required('school.ik_manage_student')(ChangeJustificatory.as_view()),
+        name='change_justificatory'),
+    url(r'^justificatory/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_student')(ChangeJustificatory.as_view()),
+        name='change_justificatory'),
+
+    url(r'^teachers/$', permission_required('school.ik_manage_teacher')(TeacherList.as_view()), name='teacher_list'),
+    url(r'^teacher/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_teacher')(TeacherDetail.as_view()), name='teacher_detail'),
+    url(r'^close_session$', close_session, name='close_session'),
 )

@@ -16,7 +16,7 @@ from django.utils import unittest
 from ikwen_foulassi.foulassi.models import Student, Parent
 
 from ikwen_foulassi.foulassi.tests_views import wipe_test_data
-from ikwen_foulassi.school.models import Subject, Level, Classroom, Session, Score, SubjectSession
+from ikwen_foulassi.school.models import Subject, Level, Classroom, Session, Score
 
 
 class SchoolViewsTestCase(unittest.TestCase):
@@ -55,7 +55,7 @@ class SchoolViewsTestCase(unittest.TestCase):
         name = 'New level'
         self.client.post(reverse('school:change_level'),
                          {'name': name, 'tuition_fees': 12000,
-                          'subjects': '59441ee04fc0c24f09e9d6da;59441ee04fc0c24f09e9d6db'})
+                          'subjects': '59441ee04fc0c24f09e9d6da:2:50:100,59441ee04fc0c24f09e9d6db:4:70:210'})
         level = Level.objects.get(name=name)
         self.assertListEqual(level.subject_fk_list, ['59441ee04fc0c24f09e9d6da', '59441ee04fc0c24f09e9d6db'])
 
@@ -68,7 +68,7 @@ class SchoolViewsTestCase(unittest.TestCase):
         name = u'Prépa'
         self.client.post(reverse('school:change_level', args=('58d89d0b531e011b37b33471', )),
                          {'name': name, 'tuition_fees': 15000,
-                          'subjects': '59441ee04fc0c24f09e9d6da;59441ee04fc0c24f09e9d6db'})
+                          'subjects': '59441ee04fc0c24f09e9d6da,59441ee04fc0c24f09e9d6db'})
         level = Level.objects.get(pk='58d89d0b531e011b37b33471')
         self.assertEqual(level.name, name)
         self.assertEqual(level.tuition_fees, 15000)
@@ -150,7 +150,7 @@ class SchoolViewsTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     @override_settings(IKWEN_SERVICE_ID='56eb6d04b37b3379b531b101', CACHES=None)
-    def test_AddClassroom(self):
+    def test_ChangeClassroom(self):
         """
         Change must update Classroom information accordingly
         """
@@ -158,13 +158,13 @@ class SchoolViewsTestCase(unittest.TestCase):
         response = self.client.get(reverse('school:add_classroom'))
         self.assertEqual(response.status_code, 200)
         name = '6eme A'
-        subjects = '59441ee04fc0c24f09e9d6da;59441ee04fc0c24f09e9d6db;59441ee04fc0c24f09e9d6dc'
-        self.client.post(reverse('school:add_classroom'), {'name': name, 'tuition_fees': 15000,
-                                                           'level': '58d89d0b531e011b37b33471',
-                                                           'subjects': subjects})
+        subjects = '59441ee04fc0c24f09e9d6da,59441ee04fc0c24f09e9d6db,59441ee04fc0c24f09e9d6dc'
+        self.client.post(reverse('school:change_classroom'), {'name': name, 'tuition_fees': 15000,
+                                                              'level': '58d89d0b531e011b37b33471',
+                                                              'subjects': subjects})
         classroom = Classroom.objects.get(name=name)
         self.assertEqual(classroom.level.id, '58d89d0b531e011b37b33471')
-        self.assertListEqual(classroom.subject_fk_list, subjects.split(';'))
+        self.assertListEqual(classroom.subject_fk_list, subjects.split(','))
 
     @override_settings(IKWEN_SERVICE_ID='56eb6d04b37b3379b531b101', CACHES=None)
     def test_ClassroomDetail_with_action_change(self):
@@ -175,7 +175,7 @@ class SchoolViewsTestCase(unittest.TestCase):
         response = self.client.get(reverse('school:classroom_detail', args=('60e011bd0b53137b33471d81', )))
         self.assertEqual(response.status_code, 200)
         name = u'6ème A'
-        subjects = '59441ee04fc0c24f09e9d6da;59441ee04fc0c24f09e9d6db;59441ee04fc0c24f09e9d6dc;59441ee04fc0c24f09e9d6de'
+        subjects = '59441ee04fc0c24f09e9d6da,59441ee04fc0c24f09e9d6db,59441ee04fc0c24f09e9d6dc,59441ee04fc0c24f09e9d6de'
         self.client.get(reverse('school:classroom_detail', args=('60e011bd0b53137b33471d81', )),
                         {'action': 'change', 'name': name, 'professor_id': '584f03a7bbd6b46a85db279a',
                          'leader_id': '584f03a7bbd6b46a8fc0c242', 'subjects': subjects})
@@ -184,7 +184,7 @@ class SchoolViewsTestCase(unittest.TestCase):
         self.assertEqual(classroom.professor.id, '584f03a7bbd6b46a85db279a')
         self.assertEqual(Student.objects.filter(classroom=classroom, is_leader=True).count(), 1)
         self.assertEqual(classroom.get_leader().id, '584f03a7bbd6b46a8fc0c242')
-        self.assertListEqual(classroom.subject_fk_list, subjects.split(';'))
+        self.assertListEqual(classroom.subject_fk_list, subjects.split(','))
 
     @override_settings(IKWEN_SERVICE_ID='56eb6d04b37b3379b531b101', CACHES=None)
     def test_ClassroomDetail_with_action_mark(self):

@@ -1,0 +1,200 @@
+{% extends 'core/change_object_base.html' %}
+{% load i18n humanize static auth_tokens %}
+
+{% block page_title %}
+    <title>{{ teacher }} - {{ service.project_name }}</title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'ikwen/swiper/css/swiper.min.css' %}" />
+{% endblock %}
+
+{% block head_js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/swiper/js/swiper.jquery.min.js' %}"></script>
+{% endblock %}
+
+{% block breadcrumb_location %}
+    <li>
+        <a href="{% url 'school:teacher_list' %}">{{ verbose_name_plural|capfirst }}</a>
+    </li>
+    <li>{% trans 'Responsibilities' %}</li>
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content">
+        <div class="container-fluid">
+            <div id="admin-tools" class="teacher-info">
+                <div class="ik-li member" style="border-bottom: none">
+                    {% with member=teacher.member %}
+                    {% if member.photo.name %}
+                        <div class="photo bg-img" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ member.photo.name }})"></div>
+                    {% else %}
+                        <div class="photo bg-img" style="background-image: url({% get_static_prefix %}ikwen/img/member-avatar.jpg)"></div>
+                    {% endif %}
+                    <div class="info">
+                        <a class="full_name target_url">{{ member.full_name }}</a>
+                        <p class="about">
+                            <span class="phone">{{ member.phone }}</span>, <span class="email">{{ member.email }}</span>
+                        </p>
+                    </div>
+                    {% endwith %}
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="" class="content-tab-list teacher-responsibilities ceil">
+                <div class="swiper-container">
+                    <div class="nav nav-tabs" role="tablist">
+                        {% for subject in teacher_subject_list %}
+                        <div role="presentation" class="tab {{ subject.slug }}{% if forloop.counter == 1 %} active{% endif %}"
+                             data-subject-id="{{ subject.id }}">
+                            <a href="#{{ subject.id }}" aria-controls="{{ subject.id }}"
+                               role="tab" data-toggle="tab">{{ subject }}</a>
+                        </div>
+                        {% endfor %}
+                        <div role="presentation" class="tab show-add-subject">
+                            <a href="javascript:;" aria-controls="student-list"
+                               role="tab" data-toggle="tab">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content">
+                {% for subject in subject_level_classroom_list %}
+                <div role="tabpanel" class="tab-pane container{% if forloop.counter == 1 %} active{% endif %}" id="{{ subject.id }}" style="padding-top: 1px">
+                    {% for level in subject.level_classroom_list %}
+                    <div class="level">
+                        <h3>{{ level.name }}</h3>
+                        <div class="classroom-list tiles" style="margin-top: 0">
+                            {% for classroom in level.classroom_list %}
+                            <div class="checkbox tile col-sm-4 col-md-2">
+                                <label for="squaredThree"{% if classroom.is_assigned %} class="text-muted"{% endif %}>
+                                     <input type="checkbox" class="subject" value="{{ classroom.id }}"
+                                            {% if classroom.is_active %}checked{% endif %}
+                                            {% if classroom.is_assigned %}disabled{% endif %}>{{ classroom }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% empty %}
+                <p class="no-subject" style="padding-top: 20px">
+                   {% trans "Click + to add new subjects for this teacher" %}
+                </p>
+                {% endfor %}
+                <div class="clearfix"></div>
+            </div>
+            <div class="col-sm-3 col-lg-2 pull-right" style="margin-top: 15px">
+                <button class="btn btn-sm btn-block btn-success save-responsibilities">{% trans "Save" %}</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add-subject" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{% trans "Add Subject" %}</h4>
+                </div>
+                <div class="modal-body">
+                    <form onclick="return false" class="form-horizontal">
+                        <input type="hidden" id="address-id" />
+                        <div class="form-group row">
+                            <label for="new-subject" class="col-sm-5 col-md-4">{% trans "Subject" %} </label>
+                            <div class="col-sm-7 col-md-8">
+                                <select id="new-subject" class="form-control input-sm">
+                                    {% for subject in subject_list %}
+                                        <option value="{{ subject.id }}">{{ subject.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="actions">
+                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                            <button class="btn btn-success btn-block btn-sm ok" aria-label="OK">OK</button>
+                            {% include 'core/snippets/spinner.html' %}
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                            <button class="btn btn-default btn-block btn-sm"
+                                    data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+            $('body').on('click', '.show-add-subject a', function() {
+                $('#add-subject').modal('show');
+                return false;
+            }).on('click', '#add-subject button.ok', function() {
+                var subjectId = $('#new-subject').val(),
+                    subjectName = $('#new-subject option:selected').text(),
+                    params = {'action': 'add_subject', 'subject_id': subjectId};
+                $.ajax({
+                    data: params,
+                    error: function() {
+                        ikwen.showFloatingNotice("Oops! Something went wrong");
+                    },
+                    success: function(response) {
+                        try {
+                            response = JSON.parse(response);
+                            if (response.error) ikwen.showFloatingNotice(response.error);
+                        } catch (e) {
+                            $('.no-subject').remove();
+                            $('.tab-pane').removeClass('active');
+                            $('.tab').removeClass('active');
+                            $('.tab.show-add-subject').clone().removeClass('show-add-subject').addClass('active')
+                                .insertBefore('.tab.show-add-subject').data('subject-id',subjectId).find('a')
+                                .attr('href', '#' + subjectId).prop('aria-controls', subjectId).text(subjectName);
+                            $(response).insertBefore('#admin-content .tab-content .clearfix');
+                            $('#add-subject').modal('hide');
+                        }
+                    }
+                });
+                $.getJSON('', params, function(data) {
+                    if (data.success) {
+                        $('.no-subject').remove();
+                        $('.tab-pane').removeClass('active');
+                        $('.tab-pane.tpl').clone().removeClass('.tpl').addClass('active')
+                            .attr('id', subjectId).insertBefore('.tab-pane.tpl');
+                        $('.tab').removeClass('active');
+                        $('#add-subject').modal('hide');
+                    }
+                })
+            }).on('click', '.save-responsibilities', function() {
+                var responsibilities = [];
+                $('.tab:not(.show-add-subject)').each(function() {
+                    var subjectId = $(this).data('subject-id'),
+                        classroomFkList = [],
+                        responsibility;
+                    $('#' + subjectId + ' input:checked').each(function() {
+                        classroomFkList.push($(this).val());
+                    });
+                    responsibility = subjectId + ':' + classroomFkList.join(',');
+                    responsibilities.push(responsibility);
+                });
+                responsibilities = responsibilities.join(';');
+                var params = {action: 'save_responsibilities', responsibilities: responsibilities};
+                $.getJSON('', params, function(data) {
+                    if (data.success) {
+                        ikwen.showFloatingNotice("{% trans "Teacher responsibilities updated" %}", '', 6);
+                    }
+                })
+            })
+        })()
+    </script>
+{% endblock %}

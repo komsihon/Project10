@@ -1,0 +1,251 @@
+{% extends "core/app_base_admin.html" %}
+{% load i18n humanize staticfiles auth_tokens %}
+
+{% block page_title %}
+<title>{% trans "Service info" %} - ikwen </title>
+{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <style type="text/css">
+        section {border: 1px solid #ddd}
+        section div.row {height: 30px}
+        section label+span {color: #888}
+        section em {font-size: 12px}
+        section button {width: 120px}
+    </style>
+{% endblock %}
+
+{% block breadcrumb_location %}
+    <li>{% trans "Info & Billing" %}</li>
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content">
+        <div class="container-fluid">
+            <div id="stage" style="float: none; margin: auto">
+                <section class="general subtle-shade">
+                    <div class="update-result">
+                        <p class="message hidden"></p>
+                    </div>
+                    <header>
+                        <h3> {% trans "General" %} </h3>
+    {#                    <span class="icon" style="background-position: -177px 0"></span>#}
+                    </header>
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "Application" %}</label>
+                        <span>
+                            <span> {{ service.app.name }} </span>
+                        </span>
+                    </div>
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "Project name" %}</label>
+                        <span>{{ service.project_name }}</span>
+                    </div>
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "Online since" %}</label>
+                        <span> {{ service.since }} </span>
+                    </div>
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "API Signature" %}</label>
+                        <span> {{ service.api_signature }} </span>
+                    </div>
+                    <div class="detail row">
+                        <div>
+                            <label class="col-sm-3">{% trans "Current session" %}</label>
+                            <span>{{ current_session }}</span>
+                        </div>
+                    </div>
+                </section>
+                <section id="billing" class="subtle-shade">
+                    <header>
+                        <h3 style="float: left"> {% trans "Billing" %} </h3>
+                        {% if service.expired %}<span class="label label-danger" style="float: right">{% trans "Expired" %}</span>{% endif %}
+                        <div class="clear"></div>
+                    </header>
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "Version" %}</label>
+                        <span>
+                            {{ service.version }}
+    {#                        {% if service.version == 'Trial' %}#}
+    {#                            - <a href="{% url 'ikwen:invoice_list' %}"> {% trans 'Activate full version' %} </a>#}
+    {#                        {% endif %}#}
+                        </span>
+                    </div>
+                    {% if service.version != 'Free' %}
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "Monthly cost" %}</label>
+                        <span>{{ currency_symbol }} {{ service.monthly_cost|intcomma }}</span>
+                    </div>
+                    <div class="detail billing-cycle row">
+                        <label class="col-sm-3">{% trans "Billing cycle" %}</label>
+                        <span>
+                            {% trans service.billing_cycle %}
+                            - <a class="action-edit" href="#"> {% trans "Change" %} </a>
+                        </span>
+                    </div>
+                    <div class="edit billing-cycle hidden row" style="height: 45px">
+                        <div class="col-sm-3" style="margin-right: 6px">
+                            <label for="billing-cycle" class="sr-only">{% trans "New billing cycle" %}</label>
+                            <select id="billing-cycle" class="form-control input-sm">
+                            {% for bc in billing_cycles %}
+                                <option value="{{ bc.0 }}">{{ bc.1 }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="buttons col-sm-7">
+                            <button field="city_id" class="btn btn-sm btn-primary"> OK </button>
+                            <button class="btn btn-sm btn-default">{% trans "Cancel" %}</button>
+                        </div>
+                    </div>
+                    <div class="detail row" style="clear: both">
+                        <label class="col-sm-3">{% trans "Last payment" %}</label>
+                        {% if service.last_payment %}<span>{{ service.last_payment }}</span>{% else %}<span>N/A</span>{% endif %}
+                    </div>
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "Expiry" %}</label>
+                        {% if service.expiry %}
+                            <span>{{ service.expiry }} <em style="font-size: 11px">({{ service.expiry }})</em></span>
+                        {% else %}
+                            <span>N/A</span>
+                        {% endif %}
+                    </div>
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "Invoices" %}</label>
+                        {% if service.pending_invoice_count > 0 %}
+                            <span>
+                                <strong>{{ service.pending_invoice_count }} {% trans "Pending" %}</strong>
+                                {% url 'billing:invoice_list' as invoice_list_url %}
+                                - <a href="{{ invoice_list_url|ikwenize }}" target="_blank"> {% trans 'See' %} </a>
+                            </span>
+                        {% else %}
+                            <span>N/A</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </section>
+                <section id="credits" class="subtle-shade">
+                    <header>
+                        <h3 style="float: left"> {% trans "Credits" %} </h3>
+                        <div class="clear"></div>
+                    </header>
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "Mail Credit" %}</label>
+                        <span>
+                            {{ echo_balance.mail_count|intcomma }}
+                            - <a href="{% url 'echo:mail_bundle' %}"> {% trans "Top up" %} </a>
+                        </span>
+                    </div>
+                    <div class="detail row">
+                        <label class="col-sm-3">{% trans "SMS Credit" %}</label>
+                        <span>
+                            {{ echo_balance.sms_count|intcomma }}
+                            - <a href="{% url 'echo:sms_bundle' %}"> {% trans "Top up" %} </a>
+                        </span>
+                    </div>
+                </section>
+                {% if user.is_bao %}
+                <section class="subtle-shade">
+                    <header>
+                        <h3 style="float: left"> {% trans "Ownership" %} </h3>
+                        <div class="clear"></div>
+                    </header>
+                    <p>{% blocktrans %}
+                        You can transfer the ownership of the platform to another person. Simply enter
+                        the person's email down here and he will receive an invitation for that. Once you
+                        transfer ownership to another, he has full control over the platform and you cannot
+                        access admin functionnalities anymore. So BE VERY CAREFUL.
+                    {% endblocktrans %}</p>
+                    <div class="row col-sm-10 col-sm-offset-1" style="height: auto; margin-top: 5vh">
+                        <div class="form-group col-sm-8">
+                            <label for="bao-email">{% trans "New owner email" %}</label>
+                            <input id="bao-email" type="email" class="form-control input-sm" />
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label class="hidden-xs">&nbsp;</label>
+                            <button class="btn btn-sm btn-block btn-danger show-confirm-transfer-modal"
+                                    data-toggle="modal" data-target="#modal-confirm-transfer">{% trans "Transfer" %}</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </section>
+                {% endif %}
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="modal fade" id="modal-confirm-transfer" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-header" style="border-bottom: none">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <h3 class="col-xs-12">Ownership transfer confirmation,</h3>
+                    <p class="col-xs-12 notice"></p>
+                    <div class="actions">
+                        <div class="col-xs-12 col-sm-4">
+                            <button class="btn btn-default btn-sm btn-block"
+                                    data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <button id="do-transfer" class="btn btn-warning btn-sm btn-block"
+                                    data-dismiss="modal" aria-label="Close">{% trans "Yes, transfer" %}</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+            $('div#admin-nav .service-info').addClass('active');
+            $('.action-edit').click(function() {
+                $(this).parents('.detail').toggleClass('hidden');
+                $(this).parents('.detail').next().toggleClass('hidden');
+                return false
+            });
+            $('.edit.billing-cycle button.btn-default').click(function() {
+                $(this).parents('.edit').toggleClass('hidden');
+                $(this).parents('.edit').prev().toggleClass('hidden')
+            });
+            $('.edit.billing-cycle button.btn-primary').click(function() {
+                var value = $('#billing-cycle').val();
+                $('body, button, .button').css('cursor', 'wait');
+                {% url 'billing:change_billing_cycle' as change_cycle_url %}
+                $.getJSON('{{ change_cycle_url|ikwenize }}' + '?callback=?',
+                        {new_cycle: value, subscription_id: '{{ service.id }}', key: '{{request.GET.key}}', rand: '{{ request.GET.rand }}' },
+                        function(response) {
+                    $('body, button, .button').css('cursor', 'default');
+                    if (response.error) {
+                        ikwen.showFloatingNotice('{% trans "Error while updating billing cycle. Try again later." %}', '', 6);
+                        return
+                    }
+                    $('.detail.billing-cycle span').text(value);
+                    $('.detail.billing-cycle, .edit.billing-cycle').toggleClass('hidden');
+                    ikwen.showFloatingNotice('{% trans "Billing cycle successfully updated." %}');
+                })
+            });
+            $('.show-confirm-transfer-modal').click(function() {
+                var email = $('#bao-email').val(),
+                    notice = "{% trans "You are about to transfer ownership to " %}" + "<strong>" + email + "</strong>";
+                $('#modal-confirm-transfer .notice').html(notice);
+            });
+            $('#do-transfer').click(function() {
+                var email = $('#bao-email').val();
+                $.getJSON('', {action: 'transfer_ownership', email: email}, function(data) {
+                    if (data.error) {
+                        ikwen.showFloatingNotice('{% trans "Ooops! Something wrong happened." %}');
+                        return
+                    }
+                    if (data.success) {
+
+                    }
+                })
+            })
+        })()
+    </script>
+{% endblock %}

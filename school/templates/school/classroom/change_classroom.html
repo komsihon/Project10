@@ -1,0 +1,144 @@
+{% extends "core/change_object_base.html" %}
+{% load i18n humanize static admin_list %}
+
+{% block admin_content %}
+    <div id="admin-content" class="change-form">
+        <div class="container-fluid">
+            {% if errors %}<p class="alert alert-danger">{{ errors }}</p>{% endif %}
+            <form id="submit-classroom" class="admin-form" method="post">{% csrf_token %}
+                <input type="hidden" name="object_id" value="{{ obj.id }}" />
+                {% include 'core/snippets/model_admin_form.html' %}
+                <formset>
+                    <legend>{% trans "Subjects" %}</legend>
+                    <p class="row acronyms">
+                        <span class="col-sm-3 col-lg-2">{% trans "Coef." %} = {% trans "Coefficient" %}</span>
+                        <span class="col-sm-3 col-lg-2">{% trans "LD" %} = {% trans "Lessons Due" %}</span>
+                        <span class="col-sm-3 col-lg-2">{% trans "Hours Due" %} = {% trans "Hours Due" %}</span>
+                    </p>
+                    <input type="hidden" id="subjects" name="subjects" />
+                    {% for subject in subject_list %}
+                        <div class="subject checkbox tile col-sm-4 col-md-3">
+                            <label for="squaredThree">
+                                 <input type="checkbox" value="{{ subject.id }}"
+                                        {% if subject.is_active %}checked{% endif %}><strong>{{ subject.name }}</strong>
+                            </label>
+                            <div>
+                                <span class="sc-label">{% trans "Tchr" %}</span>
+                                <select class="form-control input-sm teacher" title="{% trans "Teacher" %}">
+                                    <option value="">-------</option>
+                                    {% for teacher in teacher_list %}
+                                        <option {% if teacher == subject.teacher %} selected{% endif %}
+                                                value="{{ teacher.id }}">{{ teacher }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <span class="sc-label">{% trans "Grp" %}</span>
+                                <select class="form-control input-sm group" title="{% trans "Group" %}">
+                                    {% for gp in range_1_4 %}
+                                        <option{% if gp == subject.group %} selected{% endif %}>{{ gp }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <span class="sc-label">{% trans "Coef." %}</span>
+                                <input type="text" class="form-control input-sm coefficient"
+                                       value="{{ subject.coefficient }}" placeholder="{% trans "Coefficient" %}"/>
+                            </div>
+                            <div>
+                                <span class="sc-label">{% trans "LD" %}</span>
+                                <input type="text" class="form-control input-sm lessons-due"
+                                       value="{{ subject.lessons_due }}" placeholder="{% trans "Lessons due" %}"/>
+                            </div>
+                            <div>
+                                <span class="sc-label">{% trans "HD" %}</span>
+                                <input type="text" class="form-control input-sm hours-due"
+                                       value="{{ subject.hours_due }}" placeholder="{% trans "Hours due" %}"/>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </formset>
+                <div class="form-group col-xs-12 col-sm-4 col-md-3" style="clear: both; padding-top: 15px">
+                    <button class="btn btn-sm btn-primary btn-block">{% trans "Save" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (function() {
+            var levelInfo = {{ level_info|safe }};
+            $('#id_level').change(function() {
+                var levelId = $(this).val(),
+                    tuitionFees = levelInfo[levelId].tuition_fees,
+                    subjectList = levelInfo[levelId].subject_list;
+                $('#id_tuition_fees').val(tuitionFees);
+                $('.subject input[type=checkbox]').prop('checked', false);
+                $('.subject input[type=text]').val('');
+                $('.subject').each(function() {
+                    var $checkbox = $(this).find('input[type=checkbox]'),
+                        $group = $(this).find('select.group'),
+                        $coefficient = $(this).find('input.coefficient'),
+                        $lessonsDue = $(this).find('input.lessons-due'),
+                        $hoursDue = $(this).find('input.hours-due');
+                    for (var i=0; i<subjectList.length; i++) {
+                        if (subjectList[i].id == $checkbox.val()) {
+                            $checkbox.prop('checked', true);
+                            $group.val(subjectList[i].group);
+                            $coefficient.val(subjectList[i].coefficient);
+                            $lessonsDue.val(subjectList[i].lessons_due);
+                            $hoursDue.val(subjectList[i].hours_due);
+                        }
+                    }
+                });
+            });
+            $('form#submit-classroom').submit(function() {
+                var doSubmit = true,
+                    subjects = [];
+                $('.coefficient, .lessons-due, .hours-due').removeClass('input-error');
+                $('.subject').each(function() {
+                    var $checkbox = $(this).find('input[type=checkbox]');
+                    if ($checkbox.prop('checked')) {
+                        var subjectId = $checkbox.val(),
+                            teacherId = $(this).find('.teacher').val(),
+                            $group = $(this).find('.group'),
+                            $coefficient = $(this).find('.coefficient'),
+                            $lessonsDue = $(this).find('.lessons-due'),
+                            $hoursDue = $(this).find('.hours-due'),
+                            group = parseInt($group.val()),
+                            coefficient = parseInt($coefficient.val()),
+                            lessonsDue = parseInt($lessonsDue.val()),
+                            hoursDue = parseInt($hoursDue.val());
+                        if (isNaN(group)) {
+                            $group.addClass('input-error');
+                            doSubmit = false;
+                        }
+                        if (isNaN(coefficient)) {
+                            $coefficient.addClass('input-error');
+                            doSubmit = false;
+                        }
+                        if (isNaN(lessonsDue)) {
+                            $lessonsDue.addClass('input-error');
+                            doSubmit = false;
+                        }
+                        if (isNaN(hoursDue)) {
+                            $hoursDue.addClass('input-error');
+                            doSubmit = false;
+                        }
+                        var item = subjectId + ':' + group + ':' + coefficient + ':' + lessonsDue + ':' + hoursDue + ':' + teacherId;
+                        subjects.push(item);
+                    }
+                });
+                $('#subjects').val(subjects.join(','));
+                if (!doSubmit) {
+                    var notice = "{% trans "Some fields are incorrect. Please check and fix." %}";
+                    ikwen.showFloatingNotice(notice, '', 6);
+                }
+                return doSubmit;
+            });
+        })()
+    </script>
+{% endblock %}

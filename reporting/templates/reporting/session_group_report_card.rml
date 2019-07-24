@@ -1,0 +1,1238 @@
+{% load i18n static humanize %}
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+<!DOCTYPE document SYSTEM "rml.dtd">
+<document filename="Bulletin.pdf">
+    <template author="Wilfried Futchea" creator="w.futchea@ikwen.com" pageSize="(210mm, 297mm)" leftMargin="72" showBoundary="0">
+        <pageTemplate id="main">
+            <pageGraphics>
+                <setFont name="Helvetica-Bold" size="10"/>
+                <!-- This set font-size for major elements in header -->
+                <drawString x="117" y="810">{{ school_name|safe }}</drawString>
+                <drawString x="373" y="770">{{ country_name|safe }}</drawString>
+                <drawString x="403" y="758">{{ country_motto|safe }}</drawString>
+                <drawString x="333" y="740">{{ country_ministry|safe }}</drawString>
+                <drawString x="353" y="720">{% blocktrans with session=sequence_number|safe %}
+                    Report Card {{ session }}
+                {% endblocktrans %}</drawString>
+
+                <setFont name="Helvetica-Bold" size="9"/>
+                <!-- This set font-size for minor elements in header -->
+                <drawString x="117" y="795">{{ school_motto|safe }}</drawString>
+                <drawString x="117" y="780">BP : {{ school_address|safe }}</drawString>
+                <drawString x="117" y="765">Tel : {{ school_contact }}</drawString>
+                <drawString x="398" y="705">
+                    {% trans "School year" %} : {{ school_year }}
+                </drawString>
+
+                <drawString x="117" y="690">
+                    {% trans "Registration number" %} : {{ student.registration_number|safe }}
+{#                    Matricule de l'el&#232;ve : {{ student.registration_number }}#}
+                </drawString>
+                <drawString x="117" y="675">
+                    {% trans "Student name" %} : {{ last_name|safe }} {{ first_name|safe }}
+                </drawString>
+                <drawString x="117" y="660">
+                    {% trans "Classroom / Size" %} : {{ classroom_name|safe }} / {{ classroom.size }}
+                </drawString>
+                {% if ministry_logo %}
+                    <image file="{{ ministry_logo }}" x="14" y="750" width="85" height="85"></image>
+                {% endif %}
+                {% if student_photo %}
+                    <image file="{{ student_photo }}" x="14" y="655" width="85" height="85"></image>
+                {% endif %}
+                <fill color="#C3C3C3"></fill>
+                <drawString x="420" y="14">Powered by ikwen - www.ikwen.com</drawString>
+            </pageGraphics>
+        <frame id="first" x1="22" y1="10" width="550" height="698"/>
+        </pageTemplate>
+    </template>
+
+    <stylesheet>
+        <blockTableStyle id="table_header">
+            <blockAlignment value="CENTER"/>
+			<blockValign value="MIDDLE" start="0,0" stop="-1,-1"/>
+            <blockBackground colorName="#C3C3C3" start="0,0" stop="-1,-1"/>
+            <blockTextColor colorName="black" start="0,0" stop="-1,-1"/>
+            <lineStyle kind="GRID" colorName="black" start="0,0" stop="-1,-1"/>
+        </blockTableStyle>
+        <blockTableStyle id="table_style">
+			<blockAlignment value="CENTER"/>
+			<blockValign value="MIDDLE" start="0,0" stop="-1,-1"/>
+            <blockTextColor colorName="black" start="0,0" stop="-1,-1"/>
+			<lineStyle kind="GRID" colorName="black" thickness="0.5" start="0,0" stop="-1,-1"/>
+		</blockTableStyle>
+        <blockTableStyle id="table_result">
+            <blockAlignment value="CENTER"/>
+            <blockValign value="MIDDLE" start="0,0" stop="-1,-1"/>
+            <blockBackground colorName="#C3C3C3" start="0,0" stop="-1,-1"/>
+            <lineStyle kind="OUTLINE" colorName="black" start="0,0" stop="-1,-1"/>
+        </blockTableStyle>
+        <blockTableStyle id="council_decision">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="MIDDLE" start="0,0" stop="-1,-1"/>
+            <lineStyle kind="GRID" colorName="black" start="0,0" stop="8,-1"/>
+            <lineStyle kind="GRID" colorName="black" start="10,0" stop="14,-1"/>
+            <blockBackground colorName="#C3C3C3" start="0,0" stop="8,1"/>
+            <blockBackground colorName="#C3c3C3" start="10,0" stop="14,4"/>
+            <blockBackground colorName="#C3C3C3" start="0,9" stop="4,10"/>
+            <blockBackground colorName="#C3C3C3" start="5,9" stop="8,10"/>
+            <!-- Blockspan header -->
+            <blockSpan start="0,0" stop="8,0"/>
+
+            <!-- Blockspan section -->
+            <blockSpan start="0,1" stop="4,1"/>
+            <blockSpan start="5,1" stop="8,1"/>
+
+            <!-- Blockspan design -->
+            <blockSpan start="0,2" stop="1,3"/>
+            <blockSpan start="3,2" stop="4,2"/>
+            <blockSpan start="3,3" stop="4,3"/>
+
+            <blockSpan start="0,4" stop="1,5"/>
+            <blockSpan start="3,4" stop="4,4"/>
+            <blockSpan start="3,5" stop="4,5"/>
+
+            <blockSpan start="0,6" stop="2,6"/>
+            <blockSpan start="0,7" stop="2,7"/>
+            <blockSpan start="0,8" stop="2,8"/>
+
+            <blockSpan start="3,6" stop="4,6"/>
+            <blockSpan start="3,7" stop="4,7"/>
+            <blockSpan start="3,8" stop="4,8"/>
+
+            <blockSpan start="5,4" stop="8,8"/>
+
+            <blockSpan start="0,9" stop="4,10"/>
+            <blockSpan start="5,9" stop="8,10"/>
+
+            <blockSpan start="0,11" stop="4,-1"/>
+            <blockSpan start="5,11" stop="8,-1"/>
+
+            <blockSpan start="10,0" stop="11,0"/>
+            <blockSpan start="13,0" stop="14,3"/>
+
+            <blockSpan start="10,1" stop="11,1"/>
+
+            <blockSpan start="10,2" stop="11,2"/>
+
+            <blockSpan start="10,3" stop="11,3"/>
+
+            <blockSpan start="10,4" stop="14,4"/>
+
+            <blockSpan start="10,5" stop="14,-1"/>
+
+
+        </blockTableStyle>
+        <paraStyle name="score" fontSize="8"/>
+        <paraStyle name="title_left" fontSize="9" alignment="LEFT"/>
+        <paraStyle name="title" fontSize="9" textTransform="uppercase" alignment="CENTER"/>
+        <paraStyle name="date" fontSize="9" alignment="RIGHT"/>
+        <paraStyle name="lesson" fontSize="9" alignment="LEFT"/>
+        <paraStyle name="teacher" fontSize="7" alignment="RIGHT"/>
+        <paraStyle name="warning" fontSize="10" alignment="CENTER" textColor="red"/>
+        <paraStyle name="mention" fontSize="12" alignment="CENTER" textColor="red" />
+    </stylesheet>
+
+    <story>
+        <spacer length="1.8cm"/>
+        <blockTable style="table_header" rowHeights="0.75cm" colWidths="5.5cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,5.2cm">
+            <tr>
+                <td>
+                    <para style="title">
+                        <b>{% trans "Subjects" %}</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        <b>{% trans "Ses" context 'Session' %} 1
+                        /20</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        <b>{% trans "Ses" context 'Session' %} 2
+                        /20</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        <b>Coef.</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        <b>Total</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        <b>{% trans "RK" %}</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        <b>{% trans "Cl. Av" %}</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        <b>Max
+                        Min</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        <b>Observation</b>
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+        {% for group, score_summary in student_score_matrix.items %}
+        <blockTable style="table_style" rowHeights="{% for item in score_summary.subject_list  %}{% if forloop.counter != 1 %},{% endif %}0.7cm{% endfor %}"
+                    colWidths="5.5cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,5.2cm">
+            {% for item in score_summary.subject_list %}
+            <tr>
+                <td>
+                    <para style="lesson">
+                        {{ item.subject_name|safe }}
+                    </para>
+                    <para style="teacher">
+                        {{ item.teacher_name|safe }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ item.score.value1|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ item.score.value2|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ item.coefficient }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ item.total_score|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ item.score.rank }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ item.classroom_avg|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ item.max.value|floatformat:"2" }} <br/>
+                        {{ item.min.value|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score"> </para>
+                </td>
+            </tr>
+            {% endfor %}
+        </blockTable>
+        <blockTable style="table_result" rowHeights="0.7cm" colWidths="6.2cm,3.1cm,3.1cm,4.3cm,3.1cm">
+            <tr>
+                <td>
+                    <para style="title_left">
+                    <b>{{ group }}</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                    Total: {{ score_summary.total_score|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                    Coef. : {{ score_summary.total_coef }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                    {% trans "Average" %}: {{ score_summary.avg_score.value|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                    {% trans "Rank" %}: {{ score_summary.avg_score.rank }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+        {% endfor %}
+
+        <spacer length="0.1cm"/>
+        <blockTable style="table_result" rowHeights="0.75cm" colWidths="6.2cm,3.1cm,3.1cm,4.3cm,3.1cm">
+            <tr>
+                <td>
+                    <para style="title_left">
+                        <b>{% trans "Results" %}</b>
+{#                        <b>R&#201;SULTATS S&#201;QUENTIELS</b>#}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    Total : {{ total_score|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    Coef. : {{ total_coef }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    {% trans "Average" %} : {{ session_score.value|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    {% trans "Rank" %} : {{ session_score.rank }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+        <spacer length="0.5cm"/>
+        <blockTable style="council_decision" rowHeights="0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm" colWidths="1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,0.5cm,1.2cm,1.3cm,2.2cm,1.3cm,1.6cm">
+            <tr>
+                <td>
+                    <para style="title">
+                        Decisions du conseil de classe
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        &#201;leve / Classe
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ student_grade }}
+                    </para>
+                </td>
+                <td>
+                    <para style="title_left">
+                        MENTION
+                    </para>
+                    <para style="mention">
+                        {{ student_mention }}
+                    </para>
+                </td>
+                <td>
+                    <para style="title_left">
+                        Mention
+                    </para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para style="title">
+                        Discipline
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        TRAVAIL
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        Rang
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ student_rank }} / {{ classroom_count }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para style="title_left">
+                        Absences
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        J
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ absences_count_J }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        TB
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        B
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        AB
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        PASS
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        M. CI
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ global_MCI_value }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        NJ
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ absence_count_NJ }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        MED
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        INS
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        FAIB
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        NUL
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        Min/Max
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ global_min_max_values }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para style="title_left">
+                        Retards
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        J
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ retard_count_J }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="title_left">
+                        Un effort s'impose en
+                    </para>
+                    <para style="warning">
+                        {{ weakness }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        Visa du Proviseur
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        NJ
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ retard_count_NJ }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+                    </para>
+                </td>
+                <td>
+                    <para style="date">
+                        {{ school_city }} {{ bulletin_date }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para style="title_left">
+                        Avertissements
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ warning_satus }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para style="title_left">
+                        Blames de conduite
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ blame_status }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para style="title_left">
+                        Exclusions (en jours)
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ exclusion_status }}
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+           <tr>
+                <td>
+                    <para style="title">
+                        Visa des Parents ou tuteurs
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        Observations et Visa du professeur principal
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+           <tr>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+           <tr>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+           <tr>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+           <tr>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para style="table_vertical_spacer">
+
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+                <td>
+                    <para>
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+    </story>
+</document>

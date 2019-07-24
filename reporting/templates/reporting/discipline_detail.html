@@ -1,0 +1,168 @@
+{% extends "core/app_base_admin.html" %}
+{% load i18n humanize static admin_list %}
+
+{% block page_title %}
+<title>{% trans "Dashboard" %}</title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'ikwen/css/dashboard.css' %}" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi.css' %}" />
+{% endblock %}
+
+{% block breadcrumb_location %}
+    <li>{% trans 'Dashboard' %}</li>
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content">
+        <div class="container-fluid">
+            <div class="count-report-detail">
+                <div class="section-title">
+                    <div>
+                        <span style="float: left">{% trans "Discipline" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</span>
+                        <div class="dropdown" style="cursor: pointer; float: left; margin-left: 15px">
+                            <span class="dropdown-toggle" id="period" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span class="target">{% trans "Today" %}</span>
+                                <span class="caret"></span>
+                            </span>
+                            <ul id="performances-period" class="dropdown-menu" aria-labelledby="period">
+                                <li data-target="today" style="display: none"><a>{% trans "Today" %}</a></li>
+                                <li data-target="yesterday"><a>{% trans "Yesterday" %}</a></li>
+                                <li data-target="last_week"><a>{% trans "Last week" %}</a></li>
+                                <li data-target="last_28_days"><a>{% trans "Last 28 days" %}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="btn-group pull-right" role="group" aria-label="...">
+                        <button type="button" class="btn btn-sm btn-default active">{% trans "Classroom" %}</button>
+                        <button type="button" class="btn btn-sm btn-default">{% trans "Level" %}</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="row performances" style="clear: both">
+                    <div class="col-sm-6">
+                        <div class="count-report-summary">
+                            <div class="figure-lg">48</div>
+                            <div class="chart"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 count-detail-item-list">
+                        <div class="subtle-shade">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="figure-lg">48</div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <ul class="report overview">
+                                        <li>
+                                            <a href="#">Student 1</a>
+                                            <span>6ème 3</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 2</a>
+                                            <span>Tle D</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 3</a>
+                                            <span>PC</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 4</a>
+                                            <span>4ème 5</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 5</a>
+                                            <span>2de A4 Esp</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="text-right" style="margin-top: 10px">
+                                <a href="#">See All</a>
+                            </div>
+                        </div>
+                        <div class="subtle-shade">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="figure-lg">48</div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <ul class="report overview">
+                                        <li>
+                                            <a href="#">Student 1</a>
+                                            <span>6ème 3</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 2</a>
+                                            <span>Tle D</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 3</a>
+                                            <span>PC</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 4</a>
+                                            <span>4ème 5</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 5</a>
+                                            <span>2de A4 Esp</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="text-right" style="margin-top: 10px">
+                                <a href="#">See All</a>
+                            </div>
+                        </div>
+                        <div class="subtle-shade">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="figure-lg">48</div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <ul class="report overview">
+                                        <li>
+                                            <a href="#">Student 1</a>
+                                            <span>6ème 3</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 2</a>
+                                            <span>Tle D</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 3</a>
+                                            <span>PC</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 4</a>
+                                            <span>4ème 5</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">Student 5</a>
+                                            <span>2de A4 Esp</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="text-right" style="margin-top: 10px">
+                                <a href="#">See All</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+            $('div#admin-nav .dashboard').addClass('active');
+        })()
+    </script>
+{% endblock %}

@@ -1,0 +1,228 @@
+/**
+    Document   : foulassi
+    Created on : Mai 03, 2018, 12:54
+    Author     : Kom Sihon
+    Description:
+        Foulassi admin styles
+*/
+
+#app-nav .school-year-list {float: left;margin-top: 5px;width: 70px;}
+#app-nav .school-year-list .dropdown {cursor: pointer; float: left; margin-left: 5px}
+.checkbox.tile {margin: 0 0 10px}
+.subject.checkbox.tile {margin: 0 0 30px}
+.tiles .ik-li.classroom {border: 1px solid #dedede; border-top-color: #e9e9e9; margin-bottom: 10px; padding: 12px 10px}
+.level h3 {font-size: 21px}
+#results .level:first-of-type h3 {margin-top: 0}
+.classroom .actions {margin: -27px 24px 0 0}
+.classroom .dropdown-menu-right {right: -32px}
+.classroom .dropdown-menu .progress {height: 4px; margin: 9px 0}
+.classroom .dropdown-menu .progress-bar.sms {background: #3452af}
+.classroom .dropdown-menu .progress-bar.mail {background: #E91E63}
+.action.glyphicon-option-vertical {border-radius: 15px; border-color: transparent; cursor: pointer; font-size: 18px; height: 30px; line-height: 30px;
+    overflow: hidden; position: absolute; text-align: center; width: 30px}
+.action.glyphicon-option-vertical:active {background: #f2f2f2;padding: 0}
+.glyphicon.action.glyphicon-option-vertical {border-color: transparent; margin: 0; padding: 0}
+.glyphicon.action.glyphicon-option-vertical:hover {border-radius: 15px; border-color: transparent}
+.classroom-detail {padding: 10px}
+.classroom-detail .summary {margin-top: 30px}
+.classroom-detail .recent {border-top: 1px solid #ddd; margin-top: 20px; padding-top: 15px}
+.acronyms {background: #f8f8f8; border-radius: 4px; margin: -15px 0 30px; padding: 20px 5px}
+.sc-label {float: left; margin: 9px 5px 0 0; width: 30px}
+select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-due {margin-bottom: 5px; width: 100px}
+.input-error {border-color: #ff6e5d}
+#student-list-stage.tabs-hidden {margin-top: 20px}
+.ik-li .scores {margin-top: 15px}
+.ik-li .score {border: 1px solid #ddd; float: left; height: 20px; margin-right: 5px; text-align: center; width: 42px}
+.score-0, .score-1, .score-3, .score-4, .score-5, .score-6, .score-7 {color: #ff0000}
+.score-8, .score-9 {color: #F57C00}
+.score-10, .score-11 {color: #888}
+.score-12, .score-13 {color: #228b22}
+.score-14, .score-15 {color: #00897B}
+.score-16, .score-17 {color: #1e90ff}
+.score-18, .score-19 {color: #FF1493}
+.score-20 {color: #7E57C2}
+.input-score {margin: 4px 0 0}
+.submit-scores {clear: both; padding-top: 30px}
+#student-scores .list-group {margin-top: -35px; padding-left: 15px}
+#student-scores .list-group-item {border: none; margin-bottom: 0}
+#student-scores .list-group-item.summary {margin-bottom: 15px}
+#student-scores .ik-li {padding: 0}
+#student-scores .ik-li:hover {background: none}
+#student-scores .list-group-item > * {padding: 15px}
+#student-scores .list-group-item:not(.summary) > * {border-bottom: 1px solid #ecf0f1}
+#student-scores .list-group-item.summary > * {background: #f8f6f6}
+
+#student-details .upload-container .image {height: 280px;margin-left: 0;width: 240px;}
+#student-details .upload-container .uploader {width: 238px}
+#student-details .upload-title {display: none}
+#student-details .btn.save-parent {min-width: 120px}
+.student-info-tab {padding-top: 40px}
+
+.discipline-summary, .billing-summary {padding: 15px}
+.discipline-items, .pending-invoices {padding: 0}
+.discipline-items li, .pending-invoices li {display: block;padding-bottom: 25px;}
+.discipline-items li label, .pending-invoices li label {color: #444}
+.pending-invoice .amount {font-size: 36px; height: 37px; line-height: 40px}
+.pending-invoice .amount .currency {font-size: 15px}
+
+.di-title .name {color: #444}
+.di-title .justified {color: #33CC00; margin-left: 10px}
+.di-happened-on {color: #888; font-size: 12px; margin-top: -5px; padding-bottom: 10px; text-align: right}
+.discipline-log .parent-convocation .count {display: none}
+
+.sms-widget {height: 0; overflow: hidden; transition: height .3s}
+.sms-widget.disclosed {height: 210px; transition: height .3s}
+.sms-recipient {float: left; margin-right: 5px}
+.sms-recipient input[type=checkbox] {float: left; margin-top: 3px}
+.sms-contact {float: left; margin-left: 5px; width: 100px}
+.insufficient-credit {display: none; margin-top: 5px}
+
+#add-discipline-entry-modal .form-group {margin-bottom: 5px}
+.discipline-log .ik-li, .billing-log .ik-li {min-height: 61px}
+.discipline-log .ik-li .actions {clear: both; cursor: pointer; float: right; margin: 0 24px 0 0;}
+.people-in-charge .ik-li {border: none}
+.admin-form .people-in-charge .form-control {width: 100%}
+.parent-title {color: #444; font-size: 15px}
+.parent-contact {margin-top: 5px}
+.add-parent {float: right; margin: 15px 0; min-width: 100px}
+
+/***    Dashboard   ***/
+.overview {
+    clear: both;
+    padding-left: 0
+}
+
+.overview li {
+    display: block;
+    float: left;
+    height: 30px;
+    padding: 5px 5px 0;
+    width: 100%
+}
+
+.overview li.empty {
+    background: #f8f9f9;
+    color: #888;
+    text-align: center
+}
+
+.overview li:nth-child(2n) {
+    background: #fff
+}
+
+.overview li span {
+    float: left
+}
+
+.overview li span:last-child {
+    float: right
+}
+
+.scores-report-grid > div {padding-left: 5px; padding-right: 5px}
+.scores-report-grid > div:first-child {padding-left: 0}
+.scores-report-grid > div:last-child {padding-right: 0}
+.performances .scores-report-grid h5 {float: right}
+.best-score .gender {float: left; width: 45px}
+
+.count-report-detail .section-title {background: #fff; margin-top: -15px;padding: 15px 20px 15px 0;position: fixed; width: 100%;z-index: 1}
+.count-detail-item-list {overflow: auto;height: 100%; padding-bottom: 300px}
+.count-report-detail .performances {padding-bottom: 15px; padding-top: 45px}
+.count-report-summary {background: #fff;padding-bottom: 15px;position: fixed}
+
+/***    Event list   ***/
+.event-list {margin-bottom: 30px}
+.event-detail {border: 1px solid #ddd;height: 150px;margin-top: 10px;}
+.event-icon {line-height: 140px;position: absolute;text-align: center;width: 90px;}
+.event-icon img {width: 60px}
+.event-content {height: 150px}
+.event-content p {margin-top: 10px}
+.event-detail .btn {min-width: 120px;margin-left: 10px;}
+.event-detail.report-cards-generated:not(:first-of-type) .btn.download {display: none}
+
+.splash-screen {background: #fff; height: 100%; position: fixed; text-align: center; width: 100%; z-index: 10000}
+.splash-screen .logo {height: 150px; line-height: 150px; margin: 42% auto 0; width: 300px}
+.splash-screen img {height: 25%}
+.splash-screen .gauge {background: #eee; border-radius: 3px; margin: auto; overflow: hidden; width: 250px}
+.splash-screen .widgets {line-height: 50px; margin-top: 30px}
+.splash-screen .fill {background: #F57C00; height: 4px; width: 5%}
+.splash-screen .catchy {color: #888}
+
+.msg-bundle-list {margin-top: 40px;}
+.msg-bundle {
+    border: 1px solid #c5c5c5;
+    cursor: pointer;
+    display: block;
+    padding: 20px 25px 40px;
+    margin-top: 20px;
+}
+.msg-bundle:hover {text-decoration: none}
+.msg-bundle .cost {color: #333; font-size: 3em; font-weight: 700; text-align: center}
+.msg-bundle .cost .currency {font-size: 18px; font-weight: 400; left: -0.5em; top: -1.5em}
+.msg-bundle .description {color:  #0f9e15; margin-top: 24px; font-size: 1.3em}
+
+@media (max-width: 767px) {
+    .tiles .ik-li.classroom {float: none; height: auto; padding: 18px 10px; width: auto}
+    .tiles .ik-li.classroom .actions {margin: -27px 24px 0 0}
+    .ik-li:not(.selected):hover .actions {
+        background: #fff;
+        border-radius: 3px;
+        box-shadow: none;
+        position: relative;
+        padding: 0;
+    }
+    #app-nav .breadcrumb li {display: none}
+    #admin-tools.teacher-info {height: 80px; padding-top: 0; border-bottom: 0}
+    #admin-tools + .content-tab-list.teacher-responsibilities {margin-top: 60px}
+    #admin-tools + .content-tab-list.teacher-responsibilities + .tab-content {margin-top: 85px}
+    #scores-report header {margin: 10px 0 2px;}
+    .performances .scores-report-grid h5 {font-weight: 600; float: left}
+    #student-details .student-photo .image {float: none; margin: auto}
+    .student-photo .upload-container {float: none; width: auto}
+    #scores-report.performances:not(.section-title) > div > div {padding-top: 0}
+    .billing .figure {margin: -20px 0 25px}
+    .discipline-log .ik-li:hover .actions {margin: 23px 10px 0 0;}
+    .di-happened-on {margin-right: 7px; position: absolute; right: 0; width: 120px}
+    .section-title {border: none; margin-top: -10px; padding-top: 0}
+    .event-content {height: auto}
+    .event-detail {height: auto; min-height: 150px}
+    .event-list .btn {margin-top: 10px;}
+    .report-card-download-list {margin: 0 -15px}
+    .report-card-download-list li > * {padding: 0 5px}
+}
+
+@media (max-width: 991px) {
+    .level h3 {margin-left: 15px}
+    #student-scores .ik-li {margin-left: -8px;}
+}
+
+@media (min-width: 768px) {
+    #app-nav .school-year-list {margin-top: 5px;width: 140px;}
+    #app-nav .school-year-list .dropdown {margin-left: 5px}
+    .splash-screen .logo {height: 240px; line-height: 240px; margin-top: 12%}
+    .splash-screen .widgets {line-height: 70px}
+    .splash-screen .gauge {width: 340px}
+    .splash-screen .catchy {font-size: 21px}
+    .tiles .ik-li.classroom {float: none; height: auto; width: auto}
+    #admin-tools.teacher-info {height: 100px}
+    #admin-tools + .content-tab-list.teacher-responsibilities {margin-top: 85px;}
+    #admin-tools + .content-tab-list.teacher-responsibilities + .tab-content {margin-top: 130px;}
+    #student-list-stage.tabs-hidden {margin-top: 40px}
+    .count-report-detail .section-title {padding-right: 30px}
+    .people-in-charge .form-group:last-child {padding-left: 15px}
+}
+@media (min-width: 992px) {
+    #student-details .student-photo {padding-left: 0}
+    #app-nav .school-year-list {margin-top: 2px}
+    #app-nav .school-year-list .dropdown {margin-left: 15px}
+    .splash-screen .logo {height: 400px; line-height: 400px; margin-top: 3%; width: 400px}
+    .splash-screen .gauge {width: 420px}
+    .tiles .ik-li.classroom {float: none; height: auto; width: auto}
+    .admin-form select.teacher.form-control, .admin-form select.group.form-control, .admin-form input.coefficient.form-control, .admin-form input.lessons-due.form-control, .admin-form input.hours-due.form-control {width: 100px}
+    .submit-scores {margin-right: -15px}
+    .count-report-detail .section-title {padding-right: 270px}
+}
+@media (min-width: 1200px) {
+    .splash-screen .logo {margin-top: 5%}
+    .splash-screen .catchy {font-size: 24px}
+    .tiles .ik-li.classroom {float: none; height: auto; width: auto}
+}

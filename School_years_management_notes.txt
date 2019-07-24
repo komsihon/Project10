@@ -1,0 +1,42 @@
+1 - When the school year ends. Remove everyone from the Teacher Group for later manual assignment
+
+
+2 - Permissions to manage:
+
+    - school.ik_manage_school
+    - school.ik_manage_student
+    - school.ik_manage_teacher
+    - school.ik_access_scores
+    - foulassi.ik_view_dashboard
+    - foulassi.ik_view_events
+    - billing.ik_cash_in
+
+
+3 - List of default (unchangeable) discipline items:
+    - Parent convocation
+    - Late
+    - Exclusion
+    - Absence
+    - Censure
+
+
+4 - Different events:
+    - SessionGroup Scores all set.
+        - Generate report cards ?
+            - Send to parents ? Mail - SMS
+
+    - Session scores set for a subject
+        - Send to parents ? Mail - SMS
+
+    - SMS Credit too low
+        - Reload ?
+
+    - Email Credit too low
+        - Reload ?
+
+
+5 - Server setup:
+    Install p7zip-full in order to be able to compress files in 7z format
+
+
+1594

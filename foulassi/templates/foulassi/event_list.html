@@ -1,0 +1,136 @@
+{% extends 'core/object_list_base.html' %}
+{% load i18n humanize static auth_tokens %}
+
+{% block head_js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/swiper/js/swiper.jquery.min.js' %}"></script>
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content">
+        <div class="container-fluid">
+            <div id="results">
+                {% include 'core/snippets/spinner.html' %}
+                <div class="col-sm-10 col-sm-offset-1">
+                    {% for date, event_list in event_collection.items %}
+                    <div class="event-list">
+                        <strong class="event-date">{{ date }}</strong>
+                        {% for event in event_list %}
+                            {{ event }}
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                    <div class="event-list">
+                        <strong class="event-date">Date</strong>
+                        <div class="subtle-shade event-detail">
+                            <div class="event-icon">
+                                <img src="{% static 'foulassi/img/otp.png' %}" />
+                            </div>
+                            <div class="event-content">
+                                <strong class="event-title">Session scores all set</strong>
+                                <p>All teachers have input their scores and report cards for session 1 are
+                                ready to be generated</p>
+                                <div class="actions">
+                                    <button class="btn btn-success pull-right btn-sm">Generate</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="event-list">
+                        <strong class="event-date">Date</strong>
+                        <div class="subtle-shade event-detail">
+                            <div class="event-icon">
+                                <img src="{% static 'foulassi/img/report-card-icon.png' %}" />
+                            </div>
+                            <div class="event-content">
+                                <strong class="event-title">Report cards ready</strong>
+                                <p>All teachers have input their scores and report cards for session 1 are
+                                ready to be generated</p>
+                                <div class="actions">
+                                    <button class="btn btn-success pull-right btn-sm"
+                                            data-toggle="modal" data-target="#generate-report-cards-modal">{% trans "Generate" %}</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="subtle-shade event-detail">
+                            <div class="event-icon">
+                                <img src="{% static 'foulassi/img/sms_balance.png' %}" />
+                            </div>
+                            <div class="event-content">
+                                <strong class="event-title">Low SMS Credits</strong>
+                                <p>All teachers have input their scores and report cards for session 1 are
+                                ready to be generated</p>
+                                <div class="actions">
+                                    <button class="btn btn-success pull-right btn-sm">{% trans "Refill" %}</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="subtle-shade event-detail">
+                            <div class="event-icon">
+                                <img src="{% static 'foulassi/img/email-alert-notification-mail-icon.svg' %}" />
+                            </div>
+                            <div class="event-content">
+                                <strong class="event-title">Low Email Credits</strong>
+                                <p>All teachers have input their scores and report cards for session 1 are
+                                ready to be generated</p>
+                                <div class="actions">
+                                    <button class="btn btn-success pull-right btn-sm">{% trans "Refill" %}</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="event-list">
+                        <strong class="event-date">Date</strong>
+                        <div class="subtle-shade event-detail">
+                            <div class="event-icon"></div>
+                            <div class="event-content">
+                                <strong class="event-title">Report cards generated</strong>
+                                <p>All teachers have input their scores and report cards for session 1 are
+                                ready to be generated</p>
+                                <div class="actions">
+                                    <button class="btn btn-success pull-right btn-sm">Generate</button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+            $('#send-sms').click(function() {
+                $('.sms-widget').toggleClass('disclosed');
+            });
+            $('.report-cards-generated:first .btn.download').show();
+            $('body').on('click', '.generate-report-cards:not(.processing)', function() {
+                var _$btn = $(this),
+                    eventId = _$btn.data('event-id');
+                    _$btn.addClass('processing');
+                $.getJSON('{% url 'reporting:generate_report_cards' %}', {'event_id': eventId}, function(data) {
+                    if (data.success) {
+                        ikwen.showFloatingNotice("{% trans "Reports cards creation was started." %}");
+                        _$btn.hide();
+                        $('.show-modal-close-session, .generate-report-cards').hide()
+                    }
+                }).fail(function() {
+                    ikwen.showFloatingNotice("{% trans "Ooops! Something wrong happened." %}")
+                })
+            });
+        })()
+    </script>
+{% endblock %}

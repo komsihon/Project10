@@ -1,0 +1,36 @@
+{% load i18n static index %}
+{% for student in student_list %}
+    <li id="{{ student.id }}" class="ik-li member{% if student.is_excluded %} excluded{% endif %}" data-id="{{ student.id }}">
+        {% if perms.school.ik_manage_student and not student.is_excluded %}
+            {% url 'school:student_detail' student.id as student_url %}
+        {% endif %}
+        {% if student.photo.name %}
+            <a href="{{ student_url|default_if_none:"javascript:;" }}" class="photo" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ student.photo.small_name }})"></a>
+        {% else %}
+            <a href="{{ student_url|default_if_none:"javascript:;" }}" class="photo" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></a>
+        {% endif %}
+        <span class="hidden tags">{{ student.tags }}</span>
+        <div class="info">
+            <a href="{{ student_url|default_if_none:"javascript:;" }}" class="full_name">{{ student }}</a>
+            {% if perms.school.ik_access_scores %}
+                <div class="scores">
+                    {% for score in student.scores|index:i %}
+                        <span class="score score-{{ score.value|floatformat:"0" }}">{{ score.value }}</span>
+                    {% endfor %}
+                </div>
+                {% if not student.is_excluded %}
+                <div class="form-group input-score tpl">
+                    <input type="number" class="form-control input-sm" placeholder="10.0" step="0.25" tabindex="{{ forloop.counter }}" />
+                </div>
+                {% endif %}
+            {% else %}
+                <p class="about">{{ student.dob }}</p>
+            {% endif %}
+        </div>
+        {% if perms.school.ik_manage_student and not student.is_confirmed %}
+            <div class="actions">
+                <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete student" %}"></i>
+            </div>
+        {% endif %}
+    </li>
+{% endfor %}

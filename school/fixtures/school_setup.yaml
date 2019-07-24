@@ -2,37 +2,53 @@
   pk: 58d89d0b531e011b37b33471
   fields:
     name: 6ème
-    subject_fk_list: [59441ee04fc0c24f09e9d6da, 59441ee04fc0c24f09e9d6db, 59441ee04fc0c24f09e9d6dc]
+    slug: 6eme
+    subject_coefficient_list:
+      - subject_id: 59441ee04fc0c24f09e9d6da
+        group: 1
+        coefficient: 3
+      - subject_id: 59441ee04fc0c24f09e9d6db
+        group: 1
+        coefficient: 2
+      - subject_id: 59441ee04fc0c24f09e9d6dc
+        group: 2
+        coefficient: 2
 
 - model: school.level
   pk: 58d89d0b531e011b37b33472
   fields:
     name: 5ème
+    slug: 5eme
 
 - model: school.level
   pk: 58d89d0b531e011b37b33473
   fields:
     name: 4ème
+    slug: 4eme
 
 - model: school.level
   pk: 58d89d0b531e011b37b33474
   fields:
     name: 3ème
+    slug: 3eme
 
 - model: school.level
   pk: 58d89d0b531e011b37b33475
   fields:
     name: 2nde
+    slug: 2nde
 
 - model: school.level
   pk: 58d89d0b531e011b37b33476
   fields:
     name: 1ère
+    slug: 1ere
 
 - model: school.level
   pk: 58d89d0b531e011b37b33477
   fields:
     name: Tle
+    slug: tle
 
 - model: school.classroom
   pk: 60e011bd0b53137b33471d81
@@ -40,6 +56,7 @@
     name: 4
     level: 58d89d0b531e011b37b33471
     professor: 56eb6d04b37b3379b531e013
+    leader: 584f03a7bbd6b46a8fc0c241
 
 - model: school.classroom
   pk: 60e011bd0b53137b33471d82
@@ -107,3 +124,57 @@
   pk: 58b217ec25de1dd789524fc6
   fields:
     name: 6ème Séquence
+
+- model: school.disciplineitem
+  pk: 5958b217ed7824fcc25de1d1
+  fields:
+    name: Lateness
+    slug: lateness
+
+- model: school.disciplineitem
+  pk: 5958b217ed7824fcc25de1d2
+  fields:
+    name: Absence
+    slug: absence
+
+- model: school.disciplineitem
+  pk: 5958b217ed7824fcc25de1d3
+  fields:
+    name: Warning
+    slug: warning
+
+- model: school.disciplineitem
+  pk: 5958b217ed7824fcc25de1d4
+  fields:
+    name: Parent Convocation
+    slug: parent-convocation
+
+- model: school.teacherresponsibility
+  fields:
+    teacher: 584f03a7bbd6b46a85db279a
+    subject: 59441ee04fc0c24f09e9d6da
+    classroom_fk_list: [60e011bd0b53137b33471d81]
+
+- model: school.teacherresponsibility
+  fields:
+    teacher: 584f03a7bbd6b46a85db279a
+    subject: 59441ee04fc0c24f09e9d6db
+    classroom_fk_list: [60e011bd0b53137b33471d81, 60e011bd0b53137b33471d82]
+
+- model: school.teacherresponsibility
+  fields:
+    teacher: 584f03a7bbd6b46a85db279b
+    subject: 59441ee04fc0c24f09e9d6da
+    classroom_fk_list: [60e011bd0b53137b33471d82]
+
+- model: school.teacherresponsibility
+  fields:
+    teacher: 584f03a7bbd6b46a85db279b
+    subject: 59441ee04fc0c24f09e9d6db
+    classroom_fk_list: [60e011bd0b53137b33471d83]
+
+- model: school.teacherresponsibility
+  fields:
+    teacher: 584f03a7bbd6b46a85db279b
+    subject: 59441ee04fc0c24f09e9d6dc
+    classroom_fk_list: [60e011bd0b53137b33471d82, 60e011bd0b53137b33471d83]

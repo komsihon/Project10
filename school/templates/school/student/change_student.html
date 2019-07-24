@@ -1,0 +1,28 @@
+{% extends "core/change_object_base.html" %}
+{% load i18n humanize static %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+{% endblock %}
+
+{% block head_js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/swiper/js/swiper.jquery.min.js' %}"></script>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/js/jquery-ui.js' %}"></script>
+    <script>
+        (function() {
+            $('#id_classroom').val('{{ classroom.id }}').prop('disabled', true).removeAttr('name');
+            $('<input type="hidden" name="classroom" value="{{ classroom.id }}" />').insertBefore('#id_classroom');
+            $('<input type="hidden" id="dob-alt" name="dob" value="" />').insertBefore('#id_dob');
+            $('#id_dob').datepicker({
+                altField: "#dob-alt",
+                altFormat: "yy-mm-dd"
+            }).removeAttr('name');
+        })()
+    </script>
+{% endblock %}

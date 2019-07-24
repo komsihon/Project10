@@ -1,0 +1,150 @@
+{% extends "core/object_list_base.html" %}
+{% load i18n humanize static admin_list %}
+
+{% block admin_content %}
+    <div id="admin-content" class="has-edge-panel-right">
+        <div class="container-fluid">
+            <div id="admin-tools" class="ceil bottom-shade-xs">
+                <form id="admin-tools-form" onsubmit="return false">
+                    <div style="font-size: 1.5em">{% blocktrans with boys_count=config.boys_count girls_count=config.girls_count count=config.student_count %}
+                        {{ count }} students -
+                        <span style="font-size: .7em">
+                            Girls: <span class="text-muted">{{ girls_count }}</span> / Boys: <span class="text-muted">{{ boys_count }}</span>
+                        </span>
+                    {% endblocktrans %}</div>
+                    {% if filter and filter|length > 0 %}
+                        <div class="filter-trigger">
+                            <i class="glyphicon glyphicon-filter"></i>
+                            <i class="glyphicon glyphicon-menu-left hide-filter back"></i>
+                            {% for elt in filter %}
+                            <div class="tool filter">
+                                <label for="{{ elt.parameter_name }}" class="sr-only">{% trans elt.title %}</label>
+                                <select id="{{ elt.parameter_name }}" style="float: left; width: 120px" class="form-control input-sm {{ elt.parameter_name }} widget" name="{{ elt.parameter_name }}">
+                                    <option value="">{% trans "All" %}</option>
+                                    {% for choice in elt.choices %}
+                                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </form>
+                {% if level_list and not request.session.is_teacher %}
+                {% url change_object_url_name as change_classroom_url %}
+                <a href="{{ change_classroom_url }}" class="btn btn-sm btn-success cta pull-right action"
+                        title="{% trans "Add new classroom" %}">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span class="hidden-xs">{% trans "Add" %}</span>
+                </a>
+                {% endif %}
+                <div class="clearfix"></div>
+            </div>
+            <div id="results">
+                {% if level_list %}
+                    {% for level in level_classroom_list %}
+                    <div class="level">
+                        {% if level.classroom_list %}
+                        <h3>{{ level.name }} <span class="text-muted" style="font-weight: 400; font-size: .7em"> ({{ level.student_count }})</span></h3>
+                        <div class="classroom-list tiles" style="margin-top: 0">
+                            {% for classroom in level.classroom_list %}
+                            {% url 'school:classroom_detail' classroom.id as classroom_detail_url %}
+                            {% url 'school:change_classroom' classroom.id as change_classroom_url %}
+                            <div class="col-sm-4 col-lg-3">
+                                <div class="classroom ik-li subtle-shade">
+                                    <div>
+                                        {% if request.session.is_teacher %}
+                                            <a href="{{ classroom_detail_url }}">{{ classroom }}</a>
+                                        {% else %}
+                                            {{ classroom }}
+                                        {% endif %}
+                                        <span class="text-muted">({{ classroom.size }})</span>
+                                    </div>
+                                    {% if not request.session.is_teacher %}
+                                    <div class="actions dropdown" style="cursor: pointer; float: right">
+                                        <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <i class="action glyphicon glyphicon-option-vertical text-muted"></i>
+                                        </span>
+                                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="period">
+                                            <li>
+                                                <a href="{{ classroom_detail_url }}">{% trans "Access" %}</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ change_classroom_url }}">{% trans "Manage" %}</a>
+                                            </li>
+                                            <li>
+                                                {% if classroom.get_sms_sending_in_progress %}
+                                                    <a href="javascript:;" title="{% trans "SMS Sending in progress" %}">
+                                                        <div class="progress" role="progressbar">
+                                                            <div class="progress-bar sms" style="width: 15%"></div>
+                                                        </div>
+                                                    </a>
+                                                {% else %}
+                                                    <a href="javascript:;" class="show-send-sms"
+                                                       data-classroom="{{ classroom }}"
+                                                       data-size="{{ classroom.size }}">{% trans "Send SMS" %}</a>
+                                                {% endif %}
+                                            </li>
+                                            <li>
+                                                {% if classroom.get_mail_sending_in_progress %}
+                                                    <a href="javascript:;" title="{% trans "Mail Sending in progress" %}">
+                                                        <div class="progress" role="progressbar">
+                                                            <div class="progress-bar mail" style="width: 15%"></div>
+                                                        </div>
+                                                    </a>
+                                                {% else %}
+                                                    <a href="javascript:;" class="show-send-mail"
+                                                       data-classroom="{{ classroom }}"
+                                                       data-size="{{ classroom.size }}">{% trans "Send Mail" %}</a>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="clearfix"></div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div id="stage" style="margin: auto">
+                        <p>{% blocktrans %}
+                            You can start adding classrooms only after you have added levels.
+                        {% endblocktrans %}</p>
+                        <a href="{% url 'school:change_level' %}" class="btn btn-success btn-sm">{% trans "Add level" %}</a>
+                    </div>
+                {% endif %}
+                <div class="clearfix"></div>
+            </div>
+            <div class="edge-panel-right-container">
+                <div id="object-detail" class="edge-panel edge-panel-right">
+                    <div class="empty">
+                        {% trans "Click on a classroom in the list to view details." %}
+                    </div>
+                    <div style="padding-bottom: 200px">
+                        <div class="info">
+                            {% include 'core/snippets/spinner.html' %}
+                            <div class="content"></div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (function() {
+            $('#discipline-item-happened-on').datepicker({
+                altField: "#happened-on-alt",
+                altFormat: "yy-mm-dd"
+            });
+        })()
+    </script>
+{% endblock %}

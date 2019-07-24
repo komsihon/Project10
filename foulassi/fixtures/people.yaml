@@ -2,49 +2,11 @@
   pk: 584f03a7bbd6b46a85db279a
   fields:
     member: 56eb6d04b37b3379b531e013
-    classroom_fk_list: [60e011bd0b53137b33471d81, 60e011bd0b53137b33471d82]
-    responsibilities:
-      - classroom_id: 60e011bd0b53137b33471d81
-        subject_fk_list: [59441ee04fc0c24f09e9d6da, 59441ee04fc0c24f09e9d6db]
-      - classroom_id: 60e011bd0b53137b33471d82
-        subject_fk_list: [59441ee04fc0c24f09e9d6db]
 
 - model: foulassi.teacher
   pk: 584f03a7bbd6b46a85db279b
   fields:
     member: 56eb6d04b37b3379b531e014
-    classroom_fk_list: [60e011bd0b53137b33471d82, 60e011bd0b53137b33471d83]
-    responsibilities:
-      - classroom_id: 60e011bd0b53137b33471d82
-        subject_fk_list: [59441ee04fc0c24f09e9d6da, 59441ee04fc0c24f09e9d6dc]
-      - classroom_id: 60e011bd0b53137b33471d83
-        subject_fk_list: [59441ee04fc0c24f09e9d6db, 59441ee04fc0c24f09e9d6dc]
-
-- model: foulassi.parent
-  pk: 574fb307c0cbed6b4f246a81
-  fields:
-    name: Simao Toko
-    phone: 680 00 00 00
-    email: simao@ikwen.com
-    relation: Grand-Father
-
-- model: foulassi.parent
-  pk: 574fb307c0cbed6b4f246a82
-  fields:
-    member: 56eb6d04b37b3379b531e014
-    relation: Mother
-
-- model: foulassi.parent
-  pk: 574fb307c0cbed6b4f246a83
-  fields:
-    member: 56eb6d04b37b3379b531e012
-    relation: Father
-
-- model: foulassi.parent
-  pk: 574fb307c0cbed6b4f246a84
-  fields:
-    member: 56eb6d04b37b3379b531e013
-    relation: Sister
 
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c241
@@ -55,9 +17,7 @@
     dob: 2004-06-19
     photo: school/students/wes_madiko.jpg
     classroom: 60e011bd0b53137b33471d81
-    is_leader: Yes
     score_history: []
-    parent_fk_list: [574fb307c0cbed6b4f246a81, 574fb307c0cbed6b4f246a82]
 
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c242
@@ -69,7 +29,6 @@
     photo: school/students/yousilb.jpg
     classroom: 60e011bd0b53137b33471d81
     score_history: []
-    parent_fk_list: [574fb307c0cbed6b4f246a83]
 
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c243
@@ -81,7 +40,6 @@
     photo: school/students/gapingsi.jpg
     classroom: 60e011bd0b53137b33471d82
     score_history: []
-    parent_fk_list: []
 
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c244
@@ -93,7 +51,6 @@
     photo: school/students/kamtchuint.jpg
     classroom: 60e011bd0b53137b33471d82
     score_history: []
-    parent_fk_list: []
 
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c245
@@ -105,4 +62,34 @@
     photo: school/students/kompascal.jpg
     classroom: 60e011bd0b53137b33471d82
     score_history: []
-    parent_fk_list: []
+
+- model: foulassi.parent
+  pk: 574fb307c0cbed6b4f246a81
+  fields:
+    student: 584f03a7bbd6b46a8fc0c241
+    name: Simao Toko
+    phone: 680 00 00 00
+    email: simao@ikwen.com
+    relation: Grand-Father
+
+- model: foulassi.parent
+  pk: 574fb307c0cbed6b4f246a82
+  fields:
+    student: 584f03a7bbd6b46a8fc0c241
+    member: 56eb6d04b37b3379b531e014
+    relation: Mother
+
+- model: foulassi.parent
+  pk: 574fb307c0cbed6b4f246a83
+  fields:
+    student: 584f03a7bbd6b46a8fc0c242
+    member: 56eb6d04b37b3379b531e012
+    relation: Father
+
+- model: foulassi.parent
+  pk: 574fb307c0cbed6b4f246a84
+  fields:
+    student: 584f03a7bbd6b46a8fc0c243
+    member: 56eb6d04b37b3379b531e013
+    relation: Sister
+

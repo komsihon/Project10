@@ -1,0 +1,35 @@
+{% load i18n humanize static %}
+
+{% block admin_nav %}
+    <div id="admin-nav" class="edge-panel-left">
+        <a href="{% url 'foulassi:kid_list' %}" class="title-brand">Foulassi</a>
+        <div class="wrapper">
+            <div class="stage">
+                <div class="menu">
+                    <ul class="object-list people">
+                        {% for kid in kid_list %}
+                        {% url 'foulassi:kid_detail' kid.school.ikwen_name kid.id as kid_url %}
+                        <li class="ik-li member">
+                            <a href="{{ kid_url }}" style="display: block; margin: 0 -15px 0 -10px">
+                                {% if kid.photo.name %}
+                                    <div class="photo bg-img" style="background-image: url({% get_media_prefix %}{{ kid.photo.name }})"></div>
+                                {% else %}
+                                    <div class="photo bg-img" style="background-image: url({% get_static_prefix %}ikwen/img/member-avatar.jpg)"></div>
+                                {% endif %}
+                                <div class="info">
+                                    <span class="full_name">{{ kid }}</span>
+                                    <p class="about">
+                                        <span class="phone">{{ kid.school.ikwen_name }}</span>
+                                    </p>
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

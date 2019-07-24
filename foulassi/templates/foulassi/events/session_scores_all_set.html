@@ -1,0 +1,21 @@
+{% load i18n static humanize %}
+<div class="subtle-shade event-detail">
+    <div class="event-icon">
+        <img src="{% static 'foulassi/img/report-card-icon.png' %}">
+    </div>
+    <div class="event-content">
+        {% blocktrans %}
+            <strong class="event-title">Session scores all set</strong>
+            <p>All teachers have input their scores and report cards for <strong>{{ session }}</strong> are
+            ready to be generated.</p>
+        {% endblocktrans %}
+        {% if not event.is_processed %}
+        <div class="actions">
+            <button class="btn btn-success pull-right btn-sm generate-report-cards"
+                    data-event-id="{{ event.id }}">{% trans "Generate" %}</button>
+        </div>
+        {% endif %}
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+</div>

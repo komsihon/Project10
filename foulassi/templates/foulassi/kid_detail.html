@@ -1,0 +1,129 @@
+{% extends "school/student/student_detail.html" %}
+{% load i18n humanize static admin_list %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}" />
+{% endblock %}
+
+{% block admin_nav %}
+    {% include 'foulassi/snippets/kid_list_nav.html' %}
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content" class="change-form">
+        <div class="container-fluid">
+            <div class="content-tab-list ceil">
+                <div class="swiper-container">
+                    <div class="nav nav-tabs" role="tablist">
+                        <div role="presentation" class="tab active" data-tab="details">
+                            <a href="#student-details" aria-controls="student-details" role="tab" data-toggle="tab">{% trans "Details" %}</a>
+                        </div>
+                        <div role="presentation" class="tab scores" data-tab="scores">
+                            <a href="#student-scores" aria-controls="student-scores" role="tab" data-toggle="tab">{% trans "Scores" %}</a>
+                        </div>
+                        <div role="presentation" class="tab discipline" data-tab="discipline">
+                            <a href="#student-discipline" aria-controls="student-discipline" role="tab" data-toggle="tab">{% trans "Discipline" %}</a>
+                        </div>
+                        <div role="presentation" class="tab billing" data-tab="billing">
+                            <a href="#student-billing" aria-controls="student-billing" role="tab" data-toggle="tab">{% trans "Billing" %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content student-tab-panel">
+                <div id="student-details" class="tab-pane active admin-form" role="tabpanel" style="padding-top: 15px; padding-bottom: 90px">
+                    <div class="col-sm-4 col-lg-3 student-photo">
+                        <section class="photos" style="width: 100%">
+                            <div class="upload-container">
+                                <div class="image" style="background-image: url('{{ settings.IKWEN_MEDIA_URL }}{{ obj.photo.name }}')"></div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-sm-8 col-lg-9">
+                        <input type="hidden" id="dob-alt" name="dob" value="{{ student.dob|date:"Y-m-d" }}" />
+                        <div class="basic">
+                            {% include 'core/snippets/model_admin_form.html' %}
+{#                            <div class="form-group" style="word-wrap: break-word">#}
+{#                                <label style="display: block; clear: both; font-weight: 700">{% trans "Student URL" %}</label>#}
+{#                                <a href="{{ settings.IKWEN_FOULASSI_BASE_URL }}{{ student_public_url }}">{{ settings.IKWEN_FOULASSI_BASE_URL }}{{ student_public_url }}</a>#}
+{#                            </div>#}
+                        </div>
+                        <div class="divider row"></div>
+                        <div class="people-in-charge">
+                            <h5>{% trans "Parents" %}</h5>
+                            <ul class="list-group" style="padding: 0">
+                                {% for parent in student.parent_set.all %}
+                                <li class="list-group-item ik-li parent" id="{{ parent.id }}" data-id="{{ parent.id }}" data-model-name="foulassi.Parent">
+                                    <div class="parent-title">{{ parent.name }}: <span class="text-muted">{{ parent.relation }}</span></div>
+                                    <div class="parent-contact text-muted">
+                                        <span class="phone">{{ parent.phone }}</span>
+                                        <span>{% if parent.email %}, {{ parent.email }}{% endif %}</span>
+                                    </div>
+                                    {% if is_first_parent and forloop.counter > 1 %}
+                                    <div class="actions">
+                                        <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
+                                    </div>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                                <li class="list-group-item ik-li parent tpl" style="display: none">
+                                    <div class="parent-title">
+                                        <span class="name"></span>: <span class="relation text-muted"></span></div>
+                                    <div class="parent-contact text-muted">
+                                        <span class="phone"></span>
+                                        <span class="email"></span>
+                                    </div>
+                                    <div class="actions">
+                                        <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
+                                    </div>
+                                </li>
+                                <li class="list-group-item add-parent-form" style="border: none; clear: both; display: none">
+                                    <div class="row">
+                                        <div class="col-sm-4 form-group">
+                                            <input id="parent-name" class="form-control input-sm" placeholder="{% trans "Name" %}" />
+                                        </div>
+                                        <div class="col-sm-3 form-group">
+                                            <input id="parent-relation" class="form-control input-sm" placeholder="{% trans "Relationship, Ex: Father" %}" />
+                                        </div>
+                                        <div class="col-sm-3 form-group">
+                                            <input id="parent-phone" class="form-control input-sm" placeholder="{% trans "Phone" %}" />
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <input id="parent-email" class="form-control input-sm" placeholder="{% trans "Email" %}" />
+                                        </div>
+                                        <div class="col-sm-2 form-group">
+                                            <button type="button" class="btn btn-sm btn-success save-parent">OK</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            {% if is_first_parent %}
+                            <button type="button" class="btn btn-xs btn-default add-parent" title="{% trans "Add a person in charge" %}">
+                                <i class="fa fa-plus"></i> {% trans "Add" %}
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="student-scores" class="tab-pane student-info-tab" role="tabpanel">
+                    {% include 'core/snippets/spinner.html' %}
+                </div>
+
+                <div id="student-discipline" class="tab-pane student-info-tab" role="tabpanel">
+                    {% include 'core/snippets/spinner.html' %}
+                </div>
+
+                <div id="student-billing" class="tab-pane student-info-tab" role="tabpanel">
+                    {% include 'core/snippets/spinner.html' %}
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    {% with payment_conf='foulassi_invoice_payment' %}
+        {% include 'billing/snippets/modal_payment_options.html' %}
+    {% endwith %}
+{% endblock %}

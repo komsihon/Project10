@@ -1,0 +1,43 @@
+{% extends 'core/change_object_base.html' %}
+{% load i18n humanize static auth_tokens %}
+
+{% block page_title %}
+<title> {% if obj %}{{ obj }}{% else %}{% trans "New Justificatory" %}{% endif %} - {{ service.project_name }} </title>
+{% endblock %}
+
+{% block breadcrumb_location %}
+    <li>
+        <a href="{{ classroom_url }}">{{ student.classroom }}</a>
+    </li>
+    <li>
+        <a href="{{ object_list_url }}">{{ student }}</a>
+    </li>
+    {% if obj %}
+        <li>{{ obj }}</li>
+    {% else %}
+        <li>{% trans 'New Justificatory' %}</li>
+    {% endif %}
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content" class="change-form">
+        {% if errors %}<p class="alert alert-danger">{{ errors }}</p>{% endif %}
+        <form class="admin-form" method="post">{% csrf_token %}
+            {% if obj %}
+                <input type="hidden" name="entry" value="{{ obj.entry.id }}" />
+            {% else %}
+                <input type="hidden" name="entry" value="{{ request.GET.entry_id }}" />
+            {% endif %}
+            <input type="hidden" name="image_url" id="image_url" value="{% if obj.image.name %}{{ obj.image.url }}{% endif %}" />
+            <div class="container-fluid">
+                {% include 'core/snippets/model_admin_form.html' %}
+                {% with model_name='school.Justificatory' image=obj.image image_field_name='image' label_field_name='details' img_help_text='Scanned image of justificatory' upload_to_ikwen='yes' %}
+                    {% include 'core/snippets/uploader_single.html' %}
+                {% endwith %}
+                <div class="form-group col-xs-12 col-sm-4 col-md-3" style="clear: both; padding-top: 15px">
+                    <button class="btn btn-sm btn-primary btn-block">{% trans "Save" %}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

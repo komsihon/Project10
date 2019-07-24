@@ -1,0 +1,38 @@
+{% extends "core/base_bs.html" %}
+{% load i18n static %}
+
+{% block page_title %}<title>{% trans "We care about your children privacy" %}</title>{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}" />
+{% endblock %}
+{% block content %}
+    <div id="content" class="container">
+        <div style="margin-top: 10vh; text-align: center">
+            <img src="{% static 'foulassi/img/jbe-straight-to-inbox-icon.png'  %}" height="120"/>
+            <div style="padding-top: 20px">
+                {% url 'ikwen:account_setup' as account_setup_url %}
+                <h2>{% trans "Ooops! Access denied" %}</h2>
+                <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2"
+                     style="color: #888; margin-top: 15px; text-align: left">
+                    {% blocktrans with email=user.email phone=user.phone %}
+                    <p>
+                        You are not allowed to view this student information. Your email and phone do not match those
+                        set by school as authorized people. If you are sure this is your kid, try the following:
+                    </p>
+                    <ol>
+                        <li style="margin-top: 3vh">
+                            Check email and phone on your ikwen account. Those are currently <strong>{{ email }}</strong>, <strong>{{ phone }}</strong>.<br>
+                            <a href="{{ account_setup_url }}">Update if it's incorrect</a>
+                        </li>
+                        <li style="margin-top: 2vh">Ask the school to add your email/phone among parents of this student.</li>
+                        <li style="margin-top: 2vh">
+                            If you received this link from a person you know, he probably forgot to add your email and phone
+                            as parent of this kid. You can contact that person at ask him/her to do so.
+                        </li>
+                    </ol>
+                {% endblocktrans %}</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

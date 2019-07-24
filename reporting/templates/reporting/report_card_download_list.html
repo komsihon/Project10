@@ -1,0 +1,93 @@
+{% extends "core/app_base_admin.html" %}
+{% load i18n humanize static admin_list %}
+
+{% block page_title %}
+<title>{% trans "Download report cards" %} - {{ service.project_name }}</title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'ikwen/css/dashboard.css' %}" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi.css' %}" />
+{% endblock %}
+
+{% block breadcrumb_location %}
+    <li>{% trans "Report cards" %} {{ session.name }}</li>
+{% endblock %}
+
+{% block admin_content %}
+    <div id="admin-content">
+        <div class="container-fluid stage row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <div class="bundle-archive">
+{#                    {% if is_term_end %}#}
+{#                        <div class="col-sm-4 col-sm-offset-2 col-xs-6 text-center">#}
+{#                            <h4>{% trans "Session" %}</h4>#}
+{#                            <a href="{{ bundle_archive.url }}" style="display: block">#}
+{#                                <i class="fas fa-file-archive" style="font-size: 3em"></i>#}
+{#                            </a>#}
+{#                            <p class="text-muted">{{ bundle_archive.size|floatformat:"2" }} GB</p>#}
+{#                        </div>#}
+{#                        <div class="col-sm-4 col-xs-6 text-center">#}
+{#                            <h4>{% trans "Summary" %}</h4>#}
+{#                            <a href="{{ summary_bundle_archive.url }}" style="display: block">#}
+{#                                <i class="fas fa-file-archive" style="font-size: 3em"></i>#}
+{#                            </a>#}
+{#                            <p class="text-muted">{{ summary_bundle_archive.size|floatformat:"2" }} GB</p>#}
+{#                        </div>#}
+{#                    {% else %}#}
+                        <div class="col-sm-4 col-sm-offset-4 col-xs-6 col-xs-offset-3 text-center">
+                            <h4>Bundle</h4>
+                            <a href="{{ bundle_archive.url }}" style="display: block">
+                                <i class="fas fa-file-archive" style="font-size: 3em"></i>
+                            </a>
+                            <p class="text-muted">{{ bundle_archive.size|floatformat:"2" }} GB</p>
+                        </div>
+{#                    {% endif %}#}
+                    <div class="clearfix"></div>
+                </div>
+                <div id="results" style="padding-top: 0">
+                    <ul class="object-list list-group report-card-download-list">
+                        <li class="ik-li list-group-item">
+{#                            {% if is_term_end %}#}
+{#                                <strong class="col-xs-4">{% trans "Classroom" %}</strong>#}
+{#                                <strong class="col-xs-4 text-right">{% trans "Session" %}</strong>#}
+{#                                <strong class="col-xs-4 text-right">{% trans "Summary" %}</strong>#}
+{#                            {% else %}#}
+                                <strong class="col-xs-6">{% trans "Classroom" %}</strong>
+                                <strong class="col-xs-6 text-right">{% trans "Summary" %}</strong>
+{#                            {% endif %}#}
+                        </li>
+                        {% for classroom in classroom_list %}
+                        <li class="ik-li list-group-item" id="{{ classroom.id }}" data-id="{{ classroom.id }}">
+{#                            {% if is_term_end %}#}
+{#                            <span class="col-xs-4">{{ classroom }}</span>#}
+{#                            <span class="col-xs-4 text-right">#}
+{#                                <a href="{{ classroom.archive.url }}">#}
+{#                                    <i class="fas fa-download"></i>#}
+{#                                    <span class="text-muted">{{ classroom.archive.size|floatformat:"1" }} MB</span>#}
+{#                                </a>#}
+{#                            </span>#}
+{#                            <span class="col-xs-4 text-right">#}
+{#                                <a href="{{ classroom.summary_archive.url }}">#}
+{#                                    <i class="fas fa-download"></i>#}
+{#                                    <span class="text-muted">{{ classroom.summary_archive.size|floatformat:"1" }} MB</span>#}
+{#                                </a>#}
+{#                            </span>#}
+{#                            {% else %}#}
+                                <span class="col-xs-6">{{ classroom }}</span>
+                                <span class="col-xs-6 text-right">
+                                    <a href="{{ classroom.archive.url }}">
+                                        <i class="fas fa-download" title="{% trans "Deactivate" %}"></i>
+                                        <span class="text-muted">{{ classroom.archive.size|floatformat:"1" }} MB</span>
+                                    </a>
+                                </span>
+{#                            {% endif %}#}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

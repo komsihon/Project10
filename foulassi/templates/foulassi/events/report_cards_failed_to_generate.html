@@ -1,0 +1,23 @@
+{% load i18n static humanize %}
+<div class="subtle-shade event-detail failed-to-generate" data-event-id="{{ event.id }}">
+    <div class="event-icon">
+        <img src="{% static 'foulassi/img/report-card-icon.png' %}">
+    </div>
+    <div class="event-content">
+        {% blocktrans %}
+            <strong class="event-title text-danger">Report cards failed to generate</strong>
+            <p>The system encountered an error when generating report cards.
+                Our engineers have been notified and will solve the issue very soon.</p>
+        {% endblocktrans %}
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+{% if not event.is_processed %}
+<script>
+    (function() {
+        var eventId = $('.failed-to-generate').data('event-id');
+        $.getJSON('', {'action': 'mark_as_processed', 'event_id': eventId})
+    })()
+</script>
+{% endif %}
