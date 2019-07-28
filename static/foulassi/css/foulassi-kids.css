@@ -29,6 +29,8 @@
     .ik-li:not(.selected):hover .actions {right: 15px;}
     .img-circle {margin-top: 4vh}
     .kid .status-bullet {right: 2.5vh; top: 6vh}
+    .suggestion-list .ik-li .btn {width: 90%;margin: 20px auto 10px;float: none;display: block;}
+    .suggestion-list .ik-li:not(.selected):hover .actions {bottom: 0;position: fixed;height: 30vh;right: 0;width: 100%;z-index: 1000}
 }
 
 @media (min-width: 768px) {

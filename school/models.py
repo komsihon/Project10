@@ -19,7 +19,10 @@ class Level(Model, ResultsTracker):
     """
     name = models.CharField(max_length=30)
     slug = models.SlugField()
-    tuition_fees = models.IntegerField(default=0)
+    registration_fees = models.IntegerField(default=0)
+    first_instalment = models.IntegerField(default=0)
+    second_instalment = models.IntegerField(default=0)
+    third_instalment = models.IntegerField(default=0)
     order_of_appearance = models.IntegerField(default=0)
     subject_coefficient_list = ListField(EmbeddedModelField('SubjectCoefficient'))
 
@@ -38,7 +41,10 @@ class Classroom(Model, ResultsTracker):
     level = models.ForeignKey(Level)
     name = models.CharField(max_length=30)
     slug = models.SlugField()
-    tuition_fees = models.IntegerField(default=0)
+    registration_fees = models.IntegerField(default=0)
+    first_instalment = models.IntegerField(default=0)
+    second_instalment = models.IntegerField(default=0)
+    third_instalment = models.IntegerField(default=0)
     professor = models.ForeignKey(Teacher, blank=True, null=True)
     leader = models.ForeignKey(Student, related_name='leaders', blank=True, null=True)
     subject_coefficient_list = ListField(EmbeddedModelField('SubjectCoefficient'))
@@ -165,9 +171,8 @@ class SessionGroup(Model, ResultsTracker):
     ends_on = models.DateField(default=datetime.now)
 
     class Meta:
-        ordering = ('id', )
+        ordering = ('id', 'name', )
         unique_together = ('name', 'school_year', )
-        ordering = ('name', )
 
     def __unicode__(self):
         return self.name
@@ -193,10 +198,7 @@ class Session(Model, ResultsTracker):
 
     class Meta:
         ordering = ('id', )
-        unique_together = (
-            ('name', 'school_year',),
-            ('school_year', 'is_current',),
-        )
+        unique_together = ('name', 'school_year')
 
     def __unicode__(self):
         return u"%s: %s" % (self.session_group.name, self.name)

@@ -7,7 +7,7 @@
             {% if errors %}<p class="alert alert-danger">{{ errors }}</p>{% endif %}
             <form id="submit-level" class="admin-form" method="post">{% csrf_token %}
                 {% include 'core/snippets/model_admin_form.html' %}
-                <formset>
+                <formset class="subject-coefficient-list">
                     <legend>{% trans "Subjects" %}</legend>
                     <p class="row acronyms">
                         <span class="col-sm-3 col-lg-2">{% trans "Coef." %} = {% trans "Coefficient" %}</span>
@@ -18,8 +18,9 @@
                     {% for subject in subject_list %}
                         <div class="subject checkbox tile col-xs-6 col-sm-4 col-lg-3">
                             <label for="squaredThree">
-                                 <input type="checkbox" value="{{ subject.id }}"
-                                        {% if subject.is_active %}checked{% endif %}><strong>{{ subject.name }}</strong>
+                                <input type="checkbox" value="{{ subject.id }}"{% if subject.is_active %} checked{% endif %}>
+                                <strong class="hidden-xs">{{ subject.name }}</strong>
+                                <strong class="visible-xs">{{ subject.name|truncatechars:"15" }}</strong>
                             </label>
                             <div>
                                 <span>{% trans "Grp" %}</span>

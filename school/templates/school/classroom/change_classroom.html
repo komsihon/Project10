@@ -8,7 +8,7 @@
             <form id="submit-classroom" class="admin-form" method="post">{% csrf_token %}
                 <input type="hidden" name="object_id" value="{{ obj.id }}" />
                 {% include 'core/snippets/model_admin_form.html' %}
-                <formset>
+                <formset class="subject-coefficient-list">
                     <legend>{% trans "Subjects" %}</legend>
                     <p class="row acronyms">
                         <span class="col-sm-3 col-lg-2">{% trans "Coef." %} = {% trans "Coefficient" %}</span>
@@ -17,10 +17,11 @@
                     </p>
                     <input type="hidden" id="subjects" name="subjects" />
                     {% for subject in subject_list %}
-                        <div class="subject checkbox tile col-sm-4 col-md-3">
+                        <div class="subject checkbox tile col-xs-6 col-sm-4 col-md-3">
                             <label for="squaredThree">
-                                 <input type="checkbox" value="{{ subject.id }}"
-                                        {% if subject.is_active %}checked{% endif %}><strong>{{ subject.name }}</strong>
+                                <input type="checkbox" value="{{ subject.id }}" {% if subject.is_active %}checked{% endif %}>
+                                <strong class="hidden-xs">{{ subject.name }}</strong>
+                                <strong class="visible-xs">{{ subject.name|truncatechars:"15" }}</strong>
                             </label>
                             <div>
                                 <span class="sc-label">{% trans "Tchr" %}</span>
@@ -73,9 +74,15 @@
             var levelInfo = {{ level_info|safe }};
             $('#id_level').change(function() {
                 var levelId = $(this).val(),
-                    tuitionFees = levelInfo[levelId].tuition_fees,
+                    registrationFees = levelInfo[levelId].registration_fees,
+                    firstInstalment = levelInfo[levelId].first_instalment,
+                    secondInstalment = levelInfo[levelId].second_instalment,
+                    thirdInstalment = levelInfo[levelId].third_instalment,
                     subjectList = levelInfo[levelId].subject_list;
-                $('#id_tuition_fees').val(tuitionFees);
+                $('#id_registration_fees').val(registrationFees);
+                $('#id_first_instalment').val(firstInstalment);
+                $('#id_second_instalment').val(secondInstalment);
+                $('#id_third_instalment').val(thirdInstalment);
                 $('.subject input[type=checkbox]').prop('checked', false);
                 $('.subject input[type=text]').val('');
                 $('.subject').each(function() {

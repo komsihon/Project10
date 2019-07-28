@@ -29,16 +29,17 @@ from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen_foulassi.foulassi.models import Student, Teacher, Invoice, get_school_year, Parent
 from ikwen_foulassi.foulassi.utils import remove_student_from_parent_profile, set_student_counts, check_all_scores_set
 from ikwen_foulassi.reporting.utils import set_counters, calculate_session_report, \
-    calculate_session_group_report, set_stats, set_daily_counters
+    calculate_session_group_report, set_stats, set_daily_counters, set_daily_counters_many
 from ikwen_foulassi.foulassi.admin import StudentResource
 from ikwen_foulassi.reporting.models import SessionReport, LessonReport
 from ikwen_foulassi.school.admin import ClassroomAdmin
 from ikwen_foulassi.school.models import Level, Classroom, Session, get_subject_list, Subject, Score, \
     ScoreUpdateRequest, SubjectCoefficient, Lesson
+from ikwen_foulassi.school.student.views import set_student_invoices
 from import_export.formats.base_formats import XLS
 
 
-def import_students(filename, classroom=None, dry_run=True):
+def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
     abs_path = getattr(settings, 'MEDIA_ROOT') + filename
     fh = open(abs_path, 'r')
     line = fh.readline()
@@ -186,14 +187,15 @@ def import_students(filename, classroom=None, dry_run=True):
                     Student.objects.get(registration_number=reg_num)
                 except Student.DoesNotExist:
                     try:
+                        tags = slugify(last_name + ' ' + first_name).replace('-', ' ')
                         student = Student.objects\
                             .create(classroom=classroom, registration_number=reg_num, first_name=first_name,
                                     last_name=last_name, gender=gender, dob=dob, is_repeating=is_repeating,
-                                    year_joined=year_joined)
+                                    year_joined=year_joined, tags=tags)
                         student_u = Student.objects.using(UMBRELLA)\
                             .create(id=student.id, classroom=classroom, registration_number=reg_num,
                                     first_name=first_name, last_name=last_name, gender=gender, dob=dob,
-                                    is_repeating=is_repeating, year_joined=year_joined)
+                                    is_repeating=is_repeating, year_joined=year_joined, tags=tags)
                         if len(row) > row_length:
                             parent1 = Parent.objects.create(student=student, name=parent1_name, phone=parent1_phone,
                                                             email=parent1_email, relation=parent1_relationship)
@@ -206,6 +208,8 @@ def import_students(filename, classroom=None, dry_run=True):
                             Parent.objects.using(UMBRELLA)\
                                 .create(id=parent2.id, student=student_u, name=parent2_name, phone=parent2_phone,
                                         email=parent2_email, relation=parent2_relationship)
+                        if set_invoices:
+                            set_student_invoices(student)
                     except:
                         if getattr(settings, 'DEBUG', False):
                             error = traceback.format_exc()
@@ -300,7 +304,10 @@ class ChangeClassroom(ChangeObjectBase):
         level_info = {}
         for level in Level.objects.all():
             obj = {
-                'tuition_fees': level.tuition_fees,
+                'registration_fees': level.registration_fees,
+                'first_instalment': level.first_instalment,
+                'second_instalment': level.second_instalment,
+                'third_instalment': level.third_instalment,
                 'subject_list': [{'id': subject.id, 'group': subject.group, 'coefficient': subject.coefficient,
                                   'lessons_due': subject.lessons_due, 'hours_due': subject.hours_due}
                                  for subject in get_subject_list(level)]
@@ -325,16 +332,22 @@ class ChangeClassroom(ChangeObjectBase):
             obj.level = form.cleaned_data['level']
             obj.name = form.cleaned_data['name']
             obj.slug = slugify(obj.level) + '-' + slugify(obj.name)
-            obj.tuition_fees = form.cleaned_data['tuition_fees']
+            obj.registration_fees = form.cleaned_data['registration_fees']
+            obj.first_instalment = form.cleaned_data['first_instalment']
+            obj.second_instalment = form.cleaned_data['second_instalment']
+            obj.third_instalment = form.cleaned_data['third_instalment']
             subject_coefficient_list = []
             subjects = request.POST['subjects'].strip()
             if subjects:
                 for item in subjects.split(','):
-                    tk = item.split(':')
-                    subject = Subject.objects.get(pk=tk[0])
-                    subject_coefficient = SubjectCoefficient(subject=subject, group=int(tk[1]), coefficient=int(tk[2]),
-                                                             lessons_due=int(tk[3]), hours_due=int(tk[4]))
-                    subject_coefficient_list.append(subject_coefficient)
+                    try:
+                        tk = item.split(':')
+                        subject = Subject.objects.get(pk=tk[0])
+                        subject_coefficient = SubjectCoefficient(subject=subject, group=int(tk[1]), coefficient=int(tk[2]),
+                                                                 lessons_due=int(tk[3]), hours_due=int(tk[4]))
+                        subject_coefficient_list.append(subject_coefficient)
+                    except:
+                        continue
                     try:
                         teacher = Teacher.objects.get(pk=tk[5])
                         subject.set_teacher(obj, teacher)
@@ -488,10 +501,11 @@ class ClassroomDetail(ChangeObjectBase):
         classroom = context['classroom']
         media_url = getattr(settings, 'MEDIA_URL')
         filename = self.request.GET['filename'].replace(media_url, '')
+        set_invoices = self.request.GET.get('set_invoices')
         error = import_students(filename)
         if error:
             return HttpResponse(json.dumps({'error': error}))
-        import_students(filename, classroom, dry_run=False)
+        import_students(filename, classroom, dry_run=False, set_invoices=set_invoices)
         Thread(target=set_student_counts).start()
         context['student_list'] = classroom.student_set.filter(is_excluded=False)
         return render(self.request, 'school/snippets/classroom/student_list.html', context)
@@ -581,6 +595,7 @@ class ClassroomDetail(ChangeObjectBase):
         return HttpResponse(json.dumps(response))
 
     def add_lesson(self, classroom):
+        level = classroom.level
         member = self.request.user
         school_year = get_school_year(self.request)
         subject_id = self.request.GET['subject_id']
@@ -589,13 +604,19 @@ class ClassroomDetail(ChangeObjectBase):
         is_complete = True if self.request.GET['is_complete'] else False
         subject = get_object_or_404(Subject, pk=subject_id)
         teacher = Teacher.objects.get(member=member, school_year=school_year)
-        lesson = Lesson.objects.create(classroom=classroom, subject=subject, teacher=teacher,
-                                       title=title, hours_count=hours_count, is_complete=is_complete)
-        classroom_report, update = LessonReport.objects.get_or_create(lesson=lesson, level=None, classroom=classroom)
-        set_daily_counters(classroom_report)
+        Lesson.objects.create(classroom=classroom, subject=subject, teacher=teacher,
+                              title=title, hours_count=hours_count, is_complete=is_complete)
+        classroom_report, update = LessonReport.objects.get_or_create(subject=subject, level=level, classroom=classroom)
+        level_report, update = LessonReport.objects.get_or_create(subject=None, level=level, classroom=None)
+        school_report, update = LessonReport.objects.get_or_create(subject=None, level=None, classroom=None)
+        set_daily_counters_many(classroom_report, level_report, school_report)
         increment_history_field(classroom_report, 'hours_count_history', hours_count)
+        increment_history_field(level_report, 'hours_count_history', hours_count)
+        increment_history_field(school_report, 'hours_count_history', hours_count)
         if is_complete:
             increment_history_field(classroom_report, 'count_history')
+            increment_history_field(level_report, 'count_history')
+            increment_history_field(school_report, 'count_history')
         response = {'success': True,
                     'message': _("Lesson successfully added.")}
         return HttpResponse(json.dumps(response))
@@ -630,4 +651,3 @@ class ClassroomDetail(ChangeObjectBase):
         if action == 'mark':
             classroom = Classroom.objects.get(pk=kwargs['object_id'])
             return self.mark(request, classroom)
-

@@ -107,13 +107,18 @@ def grant_teacher_permissions(request, *args, **kwargs):
     grp = Group.objects.get(name=TEACHERS)
     is_teacher = grp.id in obj.group_fk_list
     if is_teacher:
-        content_type = ContentType.objects.get_for_model(Classroom)
-        perm1, update = Permission.objects \
-            .get_or_create(codename='ik_manage_classroom', name='Access classroom as teacher',
-                           content_type=content_type)
-        perm2, update = Permission.objects \
-            .get_or_create(codename='ik_access_scores', name='Access scores',
-                           content_type=content_type)
+        classroom_ct = ContentType.objects.get_for_model(Classroom)
+        score_ct = ContentType.objects.get_for_model(Score)
+        try:
+            perm1 = Permission.objects.get(codename='ik_manage_classroom', content_type=classroom_ct)
+        except Permission.DoesNotExist:
+            perm1 = Permission.objects \
+                .create(codename='ik_manage_classroom', name='Access classroom as teacher', content_type=classroom_ct)
+        try:
+            perm2 = Permission.objects.get(codename='ik_access_scores', content_type=score_ct)
+        except Permission.DoesNotExist:
+            perm2 = Permission.objects \
+                .create(codename='ik_access_scores', name='Access student scores', content_type=score_ct)
         if not member.has_perm(perm1):
             add_permission_to_user(perm1, member)
         if not member.has_perm(perm2):

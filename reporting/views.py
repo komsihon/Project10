@@ -10,6 +10,7 @@ from datetime import datetime
 from threading import Thread
 
 from django.conf import settings
+from django.contrib.auth.decorators import permission_required
 from django.db.models import Sum, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -18,6 +19,7 @@ from django.views.generic import TemplateView
 
 from ikwen.core.utils import set_counters, calculate_watch_info, slice_watch_objects, rank_watch_objects, \
     get_service_instance
+from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen_foulassi.foulassi.models import get_school_year, Invoice, Student, Event, EventType, REPORT_CARDS_GENERATED, \
     REPORT_CARDS_FAILED_TO_GENERATE
 from ikwen_foulassi.school.models import DisciplineItem, Session, SessionGroup, Classroom, Level, Score
@@ -207,6 +209,7 @@ class ReportCardDownloadList(TemplateView):
         return context
 
 
+@permission_required('reporting.ik_manage_reporting')
 def generate_report_cards(request, *args, **kwargs):
     if getattr(settings, 'DEBUG', False):
         generate_report_card_files(request)

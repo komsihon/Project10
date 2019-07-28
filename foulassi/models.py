@@ -86,9 +86,6 @@ class Student(Model):
     kid_fees_paid = models.BooleanField(default=False,
                                         help_text="Whether a parent has ever paid to follow kid on the Kids platform.")
 
-    class Meta:
-        unique_together = ('registration_number', 'school_year', )
-
     def __unicode__(self):
         return self.last_name + ' ' + self.first_name
 
@@ -210,19 +207,29 @@ class DisciplineTracker(StudentsPopulation):
 
 class SchoolConfig(AbstractConfig, ResultsTracker):
     SESSION_AVG_CALCULATION_CHOICES = (
-        (AVERAGE_OF_ALL, _("Sessions scores average")),
-        (BEST_OF_ALL, _("Sessions best score"))
+        (AVERAGE_OF_ALL, _("Average of sessions'scores")),
+        (BEST_OF_ALL, _("Best score of all sessions"))
     )
     theme = models.ForeignKey(Theme, blank=True, null=True)
     back_to_school_date = models.DateTimeField(blank=True, null=True)
-    registration_fees = models.IntegerField(default=0)
-    session_group_avg = models.CharField(max_length=60, choices=SESSION_AVG_CALCULATION_CHOICES, default=AVERAGE_OF_ALL)
+    registration_fees_title = models.CharField(max_length=60, default=_("Registration fees"))
+    registration_fees_deadline = models.DateField(blank=True, null=True)
+    first_instalment_title = models.CharField(max_length=60, default=_("First instalment"))
+    first_instalment_deadline = models.DateField(blank=True, null=True)
+    second_instalment_title = models.CharField(max_length=60, default=_("Second instalment"))
+    second_instalment_deadline = models.DateField(blank=True, null=True)
+    third_instalment_title = models.CharField(max_length=60, default=_("Third instalment"))
+    third_instalment_deadline = models.DateField(blank=True, null=True)
+    session_group_avg = models.CharField(max_length=60, choices=SESSION_AVG_CALCULATION_CHOICES, default=AVERAGE_OF_ALL,
+                                         help_text=_("Method of calculation of Term score. Average of sessions "
+                                                     "scores of best score of all sessions."))
     is_public = models.BooleanField(default=False,
                                     help_text="Designates whether this school is a State school.")
 
     def save(self, *args, **kwargs):
         bts = self.back_to_school_date
-        if bts.hour != 7 or bts.min != 30:
+        # if bts.hour != 7 or bts.min != 30:
+        if bts and (bts.hour != 7 or bts.min != 30):
             # Always set back to school time to 07:30 AM
             self.back_to_school_date = datetime(bts.year, bts.month, bts.day, 7, 30)
         super(SchoolConfig, self).save(*args, **kwargs)
@@ -230,7 +237,7 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
 
 class Invoice(AbstractInvoice):
     student = models.ForeignKey(Student, blank=True, null=True)
-    school_year = models.IntegerField(default=get_school_year)
+    school_year = models.IntegerField(default=get_school_year, db_index=True)
     is_tuition = models.BooleanField(default=False)
 
     def get_title(self):

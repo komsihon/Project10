@@ -41,16 +41,16 @@ urlpatterns = patterns(
     url(r'^classroomDetail/(?P<object_id>[-\w]+)/$', user_passes_test(access_classroom)(ClassroomDetail.as_view()),
         name='classroom_detail'),
 
-    url(r'^upload_student_file/$', permission_required('school.ik_manage_student')(upload_student_file), name='upload_student_file'),
-    url(r'^newStudent/(?P<classroom_id>[-\w]+)/$', permission_required('school.ik_manage_student')(ChangeStudent.as_view()), name='change_student'),
-    url(r'^student/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_student')(StudentDetail.as_view()),
+    url(r'^upload_student_file/$', permission_required('foulassi.ik_manage_student')(upload_student_file), name='upload_student_file'),
+    url(r'^newStudent/(?P<classroom_id>[-\w]+)/$', permission_required('foulassi.ik_manage_student')(ChangeStudent.as_view()), name='change_student'),
+    url(r'^student/(?P<object_id>[-\w]+)/$', permission_required('foulassi.ik_manage_student')(StudentDetail.as_view()),
         name='student_detail'),
-    url(r'^justificatory/$', permission_required('school.ik_manage_student')(ChangeJustificatory.as_view()),
+    url(r'^justificatory/$', permission_required('foulassi.ik_manage_student')(ChangeJustificatory.as_view()),
         name='change_justificatory'),
-    url(r'^justificatory/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_student')(ChangeJustificatory.as_view()),
+    url(r'^justificatory/(?P<object_id>[-\w]+)/$', permission_required('foulassi.ik_manage_student')(ChangeJustificatory.as_view()),
         name='change_justificatory'),
 
-    url(r'^teachers/$', permission_required('school.ik_manage_teacher')(TeacherList.as_view()), name='teacher_list'),
-    url(r'^teacher/(?P<object_id>[-\w]+)/$', permission_required('school.ik_manage_teacher')(TeacherDetail.as_view()), name='teacher_detail'),
+    url(r'^teachers/$', permission_required('foulassi.ik_manage_teacher')(TeacherList.as_view()), name='teacher_list'),
+    url(r'^teacher/(?P<object_id>[-\w]+)/$', permission_required('foulassi.ik_manage_teacher')(TeacherDetail.as_view()), name='teacher_detail'),
     url(r'^close_session$', close_session, name='close_session'),
 )

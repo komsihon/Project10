@@ -65,14 +65,16 @@ if getattr(settings, 'IS_IKWEN', False):
 else:
     service = get_service_instance()
     config = service.config
-
     _fieldsets = [
-        (_('School'), {'fields': ('company_name', 'short_description', 'slogan', 'description', 'back_to_school_date')}),
+        (_('School'), {'fields': ('company_name', 'slogan', 'back_to_school_date', 'session_group_avg')}),
+        (_('Tuition instalments'), {'fields': ('registration_fees_title', 'registration_fees_deadline',
+                                               'first_instalment_title', 'first_instalment_deadline',
+                                               'second_instalment_title', 'second_instalment_deadline',
+                                               'third_instalment_title', 'third_instalment_deadline')}),
         (_('Address & Contact'), {'fields': ('contact_email', 'contact_phone', 'address', 'country', 'city',
                                              'latitude', 'longitude',)}),
         (_('Social'), {'fields': ('facebook_link', 'twitter_link', 'google_plus_link', 'youtube_link', 'instagram_link',
                                   'tumblr_link', 'linkedin_link', )}),
-        (_('Mailing'), {'fields': ('welcome_message', 'signature', )}),
         (_('External scripts'), {'fields': ('scripts', )}),
     ]
 
@@ -80,7 +82,6 @@ else:
 class SchoolConfigAdmin(admin.ModelAdmin):
     list_display = ('service', 'company_name')
     fieldsets = _fieldsets
-    # readonly_fields = ('api_signature', )
     list_filter = ('company_name', 'contact_email', )
     save_on_top = True
 

@@ -48,6 +48,50 @@ from ikwen_foulassi.school.models import Classroom, Session, Score, DisciplineIt
 logger = logging.getLogger('ikwen')
 
 
+def set_student_invoices(student):
+    number = get_next_invoice_number()
+    service = get_service_instance()
+    school = service.config
+    classroom = student.classroom
+    if classroom.registration_fees:
+        item = InvoiceItem(label=school.registration_fees_title, amount=classroom.registration_fees)
+        entry = InvoiceEntry(item=item, short_description='------', total=classroom.registration_fees)
+        if school.registration_fees_deadline:
+            due_date = school.registration_fees_deadline
+        else:
+            due_date = datetime.now() + timedelta(days=30)
+        is_tuition = True if school.is_public else False
+        Invoice.objects.create(number=number, student=student, amount=classroom.registration_fees,
+                               due_date=due_date, entries=[entry], is_tuition=is_tuition)
+    if classroom.first_instalment:
+        item = InvoiceItem(label=school.first_instalment_title, amount=classroom.first_instalment)
+        entry = InvoiceEntry(item=item, short_description='------', total=classroom.first_instalment)
+        if school.first_instalment_deadline:
+            due_date = school.first_instalment_deadline
+        else:
+            due_date = datetime.now() + timedelta(days=60)
+        Invoice.objects.create(number=number, student=student, amount=classroom.first_instalment_fees,
+                               due_date=due_date, entries=[entry])
+    if classroom.second_instalment:
+        item = InvoiceItem(label=school.second_instalment_title, amount=classroom.second_instalment)
+        entry = InvoiceEntry(item=item, short_description='------', total=classroom.second_instalment)
+        if school.second_instalment_deadline:
+            due_date = school.second_instalment_deadline
+        else:
+            due_date = datetime.now() + timedelta(days=90)
+        Invoice.objects.create(number=number, student=student, amount=classroom.second_instalment_fees,
+                               due_date=due_date, entries=[entry])
+    if classroom.third_instalment:
+        item = InvoiceItem(label=school.third_instalment_title, amount=classroom.third_instalment)
+        entry = InvoiceEntry(item=item, short_description='------', total=classroom.third_instalment)
+        if school.third_instalment_deadline:
+            due_date = school.third_instalment_deadline
+        else:
+            due_date = datetime.now() + timedelta(days=120)
+        Invoice.objects.create(number=number, student=student, amount=classroom.first_instalment_fees,
+                               due_date=due_date, entries=[entry])
+
+
 class ChangeStudent(ChangeObjectBase):
     template_name = 'school/student/change_student.html'
     model = Student
@@ -62,33 +106,15 @@ class ChangeStudent(ChangeObjectBase):
         return context
 
     def after_save(self, request, obj, *args, **kwargs):
-        obj.save(using=UMBRELLA)
         obj.tags = slugify(obj.last_name + ' ' + obj.first_name).replace('-', ' ')
+        obj.save(using=UMBRELLA)
         obj.save()
         object_id = kwargs.get('object_id')
         Thread(target=set_student_counts).start()
         if object_id:
             return
         # It's a student under creation, so set a new Invoice for him
-        number = get_next_invoice_number()
-        service = get_service_instance()
-        config = service.config
-        registration_fees = config.registration_fees
-        due_date = datetime.now() + timedelta(days=30)
-        invoice_entries = []
-        amount = 0
-        if registration_fees:
-            # Some school have registration fees that are separate
-            # from tuition fees Create an invoice for that here
-            item = InvoiceItem(label=_('Subscription'), amount=registration_fees)
-            entry = InvoiceEntry(item=item, short_description='---', total=registration_fees)
-            invoice_entries.append(entry)
-            amount += registration_fees
-        item = InvoiceItem(label=_('Tuition fees'), amount=registration_fees)
-        entry = InvoiceEntry(item=item, short_description='---', total=registration_fees)
-        invoice_entries.append(entry)
-        amount += obj.classroom.tuition_fees
-        Invoice.objects.create(number=number, student=obj, amount=amount, due_date=due_date, entries=invoice_entries)
+        set_student_invoices(obj)
 
     def get_object_list_url(self, request, obj, *args, **kwargs):
         classroom_id = kwargs.get('classroom_id')
@@ -158,10 +184,10 @@ class StudentDetail(ChangeObjectBase):
         except ValidationError:
             response = {'error': "Invalid email"}
             return HttpResponse(json.dumps(response))
-        if Parent.objects.filter(email=email).count() >= 1:
+        if Parent.objects.filter(student=student, email=email).count() >= 1:
             response = {'error': _("A parent with this email already exists.")}
             return HttpResponse(json.dumps(response))
-        if Parent.objects.filter(phone=phone).count() >= 1:
+        if Parent.objects.filter(student=student, phone=phone).count() >= 1:
             response = {'error': _("A parent with this phone already exists.")}
             return HttpResponse(json.dumps(response))
         parent = Parent(student=student, name=name, relation=relation, phone=phone, email=email)

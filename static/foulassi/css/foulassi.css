@@ -12,12 +12,14 @@
 .subject.checkbox.tile {margin: 0 0 30px}
 .tiles .ik-li.classroom {border: 1px solid #dedede; border-top-color: #e9e9e9; margin-bottom: 10px; padding: 12px 10px}
 .level h3 {font-size: 21px}
+.student-count-summary {font-size: 1.1em}
 #results .level:first-of-type h3 {margin-top: 0}
 .classroom .actions {margin: -27px 24px 0 0}
 .classroom .dropdown-menu-right {right: -32px}
 .classroom .dropdown-menu .progress {height: 4px; margin: 9px 0}
 .classroom .dropdown-menu .progress-bar.sms {background: #3452af}
 .classroom .dropdown-menu .progress-bar.mail {background: #E91E63}
+.set-invoices-notice, .unset-invoices-notice {border: 1px solid; padding: 8px 5px 10px}
 .action.glyphicon-option-vertical {border-radius: 15px; border-color: transparent; cursor: pointer; font-size: 18px; height: 30px; line-height: 30px;
     overflow: hidden; position: absolute; text-align: center; width: 30px}
 .action.glyphicon-option-vertical:active {background: #f2f2f2;padding: 0}
@@ -28,7 +30,7 @@
 .classroom-detail .recent {border-top: 1px solid #ddd; margin-top: 20px; padding-top: 15px}
 .acronyms {background: #f8f8f8; border-radius: 4px; margin: -15px 0 30px; padding: 20px 5px}
 .sc-label {float: left; margin: 9px 5px 0 0; width: 30px}
-select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-due {margin-bottom: 5px; width: 100px}
+select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-due {margin-bottom: 5px;width: 100%;}
 .input-error {border-color: #ff6e5d}
 #student-list-stage.tabs-hidden {margin-top: 20px}
 .ik-li .scores {margin-top: 15px}
@@ -161,8 +163,12 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
 .msg-bundle .description {color:  #0f9e15; margin-top: 24px; font-size: 1.3em}
 
 @media (max-width: 767px) {
+    .action.glyphicon-option-vertical {font-size: 24px}
     .tiles .ik-li.classroom {float: none; height: auto; padding: 18px 10px; width: auto}
     .tiles .ik-li.classroom .actions {margin: -27px 24px 0 0}
+    .subject-coefficient-list .subject:nth-child(2n) {padding: 0 10px 0 5px;}
+    .subject-coefficient-list .subject:nth-child(2n+1) {padding: 0 5px 0 10px;}
+    .subject-coefficient-list .subject label {margin-bottom: 5px}
     .ik-li:not(.selected):hover .actions {
         background: #fff;
         border-radius: 3px;
@@ -173,12 +179,13 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
     #app-nav .breadcrumb li {display: none}
     #admin-tools.teacher-info {height: 80px; padding-top: 0; border-bottom: 0}
     #admin-tools + .content-tab-list.teacher-responsibilities {margin-top: 60px}
-    #admin-tools + .content-tab-list.teacher-responsibilities + .tab-content {margin-top: 85px}
+    #admin-tools + .content-tab-list.teacher-responsibilities + .tab-content {margin-top: 105px;}
     #scores-report header {margin: 10px 0 2px;}
     .performances .scores-report-grid h5 {font-weight: 600; float: left}
     #student-details .student-photo .image {float: none; margin: auto}
     .student-photo .upload-container {float: none; width: auto}
     #scores-report.performances:not(.section-title) > div > div {padding-top: 0}
+    .ik-li .score {line-height: 17px}
     .billing .figure {margin: -20px 0 25px}
     .discipline-log .ik-li:hover .actions {margin: 23px 10px 0 0;}
     .di-happened-on {margin-right: 7px; position: absolute; right: 0; width: 120px}
@@ -196,6 +203,7 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
 }
 
 @media (min-width: 768px) {
+    .student-count-summary {font-size: 1.5em}
     #app-nav .school-year-list {margin-top: 5px;width: 140px;}
     #app-nav .school-year-list .dropdown {margin-left: 5px}
     .splash-screen .logo {height: 240px; line-height: 240px; margin-top: 12%}
@@ -210,7 +218,7 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
     .count-report-detail .section-title {padding-right: 30px}
     .people-in-charge .form-group:last-child {padding-left: 15px}
 }
-@media (min-width: 992px) {
+@media (min-width: 768px) {
     #student-details .student-photo {padding-left: 0}
     #app-nav .school-year-list {margin-top: 2px}
     #app-nav .school-year-list .dropdown {margin-left: 15px}

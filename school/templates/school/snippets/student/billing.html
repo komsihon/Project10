@@ -3,15 +3,15 @@
     <ul class="pending-invoices pull-left">
         {% for invoice in pending_invoice_list %}
             <li class="pending-invoice" id="{{ invoice.id }}" data-to-be-paid="{{ invoice.get_to_be_paid }}">
-                <div class="title">
+                <h5 class="title" style="margin-top: 0">
                     <span>{{ invoice.get_title }} - </span>
                     <span class="text-muted">{% trans "Deadline" %}: {{ invoice.due_date }}</span>
-                </div>
+                </h5>
                 <div class="amount">
                     <span class="value">{{ invoice.get_to_be_paid|intcomma }}</span>
                     <span class="currency text-muted">{{ currency_symbol }}</span>
                 </div>
-                <div style="margin-top: 5px">
+                <div style="margin-top: 10px">
                     {% if settings.IS_UMBRELLA %}
                         <button class="btn btn-sm btn-success payment-start"
                            data-product-id="{{ invoice.id }}">{% trans "Pay now" %}</button>
@@ -93,73 +93,3 @@
     </li>
 </ul>
 <div class="clearfix"></div>
-
-{% if not settings.IS_UMBRELLA %}
-<div class="modal fade" id="modal-add-invoice" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content modal-info">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{% trans "New invoice" %}</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group invoice-label">
-                    <label for="new-invoice-label">{% trans "Label" %}</label>
-                    <input type="text" id="new-invoice-label" class="form-control input-sm" />
-                </div>
-                <div class="form-group invoice-amount">
-                    <label for="new-invoice-amount">{% trans "Amount" %}</label>
-                    <input type="number" id="new-invoice-amount" class="form-control input-sm" value="0" />
-                </div>
-                <div class="form-group invoice-due-date">
-                    <label for="new-invoice-due-date">{% trans "Due date" %}</label>
-                    <input type="text" id="new-invoice-due-date" autocomplete="off" class="form-control input-sm" />
-                    <input type="hidden" id="new-invoice-due-date-alt" class="form-control input-sm" />
-                </div>
-                <div class="actions">
-                    <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                        <button type="button" class="btn btn-sm btn-success btn-block do-add-invoice">{% trans "OK" %}</button>
-                    </div>
-                    <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                        <button class="btn btn-sm btn-default btn-block"
-                                data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="modal-cash-in" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content modal-info">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{% trans "Cash In" %}</h4>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="cash-in-invoice-id" />
-                <div class="form-group cash-in-amount">
-                    <label for="cash-in-amount">{% trans "Amount" %}</label>
-                    <input type="number" id="cash-in-amount" class="form-control input-sm" value="0" />
-                </div>
-                <div class="actions">
-                    <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                        <button type="button" class="btn btn-sm btn-success btn-block do-cash-in">{% trans "OK" %}</button>
-                    </div>
-                    <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                        <button class="btn btn-sm btn-default btn-block"
-                                data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
-{#{% with payment_conf='foulassi_invoice_payment' %}#}
-{#    {% include 'billing/snippets/modal_payment_options.html' %}#}
-{#{% endwith %}#}

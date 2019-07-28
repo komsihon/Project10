@@ -29,7 +29,7 @@
             <a href="{{ subject_list_url }}">{% trans "Subjects" %}</a>
         </li>
         {% endif %}
-        {% if perms.school.ik_manage_teacher %}
+        {% if perms.foulassi.ik_manage_teacher %}
         <li role="presentation" class="teachers">
             {% url 'school:teacher_list' as teacher_list_url %}
             <a href="{{ teacher_list_url }}">{% trans "Teachers" %}</a>
@@ -54,18 +54,22 @@
         </li>
         {% endif %}
     </ul>
-    {% if perms.billing.ik_manage_invoice %}
+    {% if perms.billing.ik_manage_invoice or perms.billing.ik_view_transaction_log %}
     <div class="divider"></div>
     <ul class="nav nav-pills nav-stacked">
         <li role="presentation" class="menus">{% url 'billing:payment_list' as payment_list_url %}
             <a href="{{ payment_list_url }}">{% trans "Payments" %}</a>
         </li>
+        {% if perms.billing.ik_view_transaction_log %}
         <li role="presentation" class="menus">{% url 'billing:transaction_log' as transaction_log_url %}
             <a href="{{ transaction_log_url }}">{% trans "Transactions" %}</a>
         </li>
+        {% endif %}
+        {% if perms.accesscontrol.sudo %}
         <li role="presentation" class="menus">{% url 'cashout:home' as wallet_url %}
             <a href="{{ wallet_url }}">{% trans "Wallet" %}</a>
         </li>
+        {% endif %}
     </ul>
     {% endif %}
     {% if perms.school.ik_webmaster %}

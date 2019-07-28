@@ -6,9 +6,9 @@
         <div class="container-fluid">
             <div id="admin-tools" class="ceil bottom-shade-xs">
                 <form id="admin-tools-form" onsubmit="return false">
-                    <div style="font-size: 1.5em">{% blocktrans with boys_count=config.boys_count girls_count=config.girls_count count=config.student_count %}
-                        {{ count }} students -
-                        <span style="font-size: .7em">
+                    <div class="student-count-summary">{% blocktrans with boys_count=config.boys_count girls_count=config.girls_count count=config.student_count %}
+                        <span class="hidden-xs">{{ count }} students -</span>
+                        <span style="font-size: .8em">
                             Girls: <span class="text-muted">{{ girls_count }}</span> / Boys: <span class="text-muted">{{ boys_count }}</span>
                         </span>
                     {% endblocktrans %}</div>

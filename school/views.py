@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_protect
@@ -29,7 +30,7 @@ class LevelList(HybridListView):
 
     def get_context_data(self, **kwargs):
         context = super(LevelList, self).get_context_data(**kwargs)
-        context['subject_list'] = Subject.objects.all()
+        context['subject_list'] = Subject.objects.filter(is_visible=True)
         return context
 
 
@@ -47,7 +48,7 @@ class ChangeLevel(ChangeObjectBase):
             if not level_subject_list:
                 level_subject_list = get_subject_list(level)
         subject_list = []
-        for subject in Subject.objects.all():
+        for subject in Subject.objects.filter(is_visible=True):
             try:
                 index = level_subject_list.index(subject)
                 subject.is_active = True
@@ -75,15 +76,22 @@ class ChangeLevel(ChangeObjectBase):
         form = ModelForm(request.POST, instance=obj)
         if form.is_valid():
             obj.name = form.cleaned_data['name']
-            obj.tuition_fees = form.cleaned_data['tuition_fees']
+            obj.slug = slugify(form.cleaned_data['name'])
+            obj.registration_fees = form.cleaned_data['registration_fees']
+            obj.first_instalment = form.cleaned_data['first_instalment']
+            obj.second_instalment = form.cleaned_data['second_instalment']
+            obj.third_instalment = form.cleaned_data['third_instalment']
             item_list = request.POST['subjects'].split(',')
             subject_coefficient_list = []
             for item in item_list:
                 tk = item.split(':')
-                subject = Subject.objects.get(pk=tk[0])
-                subject_coefficient = SubjectCoefficient(subject=subject, group=int(tk[1]), coefficient=int(tk[2]),
-                                                         lessons_due=int(tk[3]), hours_due=int(tk[4]))
-                subject_coefficient_list.append(subject_coefficient)
+                try:
+                    subject = Subject.objects.get(pk=tk[0])
+                    subject_coefficient = SubjectCoefficient(subject=subject, group=int(tk[1]), coefficient=int(tk[2]),
+                                                             lessons_due=int(tk[3]), hours_due=int(tk[4]))
+                    subject_coefficient_list.append(subject_coefficient)
+                except:
+                    continue
             obj.subject_coefficient_list = subject_coefficient_list
             obj.save()
             next_url = self.get_object_list_url(request, obj)

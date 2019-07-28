@@ -58,13 +58,15 @@
             <i class="glyphicon glyphicon-globe"></i>
             <span class="hidden-xs" style="font-weight: 400">{% trans "Go to website" %}</span>
         </a>
-        {% if perms.ik_manage_school %}
+        {% if perms.reporting.ik_manage_reporting %}
         <a href="{% url 'event_list' %}" class="pull-right" title="{% trans "Events" %}" style="margin-right: 20px">
             <i class="glyphicon glyphicon-bell"></i>
             {% if event_count %}
                 <span class="label label-danger" style="margin: 12px 0 0 -7px">{{ event_count }}</span>
             {% endif %}
         </a>
+        {% endif %}
+        {% if perms.school.ik_manage_school %}
         <div class="actions dropdown" title="{% trans "Send SMS or Mail to all parents" %}" style="cursor: pointer; float: right; margin-right: 20px">
             <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <i class="action fa fa-bullhorn text-muted"></i>
@@ -192,6 +194,9 @@
     <script src="{% static 'ikwen/js/jquery-ui.js' %}"></script>
     <script>
         (function() {
+            {% if messages %}
+                {% for msg in messages %}ikwen.showFloatingNotice('{{ msg|safe }}', '{{ msg.tags }}', 6);{% endfor %}
+            {% endif %}
             $('#admin-nav, #admin-content, #object-detail').scroll(function() {
                 if ($(this).scrollTop() > 0) {
                     if ($(this).find('.ceil').length > 0) return;
@@ -207,19 +212,20 @@
                 });
                 var position = $('#admin-content').scrollTop(),
                     navHeight = $('#navbar').height(),
-                    appNavHeight = $('#app-nav').height(),
                     appNavMT = $('#app-nav').css('margin-top'),
-                    stagePadding = navHeight + appNavHeight;
+                    stagePadding = $('#container.admin').css('padding-top');
                 $('#admin-content').scroll(function() {
-                    var scroll = $(this).scrollTop();
+                    var scroll = $(this).scrollTop(),
+                        delta = Math.abs(scroll - position);
                     if (scroll > position) {
                         $('#navbar').css('top', '-' + navHeight + 'px');
                         $('#app-nav').css('margin-top', 0);
                         $('#container.admin').css('padding-top', 0)
-                    } else if (scroll < position) {
+                    } else if (delta > 15 && scroll < position) {
                         $('#navbar').css('top', 0);
                         $('#app-nav').css('margin-top', appNavMT);
-                        $('#container.admin').css('padding-top', stagePadding + 'px')
+                        $('#app-nav').css('margin-top', appNavMT);
+                        $('#container.admin').css('padding-top', stagePadding)
                     }
                     position = $('#admin-content').scrollTop();
                 });
@@ -303,6 +309,26 @@
             ikwen.setupHTMLResultsSearch('#context-search', '#results', searchDescriptor);
             ikwen.setupFilter('#results', filterDescriptor);
             ikwen.setupHTMLResultsFilter(htmlFilterDescriptor);
+            ikwen.resetAdminTools = function() {
+                if ($(window).width() < 768) return;
+                var actionsWidgetsCount = $('#admin-tools-actions .action').length,
+                    maxFilterWidgets = 2;
+                if ($(window).width() < 1200) {
+                    maxFilterWidgets = 3 - actionsWidgetsCount;
+                    if (maxFilterWidgets === 0) maxFilterWidgets = 1;
+                } else {
+                    maxFilterWidgets = 7 - actionsWidgetsCount;
+                }
+                var filterWidgetsCount = $('.tool.filter').length;
+                if (filterWidgetsCount > maxFilterWidgets) {
+                    $('.tool.filter').prependTo('#admin-tools .floating-filter');
+                    $('.show-floating-filter').show();
+                } else {
+                    $('.show-floating-filter').hide();
+                    $('.floating-filter .tool.filter').insertAfter('.show-floating-filter')
+                }
+            };
+            ikwen.resetAdminTools();
             $('footer').appendTo('#admin-nav .wrapper').show();
             $('.show-send-sms').click(function() {
                 var classroom = $(this).data('classroom'),

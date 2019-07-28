@@ -18,32 +18,9 @@
 {% endblock %}
 
 {% block content %}
+    {% cache 300 kid_list user.username %}
     <div id="content" class="container">
-{#        {% cache 600 kid_list user.username %}#}
         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-{#            <div class="search-kid">#}
-{#                <label for="customer-name" class="sr-only">{% trans "Search kid" %}</label>#}
-{#                <div class="col-sm-8 col-sm-offset-2">#}
-{#                    <input id="customer-name" class="form-control" type="text"#}
-{#                           placeholder="{% trans "Search kid" %}" autocomplete="off"/>#}
-{#                    <div class="results customers has-shade" style="display: none" data-min-search-chars="2">#}
-{#                        {% include 'core/snippets/spinner.html' %}#}
-{#                        <ul style="padding-left: 0">#}
-{#                            <li class="member tpl" style="display: none">#}
-{#                                <div style="display: block">#}
-{#                                    <span class="photo logo bg-img" style="background-image: url({% static 'ikwen/img/no_photo.png' %})"></span>#}
-{#                                    <div style="float: left; margin-left: 30px">#}
-{#                                        <span class="full_name"></span>#}
-{#                                        <p class="about short_description"></p>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </li>#}
-{#                        </ul>#}
-{#                        <div class="clearfix"></div>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="clearfix"></div>#}
-{#            </div>#}
             {% if suggestion_list %}
             <div class="suggestion-list">
                 <h3>{% trans "Suggestions" %}</h3>
@@ -106,9 +83,9 @@
                 </div>
                 <div class="clearfix"></div>
             </div>
+            {% else %}
             {% endif %}
         </div>
-{#        {% endcache %}#}
         <div class="clearfix"></div>
     </div>
     <div class="modal fade" id="modal-confirm-accept" tabindex="-1" role="dialog">
@@ -159,12 +136,18 @@
             </div>
         </div>
     </div>
+    {% endcache %}
 {% endblock %}
 
 {% block js %}
     <script>
         (function() {
             var studentId, name, imageUrl, url;
+            $('.suggestion-list .ik-li').click(function() {
+                if ($(window).width() < 768) {
+                    $(this).find('.actions').css('bottom', '-30vh').animate({'bottom': 0})
+                }
+            });
             $('.show-modal-accept').click(function() {
                 var _$student = $(this).parents('.ik-li');
                     studentId = _$student.data('id');

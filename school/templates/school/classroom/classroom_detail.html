@@ -7,8 +7,8 @@
     <link rel='stylesheet' href="{% static 'ikwen/swiper/css/swiper.min.css' %}" />
     <style>
         @media (max-width: 767px) {
-            #admin-tools + .content-tab-list {margin-top: 25px}
-            #admin-tools + .content-tab-list + .tab-content {margin-top: 72px}
+            #admin-tools + .content-tab-list {margin-top: 40px}
+            #admin-tools + .content-tab-list + .tab-content {margin-top: 90px}
         }
         @media (min-width: 768px) {
             #admin-tools .btn {max-width: 95px}
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                 </form>
-                {% if perms.school.ik_manage_students %}
+                {% if perms.foulassi.ik_manage_student %}
                 {% url 'school:change_student' classroom.id as change_student_url %}
                 <a href="{{ change_student_url }}" class="btn btn-sm btn-success cta pull-right action"
                    style="margin-right: 0" title="{% trans "Add new student" %}">
@@ -88,7 +88,7 @@
                                 <a href="#tab-{{ forloop.counter0 }}" aria-controls="student-list-stage"
                                    role="tab" data-toggle="tab">
                                     <span class="hidden-xs">{{ subject }}</span>
-                                    <span class="visible-xs">{{ subject|truncatechars:"15" }}</span>
+                                    <span class="visible-xs">{{ subject|truncatechars:"12" }}</span>
                                 </a>
                             </div>
                         {% endfor %}
@@ -258,7 +258,23 @@
                         </div>
                         <div id="upload-container" class="upload-container text-center" style="padding-top: 1vh;width: 100%">
                             <div class="uploader" style="display: block; margin: auto; position: static; height: 120px"></div>
-                            <span class="student-filename text-success" style="font-size: 1.2em"></span>
+                            <div id="import-success" style="display: none">
+                                <div class="student-filename text-success" style="font-size: 1.2em"></div>
+                                <div class="form-group checkbox">
+                                    <label for="set-invoices">
+                                        <input type="checkbox" class="" name="set_invoices" id="set-invoices" checked >
+                                        <span>{% trans "Set invoices" %}</span>
+                                    </label>
+                                </div>
+                                <p class="set-invoices-notice">{% blocktrans %}
+                                    Tuition fees for those student will be marked as unpaid. Invoices will
+                                    be generated and set for their parents to pay.
+                                {% endblocktrans %}</p>
+                                <p class="unset-invoices-notice text-danger" style="display: none">{% blocktrans %}
+                                    Tuition fees for those student will be marked as being already paid and an
+                                    <strong>NO INVOICE WILL BE GENERATED.</strong>
+                                {% endblocktrans %}</p>
+                            </div>
                             <span id="import-error" class="text-danger" style="font-size: 1.2em"></span>
                         </div>
                         <input type="hidden" id="student-file-url" name="student_file_url" />
@@ -380,8 +396,9 @@
                     }
                 });
             }).on('click', '#modal-import .confirm-import', function() {
+                var setInvoices = $('#set-invoices').prop('checked') ? 'yes' : '';
                 $.ajax({
-                    data: {action: 'import_student_file', filename: $("#student-file-url").val()},
+                    data: {action: 'import_student_file', filename: $("#student-file-url").val(), set_invoices: setInvoices},
                     error: function() {
                         ikwen.showFloatingNotice("Oops! Something went wrong");
                     },
@@ -405,6 +422,9 @@
                     })
                 } else $('.student-list .ik-li.member').show();
             });
+            $('#set-invoices').click(function() {
+                $('.set-invoices-notice, .unset-invoices-notice').toggle();
+            });
             {% if perms.school.ik_manage_students %}
             var uploader = new qq.FileUploader({
                 template: '<div class="qq-uploader" style="background: none">' +
@@ -427,14 +447,13 @@
                 onComplete: function(id, fileName, responseJSON) {
                     $('body').css('cursor', 'auto');
                     if (responseJSON.error_message) {
-                        $('.student-filename').hide();
+                        $('#import-success, .student-filename, .confirm-import').hide();
                         $('#import-error').html(responseJSON.error_message).show();
-                        $('.confirm-import').hide();
                     } else if(responseJSON.success) {
                         $('#student-file-url').val(responseJSON.path);
                         $('.student-filename').text(fileName).show();
                         $('#import-error').hide();
-                        $('.confirm-import').show();
+                        $('#import-success, .confirm-import').show();
                     } else {
                         alert("upload failed!");
                     }

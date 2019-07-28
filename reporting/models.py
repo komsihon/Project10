@@ -1,6 +1,6 @@
 from django.db import models
 from djangotoolbox.fields import ListField
-from ikwen.core.models import Model, AbstractWatchModel
+from ikwen.core.models import Model, AbstractWatchModel, Service
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.accesscontrol.models import Member
 from ikwen_foulassi.foulassi.models import Student, ResultsTracker, DisciplineTracker, get_school_year
@@ -9,7 +9,7 @@ from ikwen_foulassi.school.models import Classroom, Subject, Level, Session, Les
 
 
 class LessonReport(AbstractWatchModel):
-    lesson = models.ForeignKey(Lesson)
+    subject = models.ForeignKey(Subject)
     level = models.ForeignKey(Level, null=True)
     classroom = models.ForeignKey(Classroom, null=True)
     school_year = models.IntegerField(default=get_school_year)
@@ -20,7 +20,7 @@ class LessonReport(AbstractWatchModel):
     total_hours_count = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = ('level', 'classroom')
+        unique_together = ('level', 'classroom', 'subject')
 
 
 class DisciplineReport(AbstractWatchModel, DisciplineTracker):
@@ -29,7 +29,7 @@ class DisciplineReport(AbstractWatchModel, DisciplineTracker):
     classroom = models.ForeignKey(Classroom, null=True)
 
     class Meta:
-        unique_together = ('level', 'classroom')
+        unique_together = ('level', 'classroom', 'discipline_item')
 
 
 class StudentDisciplineReport(AbstractWatchModel):
@@ -49,7 +49,7 @@ class SessionReport(Model, ResultsTracker):
     level = models.ForeignKey(Level, null=True)
 
     class Meta:
-        unique_together = ('subject', 'classroom')
+        unique_together = ('level', 'classroom', 'subject')
 
     def get_students_having_score(self, value):
         student_list = [score.student
@@ -74,7 +74,7 @@ class SessionGroupReport(Model, ResultsTracker):
     level = models.ForeignKey(Level, null=True)
 
     class Meta:
-        unique_together = ('subject', 'classroom')
+        unique_together = ('level', 'classroom', 'subject')
 
     def get_students_having_score(self, value):
         student_list = [score.student
@@ -99,10 +99,11 @@ class YearReport(Model, ResultsTracker):
     level = models.ForeignKey(Level, null=True)
 
     class Meta:
-        unique_together = ('subject', 'classroom')
+        unique_together = ('level', 'classroom', 'subject')
 
 
 class ReportCardBatch(Model):
+    # service = models.ForeignKey(Service)
     member = models.ForeignKey(Member)
     session = models.ForeignKey(Session, blank=True, null=True)
     session_group = models.ForeignKey(SessionGroup, blank=True, null=True)

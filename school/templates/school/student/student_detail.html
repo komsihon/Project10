@@ -49,10 +49,6 @@
                         <input type="hidden" id="dob-alt" name="dob" value="{{ student.dob|date:"Y-m-d" }}" />
                         <div class="basic">
                             {% include 'core/snippets/model_admin_form.html' %}
-                            <div class="form-group" style="word-wrap: break-word">
-                                <label style="display: block; clear: both; font-weight: 700">{% trans "Student URL" %}</label>
-                                <a href="{{ settings.IKWEN_FOULASSI_BASE_URL }}{{ student_public_url }}">{{ settings.IKWEN_FOULASSI_BASE_URL }}{{ student_public_url }}</a>
-                            </div>
                         </div>
                         <div class="divider row"></div>
                         <div class="people-in-charge">
@@ -128,6 +124,7 @@
             </div>
         </div>
     </div>
+    {% include 'school/snippets/student/modals.html' %}
 {% endblock %}
 
 {% block js %}
@@ -147,6 +144,10 @@
                 altFormat: "yy-mm-dd",
                 defaultDate: new Date('{{ student.dob }}')
             }).removeAttr('name');
+            $('#discipline-item-happened-on').datepicker({
+                altField: "#happened-on-alt",
+                altFormat: "yy-mm-dd"
+            });
             $('#admin-content').on('click', '.tab', function (e) {
                 var _$tab = $(this),
                     tabName = _$tab.data('tab');
@@ -237,7 +238,9 @@
                 } else $('.people-in-charge .form-group').removeClass('has-error');
                 var params = {action: 'add_parent', name: name, relation: relation, phone: phone, email: email};
                 $.getJSON('', params, function(data) {
-                    if (data.success) {
+                    if (data.error) {
+                        ikwen.showFloatingNotice(data.error)
+                    } else if (data.success) {
                         var $parent = $('li.parent.tpl').clone().removeClass('tpl').attr('id', data.id).data('id', data.id);
                         $parent.find('.name').text(name);
                         $parent.find('.relation').text(relation);

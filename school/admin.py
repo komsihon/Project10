@@ -1,12 +1,22 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
 
 class LevelAdmin(admin.ModelAdmin):
-    fields = ('name', 'tuition_fees', )
+    fields = ('name', 'registration_fees', 'first_instalment', 'second_instalment', 'third_instalment')
+    fieldsets = (
+        (None, {'fields': ('name', )}),
+        (_('Tuition fees'), {'fields': ('registration_fees', 'first_instalment', 'second_instalment', 'third_instalment')}),
+    )
 
 
 class ClassroomAdmin(admin.ModelAdmin):
-    fields = ('level', 'name', 'tuition_fees', 'professor')
+    fields = ('level', 'name', 'professor',
+              'registration_fees', 'first_instalment', 'second_instalment', 'third_instalment')
+    fieldsets = (
+        (None, {'fields': ('level', 'name', 'professor', )}),
+        (_('Tuition fees'), {'fields': ('registration_fees', 'first_instalment', 'second_instalment', 'third_instalment')}),
+    )
 
 
 class SubjectAdmin(admin.ModelAdmin):
