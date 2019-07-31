@@ -5,7 +5,7 @@ from django.utils.translation import gettext as _
 from import_export import resources, fields
 from ikwen.core.utils import get_service_instance
 
-from ikwen_foulassi.foulassi.models import Student
+from ikwen_foulassi.foulassi.models import Student, SchoolConfig
 
 
 class StudentResource(resources.ModelResource):
@@ -57,10 +57,10 @@ class StudentAdmin(admin.ModelAdmin):
 
 if getattr(settings, 'IS_IKWEN', False):
     _fieldsets = [
+        (None, {'fields': ('service', )}),
         (_('School'), {'fields': ('company_name', 'short_description', 'slogan', 'latitude', 'longitude',
                                   'description', 'is_pro_version')}),
-        (_('SMS'), {'fields': ('sms_api_script_url', 'sms_api_username', 'sms_api_password', )}),
-        (_('Mailing'), {'fields': ('welcome_message', 'signature',)})
+        (_('Messaging'), {'fields': ('sms_api_script_url', 'welcome_message', 'signature',)})
     ]
 else:
     service = get_service_instance()
@@ -87,3 +87,6 @@ class SchoolConfigAdmin(admin.ModelAdmin):
 
     def delete_model(self, request, obj):
         self.message_user(request, "You are not allowed to delete Configuration of the platform")
+
+
+admin.site.register(SchoolConfig, SchoolConfigAdmin)
