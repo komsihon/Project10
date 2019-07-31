@@ -26,6 +26,10 @@ from ikwen_foulassi.school.models import get_subject_list, Justificatory
 from ikwen_foulassi.school.student.views import StudentDetail, ChangeJustificatory
 
 
+class Home(TemplateView):
+    template_name = 'foulassi/home.html'
+
+
 class EventList(TemplateView):
     template_name = 'foulassi/event_list.html'
     MIN_DISPLAY = 10
@@ -68,7 +72,7 @@ class KidList(TemplateView):
         kid_fk_list = [kid.pk for kid in kid_list]
         suggestion_key = user.username + 'suggestion_list'
         suggestion_list = cache.get(suggestion_key)
-        # suggestion_list = None
+        suggestion_list = []
         if suggestion_list is None:
             suggestion_list = []
             for obj in Parent.objects.select_related('student').filter(Q(email=user.email) | Q(phone=user.phone)):
@@ -81,7 +85,7 @@ class KidList(TemplateView):
                     pass
             cache.set(suggestion_key, suggestion_list, 5 * 60)
         context['suggestion_list'] = suggestion_list
-        context['kid_list'] = kid_list
+        context['kid_list'] = []
         return context
 
     def get(self, request, *args, **kwargs):

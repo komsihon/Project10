@@ -1,0 +1,321 @@
+{% extends "website/base.html" %}
+{% load i18n humanize static auth_tokens  %}
+{% block page_title %}
+    <title>Foulassi - {% trans 'Connect with your kids at school' %} </title>
+{% endblock %}
+
+{% block meta %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/apple-icon-180x180.png">
+    <link rel="shortcut icon" type="image/png" href="{% static "foulassi/img/foulassi_logo.png" %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:title" content="Foulassi - {% trans "Follow your kids at school instantly" %}" />
+    <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
+    <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
+    <meta name="abstract" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
+{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}" />
+    <style type="text/css">
+        .edge-panel-left .wrapper {padding: 0 0 120px;}
+        section.main-feat {background:url("{% static 'foulassi/img/foulassi-home-bg.jpg' %}") center;background-size: cover;}
+        footer {background: url({% static 'foulassi/img/back-to-school.jpg' %}) center;background-size: cover;
+            clear: both; color: #fff; display: block; float: none; height: 75vh; margin: 0;}
+        section.address {height: 45vh}
+        section.address .cover {background-color: rgba(0, 0, 0, 0.5); color: #2f2f2f; font-weight: 400; height: 75vh}
+        section.address .cover h2 {color: #fff; font-size: 33px; font-weight: 600; padding-top: 10vh}
+        section.address .cover p {color: #fff; font-size: 18px}
+        section.address .cta a {background: #fff; color: #2f2f2f;font-size: 18px;font-weight: 300;}
+        section.address a {color: #2f2f2f;font-size: 18px;font-weight: 300;}
+        section.site {min-height: 100px; padding: 137px 0}
+        section.site:nth-child(2n) {background-color: #fff}
+        section.site img {width: 60%}
+        .white-text-has-shade {text-shadow: 1px 2px 2px rgba(255, 255, 255, 0.7)}
+        #navbar .glyphicon {color: #fff !important;}
+        #navbar .btn {background: #FFF !important; color: #233682 !important;}
+
+        #bottom-menu .lang-switcher {margin: 0 0 0 50px;}
+        #bottom-menu .lang-switcher select {color: #fff; font-size: 12px; width: 45px}
+        #bottom-menu .lang-switcher select:active {background: #111}
+        .features h3 {font-weight: 400}
+        .features.site {margin-top: 0}
+        .features.site h1 {color: #2d2d2d}
+        section.site .cover {background: rgba(0, 0, 0, 0.6); height: 100vh; margin-top: 0; top: 0}
+        section.site.main-feat.banner {height: 100vh}
+        #navbar {background: transparent}
+        .navbar-brand strong {color: #fff}
+        .navbar-default .navbar-nav>li>a , .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a{color: #fff}
+        #navbar-search input {background: rgba(102, 102, 102, 0.4);}
+        section.site.banner a.btn {background: #fff; border: #233682; color: #233682}
+        section.site.banner {margin-top: 0}
+        .section.address .cta a {font-size: 18px}
+        .icon-bar {background: #fff}
+
+        @media only screen and (max-device-width : 767px) and (orientation: portrait) {
+            section.header {height: 410px; margin-top: 0;}
+            section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 70px;}
+            section.header h3 {color: #000;font-size: 22px; font-weight: 400; line-height: 44px}
+            .company .title {font-size: 35px }
+            .pricing-list > li {margin-top: 75px}
+            .lead {font-size: 22px}
+            .achievements .title {}
+            section.address .cover h2 {color: #fff; font-weight: 600}
+            #bottom-menu {margin-top: 70px; position: relative}
+            #bottom-menu li a {color: #fff; font-size: 22px}
+            div.cloud-deploy {bottom: inherit;margin-top: 133px; position: relative}
+            .features {padding: 25px 0; margin-top: 0}
+            .feat {margin-top: 100px}
+            .feat:first-child {margin-top: 0}
+            section.main-feat {height: 1000px}
+
+            section.main-feat {background-position: center}
+            .contact-img {margin-top: 35px}
+            section.site .cover h1 {padding: 0}
+            a.btn {margin-top: 50px}
+            section.site.banner a.btn {width: 100%}
+            footer div {padding: 0}
+            .section.address .cta a {font-size: 20px}
+        }
+
+        @media only screen and (max-width : 767px) and (orientation: landscape) {
+            .features {padding: 25px 0; margin-top: 50px}
+            .feat {margin-top: 20px}
+
+            section.header {height: 510px; margin-top: 0;}
+            section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 70px;}
+            section.header h3 {color: #000;font-size: 22px; font-weight: 400; line-height: 44px;}
+            div.cloud-deploy {bottom: inherit;margin-top: 225px; position: relative}
+            section.site img {width: 60%}
+
+            section.site.banner p {margin-top: 25px; font-size: 21px;line-height: 40px;}
+            section.site.banner h1 {font-size: 51px;line-height: 65px; font-weight: 700}
+            .cta {text-align: center}
+            a.btn {margin-top: 50px}
+        }
+
+        @media only screen and (max-device-width : 767px) {
+            section.site {padding: 30px 0}
+            section.site.banner h1 {font-size: 30px;line-height: 45px; font-weight: 600}
+            section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px;}
+            section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
+            #navbar-search input {background: none}
+        }
+
+        @media only screen and (min-width : 768px) and (orientation: landscape) {
+            {#section.site .cover {height: 650px}#}
+            {#section.site.main-feat.banner {height: 650px}#}
+            section.site.banner h1 {margin-top: 40px}
+            section.site .cover .btn {margin-top: 60px}
+            section.address {height: 60vh}
+            section.address .cta {margin-top: 80px}
+        }
+
+        @media only screen and (min-width : 768px) and (orientation: portrait) {
+            section.site .cover {height: 650px}
+            section.site.main-feat.banner {height: 650px}
+            section.site.banner h1 {margin-top: 110px}
+            footer, section.address .cover {height: 540px}
+        }
+
+        @media only screen and (min-width : 768px) {
+            section.site {padding: 60px 0}
+            section.site .cover p {font-size: 21px; font-weight: 400; line-height: 35px}
+            section.site.banner h1 {font-size: 51px; font-weight: 700;line-height: 65px}
+            section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px;}
+            section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
+        }
+
+        @media only screen and (max-width : 991px) {
+            div.footer, #bottom-menu li a {font-size: 15px}
+        }
+
+        @media only screen and (min-width : 992px) {
+            .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {color: #fff}
+            section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 130px;}
+            section.header h3 {color: #000; font-size: 33px;font-weight: 400;  line-height: 94px;}
+            section.header {height: 900px}
+            .features p {line-height: 40px}
+            section.site img {width: 55%}
+            section.site img.history {width: 60%}
+            section.site.banner {text-align: left; padding-top: 0; height: 900px}
+            section.site.banner p {margin-top: 25px; text-align: justify;font-size: 21px;line-height: 40px;}
+            section.site.banner h1 {font-size: 51px; font-weight: 700;line-height: 65px; margin-top: 110px}
+            section.site.banner .video {margin-top: 58px}
+            .cta {text-align: left; }
+            .feat h2 {padding-bottom: 30px; font-size: 32px; font-weight: 600; text-align: left}
+            .trail {margin-top: 100px;}
+            footer, section.address .cover {height: 540px}
+            section.address {height: 490px}
+            section.address .cover h2 {padding-top: 15vh}
+            section.address .cta {margin-top: 150px}
+        }
+
+        @media only screen and (min-width : 1200px) {
+            section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 170px;}
+            section.site {padding: 135px 0}
+            section.site.banner h1 {margin-top: 110px}
+            section.site h2 {font-size: 33px}
+            section.header h3 {color: #000; font-size: 33px;font-weight: 400;  line-height: 94px;}
+            section.header {height: 1015px}
+            div.cloud-deploy {bottom: 250px}
+            section.site.header {height: 1000px}
+            footer, section.address .cover {height: 670px}
+            section.address {height: 600px}
+        }
+    </style>
+{% endblock %}
+
+{% block page_content %}
+    <section class="main-feat banner site">
+        <div class="cover">
+            <div class="container">
+                <div class="row desc">
+                    <div class="col-xs-12 text-has-shade">
+                        <h1>{% trans "Follow your kids at school in real-time" %} </h1>
+                        <p>
+                            {% blocktrans %}
+                                Foulassi is a social platform that connects with schools of your kids
+                                to give you information on their results, discipline and financial status.
+                            {% endblocktrans %}
+                        </p>
+                    </div>
+                </div>
+                <div class="cta" style="float: left;font-weight: 600; width: 100%">
+                    <a id="deploy" class="btn btn-sm" href="{% url 'foulassi:kid_list' %}" style="font-weight: 600">{% trans "Get connected" %}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+                    <div class="col-sm-6">
+                        <img class="img-responsive" src="{% static 'website/img/multi_tasks.png' %}">
+                    </div>
+                    <div class="col-sm-6">
+                        <h2>{% trans "Follow them all in one single place" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                Foulassi collects data from all schools of your kids and put them in one single place
+                                for you to follow.
+                                You can get someone else to follow them by adding the person to the parent list. This
+                                is perfect to add the child's mother, uncle or even grand-father.
+                            {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+                    <div class="col-sm-6">
+                        <h2>{% trans "Know their results before they do" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                You have immediate access to your children's scores and discipline information, as
+                                soon as teachers and staff put them online.<br/>
+                                You can take decisive action if things are going wrong. If results are good,
+                                think of offering them their favorite sneakers.
+                            {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <img class="img-responsive" src="{% static 'website/img/performances.png' %}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+                    <div class="col-sm-6">
+                        <img class="history img-responsive" src="{% static 'website/img/state_history.png' %}">
+                    </div>
+                    <div class="col-sm-6">
+                        <h2>{% trans "Pay their invoices online" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                Pay whatever is due directly online using whatever Mobile Money wallet.
+                                Money goes straight to the school. You know exactly how much things cost and
+                                you don't take the risk of giving money to your kids for them to go and use it
+                                for something else.
+                            {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <section class="address">
+            <div>
+                <div class="cover">
+                    <h2 class="title animated wow fadeInLeft">
+                        {% trans "Connect with your children now" %}
+                    </h2>
+                    <p class="lead animated wow fadeInDown">
+                        {% trans "And be next to them everyday for success." %}
+                    </p>
+                    <div class="cta" style="text-align: center">
+                        <a id="deploy" class="btn btn-sm" href="{% url 'foulassi:kid_list' %}" style="font-weight: 600">{% trans "Get connected" %}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </section>
+        <div class="container">
+            <div class="footer hidden-xs">
+                &copy; {{ year }} <a class="company-name" href="{{ service.url }}"><strong>{{ config.company_name }}</strong></a>.
+                {% trans "All rights reserved." %}
+                {% if config.legal_mentions_url %}
+                - <a href="{{ config.legal_mentions_url }}" style="color: #666; text-decoration: none">{% trans "Legal mentions" %}</a>
+                {% endif %}
+            </div>
+            <div id="bottom-menu" class="hidden-xs">
+                <ul>
+                    {% include 'tsunami/snippets/language_switcher.html' %}
+                    <li><a href="http://blog.ikwen.com">{% trans 'Blog' %}</a> </li>
+                    <li><a href="http://support.ikwen.com">{% trans 'Support' %}</a> </li>
+                    <li><a href="http://blog.ikwen.com">{% trans 'Terms & conditions' %}</a> </li>
+                    <li><a href="{% url 'about' %}">{% trans 'About ikwen' %}</a> </li>
+                </ul>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </footer>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (function() {
+            var scrollBreakPoint = 90;
+            $(window).scroll(function(event){
+                var scrollTop = $(this).scrollTop();
+                if (scrollTop > scrollBreakPoint){
+                    var opacity = Math.abs(scrollBreakPoint - scrollTop) / 100;
+                    $('#navbar').css("background-color", "rgba(35, 54, 130," + opacity + ")");
+                    $('#navbar-search input').css("background-color", "rgba(26, 39, 93," + opacity + ")");
+                } else {
+                    $('#navbar').css("background-color", "transparent");
+                    $('#navbar-search input').css("background-color", "rgba(102, 102, 102, .4)");
+                }
+
+            })
+        })()
+    </script>
+{% endblock %}
