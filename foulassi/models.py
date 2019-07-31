@@ -222,7 +222,7 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
     third_instalment_deadline = models.DateField(blank=True, null=True)
     session_group_avg = models.CharField(max_length=60, choices=SESSION_AVG_CALCULATION_CHOICES, default=AVERAGE_OF_ALL,
                                          help_text=_("Method of calculation of Term score. Average of sessions "
-                                                     "scores of best score of all sessions."))
+                                                     "scores or best score of all sessions."))
     is_public = models.BooleanField(default=False,
                                     help_text="Designates whether this school is a State school.")
 

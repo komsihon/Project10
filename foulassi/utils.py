@@ -27,7 +27,7 @@ def get_payment_confirmation_email_message(payment, parent_name, student_name):
     message = _("Dear %(parent_name)s,<br><br>"
                 "This is a payment receipt of %(currency)s %(amount).2f "
                 "for Invoice <strong>No. %(invoice_number)s</strong> generated on %(date_issued)s "
-                "towards school fees for %(student_name)s. Below is a summary of your payment.<br><br>"
+                "for %(student_name)s. Below is a summary of your payment.<br><br>"
                 "<span style='color: #666'>%(invoice_title)s</span><br><br>"
                 "Thank you for your "
                 "payment." % {'parent_name': parent_name,
@@ -47,7 +47,7 @@ def get_payment_sms_text(payment, student_name):
     """
     config = get_service_instance().config
     message = _("Payment confirmation of %(currency)s %(amount).2f "
-                "for school fees of %(student_name)s."
+                "for school fees of %(student_name)s. "
                 "Thank you." % {'amount': payment.amount,
                                 'student_name': student_name,
                                 'currency': config.currency_symbol})

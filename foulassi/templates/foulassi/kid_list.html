@@ -10,80 +10,141 @@
     <meta property="og:site_name" content="{{ service.domain|upper }}" />
 {% endblock %}
 
-{% block page_title %}<title>{{ service.project_name }} - Foulassi</title>{% endblock %}
+{% block page_title %}<title>Foulassi - ikwen</title>{% endblock %}
 
 {% block head_style %}
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}" />
+    <style>
+        @media (max-width: 767px) {
+            #navbar .menu-button {display: none}
+            #navbar .navbar-brand {margin-left: 20px}
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-    {% cache 300 kid_list user.username %}
+{#    {% cache 300 kid_list user.username %}#}
     <div id="content" class="container">
         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-            {% if suggestion_list %}
-            <div class="suggestion-list">
-                <h3>{% trans "Suggestions" %}</h3>
-                <ul class="people object-list" style="padding-left: 0">
-                    {% for student in suggestion_list %}
-                        {% url 'foulassi:kid_detail' student.school.ikwen_name student.id as student_url %}
-                        <li id="{{ student.id }}" class="ik-li member" data-id="{{ student.id }}"
-                            data-url="{{ student_url }}" data-img-url="{{ settings.IKWEN_MEDIA_URL }}{{ student.photo.small_name }}">
-                            {% if student.photo.name %}
-                                <a href="javascript:;" class="photo" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ student.photo.small_name }})"></a>
-                            {% else %}
-                                <a href="javascript:;" class="photo" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></a>
-                            {% endif %}
-                            <span class="hidden tags">{{ student.tags }}</span>
-                            <div class="info">
-                                <a href="javascript:;" class="full_name">{{ student }}</a>
-                                <p class="text-muted" style="font-size: .9em">
-                                    {{ student.school.config.company_name }}
-                                </p>
-                            </div>
-                            <div class="actions">
-                                <button class="btn btn-sm btn-default show-modal-refuse">{% trans "Cancel" %}</button>
-                                <button class="btn btn-sm btn-primary show-modal-accept">{% trans "Accept" %}</button>
-                            </div>
-                        </li>
+            {% if suggestion_list or kid_list %}
+                {% if suggestion_list %}
+                <div class="suggestion-list">
+                    <h3>{% trans "Suggestions" %}</h3>
+                    <ul class="people object-list" style="padding-left: 0">
+                        {% for student in suggestion_list %}
+                            {% url 'foulassi:kid_detail' student.school.ikwen_name student.id as student_url %}
+                            <li id="{{ student.id }}" class="ik-li member" data-id="{{ student.id }}"
+                                data-url="{{ student_url }}" data-img-url="{{ settings.IKWEN_MEDIA_URL }}{{ student.photo.small_name }}">
+                                {% if student.photo.name %}
+                                    <a href="javascript:;" class="photo" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ student.photo.small_name }})"></a>
+                                {% else %}
+                                    <a href="javascript:;" class="photo" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></a>
+                                {% endif %}
+                                <span class="hidden tags">{{ student.tags }}</span>
+                                <div class="info">
+                                    <a href="javascript:;" class="full_name">{{ student }}</a>
+                                    <p class="text-muted" style="font-size: .9em">
+                                        {{ student.school.config.company_name }}
+                                    </p>
+                                </div>
+                                <div class="actions">
+                                    <button class="btn btn-sm btn-default show-modal-refuse">{% trans "Cancel" %}</button>
+                                    <button class="btn btn-sm btn-primary show-modal-accept">{% trans "Accept" %}</button>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                {% endif %}
+                {% if kid_list %}
+                <div class="kid-list">
+                    <h3 class="title">{% trans "Your kids" %}</h3>
+                    {% for student in kid_list %}
+                    <div class="col-xs-6 col-sm-3 kid">
+                        <div class="text-center">
+                            {% url 'foulassi:kid_detail' student.school.ikwen_name student.id as student_url %}
+                            <a href="{{ student_url }}">
+    {#                        <a {% if student.kid_fees_paid %}href="{{ student_url }}"{% else %}href="javascript:;"{% endif %}>#}
+                                {% if student.photo.name %}
+                                    <img class="img-circle img-thumbnail" src="{% get_media_prefix %}{{ student.photo.small_name }}">
+                                {% else %}
+                                    <img class="img-circle img-thumbnail" src="{% static 'ikwen/img/login-avatar.jpg' %}">
+                                {% endif %}
+                                <span>{{ student }}</span>
+    {#                            <span class="status-bullet danger"></span>#}
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
                     {% endfor %}
-                </ul>
-                <div class="clearfix"></div>
-            </div>
-            {% endif %}
-            {% if kid_list %}
-            <div class="kid-list">
-                <h3 class="title">{% trans "Your kids" %}</h3>
-                {% for student in kid_list %}
-                <div class="col-xs-6 col-sm-3 kid">
-                    <div class="text-center">
-                        {% url 'foulassi:kid_detail' student.school.ikwen_name student.id as student_url %}
-                        <a href="{{ student_url }}">
-{#                        <a {% if student.kid_fees_paid %}href="{{ student_url }}"{% else %}href="javascript:;"{% endif %}>#}
-                            {% if student.photo.name %}
-                                <img class="img-circle img-thumbnail" src="{% get_media_prefix %}{{ student.photo.small_name }}">
-                            {% else %}
+                    <div class="col-xs-6 col-sm-3 kid tpl">
+                        <div class="text-center">
+                            <a>
                                 <img class="img-circle img-thumbnail" src="{% static 'ikwen/img/login-avatar.jpg' %}">
-                            {% endif %}
-                            <span>{{ student }}</span>
-{#                            <span class="status-bullet danger"></span>#}
-                        </a>
+                                <span class="kid-name"></span>
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                {% endfor %}
-                <div class="col-xs-6 col-sm-3 kid tpl">
-                    <div class="text-center">
-                        <a>
-                            <img class="img-circle img-thumbnail" src="{% static 'ikwen/img/login-avatar.jpg' %}">
-                            <span class="kid-name"></span>
-                        </a>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
+                {% endif %}
             {% else %}
+                <div style="margin-top: 6vh; text-align: center">
+                    <img src="{% static 'ikwen/img/embarassed.jpg'  %}" height="80"/>
+                    <h4>{% trans "Sorry! We could not find any of your children" %}</h4>
+                    <div class="search-school">
+                        <label for="school-name" class="sr-only">{% trans "Invite a school" %}</label>
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <input id="school-name" class="form-control" type="text"
+                                   placeholder="{% trans "Search school" %}" autofocus autocomplete="off"/>
+                            <div class="results customers has-shade" style="display: none" data-min-search-chars="2">
+                                {% include 'core/snippets/spinner.html' %}
+                                <ul style="padding-left: 0">
+                                    <li class="member tpl" style="display: none">
+                                        <div style="display: block">
+                                            <span class="photo logo bg-img" style="background-image: url({% static 'ikwen/img/no_photo.png' %})"></span>
+                                            <div style="float: left; margin-left: 30px">
+                                                <span class="full_name"></span>
+                                                <p class="about short_description"></p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div style="padding-top: 20px">
+                        {% url 'ikwen:account_setup' as account_setup_url %}
+                        <div style="color: #888; margin-top: 15px; text-align: left">
+                            {% blocktrans with email=user.email phone=user.phone %}
+                            <p>
+                                Maybe your children's schools are not yet on Foulassi, or they are on Foulassi
+                                and did not add your contact in children's data. Try the following :
+                            </p>
+                            <ol>
+                                <li style="margin-top: 3vh">
+                                    Search the schools of your kids above. If the schools are not yet on Foulassi,
+                                    you can invite them to do so.<br>
+                                    <a href="javascript:$('.search-school input').focus();">Search school</a>
+                                </li>
+                                <li style="margin-top: 2vh">
+                                    If you are sure that the school is on Foulassi, they probably forgot to add your
+                                    email and phone as parent's data. You can contact the school to do so, or ask a
+                                    person who already has access to the kid.
+                                </li>
+                                <li style="margin-top: 2vh">
+                                    Check email and phone on your ikwen account. Those are currently <strong>{{ email }}</strong>, <strong>{{ phone }}</strong>.<br>
+                                    <a href="{{ account_setup_url }}">Update if it's incorrect</a> to help us find your children.
+                                </li>
+                            </ol>
+                        {% endblocktrans %}</div>
+                    </div>
+                </div>
             {% endif %}
         </div>
         <div class="clearfix"></div>
@@ -136,10 +197,12 @@
             </div>
         </div>
     </div>
-    {% endcache %}
+{#    {% include 'website/snippets/edge_panel.html' %}#}
+{#    {% endcache %}#}
 {% endblock %}
 
 {% block js %}
+    {{ block.super }}
     <script>
         (function() {
             var studentId, name, imageUrl, url;
