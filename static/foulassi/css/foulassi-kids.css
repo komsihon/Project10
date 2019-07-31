@@ -8,7 +8,7 @@
 
 #app-nav {display: none;overflow: hidden;height: 0;}
 #content {min-height: 90vh}
-.search-kid {padding: 0 15px;margin: 5vh 0;}
+.search-school {margin: 5vh 0 2vh;}
 .kid {height: 195px}
 #content h3 {text-align: center; margin-bottom: 21px}
 .suggestion-list .btn {min-width: 90px; margin-left: 5px}
