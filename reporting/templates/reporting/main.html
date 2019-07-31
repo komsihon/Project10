@@ -100,13 +100,13 @@
                             </span>
                             <ul class="performances-filter dropdown-menu" aria-labelledby="filter-classes">
                                 {% if settings.DEBUG %}
-                                    <li data-target="today" style="display: none"><a>{% trans "Today" %}</a></li>
-                                    <li data-target="yesterday"><a>{% trans "Yesterday" %}</a></li>
+                                    <li data-target="today" data-stage="#classes-report" style="display: none"><a>{% trans "Today" %}</a></li>
+                                    <li data-target="yesterday" data-stage="#classes-report"><a>{% trans "Yesterday" %}</a></li>
                                 {% else %}
-                                    <li data-target="yesterday" style="display: none"><a>{% trans "Yesterday" %}</a></li>
+                                    <li data-target="yesterday" data-stage="#classes-report" style="display: none"><a>{% trans "Yesterday" %}</a></li>
                                 {% endif %}
-                                <li data-target="last_week"><a>{% trans "Last week" %}</a></li>
-                                <li data-target="last_28_days"><a>{% trans "Last 28 days" %}</a></li>
+                                <li data-target="last_week" data-stage="#classes-report"><a>{% trans "Last week" %}</a></li>
+                                <li data-target="last_28_days" data-stage="#classes-report"><a>{% trans "Last 28 days" %}</a></li>
                             </ul>
                         </div>
                     </div>
