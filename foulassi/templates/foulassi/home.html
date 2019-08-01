@@ -1,7 +1,7 @@
 {% extends "website/base.html" %}
 {% load i18n humanize static auth_tokens  %}
 {% block page_title %}
-    <title>Foulassi - {% trans 'Connect with your kids at school' %} </title>
+    <title>Foulassi - {% trans "Follow your kids at school in real-time" %} </title>
 {% endblock %}
 
 {% block meta %}
@@ -13,7 +13,7 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <meta property="og:title" content="Foulassi - {% trans "Follow your kids at school instantly" %}" />
+    <meta property="og:title" content="Foulassi - {% trans "Follow your kids at school in real-time" %}" />
     <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
     <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
     <meta name="abstract" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
@@ -309,10 +309,10 @@
                 if (scrollTop > scrollBreakPoint){
                     var opacity = Math.abs(scrollBreakPoint - scrollTop) / 100;
                     $('#navbar').css("background-color", "rgba(35, 54, 130," + opacity + ")");
-                    $('#navbar-search input').css("background-color", "rgba(26, 39, 93," + opacity + ")");
+                    if ($(window).width() > 767) $('#navbar-search input').css("background-color", "rgba(26, 39, 93," + opacity + ")");
                 } else {
                     $('#navbar').css("background-color", "transparent");
-                    $('#navbar-search input').css("background-color", "rgba(102, 102, 102, .4)");
+                    if ($(window).width() > 767) $('#navbar-search input').css("background-color", "rgba(102, 102, 102, .4)");
                 }
 
             })
