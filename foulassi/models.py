@@ -27,6 +27,7 @@ LOW_EMAIL_CREDIT = "LowEmailCredit"
 LOW_SMS_CREDIT = "LowSMSCredit"
 REPORT_CARDS_GENERATED = "ReportCardsGenerated"
 REPORT_CARDS_FAILED_TO_GENERATE = "ReportCardsFailedToGenerate"
+PARENT_REQUEST_KID = "ParentRequestKid"
 
 
 def get_school_year(request=None):
@@ -66,7 +67,7 @@ class Teacher(Model):
 class Student(Model):
     UPLOAD_TO = 'foulassi/students'
     school = models.ForeignKey(Service, blank=True, null=True,
-                               default=get_service_instance)
+                               related_name='+', default=get_service_instance)
     registration_number = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=100, db_index=True)
     last_name = models.CharField(max_length=100, db_index=True)
@@ -246,6 +247,14 @@ class Invoice(AbstractInvoice):
 
 class Payment(AbstractPayment):
     invoice = models.ForeignKey(Invoice)
+
+
+class KidRequest(Model):
+    """
+    A request to follow one ore more children, issued by a parent
+    """
+    parent = models.ForeignKey(Member)
+    kids_details = models.TextField(blank=True, null=True)
 
 
 class EventType(Model):
