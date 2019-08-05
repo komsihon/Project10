@@ -9,7 +9,7 @@
             <p>All teachers have input their scores and report cards for <strong>{{ session }}</strong> are
             ready to be generated.</p>
         {% endblocktrans %}
-        {% if not event.is_processed %}
+        {% if has_perm and not event.is_processed %}
         <div class="actions">
             <button class="btn btn-success pull-right btn-sm generate-report-cards"
                     data-event-id="{{ event.id }}">{% trans "Generate" %}</button>
