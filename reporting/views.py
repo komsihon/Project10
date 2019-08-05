@@ -89,8 +89,8 @@ class Dashboard(TemplateView):
 
         classroom_count = Classroom.objects.filter(school_year=school_year).count()
         for val in classes_report.values():
-            val['count'] = round(float(val['count'])/classroom_count, 2)
-            val['hours'] = round(float(val['hours'])/classroom_count, 2)
+            val['count'] = round(float(val['count'])/classroom_count, 2) if classroom_count else 0
+            val['hours'] = round(float(val['hours'])/classroom_count, 2) if classroom_count else 0
 
         # Session scores report
         session_queryset = Session.objects.filter(Q(is_active=False) | Q(is_current=True), school_year=school_year)
@@ -143,8 +143,11 @@ class Dashboard(TemplateView):
         }
         context['discipline_report'] = discipline_report
         context['all_session_list'] = all_session_list
-        context['selected_session'] = all_session_list[-1]
-        context['selected_session_order_number'] = all_session_list[-1].order_number
+        try:
+            context['selected_session'] = all_session_list[-1]
+            context['selected_session_order_number'] = all_session_list[-1].order_number
+        except:
+            pass
         context['session_report'] = session_report
         context['session_group_report'] = session_group_report
         context['classes_report'] = classes_report
