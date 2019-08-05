@@ -1,13 +1,15 @@
 {% extends "core/base_bs.html" %}
 {% load i18n static cache %}
+
 {% block meta %}
-    {% include 'core/snippets/favicon.html' %}
-    <meta property="description" content="{{ config.short_description }}" />
-    <meta property="og:title" content="{{ service.project_name }}" />
-    <meta property="og:image" content="{% get_media_prefix %}{{ config.logo.name }}" />
-    <meta property="og:description" content="{{ config.short_description }}" />
-    <meta property="og:url" content="{{ service.url }}" />
-    <meta property="og:site_name" content="{{ service.domain|upper }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/apple-icon-180x180.png">
+    <link rel="shortcut icon" type="image/png" href="{% static "foulassi/img/foulassi_logo.png" %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
 {% endblock %}
 
 {% block page_title %}<title>Foulassi - ikwen</title>{% endblock %}
@@ -24,7 +26,7 @@
 {% endblock %}
 
 {% block content %}
-{#    {% cache 300 kid_list user.username %}#}
+    {% cache 300 kid_list user.username %}
     <div id="content" class="container">
         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
             {% if suggestion_list or kid_list %}
@@ -49,8 +51,8 @@
                                     </p>
                                 </div>
                                 <div class="actions">
-                                    <button class="btn btn-sm btn-default show-modal-refuse">{% trans "Cancel" %}</button>
-                                    <button class="btn btn-sm btn-primary show-modal-accept">{% trans "Accept" %}</button>
+                                    <button class="btn btn-sm btn-outline-grey show-modal-refuse">{% trans "Cancel" %}</button>
+                                    <button class="btn btn-sm btn-green show-modal-accept">{% trans "Accept" %}</button>
                                 </div>
                             </li>
                         {% endfor %}
@@ -96,26 +98,16 @@
                     <img src="{% static 'ikwen/img/embarassed.jpg'  %}" height="80"/>
                     <h4>{% trans "Sorry! We could not find any of your children" %}</h4>
                     <div class="search-school">
-                        <label for="school-name" class="sr-only">{% trans "Invite a school" %}</label>
-                        <div class="col-sm-8 col-sm-offset-2">
-                            <input id="school-name" class="form-control" type="text"
-                                   placeholder="{% trans "Search school" %}" autofocus autocomplete="off"/>
-                            <div class="results customers has-shade" style="display: none" data-min-search-chars="2">
-                                {% include 'core/snippets/spinner.html' %}
-                                <ul style="padding-left: 0">
-                                    <li class="member tpl" style="display: none">
-                                        <div style="display: block">
-                                            <span class="photo logo bg-img" style="background-image: url({% static 'ikwen/img/no_photo.png' %})"></span>
-                                            <div style="float: left; margin-left: 30px">
-                                                <span class="full_name"></span>
-                                                <p class="about short_description"></p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="clearfix"></div>
+                        <form class="col-sm-8 col-sm-offset-2" action="{% url 'foulassi:search_school' %}">
+                            <label for="school-name" class="sr-only">{% trans "Invite a school" %}</label>
+                            <div class="input-group">
+                                <input id="school-name" class="form-control" type="text" name="q"
+                                       placeholder="{% trans "Search school" %}" autofocus autocomplete="off"/>
+                                <div class="do-search input-group-addon">
+                                    <i class="fa fa-search" style="color: #555"></i>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                         <div class="clearfix"></div>
                     </div>
                     <div style="padding-top: 20px">
@@ -130,7 +122,7 @@
                                 <li style="margin-top: 3vh">
                                     Search the schools of your kids above. If the schools are not yet on Foulassi,
                                     you can invite them to do so.<br>
-                                    <a href="javascript:$('.search-school input').focus();">Search school</a>
+                                    <a class="focus-search" href="javascript:;">Search school</a>
                                 </li>
                                 <li style="margin-top: 2vh">
                                     If you are sure that the school is on Foulassi, they probably forgot to add your
@@ -197,8 +189,7 @@
             </div>
         </div>
     </div>
-{#    {% include 'website/snippets/edge_panel.html' %}#}
-{#    {% endcache %}#}
+    {% endcache %}
 {% endblock %}
 
 {% block js %}
@@ -257,7 +248,18 @@
                         if ($('.suggestion-list .people li').length === 0) $('.suggestion-list').remove();
                     }
                 })
-            })
+            });
+            $('.search-school form').submit(function() {
+                var q = $('.search-school input').val();
+                if (q.length < '{{ min_search_chars }}') return false;
+            });
+            $('.focus-search').click(function() {
+                $('.search-school input').focus();
+                $('html, body').animate({'scrollTop': 0})
+            });
+            $('.do-search').click(function() {
+                $('.search-school form').submit()
+            });
         })()
     </script>
 {% endblock %}
