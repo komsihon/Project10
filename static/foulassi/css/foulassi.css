@@ -135,6 +135,7 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
 .event-list {margin-bottom: 30px}
 .event-detail {border: 1px solid #ddd;height: 150px;margin-top: 10px;}
 .event-icon {line-height: 140px;position: absolute;text-align: center;width: 90px;}
+.event-icon.rounded {background: center; background-size: cover;border-radius: 50%; height: 72px;margin: 35px 0 0 15px;width: 72px;}
 .event-icon img {width: 60px}
 .event-content {height: 150px}
 .event-content p {margin-top: 10px}
