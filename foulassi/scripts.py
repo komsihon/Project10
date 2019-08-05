@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from ikwen_foulassi.foulassi.models import Student, Teacher
+from ikwen_foulassi.foulassi.models import Student, Teacher, Event
 from ikwen_foulassi.school.models import Level, Score
 from ikwen_foulassi.reporting.models import SessionReport, ReportCardBatch
 
@@ -18,3 +18,5 @@ def create_permissions():
     Permission.objects.create(codename='ik_view_dashboard', name='View dashboard', content_type=report_ct)
     batch_ct = ContentType.objects.get_for_model(ReportCardBatch)
     Permission.objects.create(codename='ik_manage_reporting', name='Manage report cards', content_type=batch_ct)
+    event_ct = ContentType.objects.get_for_model(Event)
+    Permission.objects.create(codename='ik_view_event', name='View events', content_type=event_ct)
