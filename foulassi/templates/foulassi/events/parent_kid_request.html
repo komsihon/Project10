@@ -1,0 +1,26 @@
+{% load i18n static humanize %}
+<div class="subtle-shade event-detail">
+    {% if parent.photo.name %}
+        <div class="event-icon rounded" style="background-image: url({{ IKWEN_MEDIA_URL }}{{ parent.photo.small_name }})"></div>
+    {% else %}
+        <div class="event-icon rounded" style="background-image: url({{ MEMBER_AVATAR }})"></div>
+    {% endif %}
+    <div class="event-content" style="border-left-color: transparent">
+        <strong class="event-title">{% blocktrans with name=parent.full_name %}Mr/Mrs {{ name }}{% endblocktrans %}</strong>
+        {% if parent.email or parent.phone %}
+        <div class="text-muted">
+            {% if parent.email %}{{ parent.email }}{% endif %}
+            {% if parent.email and parent.phone %}, {% endif %}
+            {% if parent.phone %}{{ parent.phone }}{% endif %}
+        </div>
+        {% endif %}
+        <div>
+            <p>{% blocktrans %}
+                This parent would like to be added to follow his kid(s) below:
+            {% endblocktrans %}</p>
+            <div class="text-muted" style="margin-top: -7px">{{ kids_details }}</div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+</div>
