@@ -1,0 +1,139 @@
+{% extends "core/base_bs.html" %}
+{% load i18n static cache %}
+{% block meta %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/apple-icon-180x180.png">
+    <link rel="shortcut icon" type="image/png" href="{% static "foulassi/img/foulassi_logo.png" %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+{% endblock %}
+
+{% block page_title %}<title>Foulassi - ikwen</title>{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}" />
+    <style>
+        @media (max-width: 767px) {
+            #navbar .menu-button {display: none}
+            #navbar .navbar-brand {margin-left: 20px}
+            .school-list .main-title {display: none}
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="container">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+            {% if object_list %}
+                <div class="suggestion-list school-list">
+                    <h3 class="main-title">{% trans "Schools" %}</h3>
+                    <ul class="object-list" style="padding-left: 0">
+                        {% for school in object_list %}
+                            {% with config=school.config %}
+                            <li id="{{ school.id }}" class="ik-li" data-id="{{ school.id }}">
+                                {% if config.logo.name %}
+                                    <div class="image" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ school.photo.small_name }})"></div>
+                                {% else %}
+                                    <div class="image" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></div>
+                                {% endif %}
+                                <div class="info">
+                                    <p class="full_name">{{ config.company_name }}</p>
+                                    {% if config.contact_email or config.contact_phone %}
+                                    <p class="text-muted" style="font-size: .9em">
+                                        {% if config.contact_email %}{{ config.contact_email }}{% endif %}
+                                        {% if config.contact_email and config.contact_phone %}, {% endif %}
+                                        {% if config.contact_phone %}{{ config.contac_phone }}{% endif %}
+                                    </p>
+                                    {% endif %}
+                                </div>
+                                <div class="actions">
+                                    <button class="btn btn-sm btn-green show-modal-invite">{% trans "Invite" %}</button>
+                                </div>
+                            </li>
+                            {% endwith %}
+                        {% endfor %}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            {% else %}
+                <div style="margin-top: 6vh; text-align: center">
+                    <h4>{{ request.GET.q }}</h4>
+                    <p class="text-muted">{% trans "Sorry! No result found." %}</p>
+                </div>
+            {% endif %}
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="modal fade" id="modal-invite-school" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-header" style="border-bottom: none">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body row">
+                    <h4 class="col-xs-12 title" style="font-weight: 600; margin: -40px 0 10px"></h4>
+                    <p class="col-xs-12 notice">
+                        {% trans "Please write the names and classrooms of your kid(s) so that we can easily find and link them to you." %}
+                    </p>
+                    <div class="form-group col-xs-12">
+                        <label for="kids-details" class="sr-only">{% trans "Kids'details" %}</label>
+                        <textarea id="kids-details" class="form-control" style="height: 150px"
+                                  placeholder="{% blocktrans %}Simo Mballa, Form 6 A&#10;Youego Mballa, Form 2 C{% endblocktrans %}"></textarea>
+                    </div>
+                    {% include 'core/snippets/spinner.html' %}
+                    <div class="actions col-xs-12 col-sm-4">
+                        <button class="btn btn-green btn-md btn-block do-invite-school">
+                            {% include 'core/snippets/button_spinner.html' %}
+                            <span>{% trans "Submit" %}</span>
+                        </button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (function() {
+            var $school, schoolId, schoolName;
+            $('.suggestion-list .ik-li').click(function() {
+                if ($(window).width() < 768) {
+                    $(this).find('.actions').css('bottom', '-30vh').animate({'bottom': 0})
+                }
+            });
+            $('.show-modal-invite').click(function() {
+                $school = $(this).parents('.ik-li');
+                schoolId = $school.data('id');
+                schoolName = $school.find('.full_name').text();
+                $('#modal-invite-school .title').text("{% trans 'Invite' context 'invite school ...' %}" + " " + schoolName);
+                $('#modal-invite-school').modal('show');
+                $('#kids-details').delay(1000).focus();
+            });
+            $('.do-invite-school:not(.processing)').click(function() {
+                var _$btn = $(this),
+                    kidsDetails = $('#kids-details').val();
+                $('#modal-invite-school .form-group').removeClass('has-error');
+                if (!kidsDetails) {
+                    $('#kids-details').parents('.form-group').addClass('has-error');
+                    return
+                }
+                _$btn.addClass('processing');
+                $.getJSON('', {action: 'invite_school', school_id: schoolId, kids_details: kidsDetails}, function(resp) {
+                    _$btn.removeClass('processing');
+                    if (resp.success) {
+                        $('#modal-invite-school').modal('hide');
+                        ikwen.showFloatingNotice("{% trans "Your request was submitted" %}");
+                        $school.find('.actions').remove();
+                    }
+                })
+            });
+        })()
+    </script>
+{% endblock %}
