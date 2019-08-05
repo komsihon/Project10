@@ -1,26 +1,32 @@
 import json
 from collections import OrderedDict
 from datetime import timedelta, datetime
+from threading import Thread
 
 import requests
 from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.db.models import Sum, Q
 from django.http.response import HttpResponseRedirect, Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.http import urlquote
 from django.views.generic import TemplateView
+from django.utils.translation import gettext as _
 
-from ikwen.conf.settings import WALLETS_DB_ALIAS
-from ikwen.core.models import Service
-from ikwen.core.utils import add_database, get_service_instance
+from ikwen.conf.settings import WALLETS_DB_ALIAS, MEDIA_URL, MEMBER_AVATAR
+from ikwen.core.constants import MALE, FEMALE
+from ikwen.core.models import Application, Service
+from ikwen.core.utils import add_database, get_service_instance, get_mail_content, send_sms
+from ikwen.core.views import HybridListView
 from ikwen.billing.models import MoMoTransaction
 from ikwen.billing.mtnmomo.views import MTN_MOMO
 from ikwen_foulassi.foulassi.utils import can_access_kid_detail
 
-from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Payment, Event, Parent
+from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Payment, Event, Parent, EventType, \
+    PARENT_REQUEST_KID, KidRequest
 from ikwen_foulassi.school.models import get_subject_list, Justificatory
 
 from ikwen_foulassi.school.student.views import StudentDetail, ChangeJustificatory
@@ -70,9 +76,8 @@ class KidList(TemplateView):
         parent_profile, update = ParentProfile.objects.get_or_create(member=user)
         kid_list = parent_profile.student_list
         kid_fk_list = [kid.pk for kid in kid_list]
-        suggestion_key = user.username + 'suggestion_list'
+        suggestion_key = user.username + 'kid_list_suggestion_list'
         suggestion_list = cache.get(suggestion_key)
-        suggestion_list = []
         if suggestion_list is None:
             suggestion_list = []
             for obj in Parent.objects.select_related('student').filter(Q(email=user.email) | Q(phone=user.phone)):
@@ -84,8 +89,16 @@ class KidList(TemplateView):
                 except:
                     pass
             cache.set(suggestion_key, suggestion_list, 5 * 60)
+        min_search_chars = 0
+        try:
+            app = Application.objects.get(slug='foulassi')
+            school_count = Service.objects.filter(app=app).count()
+            min_search_chars = len(str(school_count)) - 2
+        except:
+            pass
         context['suggestion_list'] = suggestion_list
-        context['kid_list'] = []
+        context['kid_list'] = kid_list
+        context['min_search_chars'] = min_search_chars
         return context
 
     def get(self, request, *args, **kwargs):
@@ -193,6 +206,63 @@ class ShowJustificatory(ChangeJustificatory):
 
 class AccessDenied(TemplateView):
     template_name = 'foulassi/access_denied.html'
+
+
+class SearchSchool(HybridListView):
+    template_name = 'foulassi/search_school.html'
+    search_field = 'project_name_slug'
+
+    def get_queryset(self, **kwargs):
+        app = Application.objects.get(slug='foulassi')
+        queryset = Service.objects.filter(app=app)
+        if not getattr(settings, 'DEBUG', False):
+            queryset = queryset.exclude(project_name_slug='foulassi')
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        action = request.GET.get('action')
+        if action == 'invite_school':  # Send a request to see his children online to the school
+            service = get_service_instance()
+            member = request.user
+            school_id = request.GET['school_id']
+            kids_details = request.GET['kids_details']
+            school = Service.objects.get(pk=school_id)
+            db = school.database
+            add_database(db)
+            event_type, change = EventType.objects.using(db) \
+                .get_or_create(codename=PARENT_REQUEST_KID, renderer='ikwen_foulassi.foulassi.events.render_parent_request_kid')
+            kid_request = KidRequest.objects.using(db).create(parent=member, kids_details=kids_details)
+            Event.objects.using(db).create(type=event_type, object_id_list=[kid_request.id])
+            try:
+                if member.gender == FEMALE:
+                    parent_name = _("Mrs %s" % member.full_name)
+                elif member.gender == MALE:
+                    parent_name = _("Mr %s " % member.full_name)
+                else:  # Unknown gender
+                    parent_name = _("The parent %s " % member.full_name)
+                subject = _("I would like to follow my kids in your school on Foulassi.")
+                cta_url = school.url + reverse('foulassi:event_list')
+                html_content = get_mail_content(subject, template_name='foulassi/mails/invite_school.html',
+                                                extra_context={'parent': member, 'kids_details': kids_details,
+                                                               'IKWEN_MEDIA_URL': MEDIA_URL, 'MEMBER_AVATAR': MEMBER_AVATAR,
+                                                               'cta_url': cta_url})
+                sender = '%s via ikwen Foulassi <no-reply@%s>' % (parent_name, service.domain)
+                msg = EmailMessage(subject, html_content, sender, [school.config.contact_email.strip()])
+                msg.content_subtype = "html"
+                msg.cc = ["contact@ikwen.com"]
+                if member.email:
+                    msg.extra_headers = {'Reply-To': member.email}
+                Thread(target=lambda m: m.send(), args=(msg,)).start()
+                sms_text = _("%(parent_name)s would like to follow his kid(s) below on ikwen Foulassi:\n"
+                             "%(kids_details)s" % {'parent_name': parent_name, 'kids_details': kids_details})
+                if member.phone:
+                    if len(member.phone) == 9:
+                        member.phone = '237' + member.phone
+                    send_sms(member.phone, sms_text)
+            except:
+                pass
+            return HttpResponse(json.dumps({'success': True}, 'content-type: text/json'))
+        return super(SearchSchool, self).get(request, *args, **kwargs)
 
 
 def set_invoice_checkout(request, *args, **kwargs):
