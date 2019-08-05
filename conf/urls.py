@@ -17,15 +17,15 @@ urlpatterns = patterns(
     url(r'^revival/', include('ikwen.revival.urls', namespace='revival')),
     url(r'^ikwen/', include('ikwen.core.urls', namespace='ikwen')),
 
-    url(r'^reporting/', include('ikwen_foulassi.reporting.urls', namespace='reporting')),
-    url(r'^school/', include('ikwen_foulassi.school.urls', namespace='school')),
-    url(r'^events/$', permission_required('school.ik_view_event')(EventList.as_view()), name='event_list'),
-
     url(r'^page/(?P<url>[-\w]+)/$', FlatPageView.as_view(), name='flatpage'),
     url(r'^blog/', include('ikwen_webnode.blog.urls', namespace='blog')),
     url(r'^web/', include('ikwen_webnode.web.urls', namespace='web')),
     url(r'^items/', include('ikwen_webnode.items.urls', namespace='items')),
     url(r'^echo/', include('echo.urls', namespace='echo')),
-    url(r'^', include('ikwen_foulassi.foulassi.urls', namespace='foulassi')),
+
+    url(r'^reporting/', include('ikwen_foulassi.reporting.urls', namespace='reporting')),
+    url(r'^school/', include('ikwen_foulassi.school.urls', namespace='school')),
+    url(r'^foulassi/', include('ikwen_foulassi.foulassi.urls', namespace='foulassi')),
+
     url(r'^', include('ikwen_webnode.webnode.urls', namespace='webnode')),
 )
