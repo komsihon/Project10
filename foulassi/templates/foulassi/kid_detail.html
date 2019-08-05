@@ -1,6 +1,17 @@
 {% extends "school/student/student_detail.html" %}
 {% load i18n humanize static admin_list %}
 
+{% block meta %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/apple-icon-180x180.png">
+    <link rel="shortcut icon" type="image/png" href="{% static "foulassi/img/foulassi_logo.png" %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+{% endblock %}
+
 {% block head_style %}
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}" />
