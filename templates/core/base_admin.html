@@ -58,8 +58,8 @@
             <i class="glyphicon glyphicon-globe"></i>
             <span class="hidden-xs" style="font-weight: 400">{% trans "Go to website" %}</span>
         </a>
-        {% if perms.reporting.ik_manage_reporting %}
-        <a href="{% url 'event_list' %}" class="pull-right" title="{% trans "Events" %}" style="margin-right: 20px">
+        {% if perms.foulassi.ik_view_event %}
+        <a href="{% url 'foulassi:event_list' %}" class="pull-right" title="{% trans "Events" %}" style="margin-right: 20px">
             <i class="glyphicon glyphicon-bell"></i>
             {% if event_count %}
                 <span class="label label-danger" style="margin: 12px 0 0 -7px">{{ event_count }}</span>
