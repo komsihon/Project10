@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
@@ -67,32 +69,11 @@ def can_access_kid_detail(request, **kwargs):
     user = request.user
     if user.is_anonymous():
         return False
-    # ikwen_name = kwargs['ikwen_name']
     student_id = kwargs['student_id']
     parent_profile, update = ParentProfile.objects.get_or_create(member=user)
     student_fk_list = [student.id for student in parent_profile.student_list]
     if student_id in student_fk_list:
         return True
-    # service = Service.objects.get(project_name_slug=ikwen_name)
-    # db = service.database
-    # add_database(db)
-    # parent_email_list = [parent.email for parent in Parent.objects.using(db).filter(student=student_id)]
-    # parent_phone_list = [parent.phone for parent in Parent.objects.using(db).filter(student=student_id)]
-    # user_phone = slugify(user.phone).replace('-', '')
-    # if user_phone in parent_phone_list or user.email in parent_email_list:
-    #     try:
-    #         student = Student.objects.using(db).get(pk=student_id)
-    #         for parent in Parent.objects.using(db).filter(student=student):
-    #             if user.email == parent.email or user.phone == parent.phone:
-    #                 user.save(using=db)
-    #                 parent.member = user  # Binds the ikwen Member as parent
-    #                 parent.save(using=db)
-    #                 break
-    #     except:
-    #         raise Http404("Student not found.")
-    #     parent_profile.student_list.append(student)
-    #     parent_profile.save()
-    #     return True
     return False
 
 
@@ -147,6 +128,7 @@ def check_all_scores_set(session):
                 all_scores_set = False
                 break
     if all_scores_set:
+        session.all_scores_set_on = datetime.now()
         event_type, change = EventType.objects\
             .get_or_create(codename=ALL_SCORES_SET, renderer='ikwen_foulassi.foulassi.events.render_all_scores_set')
         try:
