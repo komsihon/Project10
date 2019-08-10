@@ -1,7 +1,9 @@
 from datetime import datetime
 
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.db import models
+from django.db.models.signals import post_save
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.module_loading import import_by_path
@@ -16,6 +18,7 @@ from ikwen.core.models import Model, AbstractConfig, Service
 from ikwen.core.fields import MultiImageField
 from ikwen.theming.models import Theme
 from ikwen.billing.models import AbstractInvoice, AbstractPayment
+from permission_backend_nonrel.models import UserPermissionList
 
 TEACHERS = "Teachers"
 BEST_OF_ALL = "BestOfAll"
@@ -283,3 +286,29 @@ class Event(Model):
                 template_name = 'foulassi/events/rendering_error.html'
                 html_template = get_template(template_name)
                 return html_template.render(Context({}))
+
+
+def sync_teacher(sender, **kwargs):
+    """
+    Receiver of the post_save signals of UserPermissionList. It creates
+    the corresponding Teacher when a Member is moved to the Teacher Group
+    and delete the Teacher object when the Member is moved out of the
+    Teacher Group
+    """
+    if sender != UserPermissionList:  # Avoid unending recursive call
+        return
+    instance = kwargs['instance']
+    group_id = Group.objects.get(name=TEACHERS).id
+    school_year = get_school_year()
+    if group_id in instance.group_fk_list:
+        Teacher.objects.get_or_create(member=instance.user, school_year=school_year)
+    else:
+        try:
+            teacher = Teacher.objects.get(member=instance.user, school_year=school_year)
+            if teacher.teacherresponsibility_set.all().count() == 0:
+                teacher.delete()
+        except Teacher.DoesNotExist:
+            pass
+
+
+post_save.connect(sync_teacher, dispatch_uid="permission_post_save_id")
