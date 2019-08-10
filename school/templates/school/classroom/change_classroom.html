@@ -10,11 +10,13 @@
                 {% include 'core/snippets/model_admin_form.html' %}
                 <formset class="subject-coefficient-list">
                     <legend>{% trans "Subjects" %}</legend>
-                    <p class="row acronyms">
-                        <span class="col-sm-3 col-lg-2">{% trans "Coef." %} = {% trans "Coefficient" %}</span>
-                        <span class="col-sm-3 col-lg-2">{% trans "LD" %} = {% trans "Lessons Due" %}</span>
-                        <span class="col-sm-3 col-lg-2">{% trans "Hours Due" %} = {% trans "Hours Due" %}</span>
-                    </p>
+                    <div class="row acronyms">
+                        <div class="col-sm-2 col-lg-2">{% trans "Tchr" %} = {% trans "Teacher" %}</div>
+                        <div class="col-sm-2 col-lg-2">{% trans "Grp" %} = {% trans "Group" %}</div>
+                        <div class="col-sm-2 col-lg-2">{% trans "Coef." %} = {% trans "Coefficient" %}</div>
+                        <div class="col-sm-3 col-lg-2">{% trans "LD" %} = {% trans "Lessons Due" %}</div>
+                        <div class="col-sm-3 col-lg-2">{% trans "HD" %} = {% trans "Hours Due" %}</div>
+                    </div>
                     <input type="hidden" id="subjects" name="subjects" />
                     {% for subject in subject_list %}
                         <div class="subject checkbox tile col-xs-6 col-sm-4 col-md-3">

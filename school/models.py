@@ -166,7 +166,6 @@ class SessionGroup(Model, ResultsTracker):
     """
     name = models.CharField(max_length=60)
     slug = models.SlugField(blank=True, null=True)
-    all_scores_set = models.BooleanField(default=False)
     starts_on = models.DateField(default=datetime.now)
     ends_on = models.DateField(default=datetime.now)
 
@@ -192,7 +191,8 @@ class Session(Model, ResultsTracker):
     session_group = models.ForeignKey(SessionGroup, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_current = models.BooleanField(default=False)
-    report_cards_generated = models.BooleanField(default=False)
+    all_scores_set_on = models.DateTimeField(blank=True, null=True)
+    report_cards_generated_on = models.DateTimeField(blank=True, null=True)
     starts_on = models.DateField(default=datetime.now)
     ends_on = models.DateField(default=datetime.now)
 
@@ -292,6 +292,7 @@ class DisciplineItem(Model):
     unit = models.CharField(max_length=15, blank=True, null=True)
     editable = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
+    has_count = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name

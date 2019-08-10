@@ -21,19 +21,19 @@
             <div id="results">
                 <div id="student-list" class="tab-pane active" role="tabpanel" style="padding-bottom: 90px">
                     <ul class="people object-list">
-                    {% for obj in teacher_nonrel_perm_list %}
-                        {% with teacher=obj.user %}
-                        <li id="{{ teacher.id }}" class="member {{ teacher.get_status }}" data-id="{{ teacher.id }}" data-status="{{ teacher.get_status }}"
+                    {% for teacher in object_list %}
+                        {% with member=teacher.member %}
+                        <li id="{{ member.id }}" class="member {{ member.get_status }}" data-id="{{ member.id }}" data-status="{{ member.get_status }}"
                             data-permissions="{% for perm in obj.permission_fk_list %},{{ perm }}{% endfor %}">
-                            {% url 'school:teacher_detail' teacher.id as member_url %}
+                            {% url 'school:teacher_detail' member.id as member_url %}
                         {% if user.photo and user.photo.name %}
-                            <a href="{{ member_url }}" class="photo" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ teacher.photo.small_name }})"></a>
+                            <a href="{{ member_url }}" class="photo" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ member.photo.small_name }})"></a>
                         {% else %}
                             <a href="{{ member_url }}" class="photo" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></a>
                         {% endif %}
                             <div class="info">
-                                <a href="{{ member_url}}" class="full_name">{{ teacher.full_name }}</a>
-                                <p class="about">{{ teacher.phone }}, {{ teacher.email }}</p>
+                                <a href="{{ member_url}}" class="full_name">{{ member.full_name }}</a>
+                                <p class="about">{{ member.phone }}, {{ member.email }}</p>
                             </div>
                         </li>
                         {% endwith %}

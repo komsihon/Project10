@@ -314,7 +314,7 @@ class ChangeClassroom(ChangeObjectBase):
             }
             level_info[level.id] = obj
         context['level_info'] = json.dumps(level_info)
-        context['teacher_list'] = Teacher.objects.all()
+        context['teacher_list'] = Teacher.objects.filter(school_year=get_school_year(self.request))
         context['range_1_4'] = range(1, 4)
         return context
 

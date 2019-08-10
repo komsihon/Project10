@@ -70,7 +70,7 @@ def set_student_invoices(student):
             due_date = school.first_instalment_deadline
         else:
             due_date = datetime.now() + timedelta(days=60)
-        Invoice.objects.create(number=number, student=student, amount=classroom.first_instalment_fees,
+        Invoice.objects.create(number=number, student=student, amount=classroom.first_instalment,
                                due_date=due_date, entries=[entry])
     if classroom.second_instalment:
         item = InvoiceItem(label=school.second_instalment_title, amount=classroom.second_instalment)
@@ -79,7 +79,7 @@ def set_student_invoices(student):
             due_date = school.second_instalment_deadline
         else:
             due_date = datetime.now() + timedelta(days=90)
-        Invoice.objects.create(number=number, student=student, amount=classroom.second_instalment_fees,
+        Invoice.objects.create(number=number, student=student, amount=classroom.second_instalment,
                                due_date=due_date, entries=[entry])
     if classroom.third_instalment:
         item = InvoiceItem(label=school.third_instalment_title, amount=classroom.third_instalment)
@@ -88,7 +88,7 @@ def set_student_invoices(student):
             due_date = school.third_instalment_deadline
         else:
             due_date = datetime.now() + timedelta(days=120)
-        Invoice.objects.create(number=number, student=student, amount=classroom.first_instalment_fees,
+        Invoice.objects.create(number=number, student=student, amount=classroom.third_instalment,
                                due_date=due_date, entries=[entry])
 
 
@@ -141,6 +141,8 @@ class StudentDetail(ChangeObjectBase):
         student_public_url = reverse('foulassi:kid_detail', args=(service.ikwen_name, student.id, ))
         student_public_url = strip_base_alias(student_public_url)
         context['student_public_url'] = student_public_url
+        context['discipline_item_list'] = DisciplineItem.objects.filter(is_active=True)\
+            .exclude(slug__in=[DisciplineItem.PARENT_CONVOCATION, DisciplineItem.EXCLUSION])
         return context
 
     def post(self, request, *args, **kwargs):
@@ -248,8 +250,6 @@ class StudentDetail(ChangeObjectBase):
         discipline_log = DisciplineLogEntry.objects.using(db).select_related('item, student').filter(student=student).order_by('-id')
         context['summary'] = summary
         context['discipline_log'] = discipline_log
-        context['discipline_item_list'] = DisciplineItem.objects.using(db).filter(editable=True)\
-            .exclude(slug__in=[DisciplineItem.PARENT_CONVOCATION, DisciplineItem.EXCLUSION])
         context['parent_convocation'] = DisciplineItem.objects.using(db).get(slug=DisciplineItem.PARENT_CONVOCATION)
         context['exclusion'] = DisciplineItem.objects.using(db).get(slug=DisciplineItem.EXCLUSION)
         return render(self.request, 'school/snippets/student/discipline.html', context)

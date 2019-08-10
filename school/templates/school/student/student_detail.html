@@ -46,7 +46,6 @@
                         {% endwith %}
                     </div>
                     <div class="col-sm-8 col-lg-9">
-                        <input type="hidden" id="dob-alt" name="dob" value="{{ student.dob|date:"Y-m-d" }}" />
                         <div class="basic">
                             {% include 'core/snippets/model_admin_form.html' %}
                         </div>
@@ -129,7 +128,6 @@
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'ikwen/js/jquery-ui.js' %}"></script>
     <script type="text/javascript">
         (function() {
             $('div#admin-nav .classrooms').addClass('active');
@@ -139,14 +137,21 @@
             {% endif %}
             $('#id_classroom').val('{{ classroom.id }}').prop('disabled', true).removeAttr('name');
             $('<input type="hidden" name="classroom" value="{{ classroom.id }}" />').insertBefore('#id_classroom');
-            $('#id_dob').datepicker({
-                altField: "#dob-alt",
-                altFormat: "yy-mm-dd",
-                defaultDate: new Date('{{ student.dob }}')
-            }).removeAttr('name');
+            $('#id_dob').keyup(function() {
+                var dob = $(this).val();
+                if (dob.length >= 10) $(this).datepicker("setDate", dob);
+            }).datepicker("option", {dateFormat: "dd/mm/yy"}).datepicker("setDate", {{ obj.dob|date:"d/m/Y" }});
             $('#discipline-item-happened-on').datepicker({
                 altField: "#happened-on-alt",
                 altFormat: "yy-mm-dd"
+            });
+            $('#discipline-item-id').change(function() {
+                if ($(this).find('option:selected').data('has-count')) {
+                    $('.form-group.discipline-item-count').show();
+                } else {
+                    $('.form-group.discipline-item-count').hide();
+                    $('#discipline-item-count').val(1)
+                }
             });
             $('#admin-content').on('click', '.tab', function (e) {
                 var _$tab = $(this),

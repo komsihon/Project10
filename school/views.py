@@ -116,14 +116,6 @@ class ChangeSubject(ChangeObjectBase):
     model_admin = SubjectAdmin
 
 
-class SessionList(HybridListView):
-    model = Session
-    ordering = ('id', )
-
-    def get_queryset(self):
-        return Session.objects.filter(school_year=get_school_year(self.request))
-
-
 class SessionGroupList(HybridListView):
     model = Session
     ordering = ('id', )
@@ -132,14 +124,28 @@ class SessionGroupList(HybridListView):
         return SessionGroup.objects.filter(school_year=get_school_year(self.request))
 
 
+class ChangeSessionGroup(ChangeObjectBase):
+    model = SessionGroup
+    model_admin = SessionGroupAdmin
+
+
+class SessionList(HybridListView):
+    model = Session
+    ordering = ('id', )
+
+    def get_queryset(self):
+        return Session.objects.filter(school_year=get_school_year(self.request))
+
+
 class ChangeSession(ChangeObjectBase):
     model = Session
     model_admin = SessionAdmin
 
-
-class ChangeSessionGroup(ChangeObjectBase):
-    model = SessionGroup
-    model_admin = SessionGroupAdmin
+    def get_model_form(self, obj):
+        form = super(ChangeSession, self).get_model_form(obj)
+        school_year = get_school_year(self.request)
+        form.fields['session_group'].queryset = SessionGroup.objects.filter(school_year=school_year)
+        return form
 
 
 class DisciplineItemList(HybridListView):
@@ -153,17 +159,10 @@ class ChangeDisciplineItem(ChangeObjectBase):
 
 class TeacherList(HybridListView):
     template_name = 'school/teacher_list.html'
-    context_object_name = 'teacher_nonrel_perm_list'
 
     def get_queryset(self):
-        group_id = Group.objects.get(name=TEACHERS).id
-        return UserPermissionList.objects.raw_query({'group_fk_list': {'$elemMatch': {'$eq': group_id}}})
-
-    def get_context_data(self, **kwargs):
-        context = super(TeacherList, self).get_context_data(**kwargs)
-        context['verbose_name'] = _('Teacher')
-        context['verbose_name_plural'] = _('Teachers')
-        return context
+        school_year = get_school_year(self.request)
+        return Teacher.objects.filter(school_year=school_year)
 
 
 class TeacherDetail(TemplateView):
@@ -178,10 +177,14 @@ class TeacherDetail(TemplateView):
         school_year = get_school_year(self.request)
         teacher = Teacher.objects.get(member=member, school_year=school_year)
         teacher_subject_list = [obj.subject for obj in teacher.teacherresponsibility_set.all()]
+        teacher_subject_list_copy = list(teacher_subject_list)
         subject_level_classroom_list = []
-        for subject in teacher_subject_list:
+        for subject in teacher_subject_list_copy:
             level_classroom_list = []
             classroom_fk_list = TeacherResponsibility.objects.get(teacher=teacher, subject=subject).classroom_fk_list
+            if len(classroom_fk_list) == 0:
+                teacher_subject_list.remove(subject)
+                continue
             for level in Level.objects.filter(school_year=school_year).order_by('order_of_appearance', 'name'):
                 classroom_list = []
                 for classroom in Classroom.objects.filter(level=level):

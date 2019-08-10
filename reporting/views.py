@@ -305,7 +305,7 @@ def generate_report_card_files(request):
             batch.message = "OK"
 
         event_type = EventType.objects.get(codename=REPORT_CARDS_GENERATED)
-        session.report_cards_generated = True
+        session.report_cards_generated_on = datetime.now()
         session.save()
     except:
         service = get_service_instance()

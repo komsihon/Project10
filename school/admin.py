@@ -32,7 +32,7 @@ class SessionGroupAdmin(admin.ModelAdmin):
 
 
 class DisciplineItemAdmin(admin.ModelAdmin):
-    fields = ('name', 'unit', )
+    fields = ('name', 'unit', 'has_count')
 
 
 class JustificatoryAdmin(admin.ModelAdmin):

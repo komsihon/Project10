@@ -13,16 +13,14 @@
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'ikwen/js/jquery-ui.js' %}"></script>
     <script>
         (function() {
             $('#id_classroom').val('{{ classroom.id }}').prop('disabled', true).removeAttr('name');
             $('<input type="hidden" name="classroom" value="{{ classroom.id }}" />').insertBefore('#id_classroom');
-            $('<input type="hidden" id="dob-alt" name="dob" value="" />').insertBefore('#id_dob');
-            $('#id_dob').datepicker({
-                altField: "#dob-alt",
-                altFormat: "yy-mm-dd"
-            }).removeAttr('name');
+            $('#id_dob').keyup(function() {
+                var dob = $(this).val();
+                if (dob.length >= 10) $(this).datepicker("setDate", dob);
+            }).datepicker("option", {dateFormat: "dd/mm/yy"});
         })()
     </script>
 {% endblock %}

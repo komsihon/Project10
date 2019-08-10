@@ -12,7 +12,7 @@
                         <label for="discipline-item-id">{% trans "Type" %}</label>
                         <select id="discipline-item-id" class="form-control input-sm">
                             {% for item in discipline_item_list %}
-                                <option value="{{ item.id }}">{{ item.name }}</option>
+                                <option value="{{ item.id }}"{% if item.has_count %} data-has-count="yes"{% endif %}>{{ item.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
