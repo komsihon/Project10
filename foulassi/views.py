@@ -237,9 +237,9 @@ class SearchSchool(HybridListView):
                 if member.gender == FEMALE:
                     parent_name = _("Mrs %s" % member.full_name)
                 elif member.gender == MALE:
-                    parent_name = _("Mr %s " % member.full_name)
+                    parent_name = _("Mr %s" % member.full_name)
                 else:  # Unknown gender
-                    parent_name = _("The parent %s " % member.full_name)
+                    parent_name = _("The parent %s" % member.full_name)
                 subject = _("I would like to follow my kids in your school on Foulassi.")
                 cta_url = school.url + reverse('foulassi:event_list')
                 html_content = get_mail_content(subject, template_name='foulassi/mails/invite_school.html',
