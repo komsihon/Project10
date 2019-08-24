@@ -38,7 +38,7 @@ def get_school_year(request=None):
         return request.session.get('school_year', get_school_year())
     now = datetime.now()
     month = now.month
-    if 8 <= month <= 12:
+    if 9 <= month <= 12:
         return now.year
     return now.year - 1
 
@@ -134,7 +134,19 @@ class Parent(Model):
 
 class ParentProfile(Model):
     member = models.ForeignKey(Member)
-    student_list = ListField(EmbeddedModelField('Student'))
+    student_fk_list = ListField()
+
+    def _get_student_list(self):
+        student_fk_list = list(self.student_fk_list)
+        student_list = []
+        for student_id in student_fk_list:
+            try:
+                student_list.append(Student.objects.get(pk=student_id))
+            except Student.DoesNotExist:
+                self.student_fk_list.remove(student_id)
+                self.save()
+        return student_list
+    student_list = property(_get_student_list)
 
 
 class StudentsPopulation(models.Model):
@@ -295,20 +307,25 @@ def sync_teacher(sender, **kwargs):
     and delete the Teacher object when the Member is moved out of the
     Teacher Group
     """
+    if get_service_instance().app.slug != 'foulassi':
+        return
     if sender != UserPermissionList:  # Avoid unending recursive call
         return
     instance = kwargs['instance']
-    group_id = Group.objects.get(name=TEACHERS).id
-    school_year = get_school_year()
-    if group_id in instance.group_fk_list:
-        Teacher.objects.get_or_create(member=instance.user, school_year=school_year)
-    else:
-        try:
-            teacher = Teacher.objects.get(member=instance.user, school_year=school_year)
-            if teacher.teacherresponsibility_set.all().count() == 0:
-                teacher.delete()
-        except Teacher.DoesNotExist:
-            pass
+    try:
+        group_id = Group.objects.get(name=TEACHERS).id
+        school_year = get_school_year()
+        if group_id in instance.group_fk_list:
+            Teacher.objects.get_or_create(member=instance.user, school_year=school_year)
+        else:
+            try:
+                teacher = Teacher.objects.get(member=instance.user, school_year=school_year)
+                if teacher.teacherresponsibility_set.all().count() == 0:
+                    teacher.delete()
+            except Teacher.DoesNotExist:
+                pass
+    except Group.DoesNotExist:
+        pass
 
 
 post_save.connect(sync_teacher, dispatch_uid="permission_post_save_id")

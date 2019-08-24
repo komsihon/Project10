@@ -27,13 +27,27 @@ from ikwen_foulassi.foulassi.utils import can_access_kid_detail
 
 from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Payment, Event, Parent, EventType, \
     PARENT_REQUEST_KID, KidRequest
-from ikwen_foulassi.school.models import get_subject_list, Justificatory
+from ikwen_foulassi.school.models import get_subject_list, Justificatory, Classroom
 
 from ikwen_foulassi.school.student.views import StudentDetail, ChangeJustificatory
 
 
 class Home(TemplateView):
     template_name = 'foulassi/home.html'
+
+
+class HomeSaaS(TemplateView):
+    """
+    Homepage of Foulassi addressed to schools presenting the Software as a Service
+    """
+    template_name = 'foulassi/home_saas.html'
+
+
+class Offline(TemplateView):
+    """
+    Offline page for the PWA
+    """
+    template_name = 'foulassi/offline.html'
 
 
 class EventList(TemplateView):
@@ -75,17 +89,16 @@ class KidList(TemplateView):
         user = self.request.user
         parent_profile, update = ParentProfile.objects.get_or_create(member=user)
         kid_list = parent_profile.student_list
-        kid_fk_list = [kid.pk for kid in kid_list]
         suggestion_key = user.username + 'kid_list_suggestion_list'
         suggestion_list = cache.get(suggestion_key)
         if suggestion_list is None:
             suggestion_list = []
             for obj in Parent.objects.select_related('student').filter(Q(email=user.email) | Q(phone=user.phone)):
-                if obj.student.id in kid_fk_list:
+                student = obj.student
+                if student.id in parent_profile.student_fk_list or student in suggestion_list:
                     continue
                 try:
-                    suggestion_list.append(obj.student)
-                    kid_fk_list.append(obj.student.id)
+                    suggestion_list.append(student)
                 except:
                     pass
             cache.set(suggestion_key, suggestion_list, 5 * 60)

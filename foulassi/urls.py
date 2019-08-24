@@ -3,11 +3,13 @@ from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required, permission_required
 
 from ikwen_foulassi.foulassi.views import KidList, KidDetail, ShowJustificatory, AccessDenied, confirm_invoice_payment, \
-    Home, SearchSchool, EventList
+    Home, HomeSaaS, SearchSchool, EventList, Offline
 
 urlpatterns = patterns(
     '',
     url(r'^$', Home.as_view(), name='home'),
+    url(r'^for-schools$', HomeSaaS.as_view(), name='home_saas'),
+    url(r'^offline.html$', Offline.as_view(), name='offline'),
     url(r'^search/$', login_required(SearchSchool.as_view()), name='search_school'),
     url(r'^kids/$', login_required(KidList.as_view()), name='kid_list'),
     url(r'^(?P<ikwen_name>[-\w]+)/kid/(?P<student_id>[-\w]+)$', login_required(KidDetail.as_view()), name='kid_detail'),

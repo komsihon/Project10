@@ -2,14 +2,7 @@
 {% load i18n static cache %}
 
 {% block meta %}
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/apple-icon-180x180.png">
-    <link rel="shortcut icon" type="image/png" href="{% static "foulassi/img/foulassi_logo.png" %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-16x16.png">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
+    {% include 'foulassi/snippets/color_and_icons.html' %}
 {% endblock %}
 
 {% block page_title %}<title>Foulassi - ikwen</title>{% endblock %}
@@ -70,11 +63,15 @@
                             <a href="{{ student_url }}">
     {#                        <a {% if student.kid_fees_paid %}href="{{ student_url }}"{% else %}href="javascript:;"{% endif %}>#}
                                 {% if student.photo.name %}
-                                    <img class="img-circle img-thumbnail" src="{% get_media_prefix %}{{ student.photo.small_name }}">
+                                <div class="img-thumbnail">
+                                    <div class="img-circle" style="background-image: url({% get_media_prefix %}{{ student.photo.small_name }})"></div>
+                                </div>
                                 {% else %}
-                                    <img class="img-circle img-thumbnail" src="{% static 'ikwen/img/login-avatar.jpg' %}">
+                                <div class="img-thumbnail">
+                                    <div class="img-circle" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></div>
+                                </div>
                                 {% endif %}
-                                <span>{{ student }}</span>
+                                <div>{{ student }}</div>
     {#                            <span class="status-bullet danger"></span>#}
                             </a>
                         </div>
@@ -93,6 +90,22 @@
                     <div class="clearfix"></div>
                 </div>
                 {% endif %}
+                <div id="search-other-school">
+                    <h4 class="text-center">{% trans "Looking for another school ?" %}</h4>
+                    <div class="search-school">
+                        <form class="col-sm-8 col-sm-offset-2" action="{% url 'foulassi:search_school' %}">
+                            <label for="school-name" class="sr-only">{% trans "Invite a school" %}</label>
+                            <div class="input-group">
+                                <input id="school-name" class="form-control" type="text" name="q"
+                                       placeholder="{% trans "Search school" %}" autocomplete="off"/>
+                                <div class="do-search input-group-addon">
+                                    <i class="fa fa-search" style="color: #555"></i>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
             {% else %}
                 <div style="margin-top: 6vh; text-align: center">
                     <img src="{% static 'ikwen/img/embarassed.jpg'  %}" height="80"/>

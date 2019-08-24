@@ -1,0 +1,333 @@
+{% extends "website/base.html" %}
+{% load i18n humanize static auth_tokens  %}
+{% block page_title %}
+    <title>Foulassi - {% trans "Effective school management solution" %} </title>
+{% endblock %}
+
+{% block meta %}
+    {% include 'foulassi/snippets/color_and_icons.html' %}
+    <meta name="apple-mobile-web-app-title" content="Foulassi" />
+
+    <meta name="abstract" content="{% trans "Effective school management solution" %}"/>
+    <meta name="description" content="{% trans "Foulassi lets staffs, teachers and parents connect and work together to manage the school and students." %}"/>
+
+    <meta property="og:title" content="Foulassi - {% trans "Effective school management solution" %}" />
+    <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
+    <meta property="og:description" content="{% trans "Foulassi lets staffs, teachers and parents connect and work together to manage the school and students." %}" />
+
+    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}" />
+{% endblock %}
+
+{% block page_content %}
+    <section class="main-feat banner site">
+        <div class="container">
+            <div class="row desc">
+                <div class="col-sm-5">
+                    <h1>{% trans "One Platform. Everybody" %}</h1>
+                    <p>
+                        {% blocktrans %}
+                            Built with the idea of collaborative and social platform, Foulassi lets staffs,
+                            teachers and parents connect and work together to manage the school and students.
+                        {% endblocktrans %}
+                    </p>
+                    <a id="deploy" class="btn btn-md cta" href="javascript:;">{% trans "DEPLOY" %}</a>
+                </div>
+                <div class="col-sm-7">
+                    <img src="{% static 'foulassi/img/foulassi-one-platform-everyone.png' %}" alt="One platform, everyone" style="width: 100%"/>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site effective-solution listing">
+        <div class="container">
+            <h2>{% trans "An effective School Management Solution" %}</h2>
+            <div class="row features text-center">
+                <div class="col-sm-2 col-sm-offset-1">
+                    <img class="img-responsive" src="{% static 'foulassi/img/foulassi-school-setup.png' %}">
+                    <h3>{% trans "SCHOOL SETUP" %}</h3>
+                </div>
+                <div class="col-sm-2">
+                    <img class="img-responsive" src="{% static 'foulassi/img/foulassi-students-follow-up.png' %}">
+                    <h3>{% trans "STUDENTS FOLLOW-UP" %}</h3>
+                </div>
+                <div class="col-sm-2">
+                    <img class="img-responsive" src="{% static 'foulassi/img/foulassi-scores-input.png' %}">
+                    <h3>{% trans "ONLINE MARKING" %}</h3>
+                </div>
+                <div class="col-sm-2">
+                    <img class="img-responsive" src="{% static 'foulassi/img/foulassi-report-cards.png' %}">
+                    <h3>{% trans "REPORT CARDS" %}</h3>
+                </div>
+                <div class="col-sm-2">
+                    <img class="img-responsive" src="{% static 'foulassi/img/foulassi-dashboard.png' %}">
+                    <h3>{% trans "STATISTICS" %}</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+                    <div class="col-sm-6">
+                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-stay-tuned.png' %}">
+                    </div>
+                    <div class="col-sm-6 description">
+                        <h2>{% trans "Easy Setup and configuration" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                Deploy in 5 seconds ! Next, the wizard will guide you during initial setup for choosing
+                                the school system (French or English), configure payment installments, load subjects and
+                                create exam sessions . You can change all that later as you wish. From there you can
+                                easily add levels, classrooms and students. Those can be imported from XL files.
+                            {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site" style="background: url({% static 'foulassi/img/foulassi-student-follow-up.png' %}) no-repeat right; background-size: auto 100%">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+{#                    <div class="col-sm-7">#}
+{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-connect-and-share.png' %}">#}
+{#                    </div>#}
+                    <div class="col-sm-5 description">
+                        <h2>{% trans "Students follow up" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                Powerful Student file management. Easily navigate through Student information, Scores,
+                                Discipline and Billing. Add discipline entry and check ‘Send SMS’ to send an alert to
+                                parent. Upload and keep track of absence justificatory documents in the same place.
+                                See whatever is paid or due in the Billing tab.
+                            {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site" style="background: url({% static 'foulassi/img/foulassi-online-scores-input.png' %}) no-repeat; background-size: auto 100%">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+{#                    <div class="col-sm-7">#}
+{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-connect-and-share.png' %}">#}
+{#                    </div>#}
+                    <div class="col-sm-5 col-sm-offset-7 description">
+                        <h2>{% trans "Scores input by teachers" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                Let teachers put scores online by themselves and from home. They can do it using a PC,
+                                tablet or smartphone. Session results are automatically calculated when they do so.
+                                When all teachers have input their scores, there’s an alert that suggest to generate
+                                report cards.
+                            {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+                    <div class="col-sm-6 description">
+                        <h2>{% trans "Report cards generation" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                Get notified when all teachers have input their scores for a session. Simply click on
+                                the button to generate reports cards. Process is done on our cloud and you can come back
+                                later just to download the files grouped by classrooms.
+                            {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-connect-and-share.png' %}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site" style="background: url({% static 'foulassi/img/foulassi-screenshot-dashboard.png' %}) no-repeat; background-size: auto 100%">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+{#                    <div class="col-sm-6 img">#}
+{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-screenshot-dashboard.png' %}">#}
+{#                    </div>#}
+                    <div class="col-sm-5 col-sm-offset-7">
+                        <h2>{% trans "Dashboard" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                See detailed statistics on all what is going on in your school from a single screen.
+                                Easily switch between periods and sessions.
+                            {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site" style="background: url({% static 'foulassi/img/foulassi-connect-and-share.png' %}) no-repeat right; background-size: auto 100%">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+{#                    <div class="col-sm-7">#}
+{#                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-connect-and-share.png' %}">#}
+{#                    </div>#}
+                    <div class="col-sm-5">
+                        <h2>{% trans "Online payment" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                Yes, your platform accepts online payment for school fees or everything else,
+                                and you collect money on your bank account. Once parents can follow their child online,
+                                they can see whatever is due and pay by themselves using whatever Mobile Money wallet or
+                                bank account. You have detailed information about those payments and status
+                                of your online wallet.
+                            {% endblocktrans %}</p>
+{#                            <a href="javascript:;">{% trans "See details" %}</a> #}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site why-foulassi listing">
+        <div class="container">
+            <h2 class="text-center">{% trans "Why use Foulassi ?" %}</h2>
+            <p style="font-size: 21px; margin-bottom: 40px; text-align: center">
+                {% trans "Foulassi will set you free from some annoying tasks, while providing you with continuous improvements." %}
+            </p>
+            <div class="row features">
+                <div class="col-sm-4">
+                    <div>
+                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-backup-archiving.png' %}">
+                        <h3>{% trans "Back-up and archiving" %}</h3>
+                    </div>
+                    <p>{% blocktrans %}
+                        As a cloud solution, we offer automatic backup and archiving of your data using the most up to
+                        date infrastructures and technologies. As time pass on, you can always come back on whatever
+                        previous year and see all data exactly as they were. We make sure you don’t lose a single byte of data.
+                    {% endblocktrans %}</p>
+                </div>
+                <div class="col-sm-4">
+                    <div>
+                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-continuous-improvement.png' %}">
+                        <h3>{% trans "Free and continuous improvements" %}</h3>
+                    </div>
+                    <p>{% blocktrans %}
+                        We have a wonderful team of experienced developers who work daily based on your issues and
+                        expectations to make sure that the platform gets better and better.
+                    {% endblocktrans %}</p>
+                </div>
+                <div class="col-sm-4">
+                    <div>
+                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-free-website.png' %}">
+                        <h3>{% trans "You have a website and blog" %}</h3>
+                    </div>
+                    <p>{% blocktrans %}
+                        Foulassi gives you a modern and free website on the same platform. You also have a blog to
+                        publish daily articles. Better market you schools and keep people in the know. Simply buy a
+                        domain name of your choice and change the default one to <em style="color: blue">mygreatschool.org</em>
+                    {% endblocktrans %}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site good-company listing">
+        <div class="container">
+            <h2 class="text-center">{% trans "You're in good company" %}</h2>
+            <p class="col-sm-8 col-sm-offset-2" style="font-size: 21px; font-weight: 300; margin-bottom: 60px; text-align: center">{% blocktrans %}
+                We have been on the field for many years, building and maintaining great cloud apps that  address
+                business-critical issues for some major IT companies in Cameroon.
+                Join those organizations with confidence.
+            {% endblocktrans %}</p>
+            <div class="row features">
+                <div class="col-xs-6 col-sm-3">
+                    <div>
+                        <img class="img-responsive" src="{% static 'foulassi/img/logo-creolink.jpg' %}">
+                        <h3>Creolink Communications</h3>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-3">
+                    <div>
+                        <img class="img-responsive" src="{% static 'foulassi/img/logo-gimipowa.png' %}">
+                        <h3>GimiPOWA</h3>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-3">
+                    <div>
+                        <img class="img-responsive" src="{% static 'foulassi/img/logo-giz.jpeg' %}">
+                        <h3>{% trans "GIZ" %}</h3>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-3">
+                    <div>
+                        <img class="img-responsive" src="{% static 'foulassi/img/WuGoSing_Logo.png' %}">
+                        <h3>{% trans "WuGoSing" %}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site deploy">
+        <div class="container">{% blocktrans %}
+            Deploy your <strong>Foulassi Weblet</strong> now and start collaborating with teachers and thousands of parents.
+        {% endblocktrans %}</div>
+        <a class="btn btn-md cta" href="javascript:;">{% trans "DEPLOY" %}</a>
+    </section>
+{% endblock %}
+
+{% block footer %}
+    <footer style="height: 100px">
+        <div class="container">
+            <div class="footer hidden-xs">
+                &copy; {{ year }} <a class="company-name" href="{{ service.url }}"><strong>{{ config.company_name }}</strong></a>.
+                {% trans "All rights reserved." %}
+                {% if config.legal_mentions_url %}
+                - <a href="{{ config.legal_mentions_url }}" style="color: #666; text-decoration: none">{% trans "Legal mentions" %}</a>
+                {% endif %}
+            </div>
+            <div id="bottom-menu" class="hidden-xs">
+                <ul>
+                    {% include 'tsunami/snippets/language_switcher.html' %}
+                    <li><a href="http://blog.ikwen.com">{% trans 'Blog' %}</a> </li>
+                    <li><a href="http://support.ikwen.com">{% trans 'Support' %}</a> </li>
+                    <li><a href="http://blog.ikwen.com">{% trans 'Terms & conditions' %}</a> </li>
+                    <li><a href="{% url 'about' %}">{% trans 'About ikwen' %}</a> </li>
+                </ul>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </footer>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (() => {
+            var scrollBreakPoint = 90;
+            $(window).scroll((event) => {
+                var scrollTop = $(this).scrollTop();
+                if (scrollTop > scrollBreakPoint){
+                    var opacity = Math.abs(scrollBreakPoint - scrollTop) / 100;
+                    $('#navbar').css("background-color", `rgba(255, 255, 255, ${opacity})`);
+                    {#if ($(window).width() > 767) $('#navbar-search input').css("background-color", `rgba(26, 39, 93, ${opacity})`);#}
+                } else {
+                    $('#navbar').css("background-color", "transparent");
+                    {#if ($(window).width() > 767) $('#navbar-search input').css("background-color", "rgba(102, 102, 102, .4)");#}
+                }
+            });
+        })()
+    </script>
+{% endblock %}

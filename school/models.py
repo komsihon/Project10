@@ -143,7 +143,7 @@ def get_subject_list(obj, using='default'):
             subject_list.append(subject)
         except Subject.DoesNotExist:
             obj.subject_coefficient_list.remove(item)
-    obj.save()
+    obj.save(using=using)
     return subject_list
 
 

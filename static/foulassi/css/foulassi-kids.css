@@ -16,7 +16,7 @@
 .school-list .ik-li .image {height: 100%;background-size: cover;width: 120px;}
 .school-list .ik-li .info {padding: 10px 0;}
 .kid .status-bullet {height: 10px; position: absolute; right: 2.5vh; top: 3.3vh; width: 10px}
-.img-circle {width: 100%; height: 100%}
+.kid .img-thumbnail {border-radius: 50%}
 #modal-confirm-accept .modal-body, #modal-confirm-refuse .modal-body {padding-top: 0}
 #modal-confirm-accept h3, #modal-confirm-refuse h3 {margin-top: -15px}
 #modal-confirm-accept .notice, #modal-confirm-refuse .notice {margin-bottom: 42px}
@@ -24,6 +24,9 @@
 .title-brand {font-weight: 600;padding: 0 10px;font-size: 21px}
 .title-brand:hover {text-decoration:none}
 .pending-invoices .payment-start {margin-top: 2vh; min-width: 150px}
+#search-other-school {border-top: 1px solid #eee; margin-top: 6vh; padding-top: 2vh}
+#search-other-school h4 {font-weight: 700}
+#search-other-school .search-school {margin-top: 3vh}
 
 @media (max-width: 767px) {
     .school-list .ik-li .info {padding: 10px 0;max-width: 180px;}
@@ -31,7 +34,8 @@
     div#container.admin {padding-top: 55px;}
     #student-details .basic {clear: both;padding-top: 15px;}
     .ik-li:not(.selected):hover .actions {right: 15px;}
-    .img-circle {margin-top: 4vh}
+    .kid .img-thumbnail {border-radius: 50%;height: 115px;width: 115px;}
+    .kid .img-circle {background: center;background-size: cover;height: 105px;width: 105px;}
     .kid .status-bullet {right: 2.5vh; top: 6vh}
     .suggestion-list .ik-li .btn {width: 90%;margin: 20px auto 10px;float: none;display: block;}
     .suggestion-list .ik-li:not(.selected):hover .actions {bottom: 0;position: fixed;height: 30vh;right: 0;width: 100%;z-index: 1000}
@@ -44,13 +48,19 @@
     .school-list .ik-li .info {max-width: 260px}
     .kid-list {margin-top: 6vh;}
     div#container.admin {padding-top: 65px}
-    .img-circle {margin-top: 1vh}
+    .kid .img-thumbnail {height: 118.75px;width: 118.75px;}
+    .kid .img-circle {background: center;background-size: cover;height: 108.75px;width: 108.75px;}
 }
 @media (min-width: 992px) {
     .title-brand {margin-top: -2px;}
     .school-list .ik-li .info {max-width: 280px;}
+    .kid .img-thumbnail {height: 124.16px;width: 124.16px;}
+    .kid .img-circle {background: center;background-size: cover;height: 114.16px;width: 114.16px;}
 }
 @media (min-width: 1200px) {
     .school-list .ik-li .info {max-width: 395px;}
     .kid {height: 210px}
+    .kid a {display: block}
+    .kid .img-thumbnail {height: 157.5px;width: 157.5px;}
+    .kid .img-circle {background: center;background-size: cover;height: 147.5px;width: 147.5px;}
 }

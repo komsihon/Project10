@@ -5,26 +5,27 @@
 {% endblock %}
 
 {% block meta %}
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/apple-icon-180x180.png">
-    <link rel="shortcut icon" type="image/png" href="{% static "foulassi/img/foulassi_logo.png" %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/favicon-16x16.png">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="{{ settings.IKWEN_MEDIA_URL }}ikwen/favicons/{{ service.app.slug }}/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
+    {% include 'foulassi/snippets/color_and_icons.html' %}
+    <meta name="apple-mobile-web-app-title" content="Foulassi" />
+
+    <meta name="abstract" content="{% trans "Follow your kids at school in real-time" %}"/>
+    <meta name="description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
+
     <meta property="og:title" content="Foulassi - {% trans "Follow your kids at school in real-time" %}" />
     <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
     <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
-    <meta name="abstract" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
+
+{#    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">#}
+    <link rel="manifest" href="/foulassi/manifest.json">
 {% endblock %}
+
 {% block head_style %}
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'website/css/apps.css' %}" />
     <style type="text/css">
         .edge-panel-left .wrapper {padding: 0 0 120px;}
         section.main-feat {background:url("{% static 'foulassi/img/foulassi-home-bg.jpg' %}") center;background-size: cover;}
-        footer {background: url({% static 'foulassi/img/back-to-school.jpg' %}) center;background-size: cover;
+        footer {background: url({% static 'foulassi/img/foulassi-back-to-school.jpg' %}) center;background-size: cover;
             clear: both; color: #fff; display: block; float: none; height: 75vh; margin: 0;}
         section.address {background-image: none; height: 45vh}
         section.address .cover {background-color: rgba(0, 0, 0, 0.5); color: #2f2f2f; font-weight: 400; height: 75vh}
@@ -35,6 +36,8 @@
         section.site {min-height: 100px; padding: 137px 0}
         section.site:nth-child(2n) {background-color: #fff}
         section.site img {width: 60%}
+        section.install-pwa {background: url({% static 'foulassi/img/foulassi-install-pwa.png' %}) center; background-size: cover}
+        #install-pwa {text-align: left}
         .white-text-has-shade {text-shadow: 1px 2px 2px rgba(255, 255, 255, 0.7)}
         #navbar .glyphicon {color: #fff !important;}
         #navbar .btn {background: #FFF !important; color: #233682 !important;}
@@ -80,6 +83,8 @@
             section.site.banner a.btn {width: 100%}
             footer div {padding: 0}
             .section.address .cta a {font-size: 20px}
+            section.install-pwa {background-position: right}
+            #install-pwa {text-align: center}
         }
 
         @media only screen and (max-width : 767px) and (orientation: landscape) {
@@ -170,6 +175,20 @@
     </style>
 {% endblock %}
 
+{% block head_js %}
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/foulassi/service-worker.js')
+            .then((reg) => {
+              console.log('Service worker registered.', reg);
+            });
+      });
+    }
+    </script>
+    {{ block.super }}
+{% endblock %}
+
 {% block page_content %}
     <section class="main-feat banner site">
         <div class="cover">
@@ -196,7 +215,7 @@
             <div class="row features">
                 <div class="feat col-sm-12">
                     <div class="col-sm-6">
-                        <img class="img-responsive" src="{% static 'website/img/multi_tasks.png' %}">
+                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-follow-in-single-place.png' %}">
                     </div>
                     <div class="col-sm-6">
                         <h2>{% trans "Follow them all in one single place" %}</h2>
@@ -229,7 +248,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <img class="img-responsive" src="{% static 'website/img/performances.png' %}">
+                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-stay-tuned.png' %}">
                     </div>
                 </div>
             </div>
@@ -240,7 +259,7 @@
             <div class="row features">
                 <div class="feat col-sm-12">
                     <div class="col-sm-6">
-                        <img class="history img-responsive" src="{% static 'website/img/state_history.png' %}">
+                        <img class="history img-responsive" src="{% static 'foulassi/img/foulassi-online-payment.png' %}">
                     </div>
                     <div class="col-sm-6">
                         <h2>{% trans "Pay their invoices online" %}</h2>
@@ -251,6 +270,24 @@
                                 you don't take the risk of giving money to your kids for them to go and use it
                                 for something else.
                             {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site install-pwa">
+        <div class="container">
+            <div class="row features">
+                <div class="feat col-sm-12">
+                    <div class="col-sm-6">
+                        <h2>{% trans "Get the app" %}</h2>
+                        <div class="desc">
+                            <p>{% trans "Install Foulassi app on your Phone, Tablet or PC." %}</p>
+{#                            <p>{% trans "Install Foulassi app on your Phone now. It takes only 5 seconds." %}</p>#}
+                            <div id="install-pwa" class="hidden">
+                                <button class="btn btn-green btn-md cta" style="min-width: 180px; text-align: center">{% trans "Install" %}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -301,21 +338,21 @@
 
 {% block js %}
     {{ block.super }}
+    <script src="{% static 'foulassi/install.js' %}"></script>
     <script>
-        (function() {
+        (() => {
             var scrollBreakPoint = 90;
-            $(window).scroll(function(event){
+            $(window).scroll((event) => {
                 var scrollTop = $(this).scrollTop();
                 if (scrollTop > scrollBreakPoint){
                     var opacity = Math.abs(scrollBreakPoint - scrollTop) / 100;
-                    $('#navbar').css("background-color", "rgba(35, 54, 130," + opacity + ")");
-                    if ($(window).width() > 767) $('#navbar-search input').css("background-color", "rgba(26, 39, 93," + opacity + ")");
+                    $('#navbar').css("background-color", `rgba(35, 54, 130, ${opacity})`);
+                    if ($(window).width() > 767) $('#navbar-search input').css("background-color", `rgba(26, 39, 93, ${opacity})`);
                 } else {
                     $('#navbar').css("background-color", "transparent");
                     if ($(window).width() > 767) $('#navbar-search input').css("background-color", "rgba(102, 102, 102, .4)");
                 }
-
-            })
+            });
         })()
     </script>
 {% endblock %}
