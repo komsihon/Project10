@@ -28,6 +28,7 @@
                             <a href="#student-discipline" aria-controls="student-discipline" role="tab" data-toggle="tab">{% trans "Discipline" %}</a>
                         </div>
                         <div role="presentation" class="tab billing" data-tab="billing">
+                            {% if pending_invoice_count > 0 %}<i class="fa fa-circle attention text-danger"></i>{% endif %}
                             <a href="#student-billing" aria-controls="student-billing" role="tab" data-toggle="tab">{% trans "Billing" context 'Financial status' %}</a>
                         </div>
                     </div>

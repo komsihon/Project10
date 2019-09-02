@@ -35,7 +35,7 @@ from ikwen_foulassi.reporting.models import SessionReport, LessonReport
 from ikwen_foulassi.school.admin import ClassroomAdmin
 from ikwen_foulassi.school.models import Level, Classroom, Session, get_subject_list, Subject, Score, \
     ScoreUpdateRequest, SubjectCoefficient, Lesson
-from ikwen_foulassi.school.student.views import set_student_invoices
+from ikwen_foulassi.school.student.views import set_student_invoices, set_my_kids_invoice
 from import_export.formats.base_formats import XLS
 
 
@@ -210,6 +210,7 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                                         email=parent2_email, relation=parent2_relationship)
                         if set_invoices:
                             set_student_invoices(student)
+                        set_my_kids_invoice(student)
                     except:
                         if getattr(settings, 'DEBUG', False):
                             error = traceback.format_exc()
@@ -392,7 +393,6 @@ class ClassroomDetail(ChangeObjectBase):
                 student.scores = []
                 for subject in subject_list:
                     student.scores.append(student.get_score_list(subject))
-
         else:
             tab_count = 1
             context['tabs_hidden'] = True

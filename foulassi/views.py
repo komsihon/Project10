@@ -1,18 +1,23 @@
 import json
+import logging
 from collections import OrderedDict
 from datetime import timedelta, datetime
 from threading import Thread
 
 import requests
 from django.conf import settings
+from django.contrib import messages
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.db.models import Sum, Q
 from django.http.response import HttpResponseRedirect, Http404, HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView
 from django.utils.translation import gettext as _
 
@@ -21,16 +26,20 @@ from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.models import Application, Service
 from ikwen.core.utils import add_database, get_service_instance, get_mail_content, send_sms
 from ikwen.core.views import HybridListView
-from ikwen.billing.models import MoMoTransaction
+from ikwen.accesscontrol.utils import VerifiedEmailTemplateView
+from ikwen.billing.models import MoMoTransaction, CloudBillingPlan, IkwenInvoiceItem, InvoiceEntry
 from ikwen.billing.mtnmomo.views import MTN_MOMO
+from ikwen.theming.models import Theme, Template
+from ikwen_foulassi.foulassi.cloud_setup import DeploymentForm, deploy
 from ikwen_foulassi.foulassi.utils import can_access_kid_detail
 
 from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Payment, Event, Parent, EventType, \
-    PARENT_REQUEST_KID, KidRequest
-from ikwen_foulassi.school.models import get_subject_list, Justificatory, Classroom
+    PARENT_REQUEST_KID, KidRequest, SchoolConfig
+from ikwen_foulassi.school.models import get_subject_list, Justificatory
 
 from ikwen_foulassi.school.student.views import StudentDetail, ChangeJustificatory
 
+logger = logging.getLogger('ikwen')
 
 class Home(TemplateView):
     template_name = 'foulassi/home.html'
@@ -179,6 +188,7 @@ class KidDetail(StudentDetail):
         context['using'] = db
         parent1 = Parent.objects.filter(student=student)[0]
         context['is_first_parent'] = parent1.email == user.email or parent1.phone == user.phone
+        context['pending_invoice_count'] = Invoice.objects.using(db).filter(student=student, status=Invoice.PENDING).count()
         return context
 
     def get(self, request, *args, **kwargs):
@@ -280,7 +290,7 @@ class SearchSchool(HybridListView):
 
 def set_invoice_checkout(request, *args, **kwargs):
     invoice_id = request.POST['product_id']
-    invoice = Invoice.objects.select_related('student').get(pk=invoice_id)
+    invoice = Invoice.objects.select_related('school, student').get(pk=invoice_id)
     member = invoice.member
     if member and not member.is_ghost:
         if request.user != member:
@@ -291,8 +301,9 @@ def set_invoice_checkout(request, *args, **kwargs):
             return HttpResponseRedirect(next_url)
     service = get_service_instance()
     config = service.config
+    school = invoice.school
     try:
-        aggr = Payment.objects.filter(invoice=invoice, is_confirmed=True).aggregate(Sum('amount'))
+        aggr = Payment.objects.filter(invoice=invoice).aggregate(Sum('amount'))
         amount_paid = aggr['amount__sum']
     except IndexError:
         amount_paid = 0
@@ -301,15 +312,15 @@ def set_invoice_checkout(request, *args, **kwargs):
 
     mean = request.GET.get('mean', MTN_MOMO)
     tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS)\
-        .create(service_id=service.id, type=MoMoTransaction.CASH_OUT, amount=amount, phone='N/A',
+        .create(service_id=school.id, type=MoMoTransaction.CASH_OUT, amount=amount, phone='N/A',
                 model=model_name, object_id=invoice_id, wallet=mean, username=request.user.username, is_running=True)
     notification_url = service.url + reverse('foulassi:confirm_invoice_payment', args=(tx.id, ))
-    cancel_url = service.url + reverse('billing:invoice_detail', args=(invoice_id, ))
-    return_url = service.url + reverse('billing:invoice_detail', args=(invoice_id, ))
-    gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'https://payment.ikwen.com')
+    cancel_url = request.META['HTTP_REFERER']
+    return_url = request.META['HTTP_REFERER']
+    gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'https://payment.ikwen.com/v1')
     endpoint = gateway_url + '/request_payment'
     params = {
-        'username': getattr(settings, 'IKWEN_PAYMENT_GATEWAY_USERNAME', 'arch'),
+        'username': getattr(settings, 'IKWEN_PAYMENT_GATEWAY_USERNAME', service.project_name_slug),
         'amount': amount,
         'merchant_name': config.company_name,
         'notification_url': notification_url,
@@ -317,8 +328,18 @@ def set_invoice_checkout(request, *args, **kwargs):
         'cancel_url': cancel_url,
         'user_id': request.user.username
     }
-    r = requests.get(endpoint, params)
-    next_url = gateway_url + '/checkoutnow/' + r.json()['token'] + '?mean=' + mean
+    try:
+        r = requests.get(endpoint, params)
+        resp = r.json()
+        token = resp.get('token')
+        if token:
+            next_url = gateway_url + '/checkoutnow/' + resp['token'] + '?mean=' + mean
+        else:
+            messages.error(resp['errors'])
+            next_url = cancel_url
+    except:
+        logger.error("%s - Init payment flow failed with URL %s." % (service.project_name, r.url), exc_info=True)
+        next_url = cancel_url
     return HttpResponseRedirect(next_url)
 
 
@@ -330,10 +351,11 @@ def confirm_invoice_payment(request, *args, **kwargs):
     tx_id = kwargs['tx_id']
     try:
         tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS).get(pk=tx_id)
-        tx_timeout = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_TIMEOUT', 15) * 60
-        expiry = tx.created_on + timedelta(seconds=tx_timeout)
-        if datetime.now() > expiry:
-            return HttpResponse("Transaction %s timed out." % tx_id)
+        if not getattr(settings, 'DEBUG', False):
+            tx_timeout = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_TIMEOUT', 15) * 60
+            expiry = tx.created_on + timedelta(seconds=tx_timeout)
+            if datetime.now() > expiry:
+                return HttpResponse("Transaction %s timed out." % tx_id)
     except:
         raise Http404("Transaction %s not found" % tx_id)
     tx.status = status
@@ -344,15 +366,78 @@ def confirm_invoice_payment(request, *args, **kwargs):
     tx.save()
     if status != MoMoTransaction.SUCCESS:
         return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
+    school = Service.objects.get(pk=tx.service_id)
+    school_config = SchoolConfig.objects.get(service=school)
+    add_database(school.database)
     invoice = Invoice.objects.get(pk=tx.object_id)
-    Payment.objects.create(invoice=invoice, method=Payment.MOBILE_MONEY,
-                           amount=tx.amount, processor_tx_id=operator_tx_id)
+    payment = Payment.objects.create(invoice=invoice, method=Payment.MOBILE_MONEY,
+                                     amount=tx.amount, processor_tx_id=operator_tx_id)
+    payment.save(using=school.database)
     invoice.paid = invoice.amount
     invoice.status = Invoice.PAID
     invoice.save()
-    service = get_service_instance()
-    school = service.config
-    if not school.is_public or (school.is_public and not invoice.is_tuition):
-        service.raise_balance(tx.amount, provider=tx.wallet)
-
+    invoice.save(using=school.database)
+    if not school_config.is_public or (school_config.is_public and not invoice.is_tuition):
+        if invoice.is_my_kids:
+            amount = tx.amount * (100 - school_config.ikwen_share_rate) / 100
+        else:
+            amount = tx.amount
+        school.raise_balance(amount, provider=tx.wallet)
+    student = invoice.student
+    student.set_has_new(using=school.database)
+    student.save(using='default')
     return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
+
+
+class DeployCloud(VerifiedEmailTemplateView):
+    template_name = 'foulassi/cloud_setup/deploy.html'
+    DEFAULT_THEME = 'dreamer'
+
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def post(self, request, *args, **kwargs):
+        form = DeploymentForm(request.POST)
+        if form.is_valid():
+            project_name = form.cleaned_data.get('project_name')
+            billing_plan_id = form.cleaned_data.get('billing_plan_id')
+            webnode = Application.objects.get(slug='webnode')
+            template_list = list(Template.objects.filter(app=webnode))
+            try:
+                theme = Theme.objects.get(template__in=template_list, slug=self.DEFAULT_THEME)
+            except:
+                theme = None
+                logger.error("Foulassi deployment: %s webnode theme not found" % self.DEFAULT_THEME)
+            billing_plan = CloudBillingPlan.objects.get(pk=billing_plan_id)
+
+            # User self-deploying his website
+            customer = request.user
+            invoice_entries = []
+            setup_cost = billing_plan.setup_cost
+            website_setup = IkwenInvoiceItem(label='Foulassi deployment', price=setup_cost, amount=setup_cost)
+            website_setup_entry = InvoiceEntry(item=website_setup, short_description=project_name, total=setup_cost)
+            invoice_entries.append(website_setup_entry)
+            if theme.cost > 0:
+                theme_item = IkwenInvoiceItem(label='Website theme', price=theme.cost, amount=theme.cost)
+                theme_entry = InvoiceEntry(item=theme_item, short_description=theme.name, total=theme.cost)
+                invoice_entries.append(theme_entry)
+            if getattr(settings, 'DEBUG', False):
+                service = deploy(customer, project_name, billing_plan, theme, invoice_entries)
+            else:
+                try:
+                    service = deploy(customer, project_name, billing_plan, theme, invoice_entries)
+                except Exception as e:
+                    context = self.get_context_data(**kwargs)
+                    context['error'] = e.message
+                    return render(request, 'foulassi/cloud_setup/deploy.html', context)
+            if is_ikwen:
+                if request.user.is_staff:
+                    next_url = reverse('partnership:change_service', args=(service.id,))
+                else:
+                    next_url = reverse('foulassi:successful_deployment')
+            else:
+                next_url = reverse('change_service', args=(service.id,))
+            return HttpResponseRedirect(next_url)
+        else:
+            context = self.get_context_data(**kwargs)
+            context['form'] = form
+            return render(request, 'foulassi/cloud_setup/deploy.html', context)

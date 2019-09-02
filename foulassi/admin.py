@@ -60,6 +60,7 @@ if getattr(settings, 'IS_IKWEN', False):
         (None, {'fields': ('service', )}),
         (_('School'), {'fields': ('company_name', 'short_description', 'slogan', 'latitude', 'longitude',
                                   'description', 'is_pro_version')}),
+        (_('My Kids'), {'fields': ('my_kids_fees', 'my_kids_payment_period')}),
         (_('Messaging'), {'fields': ('sms_api_script_url', 'welcome_message', 'signature',)})
     ]
 else:
@@ -71,10 +72,10 @@ else:
                                                'first_instalment_title', 'first_instalment_deadline',
                                                'second_instalment_title', 'second_instalment_deadline',
                                                'third_instalment_title', 'third_instalment_deadline')}),
+        (_('My Kids'), {'fields': ('my_kids_fees', 'my_kids_payment_period')}),
         (_('Address & Contact'), {'fields': ('contact_email', 'contact_phone', 'address', 'country', 'city',
                                              'latitude', 'longitude',)}),
-        (_('Social'), {'fields': ('facebook_link', 'twitter_link', 'google_plus_link', 'youtube_link', 'instagram_link',
-                                  'tumblr_link', 'linkedin_link', )}),
+        (_('Social'), {'fields': ('facebook_link', 'twitter_link', 'youtube_link', 'instagram_link', 'linkedin_link', )}),
         (_('External scripts'), {'fields': ('scripts', )}),
     ]
 

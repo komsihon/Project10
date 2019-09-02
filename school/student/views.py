@@ -26,7 +26,7 @@ from echo.utils import notify_for_low_messaging_credit, notify_for_empty_messagi
 
 from ikwen.accesscontrol.models import SUDO
 from ikwen.accesscontrol.backends import UMBRELLA
-from ikwen.billing.models import PAYMENT_CONFIRMATION, InvoiceItem, InvoiceEntry
+from ikwen.billing.models import PAYMENT_CONFIRMATION, InvoiceItem, InvoiceEntry, NEW_INVOICE_EVENT
 from ikwen.billing.utils import get_next_invoice_number
 from ikwen.conf.settings import WALLETS_DB_ALIAS
 from ikwen.core.constants import MALE
@@ -55,41 +55,110 @@ def set_student_invoices(student):
     classroom = student.classroom
     if classroom.registration_fees:
         item = InvoiceItem(label=school.registration_fees_title, amount=classroom.registration_fees)
-        entry = InvoiceEntry(item=item, short_description='------', total=classroom.registration_fees)
+        entry = InvoiceEntry(item=item, short_description=school.company_name, total=classroom.registration_fees)
         if school.registration_fees_deadline:
             due_date = school.registration_fees_deadline
         else:
             due_date = datetime.now() + timedelta(days=30)
         is_tuition = True if school.is_public else False
-        Invoice.objects.create(number=number, student=student, amount=classroom.registration_fees,
-                               due_date=due_date, entries=[entry], is_tuition=is_tuition)
+        invoice = Invoice.objects.create(number=number, student=student, amount=classroom.registration_fees,
+                                         due_date=due_date, entries=[entry], is_tuition=is_tuition)
+        invoice.save(using=UMBRELLA)
     if classroom.first_instalment:
         item = InvoiceItem(label=school.first_instalment_title, amount=classroom.first_instalment)
-        entry = InvoiceEntry(item=item, short_description='------', total=classroom.first_instalment)
+        entry = InvoiceEntry(item=item, short_description=school.company_name, total=classroom.first_instalment)
         if school.first_instalment_deadline:
             due_date = school.first_instalment_deadline
         else:
             due_date = datetime.now() + timedelta(days=60)
-        Invoice.objects.create(number=number, student=student, amount=classroom.first_instalment,
-                               due_date=due_date, entries=[entry])
+        invoice = Invoice.objects.create(number=number, student=student, amount=classroom.first_instalment,
+                                         due_date=due_date, entries=[entry])
+        invoice.save(using=UMBRELLA)
     if classroom.second_instalment:
         item = InvoiceItem(label=school.second_instalment_title, amount=classroom.second_instalment)
-        entry = InvoiceEntry(item=item, short_description='------', total=classroom.second_instalment)
+        entry = InvoiceEntry(item=item, short_description=school.company_name, total=classroom.second_instalment)
         if school.second_instalment_deadline:
             due_date = school.second_instalment_deadline
         else:
             due_date = datetime.now() + timedelta(days=90)
-        Invoice.objects.create(number=number, student=student, amount=classroom.second_instalment,
-                               due_date=due_date, entries=[entry])
+        invoice = Invoice.objects.create(number=number, student=student, amount=classroom.second_instalment,
+                                         due_date=due_date, entries=[entry])
+        invoice.save(using=UMBRELLA)
     if classroom.third_instalment:
         item = InvoiceItem(label=school.third_instalment_title, amount=classroom.third_instalment)
-        entry = InvoiceEntry(item=item, short_description='------', total=classroom.third_instalment)
+        entry = InvoiceEntry(item=item, short_description=school.company_name, total=classroom.third_instalment)
         if school.third_instalment_deadline:
             due_date = school.third_instalment_deadline
         else:
             due_date = datetime.now() + timedelta(days=120)
-        Invoice.objects.create(number=number, student=student, amount=classroom.third_instalment,
-                               due_date=due_date, entries=[entry])
+        invoice = Invoice.objects.create(number=number, student=student, amount=classroom.third_instalment,
+                                         due_date=due_date, entries=[entry])
+        invoice.save(using=UMBRELLA)
+
+
+def set_my_kids_invoice(student):
+    """
+    Sets invoice for the MyKids service.
+    """
+    number = get_next_invoice_number()
+    school = get_service_instance()
+    config = school.config
+    count = Invoice.objects.filter(student=student, is_my_kids=True).count()
+    if config.my_kids_fees > 0 and count == 0:
+        item = InvoiceItem(label="My Kids", amount=config.my_kids_fees)
+        entry = InvoiceEntry(item=item, short_description=config.company_name, total=config.my_kids_fees)
+        due_date = datetime.now() + timedelta(days=config.my_kids_payment_period)
+        invoice = Invoice.objects.create(number=number, student=student, amount=config.my_kids_fees,
+                                         due_date=due_date, entries=[entry], is_my_kids=True)
+        invoice.save(using=UMBRELLA)
+        student.has_new = True
+        student.save()
+        student.save(using=UMBRELLA)
+        try:
+            parent = Parent.objects.filter(student=student)[0]
+            member = parent.member
+            if member:
+                add_event(school, NEW_INVOICE_EVENT, member=member, object_id=invoice.id)
+        except:
+            pass
+
+
+def reset_my_kids_invoice():
+    """
+    Sets MyKids invoice after fees change. Only unpaid invoices
+    are affected.
+    """
+    school = get_service_instance()
+    config = school.config
+    if config.my_kids_fees > 0:
+        if Invoice.objects.filter(is_my_kids=True).count() > 0:
+            Invoice.objects.filter(is_my_kids=True, paid=False).update(amount=config.my_kids_fees)
+            Invoice.objects.using(UMBRELLA).filter(school=school, is_my_kids=True, paid=False).update(amount=config.my_kids_fees)
+        else:
+            for student in Student.objects.filter(is_excluded=False):
+                number = get_next_invoice_number()
+                item = InvoiceItem(label="My Kids", amount=config.my_kids_fees)
+                entry = InvoiceEntry(item=item, short_description=config.company_name, total=config.my_kids_fees)
+                due_date = datetime.now() + timedelta(days=config.my_kids_payment_period)
+                invoice = Invoice.objects.create(number=number, student=student, amount=config.my_kids_fees,
+                                                 due_date=due_date, entries=[entry], is_my_kids=True)
+                invoice.save(using=UMBRELLA)
+                student.has_new = True
+                student.save()
+                student.save(using=UMBRELLA)
+                try:
+                    parent = Parent.objects.filter(student=student)[0]
+                    member = parent.member
+                    if member:
+                        add_event(school, NEW_INVOICE_EVENT, member=member, object_id=invoice.id)
+                except:
+                    pass
+    else:
+        Invoice.objects.filter(is_my_kids=True, paid=False).delete()
+        Invoice.objects.using(UMBRELLA).filter(school=school, is_my_kids=True, paid=False).delete()
+        for student in Student.objects.filter(is_excluded=False):
+            student.set_has_new()
+            student.save(using=UMBRELLA)
 
 
 class ChangeStudent(ChangeObjectBase):
@@ -115,6 +184,7 @@ class ChangeStudent(ChangeObjectBase):
             return
         # It's a student under creation, so set a new Invoice for him
         set_student_invoices(obj)
+        set_my_kids_invoice(obj)
 
     def get_object_list_url(self, request, obj, *args, **kwargs):
         classroom_id = kwargs.get('classroom_id')
@@ -143,6 +213,7 @@ class StudentDetail(ChangeObjectBase):
         context['student_public_url'] = student_public_url
         context['discipline_item_list'] = DisciplineItem.objects.filter(is_active=True)\
             .exclude(slug__in=[DisciplineItem.PARENT_CONVOCATION, DisciplineItem.EXCLUSION])
+        context['pending_invoice_count'] = Invoice.objects.filter(student=student, status=Invoice.PENDING).count()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -280,9 +351,12 @@ class StudentDetail(ChangeObjectBase):
             return HttpResponse(json.dumps({'error': _("Invalid amount")}))
         sms_notification = self.request.GET.get('sms_notification', False)
         invoice = Invoice.objects.get(pk=invoice_id)
+        if invoice.is_my_kids:
+            return HttpResponse(json.dumps({'error': "Not allowed"}))
         payment = Payment.objects.create(invoice=invoice, amount=amount, method=Payment.CASH, cashier=self.request.user)
         invoice.paid = amount
         invoice.save()
+        invoice.save(using=UMBRELLA)
         response = {'success': True}
         service = get_service_instance()
         if getattr(settings, 'DEBUG', False):
@@ -294,6 +368,7 @@ class StudentDetail(ChangeObjectBase):
                 add_event(service, PAYMENT_CONFIRMATION, group_id=sudo_group.id, object_id=invoice.id)
             except Group.DoesNotExist:
                 pass
+
         parents = student.parent_set.all()
         if parents.count() <= 0:
             return HttpResponse(json.dumps(response))

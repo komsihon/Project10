@@ -61,18 +61,17 @@
                         <div class="text-center">
                             {% url 'foulassi:kid_detail' student.school.ikwen_name student.id as student_url %}
                             <a href="{{ student_url }}">
-    {#                        <a {% if student.kid_fees_paid %}href="{{ student_url }}"{% else %}href="javascript:;"{% endif %}>#}
-                                {% if student.photo.name %}
                                 <div class="img-thumbnail">
-                                    <div class="img-circle" style="background-image: url({% get_media_prefix %}{{ student.photo.small_name }})"></div>
+                                    {% if student.photo.name %}
+                                        <div class="img-circle" style="background-image: url({% get_media_prefix %}{{ student.photo.small_name }})"></div>
+                                    {% else %}
+                                        <div class="img-circle" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></div>
+                                    {% endif %}
+                                    {% if student.has_new %}
+                                        <span class="status-bullet danger"></span>
+                                    {% endif %}
                                 </div>
-                                {% else %}
-                                <div class="img-thumbnail">
-                                    <div class="img-circle" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></div>
-                                </div>
-                                {% endif %}
                                 <div>{{ student }}</div>
-    {#                            <span class="status-bullet danger"></span>#}
                             </a>
                         </div>
                         <div class="clearfix"></div>

@@ -15,7 +15,7 @@
                     {% if settings.IS_UMBRELLA %}
                         <button class="btn btn-sm btn-success payment-start"
                            data-product-id="{{ invoice.id }}">{% trans "Pay now" %}</button>
-                    {% elif perms.billing.ik_cash_in %}
+                    {% elif perms.billing.ik_cash_in and not invoice.is_my_kids %}
                         <a href="javascript:;" class="show-modal-cash-in" data-toggle="modal" data-target="#modal-cash-in"
                            data-invoice-id="{{ invoice.id }}" data-amount="{{ invoice.amount }}">{% trans "Cash in" %}</a>
                     {% endif %}

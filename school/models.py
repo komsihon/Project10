@@ -243,6 +243,8 @@ class AbstractScore(Model):
     student = models.ForeignKey(Student)
     value = models.FloatField(blank=True, null=True)
     rank = models.IntegerField(blank=True, null=True)
+    was_viewed = models.BooleanField(default=False,
+                                     help_text="True if parent already viewed this.")
 
     class Meta:
         abstract = True
@@ -305,6 +307,8 @@ class DisciplineLogEntry(Model):
     count = models.FloatField()
     happened_on = models.DateTimeField(blank=True, null=True, db_index=True)
     is_justified = models.BooleanField(default=False)
+    was_viewed = models.BooleanField(default=False,
+                                     help_text="True if parent already viewed this.")
 
     class Meta:
         ordering = ('-id', )

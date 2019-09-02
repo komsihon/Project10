@@ -1,4 +1,5 @@
 from datetime import datetime
+from threading import Thread
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -13,7 +14,7 @@ from djangotoolbox.fields import ListField, EmbeddedModelField
 
 from ikwen.accesscontrol.models import Member
 from ikwen.core.constants import GENDER_CHOICES
-from ikwen.core.utils import get_service_instance
+from ikwen.core.utils import get_service_instance, add_database
 from ikwen.core.models import Model, AbstractConfig, Service
 from ikwen.core.fields import MultiImageField
 from ikwen.theming.models import Theme
@@ -89,6 +90,9 @@ class Student(Model):
     tags = models.TextField(blank=True, null=True, db_index=True)
     kid_fees_paid = models.BooleanField(default=False,
                                         help_text="Whether a parent has ever paid to follow kid on the Kids platform.")
+    has_new = models.BooleanField(default=False,
+                                  help_text="Whether there's a new information published on this student: "
+                                            "score, discipline information or invoice.")
 
     def __unicode__(self):
         return self.last_name + ' ' + self.first_name
@@ -96,6 +100,19 @@ class Student(Model):
     def get_score_list(self, subject, using='default'):
         from ikwen_foulassi.school.models import Score
         return Score.objects.using(using).filter(student=self, subject=subject).order_by('session')
+
+    def set_has_new(self, using='default'):
+        """
+        Checks whether there's anything new about the Student and sets
+        Student.has_new to True, else sets it to False.
+        """
+        from ikwen_foulassi.foulassi.models import Invoice
+        from ikwen_foulassi.school.models import Score, DisciplineLogEntry
+        has_pending_invoice = Invoice.objects.using(using).filter(student=self, status=Invoice.PENDING).count() > 0
+        has_new_discipline_info = DisciplineLogEntry.objects.using(using).filter(student=self, was_viewed=False).count() > 0
+        has_new_score = Score.objects.using(using).filter(student=self, was_viewed=False).count() > 0
+        self.has_new = has_pending_invoice or has_new_discipline_info or has_new_score
+        self.save(using=using)
 
 
 class Parent(Model):
@@ -241,20 +258,47 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                                                      "scores or best score of all sessions."))
     is_public = models.BooleanField(default=False,
                                     help_text="Designates whether this school is a State school.")
+    my_kids_fees = models.IntegerField(_("Annual fees"), default=0)
+    my_kids_payment_period = models.IntegerField(_("Payment period"), default=30,
+                                                 help_text=_("Number of days left for parent to pay for the service."))
+    ikwen_share_rate = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
-        bts = self.back_to_school_date
-        # if bts.hour != 7 or bts.min != 30:
-        if bts and (bts.hour != 7 or bts.min != 30):
-            # Always set back to school time to 07:30 AM
-            self.back_to_school_date = datetime(bts.year, bts.month, bts.day, 7, 30)
-        super(SchoolConfig, self).save(*args, **kwargs)
+        if getattr(settings, 'IS_IKWEN', False):
+            db = self.service.database
+            add_database(db)
+            try:
+                obj_mirror = SchoolConfig.objects.using(db).get(pk=self.id)
+                obj_mirror.is_public = self.is_public
+                obj_mirror.my_kids_fees = self.my_kids_fees
+                obj_mirror.my_kids_payment_period = self.my_kids_payment_period
+                obj_mirror.ikwen_share_rate = self.ikwen_share_rate
+                super(SchoolConfig, obj_mirror).save(using=db)
+            except SchoolConfig.DoesNotExist:
+                pass
+            super(SchoolConfig, self).save(*args, **kwargs)
+        else:
+            before = SchoolConfig.objects.get(pk=self.id)
+            bts = self.back_to_school_date
+            # if bts.hour != 7 or bts.min != 30:
+            if bts and (bts.hour != 7 or bts.min != 30):
+                # Always set back to school time to 07:30 AM
+                self.back_to_school_date = datetime(bts.year, bts.month, bts.day, 7, 30)
+            super(SchoolConfig, self).save(*args, **kwargs)
+            if before.my_kids_fees != self.my_kids_fees:
+                from ikwen_foulassi.school.student.views import reset_my_kids_invoice
+                if getattr(settings, 'DEBUG', False):
+                    reset_my_kids_invoice()
+                else:
+                    Thread(target=reset_my_kids_invoice).start()
 
 
 class Invoice(AbstractInvoice):
+    school = models.ForeignKey(Service, default=get_service_instance, blank=True, null=True)
     student = models.ForeignKey(Student, blank=True, null=True)
     school_year = models.IntegerField(default=get_school_year, db_index=True)
     is_tuition = models.BooleanField(default=False)
+    is_my_kids = models.BooleanField(default=False)
 
     def get_title(self):
         return ', '.join([entry.item.label for entry in self.entries])
