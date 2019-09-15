@@ -1,0 +1,170 @@
+{% extends 'core/base_bs.html' %}
+{% load i18n static user_agents %}
+
+{% block meta %}
+    {{ block.super }}
+    <link rel="shortcut icon" type="image/png" href="{% static "tsunami/img/favicon_Tsunami.ico" %}">
+    <meta name="theme-color" content="#233682">
+    <meta name="msapplication-navbutton-color" content="#233682">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#233682">
+{% endblock %}
+
+{% block page_title %}
+    <title>{% trans "Successful deployment" %} - ikwen Foulassi</title>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <!-- Custom css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'ikwen/css/deploy-minimal.css' %}">
+    <style>
+        footer {position: static}
+        body > .container {margin-top: 12vh}
+        @media (max-width: 767px) {
+            body > .container {margin-top: 10vh}
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% url 'billing:invoice_detail' invoice.id as invoice_url %}
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1 row">
+            <div class="row">
+                <div class="col-sm-3 text-center">
+                    <img src="{% static 'foulassi/img/foulassi_splash.png' %}" class="main-img" alt="Sample Image"/>
+                </div>
+                <div class="col-sm-9">
+                {% blocktrans with client_name=user.first_name service_url=school.url %}
+                    <h2 class="text-center">Congratulations {{ client_name }} !</h2>
+                    <p>Your school is now online at <a target="_blank" href="{{ service_url }}"> {{ service_url }}</a>.</p>
+                    <p class="bill-link">Your invoice is available, pay now and get your <span class="animated infinite pulse" style="color: #ef7000">support code.</span></p>
+                {% endblocktrans %}
+                <a href="{{ invoice_url }}" target="_blank" class="btn btn-deep-blue" style="min-width: 200px;">{% trans "Pay now" %}</a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="summary" style="margin-top: 5vh">
+                <div class="section row">
+                    <div class="col-sm-8">
+                        <h3>{% trans "Invite collaborators" %}</h3>
+                        <div class="col-xs-6 col-xs-offset-3 visible-xs">
+                            <img class="img-responsive" alt="Invite collaborators" src="{% static 'tsunami/img/fully_automated.png' %}" />
+                        </div>
+                        <p>{% blocktrans %}
+                            Invite school staff and teachers to <em>join</em> on the platform and start collaborating.
+                        {% endblocktrans %}</p>
+                        {% if request|is_mobile or request|is_tablet %}
+                            <a href="javascript:;" data-toggle="modal" data-target="#whatsapp-share">
+                                {% trans "Send invitation" %} <i class="fa fa-arrow-circle-right animated slideInLeft"></i>
+                            </a>
+                        {% else %}
+                            <a href="http://support.ikwen.com/foulassi">
+                                {% trans "Discover how to do that" %} <i class="fa fa-arrow-circle-right animated slideInLeft"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-4 first-on-mobile hidden-xs">
+                        <img class="img-responsive pull-right" alt="img_client_list_exploitation" src="{% static 'tsunami/img/fully_automated.png' %}" />
+                    </div>
+                </div>
+                <div class="section row">
+                    <div class="col-sm-8">
+                        <h3>{% trans "Create subjects, levels and classrooms" %}</h3>
+                        <div class="col-xs-6 col-xs-offset-3 visible-xs">
+                            <img class="img-responsive" alt="img_client_list_exploitation" src="{% static 'tsunami/img/inbound_marketing.png' %}" />
+                        </div>
+                        <p>{% blocktrans %}
+                            Check subject list and add if some are missing. You need to do that before adding levels and classrooms.
+                        {% endblocktrans %}</p>
+                        <a href="{{ school.url }}/school/subjects" target="_blank"> {% trans "Setup your school" %} &nbsp;<i class="fa fa-arrow-circle-right animated slideInLeft"></i></a>
+                    </div>
+                    <div class="col-sm-4 hidden-xs">
+                        <img class="img-responsive pull-right" alt="img_inbound_marketing" src="{% static 'tsunami/img/inbound_marketing.png' %}" />
+                    </div>
+                </div>
+                <div class="section row">
+                    <div class="col-sm-8">
+                        <h3>{% trans "Share with parents" %}</h3>
+                        <div class="col-xs-6 col-xs-offset-3 visible-xs">
+                            <img class="img-responsive" alt="img_client_list_exploitation" src="{% static 'tsunami/img/glogal-market.png' %}" />
+                        </div>
+                        <p>{% blocktrans %}
+                            Invite parents to follow their children on <strong>MyKids</strong> app and charge them annual fees for the service.
+                        {% endblocktrans %}</p>
+                        <a href="{{ school.url }}{% url 'ikwen:configuration' %}" target="_blank">{% trans "Configure MyKids fees" %}&nbsp;<i class="fa fa-arrow-circle-right animated slideInLeft"></i></a>
+                    </div>
+                    <div class="col-sm-4 hidden-xs">
+                        <img class="img-responsive" alt="img_client_list_exploitation" src="{% static 'tsunami/img/glogal-market.png' %}" />
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-md-offset-3 col-sm-offset-3 text-center" style="padding-top: 3vh">
+                <h1>
+                    {% trans "Need help ?" %}
+                </h1>
+                <h3>
+                    {% trans "Contact us" %}
+                </h3>
+                <div>
+                    <h4 class="contact-address">
+                        <i class="fab fa-whatsapp"></i> &nbsp;(+237) 656 123 522
+                    </h4>
+                    <h4 class="contact-address">
+                        <i class="fas fa-envelope"></i> &nbsp;support@ikwen.com
+                    </h4>
+                </div>
+            </div>
+        </div>
+	</div>
+    {#    Modal declaration : BEGIN #}
+    <div class="modal fade" id="whatsapp-share" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{% trans "Share on WhatsApp" %}</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <form onclick="return false" class="form-horizontal">
+                        <div class="form-group row">
+                            <label for="whatsapp-share-msg" class="col-sm-5 col-md-4">{% trans "Message" %}</label>
+                            <div class="col-sm-7 col-md-8">
+                                <textarea id="whatsapp-share-msg" style="height: 120px"
+                                          class="form-control input-sm">{% blocktrans with school_name=school.project_name %}Hello! This is our Foulassi platform for collaborating online in {{ school_name }}. Join in for us to configure your access.{% endblocktrans %}</textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="actions">
+                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                            <button class="btn btn-success btn-block btn-sm ok"
+                                    data-dismiss="modal" aria-label="OK">OK</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                            <button class="btn btn-default btn-block btn-sm"
+                                    data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#    Modal declaration : END #}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (() => {
+            $('body').on('click', '#whatsapp-share .btn.ok', () => {
+                var msg = $('#whatsapp-share-msg').val(),
+                    url = '{{ school.url }}/ikwen/signIn?invite=yes&member={{ user.full_name }}';
+                window.location = 'https://api.whatsapp.com/send?text=' + url + '%0A%0A' + msg;
+            });
+        })()
+    </script>
+{% endblock %}

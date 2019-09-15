@@ -1,16 +1,16 @@
 /*
  * @license
- * Foulassi (https://ikwen.com/foulassi)
+ * ikwen (https://ikwen.com/foulassi)
  * Copyright 2019 Foulassi Inc. All rights reserved.
  */
 'use strict';
 
 // CODELAB: Update cache names any time any of the cached files change.
-const CACHE_NAME = 'static-cache-v3';
+const CACHE_NAME = 'static-cache-v4';
 
 // CODELAB: Add list of files to cache here.
 const FILES_TO_CACHE = [
-  '/ikwen/foulassi/offline.html',
+  '/offline.html',
 ];
 
 self.addEventListener('install', (evt) => {
@@ -51,7 +51,7 @@ self.addEventListener('fetch', (evt) => {
     evt.respondWith(
         fetch(evt.request).catch(() => {
             return caches.open(CACHE_NAME).then((cache) => {
-                return cache.match('ikwen/foulassi/offline.html');
+                return cache.match('offline.html');
             });
         })
     );

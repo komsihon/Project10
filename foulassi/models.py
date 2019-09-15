@@ -39,7 +39,7 @@ def get_school_year(request=None):
         return request.session.get('school_year', get_school_year())
     now = datetime.now()
     month = now.month
-    if 9 <= month <= 12:
+    if 10 <= month <= 12:
         return now.year
     return now.year - 1
 

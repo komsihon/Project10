@@ -54,11 +54,14 @@
                 {% if subject_list %}
                     {% include 'core/snippets/object_list_results.html' %}
                 {% else %}
-                    <div id="stage" style="margin: auto">
-                        <p>{% blocktrans %}
+                    <div id="stage" class="empty-list">
+                        <p class="notice">{% blocktrans %}
                             You can start add levels only after you have added subjects.
                         {% endblocktrans %}</p>
-                        <a href="{% url 'school:change_subject' %}" class="btn btn-success btn-sm">{% trans "Add subject" %}</a>
+                        <a href="{% url 'school:change_subject' %}" class="btn btn-success btn-green">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            {% trans "Add subject" %}
+                        </a>
                     </div>
                 {% endif %}
             </div>

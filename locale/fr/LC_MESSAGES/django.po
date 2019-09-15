@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-31 21:26+0000\n"
-"PO-Revision-Date: 2019-08-31 22:27+0100\n"
+"POT-Creation-Date: 2019-09-15 13:51+0000\n"
+"PO-Revision-Date: 2019-09-15 14:53+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -87,7 +87,7 @@ msgstr "Social"
 msgid "External scripts"
 msgstr "Scripts externes"
 
-#: foulassi/cloud_setup.py:272
+#: foulassi/cloud_setup.py:294
 #, python-format
 msgid "Your platform %s was created"
 msgstr "Votre plateforme %s a été créé"
@@ -205,27 +205,27 @@ msgstr ""
 "Confirmation de paiement de %(amount).2f %(currency)s pour les frais "
 "scolaires de l'élève %(student_name)s. Merci."
 
-#: foulassi/views.py:261
+#: foulassi/views.py:259
 #, python-format
 msgid "Mrs %s"
 msgstr "Mme %s"
 
-#: foulassi/views.py:263
+#: foulassi/views.py:261
 #, python-format
 msgid "Mr %s"
 msgstr "M. %s"
 
-#: foulassi/views.py:265
+#: foulassi/views.py:263
 #, python-format
 msgid "The parent %s"
 msgstr "Le parent %s"
 
-#: foulassi/views.py:266
+#: foulassi/views.py:264
 msgid "I would like to follow my kids in your school on Foulassi."
 msgstr ""
 "J'aimerais pouvoir suivre mes enfants dans votre établissement sur Foulassi."
 
-#: foulassi/views.py:279
+#: foulassi/views.py:277
 #, python-format
 msgid ""
 "%(parent_name)s would like to follow his kid(s) below on ikwen Foulassi:\n"
@@ -234,6 +234,14 @@ msgstr ""
 "%(parent_name)s aimerait pouvoir suivre ses enfants ci-dessous sur ikwen "
 "Foulassi:\n"
 "%(kids_details)s"
+
+#: foulassi/views.py:479
+msgid "Foulassi deployment"
+msgstr "Déploiement Foulassi"
+
+#: foulassi/views.py:483
+msgid "Website theme"
+msgstr ""
 
 #: foulassi/templates/foulassi/access_denied.html:4
 msgid "We care about your children privacy"
@@ -324,7 +332,7 @@ msgstr "Ooops! Une erreur s'est produite."
 #: foulassi/templates/foulassi/home.html:4
 #: foulassi/templates/foulassi/home.html:11
 #: foulassi/templates/foulassi/home.html:14
-#: foulassi/templates/foulassi/home.html:198
+#: foulassi/templates/foulassi/home.html:204
 msgid "Follow your kids at school in real-time"
 msgstr "Suivez vos enfants à l'école en temps réel"
 
@@ -337,7 +345,7 @@ msgstr ""
 "Foulassi est une plateforme sociale qui se connecte aux écoles de vos "
 "enfants pour vous donner leurs résultats, discipline et états financiers."
 
-#: foulassi/templates/foulassi/home.html:200
+#: foulassi/templates/foulassi/home.html:206
 msgid ""
 "\n"
 "                                Foulassi is a social platform that connects "
@@ -352,16 +360,16 @@ msgstr ""
 "financiers.\n"
 "                            "
 
-#: foulassi/templates/foulassi/home.html:208
-#: foulassi/templates/foulassi/home.html:311
+#: foulassi/templates/foulassi/home.html:214
+#: foulassi/templates/foulassi/home.html:299
 msgid "Get connected"
 msgstr "Connectez-vous"
 
-#: foulassi/templates/foulassi/home.html:221
+#: foulassi/templates/foulassi/home.html:227
 msgid "Follow them all in one single place"
 msgstr "Suivez-les tous en un seul endroit"
 
-#: foulassi/templates/foulassi/home.html:223
+#: foulassi/templates/foulassi/home.html:229
 msgid ""
 "\n"
 "                                Foulassi collects data from all schools of "
@@ -382,11 +390,11 @@ msgstr ""
 "                               est parfait pour ajouter l'oncle ou encore le "
 "grand-père."
 
-#: foulassi/templates/foulassi/home.html:240
+#: foulassi/templates/foulassi/home.html:246
 msgid "Know their results before they do"
 msgstr "Soyez informés de leurs résultats avant eux-mêmes"
 
-#: foulassi/templates/foulassi/home.html:242
+#: foulassi/templates/foulassi/home.html:248
 msgid ""
 "\n"
 "                                You have immediate access to your children's "
@@ -409,11 +417,11 @@ msgstr ""
 "                               sont bons, pensez à leur offrir le cadeau "
 "dont ils rêvent."
 
-#: foulassi/templates/foulassi/home.html:265
+#: foulassi/templates/foulassi/home.html:271
 msgid "Pay their invoices online"
 msgstr "Payez tout vous-même, et en ligne"
 
-#: foulassi/templates/foulassi/home.html:267
+#: foulassi/templates/foulassi/home.html:273
 msgid ""
 "\n"
 "                                Pay whatever is due directly online using "
@@ -433,56 +441,62 @@ msgstr ""
 "                               vous ne prendrez plus le risque de leur "
 "donner de l'argent qui finit parfois ailleurs."
 
-#: foulassi/templates/foulassi/home.html:284
-msgid "Get the app"
-msgstr "Obtenez l'application"
-
-#: foulassi/templates/foulassi/home.html:286
-msgid "Install Foulassi app on your Phone, Tablet or PC."
-msgstr "Installez l'application Foulassi sur votre Smartphone, tablette ou PC."
-
-#: foulassi/templates/foulassi/home.html:289
-msgid "Install"
-msgstr "Installer"
-
-#: foulassi/templates/foulassi/home.html:305
+#: foulassi/templates/foulassi/home.html:293
 msgid "Connect with your children now"
 msgstr "Connectez-vous à vos enfants maintenant"
 
-#: foulassi/templates/foulassi/home.html:308
+#: foulassi/templates/foulassi/home.html:296
 msgid "And be next to them everyday for success."
 msgstr "Et restez proche d'eux chaque jour pour atteindre le succès"
 
-#: foulassi/templates/foulassi/home.html:320
-#: foulassi/templates/foulassi/home_saas.html:296
+#: foulassi/templates/foulassi/home.html:310
+msgid "Are you a school manager ?"
+msgstr "Vous êtes responsable d'établissement ?"
+
+#: foulassi/templates/foulassi/home.html:312
+msgid "Take your school on this awesome platform in no time."
+msgstr ""
+"Amenez votre école sur cette incroyable plateforme en un rien de temps."
+
+#: foulassi/templates/foulassi/home.html:315
+msgid "Discover Foulassi for schools"
+msgstr "Découvrez Foulassi pour les établissements"
+
+#: foulassi/templates/foulassi/home.html:319
+msgctxt "Discover foulassi for schools"
+msgid "Discover"
+msgstr "Découvrez"
+
+#: foulassi/templates/foulassi/home.html:333
+#: foulassi/templates/foulassi/home_saas.html:404
 #: templates/core/base_admin.html:187
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
-#: foulassi/templates/foulassi/home.html:322
-#: foulassi/templates/foulassi/home_saas.html:298
+#: foulassi/templates/foulassi/home.html:335
+#: foulassi/templates/foulassi/home_saas.html:406
 #: templates/core/base_admin.html:188
 msgid "Legal mentions"
 msgstr "Mentions légales"
 
-#: foulassi/templates/foulassi/home.html:328
-#: foulassi/templates/foulassi/home_saas.html:304
+#: foulassi/templates/foulassi/home.html:341
+#: foulassi/templates/foulassi/home_saas.html:412
 #: templates/core/app_base_admin.html:90
 msgid "Blog"
 msgstr "Blog"
 
-#: foulassi/templates/foulassi/home.html:329
-#: foulassi/templates/foulassi/home_saas.html:305
+#: foulassi/templates/foulassi/home.html:342
+#: foulassi/templates/foulassi/home_saas.html:413
 msgid "Support"
 msgstr "Support"
 
-#: foulassi/templates/foulassi/home.html:330
-#: foulassi/templates/foulassi/home_saas.html:306
+#: foulassi/templates/foulassi/home.html:343
+#: foulassi/templates/foulassi/home_saas.html:414
 msgid "Terms & conditions"
 msgstr "Termes et Conditions"
 
-#: foulassi/templates/foulassi/home.html:331
-#: foulassi/templates/foulassi/home_saas.html:307
+#: foulassi/templates/foulassi/home.html:344
+#: foulassi/templates/foulassi/home_saas.html:415
 msgid "About ikwen"
 msgstr "À propos de ikwen"
 
@@ -501,13 +515,11 @@ msgstr ""
 "Foulassi permet au personnel d’établissement, aux enseignants et aux parents "
 "d’être connectés et collaborer pour gérer l’école et ses élèves."
 
-#: foulassi/templates/foulassi/home_saas.html:32
-msgid "One Platform. Everybody"
-msgstr ""
-"Une plateforme\n"
-"Tout le monde"
+#: foulassi/templates/foulassi/home_saas.html:35
+msgid "One Platform<br/>Everybody"
+msgstr "Une plateforme<br/>Tout le monde"
 
-#: foulassi/templates/foulassi/home_saas.html:34
+#: foulassi/templates/foulassi/home_saas.html:37
 msgid ""
 "\n"
 "                            Built with the idea of collaborative and social "
@@ -522,51 +534,54 @@ msgstr ""
 "connectés et collaborer pour gérer l’école et ses élèves.\n"
 "                            "
 
-#: foulassi/templates/foulassi/home_saas.html:39
-#: foulassi/templates/foulassi/home_saas.html:287
+#: foulassi/templates/foulassi/home_saas.html:42
+#: foulassi/templates/foulassi/home_saas.html:395
 msgid "DEPLOY"
 msgstr "DÉPLOYER"
 
-#: foulassi/templates/foulassi/home_saas.html:49
+#: foulassi/templates/foulassi/home_saas.html:52
 msgid "An effective School Management Solution"
 msgstr "Une solution efficace de gestion d’établissements scolaires"
 
-#: foulassi/templates/foulassi/home_saas.html:53
+#: foulassi/templates/foulassi/home_saas.html:56
 msgid "SCHOOL SETUP"
 msgstr "MISE EN ROUTE"
 
-#: foulassi/templates/foulassi/home_saas.html:57
+#: foulassi/templates/foulassi/home_saas.html:60
 msgid "STUDENTS FOLLOW-UP"
 msgstr "SUIVI DE L'ÉLÈVE"
 
-#: foulassi/templates/foulassi/home_saas.html:61
+#: foulassi/templates/foulassi/home_saas.html:64
 msgid "ONLINE MARKING"
 msgstr "SAISIE DE NOTES"
 
-#: foulassi/templates/foulassi/home_saas.html:65
+#: foulassi/templates/foulassi/home_saas.html:68
 msgid "REPORT CARDS"
 msgstr "BULLETINS"
 
-#: foulassi/templates/foulassi/home_saas.html:69
+#: foulassi/templates/foulassi/home_saas.html:72
+#: foulassi/templates/foulassi/home_saas.html:76
 msgid "STATISTICS"
 msgstr "STATISTIQUES"
 
-#: foulassi/templates/foulassi/home_saas.html:82
+#: foulassi/templates/foulassi/home_saas.html:89
+#: foulassi/templates/foulassi/home_saas.html:101
 msgid "Easy Setup and configuration"
 msgstr "Déploiement et configuration simplifiés"
 
-#: foulassi/templates/foulassi/home_saas.html:84
+#: foulassi/templates/foulassi/home_saas.html:91
+#: foulassi/templates/foulassi/home_saas.html:103
 msgid ""
 "\n"
-"                                Deploy in 5 seconds ! Next, the wizard will "
+"                            Deploy in 5 seconds ! Next, the wizard will "
 "guide you during initial setup for choosing\n"
-"                                the school system (French or English), "
-"configure payment installments, load subjects and\n"
-"                                create exam sessions . You can change all "
-"that later as you wish. From there you can\n"
-"                                easily add levels, classrooms and students. "
+"                            the school system (French or English), configure "
+"payment installments, load subjects and\n"
+"                            create exam sessions . You can change all that "
+"later as you wish. From there you can\n"
+"                            easily add levels, classrooms and students. "
 "Those can be imported from XL files.\n"
-"                            "
+"                        "
 msgstr ""
 "\n"
 " Déployez la solution en 5 secondes ! Ensuite, l’assistant vous guidera "
@@ -579,46 +594,50 @@ msgstr ""
 "et les élèves.\n"
 "Ces derniers peuvent être importés à partir de fichiers Excel."
 
-#: foulassi/templates/foulassi/home_saas.html:104
+#: foulassi/templates/foulassi/home_saas.html:121
+#: foulassi/templates/foulassi/home_saas.html:133
 msgid "Students follow up"
 msgstr "Suivi de l’élève"
 
-#: foulassi/templates/foulassi/home_saas.html:106
+#: foulassi/templates/foulassi/home_saas.html:123
+#: foulassi/templates/foulassi/home_saas.html:135
 msgid ""
 "\n"
-"                                Powerful Student file management. Easily "
+"                            Powerful Student file management. Easily "
 "navigate through Student information, Scores,\n"
-"                                Discipline and Billing. Add discipline entry "
-"and check <strong>Send SMS</strong> to send an alert to\n"
-"                                parent. Upload and keep track of absence "
+"                            Discipline and Billing. Add discipline entry and "
+"check <strong>Send SMS</strong> to send an alert to\n"
+"                            parent. Upload and keep track of absence "
 "justificatory documents in the same place.\n"
-"                                See whatever is paid or due in the "
+"                            See whatever is paid or due in the "
 "<strong>Billing</strong> tab.\n"
-"                            "
+"                        "
 msgstr ""
 "\n"
 "Un suivi efficace de l’élève. Naviguez simplement entre les informations "
-"personnelles, les notes, la discipline et les états financiers. Ajouter une "
-"entrée de discipline et cocher <strong>“Envoyer SMS”</strong> pour que le "
+"personnelles, les notes, la discipline et les états financiers. Ajoutez une "
+"entrée de discipline et cochez <strong>“Envoyer SMS”</strong> pour que le "
 "parent reçoive l’alerte SMS. Uploadez et conservez les justificatifs "
 "d’absence au même endroit. Vérifiez tout ce qui a été payé et qui reste à "
 "payer dans l’onglet <strong>États financiers</strong>."
 
-#: foulassi/templates/foulassi/home_saas.html:126
+#: foulassi/templates/foulassi/home_saas.html:153
+#: foulassi/templates/foulassi/home_saas.html:165
 msgid "Scores input by teachers"
 msgstr "Saisie des notes par les enseignants"
 
-#: foulassi/templates/foulassi/home_saas.html:128
+#: foulassi/templates/foulassi/home_saas.html:155
+#: foulassi/templates/foulassi/home_saas.html:167
 msgid ""
 "\n"
-"                                Let teachers put scores online by themselves "
-"and from home. They can do it using a PC,\n"
-"                                tablet or smartphone. Session results are "
+"                            Let teachers put scores online by themselves and "
+"from home. They can do it using a PC,\n"
+"                            tablet or smartphone. Session results are "
 "automatically calculated when they do so.\n"
-"                                When all teachers have input their scores, "
+"                            When all teachers have input their scores, "
 "there’s an alert that suggest to generate\n"
-"                                report cards.\n"
-"                            "
+"                            report cards.\n"
+"                        "
 msgstr ""
 "\n"
 "Les enseignants peuvent désormais saisir les notes depuis la maison. Ils le "
@@ -627,20 +646,22 @@ msgstr ""
 "enseignants ont saisi leurs notes, il y a une alerte qui propose de générer "
 "les bulletins."
 
-#: foulassi/templates/foulassi/home_saas.html:145
+#: foulassi/templates/foulassi/home_saas.html:185
+#: foulassi/templates/foulassi/home_saas.html:196
 msgid "Report cards generation"
 msgstr "Génération des bulletins"
 
-#: foulassi/templates/foulassi/home_saas.html:147
+#: foulassi/templates/foulassi/home_saas.html:187
+#: foulassi/templates/foulassi/home_saas.html:198
 msgid ""
 "\n"
-"                                Get notified when all teachers have input "
-"their scores for a session. Simply click on\n"
-"                                the button to generate reports cards. "
-"Process is done on our cloud and you can come back\n"
-"                                later just to download the files grouped by "
+"                            Get notified when all teachers have input their "
+"scores for a session. Simply click on\n"
+"                            the button to generate reports cards. Process is "
+"done on our cloud and you can come back\n"
+"                            later just to download the files grouped by "
 "classrooms.\n"
-"                            "
+"                        "
 msgstr ""
 "\n"
 "Recevez une notification lorsque toutes les notes d’une session ont été "
@@ -649,7 +670,8 @@ msgstr ""
 "infrastructure et vous revenez plus tard pour juste télécharger les fichiers "
 "regroupés par classes."
 
-#: foulassi/templates/foulassi/home_saas.html:169
+#: foulassi/templates/foulassi/home_saas.html:215
+#: foulassi/templates/foulassi/home_saas.html:225
 #: reporting/templates/reporting/discipline_detail.html:5
 #: reporting/templates/reporting/discipline_detail.html:15
 #: reporting/templates/reporting/main.html:5
@@ -658,13 +680,14 @@ msgstr ""
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: foulassi/templates/foulassi/home_saas.html:171
+#: foulassi/templates/foulassi/home_saas.html:217
+#: foulassi/templates/foulassi/home_saas.html:227
 msgid ""
 "\n"
-"                                See detailed statistics on all what is going "
-"on in your school from a single screen.\n"
-"                                Easily switch between periods and sessions.\n"
-"                            "
+"                            See detailed statistics on all what is going on "
+"in your school from a single screen.\n"
+"                            Easily switch between periods and sessions.\n"
+"                        "
 msgstr ""
 "\n"
 "Accédez à des statistiques détaillées sur tout ce qui se passe dans votre "
@@ -672,37 +695,76 @@ msgstr ""
 "sessions.\n"
 "                            "
 
-#: foulassi/templates/foulassi/home_saas.html:189
+#: foulassi/templates/foulassi/home_saas.html:244
+#: foulassi/templates/foulassi/home_saas.html:260
+msgid "Connect and share with parents"
+msgstr "Échangez directement avec les parents"
+
+#: foulassi/templates/foulassi/home_saas.html:246
+#: foulassi/templates/foulassi/home_saas.html:262
+msgid ""
+"\n"
+"                            Add parents'contacts in students data and "
+"parents will be automatically suggested to follow\n"
+"                            his child on <strong>MyKids</strong> app. "
+"Parents can also request for access to student information.\n"
+"                            Once connected, they have real-time view on all "
+"student data as you put them online.\n"
+"                            This can be offered to parent as a paid service. "
+"They pay online and money goes to the\n"
+"                            school account."
+msgstr ""
+"\n"
+"                            Ajoutez les contacts des parents dans la fiche "
+"de l’élève et il sera automatiquement suggéré\n"
+"                            à ces derniers de suivre leur enfant sur "
+"l'application <strong>MyKids</strong>.\n"
+"\t\t\t    Les parents peuvent eux aussi initier la demande d’accès au profil "
+"de l’élève.\n"
+"                            Une fois connectés, ils ont une vue temps réel "
+"sur les données de leur enfant à mesure que vous les publiez en ligne.\n"
+"                            Ce service peut être facturé aux parents. Ils "
+"paient en ligne par Mobile Money\n"
+"                            et l’argent va sur le compte de l’école."
+
+#: foulassi/templates/foulassi/home_saas.html:253
+#: foulassi/templates/foulassi/home_saas.html:270
+msgid "See details"
+msgstr "Voir les détails"
+
+#: foulassi/templates/foulassi/home_saas.html:284
+#: foulassi/templates/foulassi/home_saas.html:297
 msgid "Online payment"
 msgstr "Paiements en ligne"
 
-#: foulassi/templates/foulassi/home_saas.html:191
+#: foulassi/templates/foulassi/home_saas.html:286
+#: foulassi/templates/foulassi/home_saas.html:299
 msgid ""
 "\n"
-"                                Yes, your platform accepts online payment "
-"for school fees or everything else,\n"
-"                                and you collect money on your bank account. "
-"Once parents can follow their child online,\n"
-"                                they can see whatever is due and pay by "
+"                            Yes, your platform accepts online payment for "
+"school fees or everything else,\n"
+"                            and you collect money on your bank account. Once "
+"parents can follow their child online,\n"
+"                            they can see whatever is due and pay by "
 "themselves using whatever Mobile Money wallet or\n"
-"                                bank account. You have detailed information "
+"                            bank account. You have detailed information "
 "about those transactions and status\n"
-"                                of your online wallet.\n"
-"                            "
+"                            of your online wallet.\n"
+"                        "
 msgstr ""
 "\n"
 "Oui, votre plateforme accepte les paiements en ligne pour les frais d’école "
 "ou tout autre frais; et vous récupérez l’argent sur votre compte bancaire. "
 "Une fois que les parents suivent leur enfant en ligne, ils peuvent voir tout "
 "paiement en attente et le régler eux-mêmes par Mobile Money ou paiement "
-"bancaire. Vous avez une vue détaillée sur toutes ces et l’état de vos "
-"encaissements en ligne."
+"bancaire. Vous avez une vue détaillée sur toutes ces transactions et l’état "
+"de vos encaissements en ligne."
 
-#: foulassi/templates/foulassi/home_saas.html:207
+#: foulassi/templates/foulassi/home_saas.html:315
 msgid "Why use Foulassi ?"
 msgstr "Pourquoi passer à Foulassi ?"
 
-#: foulassi/templates/foulassi/home_saas.html:209
+#: foulassi/templates/foulassi/home_saas.html:317
 msgid ""
 "Foulassi will set you free from some annoying tasks, while providing you "
 "with continuous improvements."
@@ -710,33 +772,32 @@ msgstr ""
 "Foulassi va vous décharger de bien de tâches ennuyeuses, en vous apportant "
 "des améliorations en continu."
 
-#: foulassi/templates/foulassi/home_saas.html:215
+#: foulassi/templates/foulassi/home_saas.html:323
 msgid "Back-up and archiving"
 msgstr "Sauvegarde et archivage"
 
-#: foulassi/templates/foulassi/home_saas.html:217
+#: foulassi/templates/foulassi/home_saas.html:325
 msgid ""
 "\n"
-"                        As a cloud solution, we offer automatic backup and "
-"archiving of your data using the most up to\n"
-"                        date infrastructures and technologies. As time pass "
-"on, you can always come back on whatever\n"
-"                        previous year and see all data exactly as they were. "
-"We make sure you don’t lose a single byte of data.\n"
+"                        We offer automatic backup and archiving of your data "
+"using the most up to\n"
+"                        date infrastructures and technologies. You can "
+"always come back on whatever\n"
+"                        previous year and see all data exactly as they "
+"were.\n"
 "                    "
 msgstr ""
 "\n"
-"En tant que solution cloud, nous offrons la sauvegarde automatique et "
-"l’archivage de vos données en utilisant une infrastructure et une "
-"technologie modernes. Le temps passe et vous pouvez toujours revenir sur les "
-"années précédentes et voir les données exactement comme elles étaient. Nous "
-"nous rassurons que vous ne perdiez pas un seul octet de données."
+"Nous offrons la sauvegarde automatique et l’archivage de vos données en "
+"utilisant une infrastructure et une technologie modernes. Vous pouvez "
+"toujours revenir sur les années précédentes et voir les données exactement "
+"comme elles étaient."
 
-#: foulassi/templates/foulassi/home_saas.html:226
+#: foulassi/templates/foulassi/home_saas.html:334
 msgid "Free and continuous improvements"
 msgstr "Des améliorations gratuites et en continu"
 
-#: foulassi/templates/foulassi/home_saas.html:228
+#: foulassi/templates/foulassi/home_saas.html:336
 msgid ""
 "\n"
 "                        We have a wonderful team of experienced developers "
@@ -750,33 +811,32 @@ msgstr ""
 "travaillent chaque jour sur la base de vos problèmes et attentes, rendant la "
 "plateforme meilleure de jour en jour."
 
-#: foulassi/templates/foulassi/home_saas.html:236
+#: foulassi/templates/foulassi/home_saas.html:344
 msgid "You have a website and blog"
 msgstr "Un site internet et un blog en cadeau"
 
-#: foulassi/templates/foulassi/home_saas.html:238
+#: foulassi/templates/foulassi/home_saas.html:346
 msgid ""
 "\n"
 "                        Foulassi gives you a modern and free website on the "
 "same platform. You also have a blog to\n"
-"                        publish daily articles. Better market you schools "
-"and keep people in the know. Simply buy a\n"
-"                        domain name of your choice and change the default "
-"one to <em style=\"color: blue\">mygreatschool.org</em>\n"
+"                        publish daily articles. If you want something like "
+"<em style=\"color: blue\">mygreatschool.org</em>,\n"
+"                        simply buy that domain name and update.\n"
 "                    "
 msgstr ""
 "\n"
 "Foulassi vous donne directement et gratuitement un site web moderne sur la "
 "même plateforme. Vous avez aussi un blog pour publier les articles chaque "
-"jour. Communiquez mieux sur votre établissement désormais ! Achetez "
-"simplement le nom de domaine de votre choix pour avoir <em style=\"color: "
-"blue\">monetablissement.org</em>"
+"jour. Si vous souhaitez quelque-chose du genre <em style=\"color: blue"
+"\">monetablissement.org</em>, achetez simplement ce nom de domaine là et "
+"remplacez celui par défaut."
 
-#: foulassi/templates/foulassi/home_saas.html:249
+#: foulassi/templates/foulassi/home_saas.html:357
 msgid "You're in good company"
 msgstr "Vous êtes entre de bonnes mains"
 
-#: foulassi/templates/foulassi/home_saas.html:250
+#: foulassi/templates/foulassi/home_saas.html:358
 msgid ""
 "\n"
 "                We have been on the field for many years, building and "
@@ -792,15 +852,7 @@ msgstr ""
 "problèmes critiques de certaines grandes entreprises des TIC au Cameroun. "
 "Rejoignez ces organisations en toute quiétude."
 
-#: foulassi/templates/foulassi/home_saas.html:271
-msgid "GIZ"
-msgstr ""
-
-#: foulassi/templates/foulassi/home_saas.html:277
-msgid "WuGoSing"
-msgstr ""
-
-#: foulassi/templates/foulassi/home_saas.html:284
+#: foulassi/templates/foulassi/home_saas.html:392
 msgid ""
 "\n"
 "            Deploy your <strong>Foulassi Weblet</strong> now and start "
@@ -890,7 +942,7 @@ msgstr "Suggestions"
 #: foulassi/templates/foulassi/kid_list.html:47
 #: foulassi/templates/foulassi/kid_list.html:168
 #: foulassi/templates/foulassi/kid_list.html:192
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:182
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:148
 #: foulassi/templates/foulassi/events/report_cards_generated.html:41
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:42
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:87
@@ -1010,11 +1062,6 @@ msgstr "Oui, retirer"
 msgid "Don't add"
 msgstr "Ne pas ajouter"
 
-#: foulassi/templates/foulassi/offline.html:22
-msgid "Unable to connect. Please check your internet."
-msgstr ""
-"Impossible de se connecter. Veuillez vérifier votre connexion internet."
-
 #: foulassi/templates/foulassi/search_school.html:33
 msgid "Schools"
 msgstr "Établissements"
@@ -1061,162 +1108,141 @@ msgstr "Votre requête a été soumise"
 msgid "Deploy Foulassi"
 msgstr "Déployez Foulassi"
 
-#: foulassi/templates/foulassi/cloud_setup/deploy.html:17
+#: foulassi/templates/foulassi/cloud_setup/deploy.html:18
 msgid "Deploy now"
 msgstr "Déployer maintenant"
 
-#: foulassi/templates/foulassi/cloud_setup/deploy.html:27
+#: foulassi/templates/foulassi/cloud_setup/deploy.html:28
 msgctxt "Deployment: school name"
 msgid "School name"
 msgstr "Nom de l'établissement"
 
-#: foulassi/templates/foulassi/cloud_setup/deploy.html:31
-msgid "Deploy"
-msgstr "Déployer"
+#: foulassi/templates/foulassi/cloud_setup/deploy.html:34
+msgid "Let's go !"
+msgstr "C'est parti !"
 
 #: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:13
-msgid "ikwen TSUNAMI, the cloud tools your business needs"
-msgstr ""
-
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:14
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:15
-msgid "Reach more csustomers and sell all your stocks with Tsunami"
-msgstr ""
-
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:19
 msgid "Successful deployment"
 msgstr "Déploiement réussi"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:47
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:38
 #, python-format
 msgid ""
 "\n"
-"\t\t\t\t\t\t\t<h1 class=\"media-heading\">Congratulations %(client_name)s !</"
-"h1>\n"
-"\t\t\t\t\t\t\t<h4 class=\"mobile-adjust\"> You're now the owner of TSUNAMI "
-"platform, availaible at <a href=\"%(service_url)s\"> %(service_url)s</a>.\n"
-"\t\t\t\t\t\t\t\tDiscover all what you can do with this awesome Cloud tool. "
-"Take your business to the next level.\n"
-"                            </h4>\n"
-"                            <p class=\"bill-link\">Your invoice is "
-"available, pay now and get your <span class=\"animated infinite pulse\" "
-"style=\"color: #ef7000\">support code.</span></p>\n"
-"                            <a href=\"%(invoice_url)s\" target=\"_blank\" "
-"class=\"btn btn-outline-primary mobile-adjust\" style=\"min-width: 200px;"
-"\">Pay now</a>\n"
-"\t\t\t\t\t\t"
+"                    <h2 class=\"text-center\">Congratulations "
+"%(client_name)s !</h2>\n"
+"                    <p>Your school is now online at <a target=\"_blank\" "
+"href=\"%(service_url)s\"> %(service_url)s</a>.</p>\n"
+"                    <p class=\"bill-link\">Your invoice is available, pay "
+"now and get your <span class=\"animated infinite pulse\" style=\"color: "
+"#ef7000\">support code.</span></p>\n"
+"                "
 msgstr ""
+"\n"
+"                    <h2 class=\"text-center\">Félicitations %(client_name)s !"
+"</h2>\n"
+"                    <p>Votre établissement est en ligne sur <a target="
+"\"_blank\" href=\"%(service_url)s\"> %(service_url)s</a>.</p>\n"
+"                    <p class=\"bill-link\">Votre facture est disponible, "
+"payez maintenant et obtenez votre <span class=\"animated infinite pulse\" "
+"style=\"color: #ef7000\">Code de support.</span></p>"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:69
-#, python-format
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:43
+#: school/templates/school/snippets/student/billing.html:17
+msgid "Pay now"
+msgstr "Payer maintenant"
+
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:50
+msgid "Invite collaborators"
+msgstr "Invitez des collaborateurs"
+
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:54
 msgid ""
 "\n"
-"\t\t\t\t\t\t\t<h2 class=\"media-heading\">Congratulations %(client_name)s !</"
-"h2>\n"
-"\t\t\t\t\t\t\t<h4 class=\"mobile-adjust\"> You're now the owner of TSUNAMI "
-"platform, availaible at <a href=\"%(service_url)s\"> %(service_url)s</a>.\n"
-"\t\t\t\t\t\t\t\tDiscover all what you can do with this awesome Cloud tool. "
-"Take your business to the next level.\n"
-"                            </h4>\n"
-"                            <p class=\"bill-link\">Your invoice is "
-"available, pay now and get your <span class=\"animated infinite pulse\" "
-"style=\"color: #ef7000\">support code.</span></p>\n"
-"                            <a href=\"%(invoice_url)s\" target=\"_blank\" "
-"class=\"btn btn-outline-primary mobile-adjust\" style=\"min-width: 200px;\"> "
-"Payer</a>\n"
-"\t\t\t\t\t\t"
+"                            Invite school staff and teachers to <em>join</"
+"em> on the platform and start collaborating.\n"
+"                        "
 msgstr ""
+"\n"
+"                            Invitez le personnel et les enseignants à "
+"<em>Join</em> sur la plateforme et commencez à collaborer.\n"
+"                        "
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:87
-msgid "Your customer relationship fully automated!"
-msgstr ""
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:59
+msgid "Send invitation"
+msgstr "Envoyer l'invitation"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:89
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:63
+msgid "Discover how to do that"
+msgstr "Découvrez comment"
+
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:73
+msgid "Create subjects, levels and classrooms"
+msgstr "Créer des matières, niveaux et classes"
+
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:77
 msgid ""
 "\n"
-"                                Clients are just everywhere you know... Get "
-"them registered efficiently with TSUNAMI and let it take care of the rest.\n"
-"                                Invite people to <em>join</em> your "
-"community now by sharing your link.\n"
-"                            "
+"                            Check subject list and add if some are missing. "
+"You need to do that before adding levels and classrooms.\n"
+"                        "
 msgstr ""
+"\n"
+"                            Consultez la liste actuelle des matières et "
+"ajoutez s'il en manque. Vous devez le faire avant d'ajouter les niveaux et "
+"les classes.\n"
+"                        "
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:94
-msgid "Share my link"
-msgstr ""
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:80
+msgid "Setup your school"
+msgstr "Configurez votre établissement"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:103
-msgid "attract customer to you!"
-msgstr ""
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:88
+msgid "Share with parents"
+msgstr "Échangez avec les parents"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:104
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:92
 msgid ""
 "\n"
-"\t\t\t\t\t\t<p class=\"mobile-adjust\">\n"
-"                            No more blind and ineffective marketing "
-"campaigns, now your prospects and customers have 100 reasons to come, stay "
-"and bring people to you.\n"
-"                            TSUNAMI gives you the possibility to offer "
-"everybody free collectible coupons. They'll rush to register in your CCM*\n"
-"\t\t\t\t\t\t</p>\n"
-"\t\t\t\t\t\t<a href=\"http://blog.ikwen.com/about-continuous-rewarding/\" "
-"target=\"_blank\" style=\"font-size: 15px; font-weight: bold; margin-top: "
-"10px; text-decoration: none;\" class=\"discover-link\"> Read more about "
-"coupons &nbsp;<i class=\"fa fa-arrow-circle-right animated slideInLeft\"></"
-"i></a>\n"
-"\t\t\t\t\t"
+"                            Invite parents to follow their children on "
+"<strong>MyKids</strong> app and charge them annual fees for the service.\n"
+"                        "
 msgstr ""
-
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:118
-msgid "Conquer World market today!"
-msgstr ""
-
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:120
-msgid ""
 "\n"
-"                                You can start selling online now. Get paid "
-"via Mobile money. Your business work 24/7,\n"
-"                                and customers can buy from you immediately "
-"after they receive your automated offers sent by TSUNAMI via Emails and "
-"SMS.\n"
-"                            "
-msgstr ""
+"                           Invitez les parents à suivre leurs enfants sur "
+"l'application <strong>MyKids</strong> et facturez les annuellement pour le "
+"service.\n"
+"\n"
+"                        "
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:126
-msgid "Publish your products"
-msgstr ""
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:95
+msgid "Configure MyKids fees"
+msgstr "Configurez les frais MyKids"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:139
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:107
 msgid "Need help ?"
-msgstr ""
+msgstr "Besoin d'aide ?"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:142
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:110
 msgid "Contact us"
-msgstr ""
+msgstr "Contactez nous"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:163
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:129
 msgid "Share on WhatsApp"
-msgstr ""
+msgstr "Partagez sur WhatsApp"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:168
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:134
 msgid "Message"
 msgstr ""
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:171
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:137
 #, python-format
 msgid ""
-"Hey! Join %(service.project_name_slug)s on ikwen and get some free gifts. I "
-"just did it. It works !"
+"Hello! This is our Foulassi platform for collaborating online in "
+"%(school_name)s. Join in for us to configure your access."
 msgstr ""
-
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:202
-msgid ""
-"\n"
-"                            <h3 style=\"\">Share now !</h3>\n"
-"                            <p>And get many people to JOIN your community</"
-"p>\n"
-"                        "
-msgstr ""
+"Bonjour. Ceci est notre plateforme Foulassi pour collaborer en ligne sur "
+"%(school_name)s. Enregistrez-vous pour qu'on puisse configurer vos accès."
 
 #: foulassi/templates/foulassi/events/parent_kid_request.html:9
 #, python-format
@@ -1959,7 +1985,7 @@ msgstr ""
 "après avoir ajouté les matières.\n"
 "                        "
 
-#: school/templates/school/level_list.html:61
+#: school/templates/school/level_list.html:63
 msgid "Add subject"
 msgstr "Ajouter une matière"
 
@@ -2212,11 +2238,11 @@ msgstr ""
 "seulement après que vous avez ajouté les niveaux.\n"
 "                        "
 
-#: school/templates/school/classroom/classroom_list.html:117
+#: school/templates/school/classroom/classroom_list.html:119
 msgid "Add level"
 msgstr "Ajouter un niveau"
 
-#: school/templates/school/classroom/classroom_list.html:125
+#: school/templates/school/classroom/classroom_list.html:128
 msgid "Click on a classroom in the list to view details."
 msgstr "Cliquez sur une classe dans la liste pour voir les détails."
 
@@ -2228,10 +2254,6 @@ msgstr "Supprimer l'élève"
 #: school/templates/school/snippets/student/billing.html:32
 msgid "Deadline"
 msgstr "Date limite"
-
-#: school/templates/school/snippets/student/billing.html:17
-msgid "Pay now"
-msgstr "Payer maintenant"
 
 #: school/templates/school/snippets/student/billing.html:20
 #: school/templates/school/snippets/student/billing.html:42
@@ -2447,7 +2469,7 @@ msgstr "Événements"
 
 #: templates/core/base_admin.html:70
 msgid "Send SMS or Mail to all parents"
-msgstr "Envoyerun SMS ou un Mail à tous les parents"
+msgstr "Envoyer un SMS ou un Mail à tous les parents"
 
 #: templates/core/base_admin.html:129
 msgid "Pages"
@@ -2630,6 +2652,23 @@ msgstr "Cycle de facturation mis à jour avec succès."
 #: templates/core/service_detail.html:234
 msgid "You are about to transfer ownership to "
 msgstr "Vous êtes sur le point de transférer votre propriété à "
+
+#~ msgid "Get the app"
+#~ msgstr "Obtenez l'application"
+
+#~ msgid "Install Foulassi app on your Phone, Tablet or PC."
+#~ msgstr ""
+#~ "Installez l'application Foulassi sur votre Smartphone, tablette ou PC."
+
+#~ msgid "Install"
+#~ msgstr "Installer"
+
+#~ msgid "Unable to connect. Please check your internet."
+#~ msgstr ""
+#~ "Impossible de se connecter. Veuillez vérifier votre connexion internet."
+
+#~ msgid "Deploy"
+#~ msgstr "Déployer"
 
 #~ msgid "Pick up in store"
 #~ msgstr "Récupérer sur place"

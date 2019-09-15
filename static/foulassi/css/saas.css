@@ -13,23 +13,41 @@ section.site {min-height: 100px; padding: 137px 0}
 #navbar .glyphicon, #navbar .glyphicon.glyphicon-search, section.site h1 {color: #171b36}
 section.site:nth-child(2n) {background-color: #fff}
 section.site img {width: 60%;}
+section.site h2 {color: #201a3a}
 #navbar .btn {background: #FFF !important; color: #233682 !important;}
 .effective-solution h3 {color: #7d87a0; font-size: 14px; font-weight: 700}
+section.why-foulassi h3 {font-size: 21px;color: #29163e}
+section.why-foulassi img {width: 60px}
 
 #bottom-menu .lang-switcher {margin: 0 0 0 50px;}
-#bottom-menu .lang-switcher select {color: #fff; font-size: 12px; width: 45px}
-#bottom-menu .lang-switcher select:active {background: #111}
+#bottom-menu .lang-switcher select {color: #666;font-size: 12px;width: 45px;}
+#bottom-menu .lang-switcher select:active {/* background: #111 */}
 .features.site {margin-top: 0}
 .features.site h1 {color: #2d2d2d}
-section.site.main-feat.banner {height: 100vh; padding-top: 20vh}
+section.site.main-feat.banner {height: 100vh;padding-top: 20vh;}
 #navbar {background: transparent}
 .navbar-brand strong {color: #fff}
 .navbar-default .navbar-nav>li>a , .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a{color: #171b36}
-#navbar-search input {background: #eee}
+#navbar-search {display: none}
+#navbar-search input {background: #f6f6f6;}
 section.site .btn.cta {background: #4aa1e9; border: #4aa1e9; color: #ffffff; font-family: Lato; font-size: 16px; line-height: 28px; letter-spacing: 3px}
 section.site.banner {margin-top: 0}
-.section.address .cta a {font-size: 18px}
-.icon-bar {background: #fff}
+section.good-company h3 {font-size: 18px; font-weight: 700}
+section.deploy {/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#23538a+0,a7cfdf+100 */
+    background: #23538a; /* Old browsers */
+    background: -moz-linear-gradient(45deg,  #23538a 0%, #a7cfdf 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(45deg,  #23538a 0%,#a7cfdf 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(45deg,  #23538a 0%,#a7cfdf 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#23538a', endColorstr='#a7cfdf',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    color: #fff; font-size: 24px
+}
+section.site.deploy a.cta {background: #fff;color: #4aa1e9;margin-top: 30px;}
+.screenshots section.site {background-position-y: center; background-repeat: no-repeat}
+.screenshots section.right {background-position-x: right}
+.screenshots .img {background: no-repeat center; background-origin: content-box; background-size: cover}
+.icon-bar {background: #201a3a;}
+div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
+.my-kids a {color: #319dd5;font-size: 18px;font-weight: 700;}
 
 @media only screen and (max-device-width : 767px) and (orientation: portrait) {
     section.header {height: 410px; margin-top: 0;}
@@ -38,7 +56,6 @@ section.site.banner {margin-top: 0}
     .company .title {font-size: 35px }
     .pricing-list > li {margin-top: 75px}
     .lead {font-size: 22px}
-    .achievements .title {}
     section.address .cover h2 {color: #fff; font-weight: 600}
     #bottom-menu {margin-top: 70px; position: relative}
     #bottom-menu li a {color: #fff; font-size: 22px}
@@ -46,12 +63,11 @@ section.site.banner {margin-top: 0}
     .features {padding: 25px 0; margin-top: 0}
     .feat {margin-top: 100px}
     .feat:first-child {margin-top: 0}
-    section.main-feat {height: 1000px}
-
     section.main-feat {background-position: center}
+    section.main-feat h1 {margin-top: -4vh;}
     .contact-img {margin-top: 35px}
     section.site .cover h1 {padding: 0}
-    a.btn {margin-top: 50px}
+    a.btn {margin-top: 15px;}
     section.site.banner a.btn {width: 100%}
     footer div {padding: 0}
     .section.address .cta a {font-size: 20px}
@@ -76,11 +92,18 @@ section.site.banner {margin-top: 0}
 }
 
 @media only screen and (max-device-width : 767px) {
-    section.site {padding: 30px 0}
-    section.site.banner h1 {font-size: 30px;line-height: 45px; font-weight: 600}
+    section.site {padding: 45px 0 0;}
+    section.effective-solution .features > div {margin-bottom: 24px}
+    section.site.banner h1 {font-size: 33px;line-height: 38px;font-weight: 600;}
     section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px;}
-    section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
+    section.site p {margin-top: 15px;text-align: justify;font-size: 16px;font-weight: 400;line-height: 24px;}
     #navbar-search input {background: none}
+    section.why-foulassi img {width: 60px}
+    section.why-foulassi .features > div {margin-bottom: 24px}
+    section.good-company h3 {font-size: 18px; font-weight: 700}
+    section.good-company .features > div {margin-bottom: 15px}
+    section.deploy {padding-bottom: 45px}
+    .screenshots section.site img {width: 100%}
 }
 
 @media only screen and (min-width : 768px) and (orientation: landscape) {
@@ -88,6 +111,7 @@ section.site.banner {margin-top: 0}
     section.site .cover .btn {margin-top: 60px}
     section.address {height: 60vh}
     section.address .cta {margin-top: 80px}
+    section.why-foulassi img {width: 60px}
 }
 
 @media only screen and (min-width : 768px) and (orientation: portrait) {
@@ -99,14 +123,26 @@ section.site.banner {margin-top: 0}
 
 @media only screen and (min-width : 768px) {
     section.site {padding: 60px 0}
+    .screenshots section.site {padding: 0}
+    .screenshots section.site .features > div {padding: 60px 15px;}
     section.site .cover p {font-size: 21px; font-weight: 400; line-height: 35px}
-    section.site.banner h1 {font-size: 51px; font-weight: 700;line-height: 65px}
-    section.site h2 {font-size: 24px;font-weight: 700;line-height: 42px;}
+    section.site.banner h1 {font-size: 42px;font-weight: 700;line-height: 50px;text-align: left;}
+    section.site h2 {font-size: 30px;font-weight: 700;line-height: 42px;text-align:left}
     section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
+    .img.easy-setup {background-image: url('../img/foulassi-easy-setup-xs.png')}
+    .img.student-follow-up {background-image: url('../img/foulassi-student-follow-up-xs.png');}
+    .img.scores-input {background-image: url('../img/foulassi-scores-input-xs.png')}
+    .img.report-cards-generation {background-image: url('../img/foulassi-report-cards-generation.png')}
+    .img.dashboard {background-image: url('../img/foulassi-dashboard.png')}
+    .img.connect-and-share {background-image: url('../img/foulassi-connect-and-share.png')}
+    .img.online-payment {background-image: url('../img/foulassi-online-payment.png')}
+    section.deploy {font-size: 30px}
 }
-
+/*671273*/
 @media only screen and (max-width : 991px) {
     div.footer, #bottom-menu li a {font-size: 15px}
+    /*.screenshots section.site {background-size: auto 70%}*/
+    .screenshots .img {background-size: 100% auto}
 }
 
 @media only screen and (min-width : 992px) {
@@ -115,11 +151,13 @@ section.site.banner {margin-top: 0}
     section.header h3 {color: #000; font-size: 33px;font-weight: 400;  line-height: 94px;}
     section.header {height: 900px}
     .features p {line-height: 40px}
+    .screenshots section.site {background-size: auto 100%}
     section.site img {width: 55%;}
     section.site img.history {width: 60%}
+    section.why-foulassi img {width: 60px}
     section.site.banner {text-align: left; padding-top: 0; height: 900px}
     section.site.banner p {margin-top: 25px; text-align: justify;font-size: 21px;line-height: 40px;}
-    section.site.banner h1 {font-size: 65px;font-weight: 700;line-height: 65px;margin-top: 110px;}
+    section.site.banner h1 {font-weight: 700;line-height: 65px;margin-top: 18px;}
     section.site.banner .video {margin-top: 58px}
     .cta {text-align: left; }
     .feat h2 {padding-bottom: 30px; font-size: 32px; font-weight: 600; text-align: left}
@@ -128,34 +166,33 @@ section.site.banner {margin-top: 0}
     section.address {height: 490px}
     section.address .cover h2 {padding-top: 15vh}
     section.address .cta {margin-top: 150px}
+    section.deploy {font-size: 36px}
 }
 
 @media only screen and (min-width : 1200px) {
+    #navbar-search {display: block}
     section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 170px;}
     section.site {padding: 135px 0}
+    .screenshots section.site {padding: 0}
+    .screenshots section.site .features > div {padding: 135px 15px;}
     section.listing {padding: 70px 0}
     section.effective-solution h2 {margin-bottom: 60px}
     section.why-foulassi h2 {margin-bottom: 30px}
-    section.why-foulassi img {width: 60px;margin: unset;}
+    section.why-foulassi img {margin: unset;}
     section.why-foulassi h3 {margin: 5px 0 30px;text-align: left;font-size: 21px;color: #29163e;}
     section.why-foulassi p {font-size: 16px; line-height: 24px}
-    section.good-company h3 {font-size: 18px; font-weight: 700}
-    section.deploy {/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#23538a+0,a7cfdf+100 */
-        background: #23538a; /* Old browsers */
-        background: -moz-linear-gradient(45deg,  #23538a 0%, #a7cfdf 100%); /* FF3.6-15 */
-        background: -webkit-linear-gradient(45deg,  #23538a 0%,#a7cfdf 100%); /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(45deg,  #23538a 0%,#a7cfdf 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#23538a', endColorstr='#a7cfdf',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-        font-size: 42px;
-        color: #fff
-    }
-    section.site.deploy a.cta {background: #fff;color: #4aa1e9;margin-top: 60px;}
-    section.site.banner h1 {margin-top: 110px}
-    section.site h2 {color: #201a3a;font-size: 43px;}
+    section.site.deploy a.cta {margin-top: 60px;}
+    section.site.banner h1 {font-size: 65px; margin-top: 110px}
+    section.site h2 {font-size: 43px;}
     section.header h3 {color: #000; font-size: 33px;font-weight: 400;  line-height: 94px;}
     section.header {height: 1015px}
     div.cloud-deploy {bottom: 250px}
     section.site.header {height: 1000px}
     footer, section.address .cover {height: 670px}
     section.address {height: 600px}
+    section.deploy {font-size: 42px}
+}
+
+@media (orientation: portrait) {
+    section.site.main-feat.banner {padding-top: 8vh;}
 }

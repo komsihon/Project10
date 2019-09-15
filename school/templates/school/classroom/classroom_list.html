@@ -110,11 +110,14 @@
                     </div>
                     {% endfor %}
                 {% else %}
-                    <div id="stage" style="margin: auto">
-                        <p>{% blocktrans %}
+                    <div id="stage" class="empty-list">
+                        <p class="notice">{% blocktrans %}
                             You can start adding classrooms only after you have added levels.
                         {% endblocktrans %}</p>
-                        <a href="{% url 'school:change_level' %}" class="btn btn-success btn-sm">{% trans "Add level" %}</a>
+                        <a href="{% url 'school:change_level' %}" class="btn btn-success btn-green">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            {% trans "Add level" %}
+                        </a>
                     </div>
                 {% endif %}
                 <div class="clearfix"></div>

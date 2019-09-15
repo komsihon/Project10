@@ -45,7 +45,8 @@ if getattr(settings, 'LOCAL_DEV', False):
 else:
     CLOUD_HOME = '/home/ikwen/Cloud/'
 
-CLOUD_FOLDER = CLOUD_HOME + 'Kakocase/'
+FOULASSI_CLOUD_FOLDER = CLOUD_HOME + 'Foulassi/'
+WEBNODE_CLOUD_FOLDER = CLOUD_HOME + 'WebNode/'
 SMS_API_URL = 'http://websms.mobinawa.com/http_api?action=sendsms&username=675187705&password=depotguinness&from=$label&to=$recipient&msg=$text'
 
 
@@ -56,13 +57,16 @@ class DeploymentForm(forms.Form):
     """
     Deployment form of a platform
     """
+    partner_id = forms.CharField(max_length=24, required=False)  # Service ID of the partner retail platform
     customer_id = forms.CharField(max_length=24)
     project_name = forms.CharField(max_length=30)
     billing_plan_id = forms.CharField(max_length=24)
     bundle_id = forms.CharField(max_length=24, required=False)
+    setup_cost = forms.FloatField(required=False)
+    monthly_cost = forms.FloatField(required=False)
 
 
-def deploy(member, project_name, billing_plan, theme, invoice_entries, partner_retailer=None):
+def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entries, partner_retailer=None):
     app = Application.objects.using(UMBRELLA).get(slug='foulassi')
     project_name_slug = slugify(project_name)  # Eg: slugify('Great School') = 'great-school'
     ikwen_name = project_name_slug.replace('-', '')  # Eg: great-school --> 'greatschool'
@@ -94,16 +98,17 @@ def deploy(member, project_name, billing_plan, theme, invoice_entries, partner_r
 
     # Create a copy of template application in the Cloud folder
     app_folder = CLOUD_HOME + '000Tpl/AppSkeleton'
-    website_home_folder = CLOUD_FOLDER + ikwen_name
+    website_home_folder = FOULASSI_CLOUD_FOLDER + ikwen_name
     media_root = CLUSTER_MEDIA_ROOT + ikwen_name + '/'
     media_url = CLUSTER_MEDIA_URL + ikwen_name + '/'
-    default_images_folder = CLOUD_FOLDER + '000Tpl/images/000Default'
-    theme_images_folder = CLOUD_FOLDER + '000Tpl/images/%s/%s' % (theme.template.slug, theme.slug)
-    if os.path.exists(theme_images_folder):
-        if os.path.exists(media_root):
-            shutil.rmtree(media_root)
-        shutil.copytree(theme_images_folder, media_root)
-        logger.debug("Media folder '%s' successfully created from '%s'" % (media_root, theme_images_folder))
+    default_images_folder = WEBNODE_CLOUD_FOLDER + '000Tpl/images/000Default'
+    if theme:
+        theme_images_folder = WEBNODE_CLOUD_FOLDER + '000Tpl/images/%s/%s' % (theme.template.slug, theme.slug)
+        if os.path.exists(theme_images_folder):
+            if os.path.exists(media_root):
+                shutil.rmtree(media_root)
+            shutil.copytree(theme_images_folder, media_root)
+            logger.debug("Media folder '%s' successfully created from '%s'" % (media_root, theme_images_folder))
     elif os.path.exists(default_images_folder):
         if os.path.exists(media_root):
             shutil.rmtree(media_root)
@@ -124,9 +129,9 @@ def deploy(member, project_name, billing_plan, theme, invoice_entries, partner_r
 
     service = Service(member=member, app=app, project_name=project_name, project_name_slug=ikwen_name, domain=domain,
                       database=database, url=url, domain_type=domain_type, expiry=expiry, admin_url=admin_url,
-                      billing_plan=billing_plan, billing_cycle=Service.YEARLY, monthly_cost=billing_plan.monthly_cost,
+                      billing_plan=billing_plan, billing_cycle=Service.YEARLY, monthly_cost=monthly_cost,
                       version=Service.TRIAL, api_signature=api_signature, home_folder=website_home_folder,
-                      settings_template=settings_template)
+                      settings_template=settings_template, retailer=partner_retailer)
     service.save(using=UMBRELLA)
     logger.debug("Service %s successfully created" % pname)
 
@@ -145,16 +150,17 @@ def deploy(member, project_name, billing_plan, theme, invoice_entries, partner_r
     logger.debug("Settings file '%s' successfully created" % settings_file)
 
     # Import template database and set it up
-    foulassi_db_folder = CLOUD_FOLDER + '000Tpl/DB/000Default'
-    webnode_db_folder = CLOUD_FOLDER + '000Tpl/DB/000Default'
-    theme_db_folder = CLOUD_FOLDER + '000Tpl/DB/%s/%s' % (theme.template.slug, theme.slug)
-    if os.path.exists(theme_db_folder):
-        webnode_db_folder = theme_db_folder
+    foulassi_db_folder = FOULASSI_CLOUD_FOLDER + '000Tpl/DB/000Default'
+    webnode_db_folder = WEBNODE_CLOUD_FOLDER + '000Tpl/DB/000Default'
+    if theme:
+        theme_db_folder = WEBNODE_CLOUD_FOLDER + '000Tpl/DB/%s/%s' % (theme.template.slug, theme.slug)
+        if os.path.exists(theme_db_folder):
+            webnode_db_folder = theme_db_folder
 
     host = getattr(settings, 'DATABASES')['default'].get('HOST', '127.0.0.1')
     subprocess.call(['mongorestore', '--host', host, '-d', database, webnode_db_folder])
     subprocess.call(['mongorestore', '--host', host, '-d', database, foulassi_db_folder])
-    logger.debug("Database %s successfully created on host %s from %s and %s" % (database, host, foulassi_db_folder, webnode_db_folder))
+    logger.debug("Database %s successfully created on host %s from %s and %s" % (database, host, webnode_db_folder, foulassi_db_folder))
 
     add_database_to_settings(database)
     for group in Group.objects.using(database).all():
@@ -195,7 +201,6 @@ def deploy(member, project_name, billing_plan, theme, invoice_entries, partner_r
     logger.debug("Member %s access rights successfully set for service %s" % (member.username, pname))
 
     from ikwen.billing.mtnmomo.views import MTN_MOMO
-    from ikwen.billing.orangemoney.views import ORANGE_MONEY
     # Copy payment means to local database
     for mean in PaymentMean.objects.using(UMBRELLA).all():
         if mean.slug == MTN_MOMO:
@@ -265,8 +270,25 @@ def deploy(member, project_name, billing_plan, theme, invoice_entries, partner_r
 
     if member != vendor.member:
         add_event(vendor, SERVICE_DEPLOYED, member=member, object_id=invoice.id)
-    sender = 'ikwen Foulassi <no-reply@ikwen.com>'
-    sudo_group = Group.objects.using(UMBRELLA).get(name=SUDO)
+    if partner_retailer:
+        partner_profile = PartnerProfile.objects.using(UMBRELLA).get(service=partner_retailer)
+        try:
+            Member.objects.get(pk=member.id)
+        except Member.DoesNotExist:
+            member.is_iao = False
+            member.is_bao = False
+            member.is_staff = False
+            member.is_superuser = False
+            member.save(using='default')
+        service.save(using='default')
+        config.save(using='default')
+        sender = '%s <no-reply@%s>' % (partner_profile.company_name, partner_retailer.domain)
+        sudo_group = Group.objects.get(name=SUDO)
+        ikwen_sudo_gp = Group.objects.using(UMBRELLA).get(name=SUDO)
+        add_event(vendor, SERVICE_DEPLOYED, group_id=ikwen_sudo_gp.id, object_id=invoice.id)
+    else:
+        sender = 'ikwen Foulassi <no-reply@ikwen.com>'
+        sudo_group = Group.objects.using(UMBRELLA).get(name=SUDO)
     add_event(vendor, SERVICE_DEPLOYED, group_id=sudo_group.id, object_id=invoice.id)
     invoice_url = 'http://www.ikwen.com' + reverse('billing:invoice_detail', args=(invoice.id,))
     subject = _("Your platform %s was created" % project_name)

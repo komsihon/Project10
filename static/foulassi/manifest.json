@@ -1,6 +1,6 @@
 {
-  "name": "Foulassi",
-  "short_name": "Foulassi",
+  "name": "MyKids",
+  "short_name": "MyKids",
   "description": "Follow your kids at school in real-time",
   "icons": [{
     "src": "https://static.ikwen.com/foulassi/icons/icon-128x128.png",
@@ -27,7 +27,7 @@
       "sizes": "512x512",
       "type": "image/png"
     }],
-  "start_url": "/foulassi/kids/",
+  "start_url": "/?pwa=yes&target=foulassi",
   "display": "standalone",
   "background_color": "#233682",
   "theme_color": "#233682"

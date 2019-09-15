@@ -21,7 +21,7 @@
 
 {% block head_style %}
     {{ block.super }}
-    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}" />
+    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />
     <style type="text/css">
         .edge-panel-left .wrapper {padding: 0 0 120px;}
         section.main-feat {background:url("{% static 'foulassi/img/foulassi-home-bg.jpg' %}") center;background-size: cover;}
@@ -43,8 +43,9 @@
         #navbar .btn {background: #FFF !important; color: #233682 !important;}
 
         #bottom-menu .lang-switcher {margin: 0 0 0 50px;}
-        #bottom-menu .lang-switcher select {color: #fff; font-size: 12px; width: 45px}
+        #bottom-menu .lang-switcher select {font-size: 12px; width: 45px}
         #bottom-menu .lang-switcher select:active {background: #111}
+        div.footer, div.footer .company-name, #bottom-menu li a, #bottom-menu .lang-switcher select {color: #545454}
         .features h3 {font-weight: 400}
         .features.site {margin-top: 0}
         .features.site h1 {color: #2d2d2d}
@@ -57,6 +58,7 @@
         section.site.banner a.btn {background: #fff; border: #233682; color: #233682}
         section.site.banner {margin-top: 0}
         .section.address .cta a {font-size: 18px}
+        .for-schools {background: url({% static 'foulassi/img/foulassi-school-building.png' %}) no-repeat right; background-size: auto 100%}
         .icon-bar {background: #fff}
 
         @media only screen and (max-device-width : 767px) and (orientation: portrait) {
@@ -106,9 +108,10 @@
         @media only screen and (max-device-width : 767px) {
             section.site {padding: 30px 0}
             section.site.banner h1 {font-size: 30px;line-height: 45px; font-weight: 600}
-            section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px;}
+            section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px; text-align: left;}
             section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
             #navbar-search input {background: none}
+            .for-schools {background-position-x: -10px}
         }
 
         @media only screen and (min-width : 768px) and (orientation: landscape) {
@@ -131,8 +134,9 @@
             section.site {padding: 60px 0}
             section.site .cover p {font-size: 21px; font-weight: 400; line-height: 35px}
             section.site.banner h1 {font-size: 51px; font-weight: 700;line-height: 65px}
-            section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px;}
+            section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px; text-align: left;}
             section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
+            .for-schools {background-position-x: 50px}
         }
 
         @media only screen and (max-width : 991px) {
@@ -158,6 +162,7 @@
             section.address {height: 490px}
             section.address .cover h2 {padding-top: 15vh}
             section.address .cta {margin-top: 150px}
+            .for-schools {background-position-x: 180px}
         }
 
         @media only screen and (min-width : 1200px) {
@@ -171,6 +176,7 @@
             section.site.header {height: 1000px}
             footer, section.address .cover {height: 670px}
             section.address {height: 600px}
+            .for-schools {background-position-x: 240px}
         }
     </style>
 {% endblock %}
@@ -179,7 +185,7 @@
     <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/foulassi/service-worker.js')
+        navigator.serviceWorker.register('/service-worker.js')
             .then((reg) => {
               console.log('Service worker registered.', reg);
             });
@@ -276,24 +282,6 @@
             </div>
         </div>
     </section>
-    <section class="features site install-pwa">
-        <div class="container">
-            <div class="row features">
-                <div class="feat col-sm-12">
-                    <div class="col-sm-6">
-                        <h2>{% trans "Get the app" %}</h2>
-                        <div class="desc">
-                            <p>{% trans "Install Foulassi app on your Phone, Tablet or PC." %}</p>
-{#                            <p>{% trans "Install Foulassi app on your Phone now. It takes only 5 seconds." %}</p>#}
-                            <div id="install-pwa" class="hidden">
-                                <button class="btn btn-green btn-md cta" style="min-width: 180px; text-align: center">{% trans "Install" %}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 {% endblock %}
 
 {% block footer %}
@@ -314,7 +302,32 @@
             </div>
             <div class="clearfix"></div>
         </section>
-        <div class="container">
+        <section class="features site for-schools" style="color: #545454">
+            <div class="container">
+                <div class="row features">
+                    <div class="feat col-sm-12">
+                        <div class="col-sm-5">
+                            <h2>{% trans "Are you a school manager ?" %}</h2>
+                            <div class="desc" style="text-align: left">
+                                <p>{% trans "Take your school on this awesome platform in no time." %}</p>
+                                <a href="{% url 'foulassi:home_saas' %}" style="color: #319dd5; font-size: 16px; font-weight: 700">
+                                    <span class="visible-md visible-lg">
+                                        {% trans "Discover Foulassi for schools" %}
+                                        <i class="fa fa-arrow-circle-right"></i>
+                                    </span>
+                                    <span class="visible-xs visible-sm">
+                                        {% trans "Discover" context "Discover foulassi for schools" %}
+                                        <i class="fa fa-arrow-circle-right"></i>
+                                    </span>
+
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="container" style="clear: both; color: #545454; padding: 15px 0">
             <div class="footer hidden-xs">
                 &copy; {{ year }} <a class="company-name" href="{{ service.url }}"><strong>{{ config.company_name }}</strong></a>.
                 {% trans "All rights reserved." %}

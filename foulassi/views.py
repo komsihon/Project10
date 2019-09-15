@@ -1,5 +1,7 @@
 import json
 import logging
+import random
+import string
 from collections import OrderedDict
 from datetime import timedelta, datetime
 from threading import Thread
@@ -12,24 +14,27 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.db.models import Sum, Q
-from django.http.response import HttpResponseRedirect, Http404, HttpResponse
+from django.http.response import HttpResponseRedirect, Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, get_language
 
 from ikwen.conf.settings import WALLETS_DB_ALIAS, MEDIA_URL, MEMBER_AVATAR
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.models import Application, Service
 from ikwen.core.utils import add_database, get_service_instance, get_mail_content, send_sms
 from ikwen.core.views import HybridListView
+from ikwen.accesscontrol.backends import UMBRELLA
+from ikwen.accesscontrol.models import Member
 from ikwen.accesscontrol.utils import VerifiedEmailTemplateView
 from ikwen.billing.models import MoMoTransaction, CloudBillingPlan, IkwenInvoiceItem, InvoiceEntry
 from ikwen.billing.mtnmomo.views import MTN_MOMO
 from ikwen.theming.models import Theme, Template
+from ikwen.partnership.models import ApplicationRetailConfig
 from ikwen_foulassi.foulassi.cloud_setup import DeploymentForm, deploy
 from ikwen_foulassi.foulassi.utils import can_access_kid_detail
 
@@ -50,13 +55,6 @@ class HomeSaaS(TemplateView):
     Homepage of Foulassi addressed to schools presenting the Software as a Service
     """
     template_name = 'foulassi/home_saas.html'
-
-
-class Offline(TemplateView):
-    """
-    Offline page for the PWA
-    """
-    template_name = 'foulassi/offline.html'
 
 
 class EventList(TemplateView):
@@ -307,14 +305,16 @@ def set_invoice_checkout(request, *args, **kwargs):
         amount_paid = aggr['amount__sum']
     except IndexError:
         amount_paid = 0
+
     amount = invoice.amount - amount_paid
     model_name = 'billing.Invoice'
-
     mean = request.GET.get('mean', MTN_MOMO)
+    signature = ''.join([random.SystemRandom().choice(string.ascii_letters + string.digits) for i in range(16)])
+    lang = get_language()
     tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS)\
-        .create(service_id=school.id, type=MoMoTransaction.CASH_OUT, amount=amount, phone='N/A',
-                model=model_name, object_id=invoice_id, wallet=mean, username=request.user.username, is_running=True)
-    notification_url = service.url + reverse('foulassi:confirm_invoice_payment', args=(tx.id, ))
+        .create(service_id=school.id, type=MoMoTransaction.CASH_OUT, amount=amount, phone='N/A', model=model_name,
+                object_id=invoice_id, task_id=signature, wallet=mean, username=request.user.username, is_running=True)
+    notification_url = service.url + reverse('foulassi:confirm_invoice_payment', args=(tx.id, signature, lang))
     cancel_url = request.META['HTTP_REFERER']
     return_url = request.META['HTTP_REFERER']
     gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'https://payment.ikwen.com/v1')
@@ -341,6 +341,20 @@ def set_invoice_checkout(request, *args, **kwargs):
         logger.error("%s - Init payment flow failed with URL %s." % (service.project_name, r.url), exc_info=True)
         next_url = cancel_url
     return HttpResponseRedirect(next_url)
+    # try:
+    #     r = requests.get(endpoint, params)
+    #     resp = r.json()
+    #     token = resp.get('token')
+    #     if token:
+    #         payment_url = gateway_url + '/checkoutnow/' + resp['token'] + '?mean=' + mean
+    #         return render(request, template_name='billing/gateway.html', context={'payment_url': payment_url})
+    #     else:
+    #         messages.error(request, resp['errors'])
+    #         return HttpResponseRedirect(cancel_url)
+    # except:
+    #     logger.error("%s - Init payment flow failed with URL %s." % (service.project_name, r.url), exc_info=True)
+    #     messages.error(request, "Init payment flow failed.")
+    #     return HttpResponseRedirect(cancel_url)
 
 
 def confirm_invoice_payment(request, *args, **kwargs):
@@ -358,14 +372,26 @@ def confirm_invoice_payment(request, *args, **kwargs):
                 return HttpResponse("Transaction %s timed out." % tx_id)
     except:
         raise Http404("Transaction %s not found" % tx_id)
+
+    callback_signature = kwargs.get('signature')
+    no_check_signature = request.GET.get('ncs')
+    if getattr(settings, 'DEBUG', False):
+        if not no_check_signature:
+            if callback_signature != tx.task_id:
+                return HttpResponse('Invalid transaction signature')
+    else:
+        if callback_signature != tx.task_id:
+            return HttpResponse('Invalid transaction signature')
+
+    if status != MoMoTransaction.SUCCESS:
+        return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
+
     tx.status = status
     tx.message = message
     tx.processor_tx_id = operator_tx_id
     tx.phone = phone
     tx.is_running = False
     tx.save()
-    if status != MoMoTransaction.SUCCESS:
-        return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
     school = Service.objects.get(pk=tx.service_id)
     school_config = SchoolConfig.objects.get(service=school)
     add_database(school.database)
@@ -393,6 +419,27 @@ class DeployCloud(VerifiedEmailTemplateView):
     template_name = 'foulassi/cloud_setup/deploy.html'
     DEFAULT_THEME = 'dreamer'
 
+    def get_context_data(self, **kwargs):
+        context = super(DeployCloud, self).get_context_data(**kwargs)
+        context['billing_cycles'] = Service.BILLING_CYCLES_CHOICES
+        app = Application.objects.using(UMBRELLA).get(slug='foulassi')
+        if getattr(settings, 'IS_IKWEN', False):
+            billing_plan_list = CloudBillingPlan.objects.using(UMBRELLA).filter(app=app, partner__isnull=True, is_active=True)
+            if billing_plan_list.count() == 0:
+                context['ikwen_setup_cost'] = app.base_monthly_cost * 12
+                context['ikwen_monthly_cost'] = app.base_monthly_cost
+        else:
+            service = get_service_instance()
+            billing_plan_list = CloudBillingPlan.objects.using(UMBRELLA).filter(app=app, partner=service, is_active=True)
+            if billing_plan_list.count() == 0:
+                retail_config = ApplicationRetailConfig.objects.using(UMBRELLA).get(app=app, partner=service)
+                context['ikwen_setup_cost'] = retail_config.ikwen_monthly_cost * 12
+                context['ikwen_monthly_cost'] = retail_config.ikwen_monthly_cost
+        if billing_plan_list.count() > 0:
+            context['billing_plan'] = billing_plan_list[0]
+        return context
+
+
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)
     def post(self, request, *args, **kwargs):
@@ -400,6 +447,7 @@ class DeployCloud(VerifiedEmailTemplateView):
         if form.is_valid():
             project_name = form.cleaned_data.get('project_name')
             billing_plan_id = form.cleaned_data.get('billing_plan_id')
+            partner_id = form.cleaned_data.get('partner_id')
             webnode = Application.objects.get(slug='webnode')
             template_list = list(Template.objects.filter(app=webnode))
             try:
@@ -409,22 +457,37 @@ class DeployCloud(VerifiedEmailTemplateView):
                 logger.error("Foulassi deployment: %s webnode theme not found" % self.DEFAULT_THEME)
             billing_plan = CloudBillingPlan.objects.get(pk=billing_plan_id)
 
-            # User self-deploying his website
-            customer = request.user
+            is_ikwen = getattr(settings, 'IS_IKWEN', False)
+            if not is_ikwen or (is_ikwen and request.user.is_staff):
+                customer_id = form.cleaned_data.get('customer_id')
+                customer = Member.objects.using(UMBRELLA).get(pk=customer_id)
+                setup_cost = form.cleaned_data.get('setup_cost')
+                monthly_cost = form.cleaned_data.get('monthly_cost')
+                if setup_cost < billing_plan.setup_cost:
+                    return HttpResponseForbidden("Attempt to set a Setup cost lower than allowed.")
+                if monthly_cost < billing_plan.monthly_cost:
+                    return HttpResponseForbidden("Attempt to set a monthly cost lower than allowed.")
+            else:
+                # User self-deploying his website
+                customer = Member.objects.using(UMBRELLA).get(pk=request.user.id)
+                setup_cost = billing_plan.setup_cost
+                monthly_cost = billing_plan.monthly_cost
+
+            partner = Service.objects.using(UMBRELLA).get(pk=partner_id) if partner_id else None
+
             invoice_entries = []
-            setup_cost = billing_plan.setup_cost
-            website_setup = IkwenInvoiceItem(label='Foulassi deployment', price=setup_cost, amount=setup_cost)
+            website_setup = IkwenInvoiceItem(label=_('Foulassi deployment'), price=billing_plan.setup_cost, amount=setup_cost)
             website_setup_entry = InvoiceEntry(item=website_setup, short_description=project_name, total=setup_cost)
             invoice_entries.append(website_setup_entry)
-            if theme.cost > 0:
-                theme_item = IkwenInvoiceItem(label='Website theme', price=theme.cost, amount=theme.cost)
+            if theme and theme.cost > 0:
+                theme_item = IkwenInvoiceItem(label=_('Website theme'), price=theme.cost, amount=theme.cost)
                 theme_entry = InvoiceEntry(item=theme_item, short_description=theme.name, total=theme.cost)
                 invoice_entries.append(theme_entry)
             if getattr(settings, 'DEBUG', False):
-                service = deploy(customer, project_name, billing_plan, theme, invoice_entries)
+                service = deploy(customer, project_name, billing_plan, theme, monthly_cost, invoice_entries, partner)
             else:
                 try:
-                    service = deploy(customer, project_name, billing_plan, theme, invoice_entries)
+                    service = deploy(customer, project_name, billing_plan, theme, monthly_cost, invoice_entries, partner)
                 except Exception as e:
                     context = self.get_context_data(**kwargs)
                     context['error'] = e.message
@@ -433,7 +496,7 @@ class DeployCloud(VerifiedEmailTemplateView):
                 if request.user.is_staff:
                     next_url = reverse('partnership:change_service', args=(service.id,))
                 else:
-                    next_url = reverse('foulassi:successful_deployment')
+                    next_url = reverse('foulassi:successful_deployment', args=(service.ikwen_name,))
             else:
                 next_url = reverse('change_service', args=(service.id,))
             return HttpResponseRedirect(next_url)
@@ -441,3 +504,14 @@ class DeployCloud(VerifiedEmailTemplateView):
             context = self.get_context_data(**kwargs)
             context['form'] = form
             return render(request, 'foulassi/cloud_setup/deploy.html', context)
+
+
+class SuccessfulDeployment(TemplateView):
+    template_name = 'foulassi/cloud_setup/successful_deployment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SuccessfulDeployment, self).get_context_data(**kwargs)
+        ikwen_name = kwargs['ikwen_name']
+        school = Service.objects.get(project_name_slug=ikwen_name)
+        context['school'] = school
+        return context
