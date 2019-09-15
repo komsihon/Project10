@@ -39,7 +39,7 @@
                             teachers and parents connect and work together to manage the school and students.
                         {% endblocktrans %}
                     </p>
-                    <a id="deploy" class="btn btn-md cta" href="{% url 'foulassi:deploy_cloud' %}">{% trans "DEPLOY" %}</a>
+                    <a id="deploy" class="btn btn-md cta" href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}">{% trans "DEPLOY" %}</a>
                 </div>
                 <div class="col-sm-7 hidden-xs">
                     <img src="{% static 'foulassi/img/foulassi-one-platform-everyone.png' %}" alt="One platform, everyone" style="width: 100%"/>
@@ -392,7 +392,7 @@
         <div class="container">{% blocktrans %}
             Deploy your <strong>Foulassi Weblet</strong> now and start collaborating with teachers and thousands of parents.
         {% endblocktrans %}</div>
-        <a class="btn btn-md cta" href="{% url 'foulassi:deploy_cloud' %}">{% trans "DEPLOY" %}</a>
+        <a class="btn btn-md cta" href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}">{% trans "DEPLOY" %}</a>
     </section>
 {% endblock %}
 
