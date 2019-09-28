@@ -6,6 +6,7 @@ from django_mongodb_engine.contrib import MongoDBManager
 from djangotoolbox.fields import ListField, EmbeddedModelField
 from ikwen.accesscontrol.models import Member
 from ikwen.core.models import Model
+from django.utils.translation import gettext_lazy as _
 from ikwen_foulassi.foulassi.models import Student, Teacher, ResultsTracker, get_school_year
 
 
@@ -17,7 +18,8 @@ class Level(Model, ResultsTracker):
     """
     A school level
     """
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30,
+                            help_text=_("<strong>Eg:</strong> Form1, Form2, ..."))
     slug = models.SlugField()
     registration_fees = models.IntegerField(default=0)
     first_instalment = models.IntegerField(default=0)
@@ -39,7 +41,9 @@ class Level(Model, ResultsTracker):
 
 class Classroom(Model, ResultsTracker):
     level = models.ForeignKey(Level)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30,
+                            help_text=_("Raw name of the class. Don't write the level again. <br>Eg: A, B ... "
+                                        "The level will be added to get the full name."))
     slug = models.SlugField()
     registration_fees = models.IntegerField(default=0)
     first_instalment = models.IntegerField(default=0)

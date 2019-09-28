@@ -1,9 +1,14 @@
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import gettext as _
+from ikwen.billing.models import Payment, MoMoTransaction
 from ikwen_foulassi.foulassi.models import Student, Teacher, Event
 from ikwen_foulassi.school.models import Level, Score
 from ikwen_foulassi.reporting.models import SessionReport, ReportCardBatch
+from ikwen_webnode.web.models import HomepageSection
+
+
+group_secretary = _("Secretary")  # Simply causes this to appear in translation file
 
 
 def create_permissions():
@@ -21,3 +26,9 @@ def create_permissions():
     Permission.objects.create(codename='ik_manage_reporting', name=_('Manage report cards'), content_type=batch_ct)
     event_ct = ContentType.objects.get_for_model(Event)
     Permission.objects.create(codename='ik_view_event', name=_('View events'), content_type=event_ct)
+    hps_ct = ContentType.objects.get_for_model(HomepageSection)
+    Permission.objects.create(codename='ik_webmaster', name=_('Website admin'), content_type=hps_ct)
+    payment_ct = ContentType.objects.get_for_model(Payment)
+    Permission.objects.create(codename='ik_manage_payment', name=_('Manage payments'), content_type=payment_ct)
+    transaction_ct = ContentType.objects.get_for_model(MoMoTransaction)
+    Permission.objects.create(codename='ik_view_transaction_log', name=_('Manage transactions'), content_type=transaction_ct)

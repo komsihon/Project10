@@ -9,6 +9,7 @@ from threading import Thread
 import requests
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
@@ -46,8 +47,24 @@ from ikwen_foulassi.school.student.views import StudentDetail, ChangeJustificato
 
 logger = logging.getLogger('ikwen')
 
+
 class Home(TemplateView):
     template_name = 'foulassi/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Home, self).get_context_data(**kwargs)
+        event_list = list(Event.objects.filter(is_processed=False).order_by('-id'))
+        count_pending = len(event_list)
+        if count_pending < self.MIN_DISPLAY:
+            extra = self.MIN_DISPLAY - count_pending
+            event_list.extend(list(Event.objects.filter(is_processed=True).order_by('-id')[:extra]))
+        date_list = list(set([ev.created_on.date() for ev in event_list]))
+        date_list.sort(reverse=True)
+        event_collection = OrderedDict()
+        for date in date_list:
+            event_collection[date] = [ev.render(self.request) for ev in event_list if ev.created_on.date() == date]
+        context['event_collection'] = event_collection
+        return context
 
 
 class HomeSaaS(TemplateView):
@@ -55,6 +72,28 @@ class HomeSaaS(TemplateView):
     Homepage of Foulassi addressed to schools presenting the Software as a Service
     """
     template_name = 'foulassi/home_saas.html'
+
+
+class AdminHome(TemplateView):
+    """
+    Homepage of Foulassi admin
+    """
+    template_name = 'foulassi/admin_home.html'
+
+    def get(self, request, *args, **kwargs):
+        action = request.GET.get('action')
+        if action == 'get_in':
+            challenge = request.GET.get('challenge')
+            school = get_service_instance()
+            if school.api_signature == challenge:
+                member = authenticate(api_signature=challenge)
+                login(request, member)
+                next_url = reverse('school:subject_list') + '?first_setup=yes'
+                return HttpResponseRedirect(next_url)
+        elif request.user.is_anonymous():
+            next_url = reverse('ikwen:sign_in') + '?next=' + reverse('foulassi:admin_home')
+            return HttpResponseRedirect(next_url)
+        return super(AdminHome, self).get(request, *args, **kwargs)
 
 
 class EventList(TemplateView):
@@ -417,7 +456,7 @@ def confirm_invoice_payment(request, *args, **kwargs):
 
 class DeployCloud(VerifiedEmailTemplateView):
     template_name = 'foulassi/cloud_setup/deploy.html'
-    DEFAULT_THEME = 'dreamer'
+    DEFAULT_THEME = 'foulassi'
 
     def get_context_data(self, **kwargs):
         context = super(DeployCloud, self).get_context_data(**kwargs)
@@ -451,15 +490,17 @@ class DeployCloud(VerifiedEmailTemplateView):
             webnode = Application.objects.get(slug='webnode')
             template_list = list(Template.objects.filter(app=webnode))
             try:
-                theme = Theme.objects.get(template__in=template_list, slug=self.DEFAULT_THEME)
+                theme = Theme.objects.using(UMBRELLA).get(template__in=template_list, slug=self.DEFAULT_THEME)
             except:
                 theme = None
                 logger.error("Foulassi deployment: %s webnode theme not found" % self.DEFAULT_THEME)
-            billing_plan = CloudBillingPlan.objects.get(pk=billing_plan_id)
+            billing_plan = CloudBillingPlan.objects.using(UMBRELLA).get(pk=billing_plan_id)
 
             is_ikwen = getattr(settings, 'IS_IKWEN', False)
             if not is_ikwen or (is_ikwen and request.user.is_staff):
                 customer_id = form.cleaned_data.get('customer_id')
+                if not customer_id:
+                    customer_id = request.user.id
                 customer = Member.objects.using(UMBRELLA).get(pk=customer_id)
                 setup_cost = form.cleaned_data.get('setup_cost')
                 monthly_cost = form.cleaned_data.get('monthly_cost')
@@ -489,8 +530,9 @@ class DeployCloud(VerifiedEmailTemplateView):
                 try:
                     service = deploy(customer, project_name, billing_plan, theme, monthly_cost, invoice_entries, partner)
                 except Exception as e:
+                    logger.error("Foulassi deployment failed for %s" % project_name, exc_info=True)
                     context = self.get_context_data(**kwargs)
-                    context['error'] = e.message
+                    context['errors'] = e.message
                     return render(request, 'foulassi/cloud_setup/deploy.html', context)
             if is_ikwen:
                 if request.user.is_staff:
@@ -502,11 +544,11 @@ class DeployCloud(VerifiedEmailTemplateView):
             return HttpResponseRedirect(next_url)
         else:
             context = self.get_context_data(**kwargs)
-            context['form'] = form
+            context['errors'] = form.errors
             return render(request, 'foulassi/cloud_setup/deploy.html', context)
 
 
-class SuccessfulDeployment(TemplateView):
+class SuccessfulDeployment(VerifiedEmailTemplateView):
     template_name = 'foulassi/cloud_setup/successful_deployment.html'
 
     def get_context_data(self, **kwargs):
@@ -515,3 +557,10 @@ class SuccessfulDeployment(TemplateView):
         school = Service.objects.get(project_name_slug=ikwen_name)
         context['school'] = school
         return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        school = context['school']
+        if school.member != request.user:
+            return HttpResponseForbidden("You're not allowed here")
+        return render(request, self.template_name, context)

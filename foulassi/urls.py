@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required, permission_required
 
 from ikwen_foulassi.foulassi.views import KidList, KidDetail, ShowJustificatory, AccessDenied, confirm_invoice_payment, \
-    Home, HomeSaaS, SearchSchool, EventList, DeployCloud, SuccessfulDeployment
+    Home, HomeSaaS, SearchSchool, EventList, DeployCloud, SuccessfulDeployment, AdminHome
 
 urlpatterns = patterns(
     '',
@@ -20,4 +20,5 @@ urlpatterns = patterns(
 
     url(r'^deploy$', login_required(DeployCloud.as_view()), name='deploy_cloud'),
     url(r'^successfulDeployment/(?P<ikwen_name>[-\w]+)$', login_required(SuccessfulDeployment.as_view()), name='successful_deployment'),
+    url(r'^home/$', AdminHome.as_view(), name='admin_home'),
 )

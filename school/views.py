@@ -2,7 +2,6 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
@@ -14,11 +13,10 @@ from django.views.generic import TemplateView
 from ikwen.accesscontrol.models import Member
 from ikwen.core.utils import get_model_admin_instance
 from ikwen.core.views import HybridListView, ChangeObjectBase
-from ikwen_foulassi.foulassi.models import TEACHERS, Teacher, get_school_year, Student, Event
+from ikwen_foulassi.foulassi.models import Teacher, get_school_year, Event
 from ikwen_foulassi.school.admin import LevelAdmin, SubjectAdmin, SessionGroupAdmin, SessionAdmin, DisciplineItemAdmin
 from ikwen_foulassi.school.models import Level, Session, Subject, DisciplineItem, TeacherResponsibility, Classroom, \
     get_subject_list, SubjectCoefficient, SessionGroup, Score
-from permission_backend_nonrel.models import UserPermissionList
 
 
 class LevelList(HybridListView):
@@ -26,7 +24,7 @@ class LevelList(HybridListView):
     template_name = 'school/level_list.html'
 
     def get_queryset(self):
-        return Level.objects.filter(school_year=get_school_year(self.request))
+        return Level.objects.filter(school_year=2006)
 
     def get_context_data(self, **kwargs):
         context = super(LevelList, self).get_context_data(**kwargs)
@@ -108,6 +106,7 @@ class ChangeLevel(ChangeObjectBase):
 
 
 class SubjectList(HybridListView):
+    ordering = ('name', )
     queryset = Subject.objects.filter(is_visible=True)
 
 
@@ -163,6 +162,12 @@ class TeacherList(HybridListView):
     def get_queryset(self):
         school_year = get_school_year(self.request)
         return Teacher.objects.filter(school_year=school_year)
+
+    def get_context_data(self, **kwargs):
+        context = super(TeacherList, self).get_context_data(**kwargs)
+        new_members_joined = Member.objects.all().count() > 2
+        context['new_members_joined'] = new_members_joined
+        return context
 
 
 class TeacherDetail(TemplateView):

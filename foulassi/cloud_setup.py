@@ -45,12 +45,8 @@ if getattr(settings, 'LOCAL_DEV', False):
 else:
     CLOUD_HOME = '/home/ikwen/Cloud/'
 
-FOULASSI_CLOUD_FOLDER = CLOUD_HOME + 'Foulassi/'
-WEBNODE_CLOUD_FOLDER = CLOUD_HOME + 'WebNode/'
+CLOUD_FOLDER = CLOUD_HOME + 'Foulassi/'
 SMS_API_URL = 'http://websms.mobinawa.com/http_api?action=sendsms&username=675187705&password=depotguinness&from=$label&to=$recipient&msg=$text'
-
-
-# from captcha.fields import ReCaptchaField
 
 
 class DeploymentForm(forms.Form):
@@ -94,26 +90,23 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
     url = 'http://go.ikwen.com/' + pname
     admin_url = url + '/ikwen' + reverse('ikwen:staff_router')
     now = datetime.now()
-    expiry = now + timedelta(days=15)
+    expiry = now + timedelta(days=60)
 
     # Create a copy of template application in the Cloud folder
     app_folder = CLOUD_HOME + '000Tpl/AppSkeleton'
-    website_home_folder = FOULASSI_CLOUD_FOLDER + ikwen_name
+    website_home_folder = CLOUD_FOLDER + ikwen_name
     media_root = CLUSTER_MEDIA_ROOT + ikwen_name + '/'
     media_url = CLUSTER_MEDIA_URL + ikwen_name + '/'
-    default_images_folder = WEBNODE_CLOUD_FOLDER + '000Tpl/images/000Default'
+    images_folder = CLOUD_FOLDER + '000Tpl/images/000Default'
     if theme:
-        theme_images_folder = WEBNODE_CLOUD_FOLDER + '000Tpl/images/%s/%s' % (theme.template.slug, theme.slug)
+        theme_images_folder = CLOUD_FOLDER + '000Tpl/images/%s/%s' % (theme.template.slug, theme.slug)
         if os.path.exists(theme_images_folder):
-            if os.path.exists(media_root):
-                shutil.rmtree(media_root)
-            shutil.copytree(theme_images_folder, media_root)
-            logger.debug("Media folder '%s' successfully created from '%s'" % (media_root, theme_images_folder))
-    elif os.path.exists(default_images_folder):
+            images_folder = theme_images_folder
+    if os.path.exists(images_folder):
         if os.path.exists(media_root):
             shutil.rmtree(media_root)
-        shutil.copytree(default_images_folder, media_root)
-        logger.debug("Media folder '%s' successfully created from '%s'" % (media_root, default_images_folder))
+        shutil.copytree(images_folder, media_root)
+        logger.debug("Media folder '%s' successfully created from '%s'" % (media_root, images_folder))
     elif not os.path.exists(media_root):
         os.makedirs(media_root)
         logger.debug("Media folder '%s' successfully created empty" % media_root)
@@ -150,17 +143,15 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
     logger.debug("Settings file '%s' successfully created" % settings_file)
 
     # Import template database and set it up
-    foulassi_db_folder = FOULASSI_CLOUD_FOLDER + '000Tpl/DB/000Default'
-    webnode_db_folder = WEBNODE_CLOUD_FOLDER + '000Tpl/DB/000Default'
+    db_folder = CLOUD_FOLDER + '000Tpl/DB/000Default'
     if theme:
-        theme_db_folder = WEBNODE_CLOUD_FOLDER + '000Tpl/DB/%s/%s' % (theme.template.slug, theme.slug)
+        theme_db_folder = CLOUD_FOLDER + '000Tpl/DB/%s/%s' % (theme.template.slug, theme.slug)
         if os.path.exists(theme_db_folder):
-            webnode_db_folder = theme_db_folder
+            db_folder = theme_db_folder
 
     host = getattr(settings, 'DATABASES')['default'].get('HOST', '127.0.0.1')
-    subprocess.call(['mongorestore', '--host', host, '-d', database, webnode_db_folder])
-    subprocess.call(['mongorestore', '--host', host, '-d', database, foulassi_db_folder])
-    logger.debug("Database %s successfully created on host %s from %s and %s" % (database, host, webnode_db_folder, foulassi_db_folder))
+    subprocess.call(['mongorestore', '--host', host, '-d', database, db_folder])
+    logger.debug("Database %s successfully created on host %s from %s" % (database, host, db_folder))
 
     add_database_to_settings(database)
     for group in Group.objects.using(database).all():
@@ -221,8 +212,8 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
         th.save(using=database)
     logger.debug("Templates and themes successfully saved for service: %s" % pname)
 
-    FlatPage.objects.using(database).create(url=FlatPage.AGREEMENT, title=FlatPage.AGREEMENT)
-    FlatPage.objects.using(database).create(url=FlatPage.LEGAL_MENTIONS, title=FlatPage.LEGAL_MENTIONS)
+    FlatPage.objects.using(database).get_or_create(url=FlatPage.AGREEMENT, title=FlatPage.AGREEMENT)
+    FlatPage.objects.using(database).get_or_create(url=FlatPage.LEGAL_MENTIONS, title=FlatPage.LEGAL_MENTIONS)
 
     # Add member to SUDO Group
     obj_list, created = UserPermissionList.objects.using(database).get_or_create(user=member)
@@ -232,7 +223,7 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
 
     mail_signature = "%s<br>" \
                      "<a href='%s'>%s</a>" % (project_name, 'http://' + domain, domain)
-    config = SchoolConfig(service=service, media_url=media_url, ikwen_share_rate=billing_plan.tx_share_rate,
+    config = SchoolConfig(service=service, ikwen_share_rate=billing_plan.tx_share_rate,
                           theme=theme, currency_code='XAF', currency_symbol='XAF', decimal_precision=0,
                           signature=mail_signature, company_name=project_name, contact_email=member.email,
                           contact_phone=member.phone, sms_api_script_url=SMS_API_URL)

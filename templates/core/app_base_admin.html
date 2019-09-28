@@ -4,6 +4,14 @@
 {% block app_admin_nav %}
     {% if perms.school.ik_view_dashboard %}
     <ul class="nav nav-pills nav-stacked">
+        <li role="presentation" class="home">
+            <a href="{% url 'foulassi:admin_home' %}">{% trans "Home" %}</a>
+        </li>
+    </ul>
+    <div class="divider"></div>
+    {% endif %}
+    {% if perms.school.ik_view_dashboard %}
+    <ul class="nav nav-pills nav-stacked">
         <li role="presentation" class="dashboard">
             <a href="{% url 'reporting:dashboard' %}">{% trans "Dashboard" %}</a>
         </li>
@@ -54,37 +62,58 @@
         </li>
         {% endif %}
     </ul>
-    {% if perms.billing.ik_manage_invoice or perms.billing.ik_view_transaction_log %}
+    {% if perms.billing.ik_manage_payment or perms.billing.ik_view_transaction_log %}
     <div class="divider"></div>
     <ul class="nav nav-pills nav-stacked">
-        <li role="presentation" class="menus">{% url 'billing:payment_list' as payment_list_url %}
-            <a href="{{ payment_list_url }}">{% trans "Payments" %}</a>
+        <li role="presentation" class="billing">
+            <a href="javascript:;" data-toggle="collapse" data-target="#billing"
+               aria-expanded="true" style="padding-right: 0;"> {% trans "Billing" context "Financial transactions" %}
+                <i class="fa fa-fw fa-caret-down"></i>
+            </a>
+            <ul id="billing" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
+                style="padding-left: 15px">
+                <li role="presentation" class="payments">{% url 'billing:payment_list' as payment_list_url %}
+                    <a href="{{ payment_list_url }}">{% trans "Payments" %}</a>
+                </li>
+                {% if perms.billing.ik_view_transaction_log %}
+                <li role="presentation" class="transactions">{% url 'billing:transaction_log' as transaction_log_url %}
+                    <a href="{{ transaction_log_url }}">{% trans "Transactions" %}</a>
+                </li>
+                {% endif %}
+                {% if perms.accesscontrol.sudo %}
+                <li role="presentation" class="wallet">{% url 'cashout:home' as wallet_url %}
+                    <a href="{{ wallet_url }}">{% trans "Wallet" %}</a>
+                </li>
+                {% endif %}
+            </ul>
         </li>
-        {% if perms.billing.ik_view_transaction_log %}
-        <li role="presentation" class="menus">{% url 'billing:transaction_log' as transaction_log_url %}
-            <a href="{{ transaction_log_url }}">{% trans "Transactions" %}</a>
-        </li>
-        {% endif %}
-        {% if perms.accesscontrol.sudo %}
-        <li role="presentation" class="menus">{% url 'cashout:home' as wallet_url %}
-            <a href="{{ wallet_url }}">{% trans "Wallet" %}</a>
-        </li>
-        {% endif %}
     </ul>
     {% endif %}
     {% if perms.school.ik_webmaster %}
     <div class="divider"></div>
     <ul class="nav nav-pills nav-stacked">
-        <li role="presentation" class="homepage">
-            {% url 'web:banner_list' as banner_list_url %}
-            <a href="{{ banner_list_url }}">{% trans "Homepage" %}</a>
+        <li role="presentation" class="website-admin">
+            <a href="javascript:;" data-toggle="collapse" data-target="#website-admin"
+               aria-expanded="true" style="padding-right: 0;"> {% trans "Website Admin" %}
+                <i class="fa fa-fw fa-caret-down"></i>
+            </a>
+            <ul id="website-admin" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
+                style="padding-left: 15px">
+                <li role="presentation" class="homepage">
+                    {% url 'web:banner_list' as banner_list_url %}
+                    <a href="{{ banner_list_url }}">{% trans "Homepage" %}</a>
+                </li>
+                <li role="presentation" class="menus">{% url 'web:smart_category_list' as smart_category_list_url %}
+                    <a href="{{ smart_category_list_url }}">{% trans "Menus" %}</a>
+                </li>
+                <li role="presentation" class="items">{% url 'items:item_list' as item_url %}
+                    <a href="{{ item_url }} ">{% trans "Items" %}</a>
+                </li>
+            </ul>
         </li>
-        <li role="presentation" class="menus">{% url 'web:smart_category_list' as smart_category_list_url %}
-            <a href="{{ smart_category_list_url }}">{% trans "Menus" %}</a>
-        </li>
-        <li role="presentation" class="items">{% url 'items:item_list' as item_url %}
-            <a href="{{ item_url }} ">{% trans "Items" %}</a>
-        </li>
+    </ul>
+    <div class="divider"></div>
+    <ul class="nav nav-pills nav-stacked">
         <li role="presentation" class="blog">
             <a href="javascript:;" data-toggle="collapse" data-target="#blog"
                aria-expanded="true" style="padding-right: 0;"> {% trans "Blog" %}

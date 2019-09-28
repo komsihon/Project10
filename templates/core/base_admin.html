@@ -14,7 +14,14 @@
     {{ block.super }}
     <link rel='stylesheet' href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
     <link href="{% static 'ikwen/css/admin.css' %}" media="screen" rel="stylesheet" type="text/css" />
+    <link rel='stylesheet' href="{% static 'ikwen/swiper/css/swiper.min.css' %}" />
+    <link href="{% static 'embed-doc/css/embed-doc.css' %}" media="screen" rel="stylesheet" type="text/css" />
     <link rel='stylesheet' href="{% static 'foulassi/css/foulassi.css' %}" />
+{% endblock %}
+
+{% block head_js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/swiper/js/swiper.jquery.min.js' %}"></script>
 {% endblock %}
 
 {% block selection_control %}
@@ -180,6 +187,9 @@
         <div class="clear"></div>
     </div>
     {% include 'foulassi/snippets/send_message_modals.html' %}
+    {% if embed_doc_template_name %}
+        {% include embed_doc_template_name %}
+    {% endif %}
 {% endblock %}
 
 {% block footer %}
@@ -192,6 +202,7 @@
 {% block js %}
     {{ block.super }}
     <script src="{% static 'ikwen/js/jquery-ui.js' %}"></script>
+    <script src="{% static 'embed-doc/js/embed-doc.js' %}"></script>
     <script>
         (function() {
             {% if messages %}
@@ -357,6 +368,7 @@
                 $('div#send-mail-modal .mail-credits-needed').text(size);
                 $('#send-mail-modal').modal('show');
             });
+            embedDoc.initEmbedDoc("{% trans "Remind me later" %}", "{% trans "Got it!" %}", "{% trans "Show Help" %}");
         })()
     </script>
 {% endblock %}

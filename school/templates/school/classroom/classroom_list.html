@@ -108,6 +108,28 @@
                         <div class="clearfix"></div>
                         {% endif %}
                     </div>
+                    {% empty %}
+                        {% if perms.school.ik_manage_school %}
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="empty-list">
+                                    <p class="notice">{% blocktrans %}
+                                        Add classrooms here. Name of the classroom can be <strong>A, B, C</strong>, etc. Level will be prepended
+                                        to form the full name.<br>
+                                        <em>Ex: Naming a Form1 classroom <strong>A</strong> will result in the full name <strong>Form1 A</strong>.</em>
+                                    {% endblocktrans %}</p>
+                                    <a href="{{ change_object_url }}" class="btn btn-success btn-green">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        {% trans "Add classroom" %}
+                                    </a>
+                                </div>
+                            </div>
+                        {% elif request.session.is_teacher  %}
+                            <div id="stage" class="empty-list">
+                                <p class="notice">
+                                    {% trans "You've not been assigned any classroom yet. Please contact your administrator." %}
+                                </p>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     <div id="stage" class="empty-list">

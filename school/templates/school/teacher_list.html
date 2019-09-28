@@ -19,6 +19,7 @@
                 </form>
             </div>
             <div id="results">
+                {% if object_list %}
                 <div id="student-list" class="tab-pane active" role="tabpanel" style="padding-bottom: 90px">
                     <ul class="people object-list">
                     {% for teacher in object_list %}
@@ -41,16 +42,77 @@
                     </ul>
                     <div class="clearfix"></div>
                 </div>
+                {% else %}
+                    <div id="stage" class="empty-list">
+                        <p class="notice">{% blocktrans %}
+                            You must invite teachers to create an account on ikwen and join the school platform. Next
+                            you will be able to assign them classrooms and subjects. Send them with the link below.
+                        {% endblocktrans %}</p>
+                        <p style="color: #007bff">
+                            https://ikwen.com/{{ service.project_name_slug }}/?invite=yes&group=teachers
+                        </p>
+                        <button class="btn btn-success btn-green visible-xs" style="margin-top: 2vh"
+                                data-toggle="modal" data-target="#whatsapp-share">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            {% trans "Invite teachers" %}
+                        </button>
+                        {% if new_members_joined %}
+                            {% url 'ikwen:community' as community_url %}
+                            <p class="notice" style="margin-top: 2vh">{% blocktrans %}
+                                If the teacher has already joined the platform. Go to <a href="{{ community_url }}">Community</a> and
+                                move him to the <strong>Teachers</strong> group for him to appear here.
+                            {% endblocktrans %}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
+    {#    Modal declaration : BEGIN #}
+    <div class="modal fade" id="whatsapp-share" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{% trans "Share on WhatsApp" %}</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <form onclick="return false" class="form-horizontal">
+                        <div class="form-group row">
+                            <label for="whatsapp-share-msg" class="col-sm-5 col-md-4">{% trans "Message" %}</label>
+                            <div class="col-sm-7 col-md-8">
+                                <textarea id="whatsapp-share-msg" style="height: 120px"
+                                          class="form-control input-sm">{% blocktrans with school_name=config.company_name %}Hello! This is our Foulassi platform for collaborating online in {{ school_name }}. Please, join in for us to configure your access.{% endblocktrans %}</textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="actions">
+                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                            <button class="btn btn-success btn-block btn-sm ok"
+                                    data-dismiss="modal" aria-label="OK">OK</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                            <button class="btn btn-default btn-block btn-sm"
+                                    data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#    Modal declaration : END #}
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script type="text/javascript">
-        (function() {
-
+        (() => {
+            $('body').on('click', '#whatsapp-share .btn.ok', () => {
+                var msg = $('#whatsapp-share-msg').val(),
+                    url = 'https://ikwen.com/{{ service.project_name_slug }}/?invite%3Dyes%26group%3Dteachers';
+                window.location = 'https://api.whatsapp.com/send?text=' + url + '%0A%0A' + msg;
+            });
         })()
     </script>
 {% endblock %}

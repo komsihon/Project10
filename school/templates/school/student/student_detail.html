@@ -135,101 +135,150 @@
             {% if settings.IS_UMBRELLA %}
                 $('#student-details .basic input, #student-details .basic select').prop('disabled', true);
                 $('#id_classroom').html('<option value="' + "{{ classroom.id }}" + '">' + "{{ classroom }}" + '</option>');
+            {% else %}
+                $('#id_classroom').val('{{ classroom.id }}').prop('disabled', true).removeAttr('name');
+                $('<input type="hidden" name="classroom" value="{{ classroom.id }}" />').insertBefore('#id_classroom');
+                $('#id_dob').keyup(function() {
+                    var dob = $(this).val();
+                    if (dob.length >= 10) $(this).datepicker("setDate", dob);
+                }).datepicker("option", {dateFormat: "dd/mm/yy"}).datepicker("setDate", {{ obj.dob|date:"d/m/Y" }});
+                $('#discipline-item-happened-on').datepicker({
+                    altField: "#happened-on-alt",
+                    altFormat: "yy-mm-dd"
+                });
+                $('#discipline-item-id').change(function() {
+                    if ($(this).find('option:selected').data('has-count')) {
+                        $('.form-group.discipline-item-count').show();
+                    } else {
+                        $('.form-group.discipline-item-count').hide();
+                        $('#discipline-item-count').val(1)
+                    }
+                });
+                $('body').on('click', '#admin-content .tab', function (e) {
+                    var _$tab = $(this),
+                        tabName = _$tab.data('tab');
+                    if (tabName === 'details' || _$tab.hasClass('loaded')) {
+                        $('#admin-content').animate({'scrollTop': 0}, '50');
+                        return;
+                    }
+                    $('#student-' + tabName).load('?tab=' + tabName, function() {
+                        _$tab.addClass('loaded');
+                        $('#admin-content').animate({'scrollTop': 0}, '50');
+                        if (tabName === 'billing') {
+                            $('#new-invoice-due-date').datepicker({
+                                altField: "#new-invoice-due-date-alt",
+                                altFormat: "yy-mm-dd"
+                            }).removeAttr('name');
+                        }
+                    }).find('.spinner').show();
+                }).on('click', '.show-modal-discipline-entry', function() {
+                    var title = "{% trans "Add new entry" %}";
+                    if ($(this).hasClass('parent-convocation')) {
+                        title = "{% trans "Summon parent" %}";
+                        $('#discipline-item-id').val('{{ parent_convocation.id }}');
+                        $('.discipline-item-id, .discipline-item-count').hide();
+                        $('.discipline-item-happened-on').show();
+                        $('.add-discipline-log-entry').removeClass('btn-danger exclusion').addClass('btn-success parent-convocation');
+                    } else if ($(this).hasClass('exclusion')) {
+                        title = "{% blocktrans %}Exclude {{ student }} ?{% endblocktrans %}";
+                        $('#discipline-item-id').val('{{ exclusion.id }}');
+                        $('.discipline-item-id, .discipline-item-count, .discipline-item-happened-on').hide();
+                        $('.add-discipline-log-entry').removeClass('btn-success parent-convocation').addClass('btn-danger exclusion');
+                    } else {
+                        $('#discipline-item-id').val('');
+                        $('.discipline-item-id, .discipline-item-count, .discipline-item-happened-on').show();
+                        $('.add-discipline-log-entry').removeClass('btn-danger exclusion parent-convocation').addClass('btn-success');
+                    }
+                    $('#modal-add-discipline-entry .modal-title').text(title);
+                    $('#modal-add-discipline-entry').modal('show');
+                }).on('click', '.add-discipline-log-entry', function() {
+                    var action = 'add_discipline_log_entry',
+                        itemId = $('#discipline-item-id').val(),
+                        count = $('#discipline-item-count').val(),
+                        happenedOn = $('#happened-on-alt').val(),
+                        details = $('#discipline-item-details').val(),
+                        text = $('#sms-notification').val(),
+                        recipients = [];
+                    $('.sms-recipient input[type=checkbox]').each(function() {
+                        if ($(this).prop('checked')) recipients.push($(this).val())
+                    });
+                    recipients = recipients.join(',');
+                    var sendSMS = $('#send-sms').prop('checked') ? 'yes': '';
+                    console.log('sendSMS: ' + sendSMS + ', recipients: ' + recipients + ', text: ' + text);
+                    if ($(this).hasClass('parent-convocation')) action = 'parent-convocation';
+                    var params = {
+                        action: action, item_id: itemId, count: count, happened_on: happenedOn, details: details,
+                        send_sms: sendSMS, recipients: recipients, text: text
+                    };
+                    $.getJSON('', params, function(data) {
+                        if (data.success) {
+                            var $itemCount = $('.discipline-item .' + data.item_slug),
+                                newCount = parseInt($itemCount.text()) + parseInt(count),
+                                entry = data.entry,
+                                justifyUrl = '{% url 'school:change_justificatory' %}?entry_id=' + entry.id,
+                                $logEntry = $('li.di.tpl').clone().removeClass('tpl').addClass(entry.item.slug)
+                                    .attr('id', entry.id).data('id', entry.id);
+                            $itemCount.text(newCount);
+                            $logEntry.find('.name').text(entry.item.name);
+                            $logEntry.find('.count').text(count);
+                            $logEntry.find('.details').text(details);
+                            $logEntry.find('.justify a').attr('href', justifyUrl);
+                            $logEntry.prependTo('.discipline-log').fadeIn();
+                            var notice = "{% trans "Discipline log entry successfully added." %}";
+                            ikwen.showFloatingNotice(notice, '', 6);
+                        }
+                    });
+                }).on('click', '.do-add-invoice', function() {
+                    var amount = $('#new-invoice-amount').val(),
+                        label = $('#new-invoice-label').val(),
+                        dueDate = $('#new-invoice-due-date-alt').val(),
+                        params = {action: 'add_invoice', amount: amount, due_date: dueDate, label: label};
+                    $.getJSON('', params, function(data) {
+                        if (data.success) {
+                            var $invoice = $('li.pending-invoice.tpl').clone().removeClass('tpl').attr('id', data.id).data('id', data.id);
+                            $invoice.find('.amount .value').text(amount);
+                            $invoice.find('.due-date').text(dueDate);
+                            $invoice.find('.label').text(label);
+                            $invoice.prependTo('.pending-invoices').fadeIn();
+                            $('#modal-add-invoice').modal('hide');
+                            $('.no-pending-invoice').hide();
+                        }
+                    })
+                }).on('click', '.show-modal-cash-in', function() {
+                    $('.errorlist.amount').remove();
+                    var invoiceId = $(this).data('invoice-id'),
+                        amount = $(this).data('amount');
+                    $('#cash-in-invoice-id').val(invoiceId);
+                    $('#cash-in-amount').val(amount);
+                }).on('click', '.do-cash-in', function() {
+                    $('.errorlist.amount').remove();
+                    var invoiceId = $('#cash-in-invoice-id').val(),
+                        amount = $('#cash-in-amount').val(),
+                        title = $('#' + invoiceId + ' .title').text(),
+                        params = {action: 'cash_in', invoice_id: invoiceId, amount: amount};
+                    amount = parseFloat(amount);
+                    if (isNaN(amount)) {
+                        $('<ul class="errorlist amount">' +
+                        '<li>' + "{% trans "Please enter a valid number." %}" + '</li>' +
+                        '</ul>').insertAfter('#invoice-amount');
+                        return;
+                    }
+                    $.getJSON('', params, function(data) {
+                        if (data.success) {
+                            var toBePaid = $('#' + invoiceId).data('to-be-paid'),
+                                rest = toBePaid - amount;
+                            $('#' + invoiceId + ' .amount .value').text(rest.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                            var $payment = $('li.payment.tpl').clone().removeClass('tpl');
+                            $payment.find('.amount').text(amount.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                            $payment.find('.details').text(title);
+                            $('#modal-cash-in').modal('hide');
+                            $payment.prependTo('.payment-log').fadeIn();
+                        }
+                    })
+                });
             {% endif %}
-            $('#id_classroom').val('{{ classroom.id }}').prop('disabled', true).removeAttr('name');
-            $('<input type="hidden" name="classroom" value="{{ classroom.id }}" />').insertBefore('#id_classroom');
-            $('#id_dob').keyup(function() {
-                var dob = $(this).val();
-                if (dob.length >= 10) $(this).datepicker("setDate", dob);
-            }).datepicker("option", {dateFormat: "dd/mm/yy"}).datepicker("setDate", {{ obj.dob|date:"d/m/Y" }});
-            $('#discipline-item-happened-on').datepicker({
-                altField: "#happened-on-alt",
-                altFormat: "yy-mm-dd"
-            });
-            $('#discipline-item-id').change(function() {
-                if ($(this).find('option:selected').data('has-count')) {
-                    $('.form-group.discipline-item-count').show();
-                } else {
-                    $('.form-group.discipline-item-count').hide();
-                    $('#discipline-item-count').val(1)
-                }
-            });
-            $('#admin-content').on('click', '.tab', function (e) {
-                var _$tab = $(this),
-                    tabName = _$tab.data('tab');
-                if (tabName === 'details' || _$tab.hasClass('loaded')) {
-                    $('#admin-content').animate({'scrollTop': 0}, '50');
-                    return;
-                }
-                $('#student-' + tabName).load('?tab=' + tabName, function() {
-                    _$tab.addClass('loaded');
-                    $('#admin-content').animate({'scrollTop': 0}, '50');
-                    if (tabName === 'billing') {
-                        $('#new-invoice-due-date').datepicker({
-                            altField: "#new-invoice-due-date-alt",
-                            altFormat: "yy-mm-dd"
-                        }).removeAttr('name');
-                    }
-                }).find('.spinner').show();
-            }).on('click', '.show-modal-discipline-entry', function() {
-                var title = "{% trans "Add new entry" %}";
-                if ($(this).hasClass('parent-convocation')) {
-                    title = "{% trans "Summon parent" %}";
-                    $('#discipline-item-id').val('{{ parent_convocation.id }}');
-                    $('.discipline-item-id, .discipline-item-count').hide();
-                    $('.discipline-item-happened-on').show();
-                    $('.add-discipline-log-entry').removeClass('btn-danger exclusion').addClass('btn-success parent-convocation');
-                } else if ($(this).hasClass('exclusion')) {
-                    title = "{% blocktrans %}Exclude {{ student }} ?{% endblocktrans %}";
-                    $('#discipline-item-id').val('{{ exclusion.id }}');
-                    $('.discipline-item-id, .discipline-item-count, .discipline-item-happened-on').hide();
-                    $('.add-discipline-log-entry').removeClass('btn-success parent-convocation').addClass('btn-danger exclusion');
-                } else {
-                    $('#discipline-item-id').val('');
-                    $('.discipline-item-id, .discipline-item-count, .discipline-item-happened-on').show();
-                    $('.add-discipline-log-entry').removeClass('btn-danger exclusion parent-convocation').addClass('btn-success');
-                }
-                $('#modal-add-discipline-entry .modal-title').text(title);
-                $('#modal-add-discipline-entry').modal('show');
-            }).on('click', '.add-discipline-log-entry', function() {
-                var action = 'add_discipline_log_entry',
-                    itemId = $('#discipline-item-id').val(),
-                    count = $('#discipline-item-count').val(),
-                    happenedOn = $('#happened-on-alt').val(),
-                    details = $('#discipline-item-details').val(),
-                    text = $('#sms-notification').val(),
-                    recipients = [];
-                $('.sms-recipient input[type=checkbox]').each(function() {
-                    if ($(this).prop('checked')) recipients.push($(this).val())
-                });
-                recipients = recipients.join(',');
-                var sendSMS = $('#send-sms').prop('checked') ? 'yes': '';
-                console.log('sendSMS: ' + sendSMS + ', recipients: ' + recipients + ', text: ' + text);
-                if ($(this).hasClass('parent-convocation')) action = 'parent-convocation';
-                var params = {
-                    action: action, item_id: itemId, count: count, happened_on: happenedOn, details: details,
-                    send_sms: sendSMS, recipients: recipients, text: text
-                };
-                $.getJSON('', params, function(data) {
-                    if (data.success) {
-                        var $itemCount = $('.discipline-item .' + data.item_slug),
-                            newCount = parseInt($itemCount.text()) + parseInt(count),
-                            entry = data.entry,
-                            justifyUrl = '{% url 'school:change_justificatory' %}?entry_id=' + entry.id,
-                            $logEntry = $('li.di.tpl').clone().removeClass('tpl').addClass(entry.item.slug)
-                                .attr('id', entry.id).data('id', entry.id);
-                        $itemCount.text(newCount);
-                        $logEntry.find('.name').text(entry.item.name);
-                        $logEntry.find('.count').text(count);
-                        $logEntry.find('.details').text(details);
-                        $logEntry.find('.justify a').attr('href', justifyUrl);
-                        $logEntry.prependTo('.discipline-log').fadeIn();
-                        var notice = "{% trans "Discipline log entry successfully added." %}";
-                        ikwen.showFloatingNotice(notice, '', 6);
-                    }
-                });
-            }).on('click', '.add-parent', function() {
-                $('.add-parent-form').show()
+            $('#admin-content').on('click', '.add-parent', function() {
+                    $('.add-parent-form').show()
             }).on('click', '.save-parent', function() {
                 var name = $('#parent-name').val(),
                     relation = $('#parent-relation').val(),
@@ -257,54 +306,7 @@
                         $('#parent-name, #parent-relation, #parent-phone, #parent-email').val('')
                     }
                 })
-            }).on('click', '.do-add-invoice', function() {
-                var amount = $('#new-invoice-amount').val(),
-                    label = $('#new-invoice-label').val(),
-                    dueDate = $('#new-invoice-due-date-alt').val(),
-                    params = {action: 'add_invoice', amount: amount, due_date: dueDate, label: label};
-                $.getJSON('', params, function(data) {
-                    if (data.success) {
-                        var $invoice = $('li.pending-invoice.tpl').clone().removeClass('tpl').attr('id', data.id).data('id', data.id);
-                        $invoice.find('.amount .value').text(amount);
-                        $invoice.find('.due-date').text(dueDate);
-                        $invoice.find('.label').text(label);
-                        $invoice.prependTo('.pending-invoices').fadeIn();
-                        $('#modal-add-invoice').modal('hide');
-                        $('.no-pending-invoice').hide();
-                    }
-                })
-            }).on('click', '.show-modal-cash-in', function() {
-                $('.errorlist.amount').remove();
-                var invoiceId = $(this).data('invoice-id'),
-                    amount = $(this).data('amount');
-                $('#cash-in-invoice-id').val(invoiceId);
-                $('#cash-in-amount').val(amount);
-            }).on('click', '.do-cash-in', function() {
-                $('.errorlist.amount').remove();
-                var invoiceId = $('#cash-in-invoice-id').val(),
-                    amount = $('#cash-in-amount').val(),
-                    title = $('#' + invoiceId + ' .title').text(),
-                    params = {action: 'cash_in', invoice_id: invoiceId, amount: amount};
-                amount = parseFloat(amount);
-                if (isNaN(amount)) {
-                    $('<ul class="errorlist amount">' +
-                    '<li>' + "{% trans "Please enter a valid number." %}" + '</li>' +
-                    '</ul>').insertAfter('#invoice-amount');
-                    return;
-                }
-                $.getJSON('', params, function(data) {
-                    if (data.success) {
-                        var toBePaid = $('#' + invoiceId).data('to-be-paid'),
-                            rest = toBePaid - amount;
-                        $('#' + invoiceId + ' .amount .value').text(rest.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
-                        var $payment = $('li.payment.tpl').clone().removeClass('tpl');
-                        $payment.find('.amount').text(amount.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
-                        $payment.find('.details').text(title);
-                        $('#modal-cash-in').modal('hide');
-                        $payment.prependTo('.payment-log').fadeIn();
-                    }
-                })
-            });
+            })
             {% if request.GET.showTab %}
                 var tabName = '{{ request.GET.showTab }}',
                     _$tab = $('.tab.{{ request.GET.showTab }}');

@@ -18,8 +18,8 @@
             <h2 class="main-title text-center" style="padding-bottom: 4vh">{% trans "Deploy now" %}</h2>
         </div>
         <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-            {% if form.errors %}
-            <div class="error-report">{{ form.errors }}</div>
+            {% if errors %}
+            <div class="error-report">{{ errors }}</div>
             {% endif %}
             <form id="deploy-cloud" method="post">{% csrf_token %}
                 <input type="hidden" name="customer_id" value="{{ user.id }}">

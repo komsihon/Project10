@@ -4,7 +4,6 @@
 {% block head_style %}
     {{ block.super }}
     <link href="{% static 'ikwen/css/uploader-single.css' %}" media="screen" rel="stylesheet" type="text/css" />
-    <link rel='stylesheet' href="{% static 'ikwen/swiper/css/swiper.min.css' %}" />
     <style>
         @media (max-width: 767px) {
             #admin-tools + .content-tab-list {margin-top: 40px}
@@ -24,7 +23,6 @@
 {% block head_js %}
     {{ block.super }}
     <script src="{% static 'ikwen/ajaxuploader/js/fileuploader.js' %}"></script>
-    <script src="{% static 'ikwen/swiper/js/swiper.jquery.min.js' %}"></script>
 {% endblock %}
 
 {% block admin_content %}
@@ -58,11 +56,11 @@
                     <i class="fa fa-file-export"></i>
                     <span class="hidden-xs">{% trans "Export" %}</span>
                 </a>
-                <a href="?action=generate_report_cards" class="btn btn-sm btn-success cta pull-right action"
-                   style="margin-right: 5px" title="{% trans "Export student list to XL file" %}">
-                    <i class="fa fa-file-export"></i>
-                    <span class="hidden-xs">{% trans "Report" %}</span>
-                </a>
+{#                <a href="?action=generate_report_cards" class="btn btn-sm btn-success cta pull-right action"#}
+{#                   style="margin-right: 5px" title="{% trans "Export student list to XL file" %}">#}
+{#                    <i class="fa fa-file-export"></i>#}
+{#                    <span class="hidden-xs">{% trans "Report" %}</span>#}
+{#                </a>#}
                 {% endif %}
                 {% if subject_list and request.session.is_teacher %}
                 <div>
@@ -103,9 +101,32 @@
                 <input type="hidden" name="slug" id="slug" value="{{ classroom.slug }}" />
                 {% for i in range_tab_count %}
                 <div id="tab-{{ i }}" class="student-list tab-pane{% if i == 0 %} active{% endif %}" role="tabpanel" style="padding-bottom: 45px">
-                    <ul class="people object-list">
-                        {% include 'school/snippets/classroom/student_list.html' %}
-                    </ul>
+                    {% if student_list %}
+                        <ul class="people object-list">
+                            {% include 'school/snippets/classroom/student_list.html' %}
+                        </ul>
+                    {% else %}
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="empty-list">
+                                <p class="notice">{% blocktrans %}Add some students in {{ classroom }}.{% endblocktrans %}</p>
+                                <div>
+                                    <a href="{{ change_student_url }}" class="btn btn-success btn-green" style="margin-bottom: 2vh">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        {% trans "Add student" %}
+                                    </a>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-success btn-green" style="clear: both"
+                                       data-toggle="modal" data-target="#modal-import">
+                                        <i class="fa fa-file-import"></i>
+                                        {% trans "Import from CSV File" %}
+                                    </button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                     {% if student_list|length > 0 and request.session.is_teacher %}
                     <div class="submit-scores tpl">
                         <div class="col-xs-6 col-sm-4 col-sm-offset-4 col-lg-2 col-lg-offset-8">
@@ -432,7 +453,7 @@
                     '<div class="qq-upload-button">' +
                         '<img class="modal-icon pb-10" src="{% static 'echo/img/import-csv-small.png' %}"' +
                             'style="cursor: pointer;"' +
-                            'title="{% trans 'Import student list from CSV file' %}">' +
+                            "title='{% trans "Import student list from CSV file" %}'>" +
                     '</div>' +
                     '<ul class="qq-upload-list"></ul>' +
                 '</div>',
