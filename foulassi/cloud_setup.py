@@ -76,11 +76,11 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
         except Service.DoesNotExist:
             ikwen_name = pname
             break
-    api_signature = generate_random_key(30)
+    api_signature = generate_random_key(30, alpha_num=True)
     while True:
         try:
             Service.objects.using(UMBRELLA).get(api_signature=api_signature)
-            api_signature = generate_random_key(30)
+            api_signature = generate_random_key(30, alpha_num=True)
         except Service.DoesNotExist:
             break
     database = ikwen_name

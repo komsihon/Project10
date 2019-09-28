@@ -247,7 +247,7 @@ class ClassroomList(HybridListView):
         level_classroom_list = []
         member = self.request.user
         school_year = get_school_year(self.request)
-        if self.request.session['is_teacher']:
+        if self.request.session.get('is_teacher'):
             teacher = Teacher.objects.get(member=member, school_year=school_year)
             level_classroom_list = [{
                 "name": _("All your classrooms"),

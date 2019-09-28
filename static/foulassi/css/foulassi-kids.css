@@ -27,6 +27,7 @@
 #search-other-school {border-top: 1px solid #eee; margin-top: 6vh; padding-top: 2vh}
 #search-other-school h4 {font-weight: 700}
 #search-other-school .search-school {margin-top: 3vh}
+.member:not(.tpl):last-child, .ik-li:not(.tpl):last-of-type {border-bottom: none}
 
 @media (max-width: 767px) {
     .school-list .ik-li .info {padding: 10px 0;max-width: 180px;}

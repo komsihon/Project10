@@ -9,7 +9,7 @@ from threading import Thread
 import requests
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
@@ -18,7 +18,7 @@ from django.db.models import Sum, Q
 from django.http.response import HttpResponseRedirect, Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
-from django.utils.http import urlquote
+from django.utils.http import urlquote, urlunquote
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView
@@ -51,21 +51,6 @@ logger = logging.getLogger('ikwen')
 class Home(TemplateView):
     template_name = 'foulassi/home.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(Home, self).get_context_data(**kwargs)
-        event_list = list(Event.objects.filter(is_processed=False).order_by('-id'))
-        count_pending = len(event_list)
-        if count_pending < self.MIN_DISPLAY:
-            extra = self.MIN_DISPLAY - count_pending
-            event_list.extend(list(Event.objects.filter(is_processed=True).order_by('-id')[:extra]))
-        date_list = list(set([ev.created_on.date() for ev in event_list]))
-        date_list.sort(reverse=True)
-        event_collection = OrderedDict()
-        for date in date_list:
-            event_collection[date] = [ev.render(self.request) for ev in event_list if ev.created_on.date() == date]
-        context['event_collection'] = event_collection
-        return context
-
 
 class HomeSaaS(TemplateView):
     """
@@ -84,8 +69,11 @@ class AdminHome(TemplateView):
         action = request.GET.get('action')
         if action == 'get_in':
             challenge = request.GET.get('challenge')
+            challenge = urlunquote(challenge)
             school = get_service_instance()
             if school.api_signature == challenge:
+                if request.user.is_authenticated():
+                    logout(request)
                 member = authenticate(api_signature=challenge)
                 login(request, member)
                 next_url = reverse('school:subject_list') + '?first_setup=yes'
@@ -171,12 +159,11 @@ class KidList(TemplateView):
     def accept_suggestion(self, request):
         user = request.user
         student_id = request.GET['student_id']
-        student = Student.objects.get(pk=student_id)
         parent_profile, update = ParentProfile.objects.get_or_create(member=user)
-        if student not in parent_profile.student_list:
-            parent_profile.student_list.insert(0, student)
+        if student_id not in parent_profile.student_fk_list:
+            parent_profile.student_fk_list.insert(0, student_id)
             parent_profile.save()
-            suggestion_key = user.username + 'suggestion_list'
+            suggestion_key = user.username + 'kid_list_suggestion_list'
             cache.delete(suggestion_key)
         return HttpResponse(json.dumps({'success': True}, 'content-type: text/json'))
 
@@ -187,7 +174,7 @@ class KidList(TemplateView):
         db = student.school.database
         add_database(db)
         Parent.objects.using(db).filter(Q(email=user.email) | Q(phone=user.phone), student=student).delete()
-        suggestion_key = user.username + 'suggestion_list'
+        suggestion_key = user.username + 'kid_list_suggestion_list'
         cache.delete(suggestion_key)
         return HttpResponse(json.dumps({'success': True}, 'content-type: text/json'))
 

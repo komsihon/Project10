@@ -46,7 +46,7 @@
                 <div class="clearfix"></div>
             </div>
             <div class="text-center" style="margin-top: 5vh">
-                <a href="?action=get_in&challenge={{ school.api_signature }}" class="btn btn-deep-blue" style="min-width: 240px">
+                <a href="{{ school.url }}{% url 'foulassi:admin_home' %}?action=get_in&challenge={{ school.api_signature }}" class="btn btn-deep-blue" style="min-width: 240px">
                     <strong>{% trans "Continue" %}</strong>
                 </a>
             </div>

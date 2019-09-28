@@ -24,7 +24,7 @@ class LevelList(HybridListView):
     template_name = 'school/level_list.html'
 
     def get_queryset(self):
-        return Level.objects.filter(school_year=2006)
+        return Level.objects.filter(school_year=get_school_year(self.request))
 
     def get_context_data(self, **kwargs):
         context = super(LevelList, self).get_context_data(**kwargs)

@@ -263,6 +263,9 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                                                  help_text=_("Number of days left for parent to pay for the service."))
     ikwen_share_rate = models.IntegerField(default=0)
 
+    def __unicode__(self):
+        return self.company_name
+
     def save(self, *args, **kwargs):
         if getattr(settings, 'IS_IKWEN', False):
             db = self.service.database

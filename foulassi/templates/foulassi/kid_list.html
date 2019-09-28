@@ -9,7 +9,7 @@
 
 {% block head_style %}
     {{ block.super }}
-    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}?v=19.9.28" />
     <style>
         @media (max-width: 767px) {
             #navbar .menu-button {display: none}
@@ -53,8 +53,7 @@
                     <div class="clearfix"></div>
                 </div>
                 {% endif %}
-                {% if kid_list %}
-                <div class="kid-list">
+                <div class="kid-list{% if not kid_list %} hidden{% endif %}">
                     <h3 class="title">{% trans "Your kids" %}</h3>
                     {% for student in kid_list %}
                     <div class="col-xs-6 col-sm-3 kid">
@@ -88,7 +87,6 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                {% endif %}
                 <div id="search-other-school">
                     <h4 class="text-center">{% trans "Looking for another school ?" %}</h4>
                     <div class="search-school">
@@ -240,6 +238,7 @@
                         $kid.find('.kid-name').text(name);
                         $kid.find('img').attr('src', imageUrl);
                         $kid.insertAfter('.kid-list .title');
+                        $('.kid-list').removeClass('hidden');
                         /*if (kidFeesPaid) $kid.find('a').attr('href', url);
                         else {
                             $kid.data('toggle', 'modal');
