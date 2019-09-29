@@ -46,11 +46,27 @@
                 <div class="clearfix"></div>
             </div>
             <div class="text-center" style="margin-top: 5vh">
-                <a href="{{ school.url }}{% url 'foulassi:admin_home' %}?action=get_in&challenge={{ school.api_signature }}" class="btn btn-deep-blue" style="min-width: 240px">
+                <a class="btn-continue btn btn-deep-blue" style="min-width: 240px">
+                    {% include 'core/snippets/button_spinner.html' %}
                     <strong>{% trans "Continue" %}</strong>
                 </a>
             </div>
             <div class="clearfix"></div>
         </div>
     </div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (() => {
+            $('.btn-continue').addClass('processing');
+            window.setTimeout(function () {
+                $('.btn-continue').removeClass('processing');
+                $('.btn-continue').attr({'href': "{{ school.url }}{% url 'foulassi:admin_home' %}?action=get_in&challenge={{ school.api_signature }}"});
+            }, 5000);
+
+        })()
+    </script>
+
 {% endblock %}
