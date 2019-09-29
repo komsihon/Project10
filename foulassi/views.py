@@ -67,18 +67,19 @@ class AdminHome(TemplateView):
 
     def get(self, request, *args, **kwargs):
         action = request.GET.get('action')
+        user = request.user
         if action == 'get_in':
             challenge = request.GET.get('challenge')
             challenge = urlunquote(challenge)
             school = get_service_instance()
             if school.api_signature == challenge:
-                if request.user.is_authenticated():
+                if user.is_authenticated():
                     logout(request)
                 member = authenticate(api_signature=challenge)
                 login(request, member)
                 next_url = reverse('school:subject_list') + '?first_setup=yes'
                 return HttpResponseRedirect(next_url)
-        elif request.user.is_anonymous():
+        elif user.is_anonymous() or (user.is_authenticated() and not user.is_staff):
             next_url = reverse('ikwen:sign_in') + '?next=' + reverse('foulassi:admin_home')
             return HttpResponseRedirect(next_url)
         return super(AdminHome, self).get(request, *args, **kwargs)
