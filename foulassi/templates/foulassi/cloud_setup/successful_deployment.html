@@ -46,7 +46,7 @@
                 <div class="clearfix"></div>
             </div>
             <div class="text-center" style="margin-top: 5vh">
-                <a class="btn-continue btn btn-deep-blue" style="min-width: 240px">
+                <a class="btn btn-deep-blue continue processing" style="min-width: 240px">
                     {% include 'core/snippets/button_spinner.html' %}
                     <strong>{% trans "Continue" %}</strong>
                 </a>
@@ -60,10 +60,9 @@
     {{ block.super }}
     <script>
         (() => {
-            $('.btn-continue').addClass('processing');
-            window.setTimeout(function () {
-                $('.btn-continue').removeClass('processing');
-                $('.btn-continue').attr({'href': "{{ school.url }}{% url 'foulassi:admin_home' %}?action=get_in&challenge={{ school.api_signature }}"});
+            setTimeout(() => {
+                let href = "{{ school.url }}{% url 'foulassi:admin_home' %}?action=get_in&challenge={{ school.api_signature }}";
+                $('.btn.continue').removeClass('processing').attr('href', href);
             }, 5000);
 
         })()
