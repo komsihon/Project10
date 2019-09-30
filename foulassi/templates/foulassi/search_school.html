@@ -36,9 +36,9 @@
                             {% with config=school.config %}
                             <li id="{{ school.id }}" class="ik-li" data-id="{{ school.id }}">
                                 {% if config.logo.name %}
-                                    <div class="image" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ school.photo.small_name }})"></div>
+                                     <div class="image" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ school.photo.small_name }})"></div>
                                 {% else %}
-                                    <div class="image" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></div>
+                                    <div class="image"><i class="fa-school fas school-avatar"></i></div>
                                 {% endif %}
                                 <div class="info">
                                     <p class="full_name">{{ config.company_name }}</p>
@@ -46,11 +46,11 @@
                                     <p class="text-muted" style="font-size: .9em">
                                         {% if config.contact_email %}{{ config.contact_email }}{% endif %}
                                         {% if config.contact_email and config.contact_phone %}, {% endif %}
-                                        {% if config.contact_phone %}{{ config.contac_phone }}{% endif %}
+                                        {% if config.contact_phone %}{{ config.contact_phone }}{% endif %}
                                     </p>
                                     {% endif %}
                                 </div>
-                                <div class="actions">
+                                <div class="actions" style="line-height: 50px">
                                     <button class="btn btn-sm btn-green show-modal-invite">{% trans "Invite" %}</button>
                                 </div>
                             </li>
