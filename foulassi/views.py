@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
@@ -124,7 +125,7 @@ class KidList(TemplateView):
         user = self.request.user
         parent_profile, update = ParentProfile.objects.get_or_create(member=user)
         kid_list = parent_profile.student_list
-        suggestion_key = user.username + 'kid_list_suggestion_list'
+        suggestion_key = 'kid_list:suggestion_list:' + user.username
         suggestion_list = cache.get(suggestion_key)
         if suggestion_list is None:
             suggestion_list = []
@@ -164,8 +165,10 @@ class KidList(TemplateView):
         if student_id not in parent_profile.student_fk_list:
             parent_profile.student_fk_list.insert(0, student_id)
             parent_profile.save()
-            suggestion_key = user.username + 'kid_list_suggestion_list'
+            suggestion_key = 'kid_list:suggestion_list:' + user.username
+            fragment_key = make_template_fragment_key('kid_list', [user.username])
             cache.delete(suggestion_key)
+            cache.delete(fragment_key)
         return HttpResponse(json.dumps({'success': True}, 'content-type: text/json'))
 
     def refuse_suggestion(self, request):
@@ -175,8 +178,10 @@ class KidList(TemplateView):
         db = student.school.database
         add_database(db)
         Parent.objects.using(db).filter(Q(email=user.email) | Q(phone=user.phone), student=student).delete()
-        suggestion_key = user.username + 'kid_list_suggestion_list'
+        suggestion_key = 'kid_list:suggestion_list:' + user.username
+        fragment_key = make_template_fragment_key('kid_list', [user.username])
         cache.delete(suggestion_key)
+        cache.delete(fragment_key)
         return HttpResponse(json.dumps({'success': True}, 'content-type: text/json'))
 
 

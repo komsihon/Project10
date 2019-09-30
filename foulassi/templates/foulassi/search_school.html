@@ -15,7 +15,7 @@
 
 {% block head_style %}
     {{ block.super }}
-    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}?v=19.9.30" />
     <style>
         @media (max-width: 767px) {
             #navbar .menu-button {display: none}
@@ -36,9 +36,11 @@
                             {% with config=school.config %}
                             <li id="{{ school.id }}" class="ik-li" data-id="{{ school.id }}">
                                 {% if config.logo.name %}
-                                     <div class="image" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ school.photo.small_name }})"></div>
+                                    <div class="image" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ school.photo.small_name }})"></div>
                                 {% else %}
-                                    <div class="image"><i class="fa-school fas school-avatar"></i></div>
+                                    <div class="image" style="padding-left: 10px">
+                                        <i class="fa-school fas school-avatar"></i>
+                                    </div>
                                 {% endif %}
                                 <div class="info">
                                     <p class="full_name">{{ config.company_name }}</p>
@@ -50,7 +52,7 @@
                                     </p>
                                     {% endif %}
                                 </div>
-                                <div class="actions" style="line-height: 50px">
+                                <div class="actions">
                                     <button class="btn btn-sm btn-green show-modal-invite">{% trans "Invite" %}</button>
                                 </div>
                             </li>
