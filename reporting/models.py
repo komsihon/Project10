@@ -29,7 +29,7 @@ class DisciplineReport(AbstractWatchModel, DisciplineTracker):
     classroom = models.ForeignKey(Classroom, null=True)
 
     class Meta:
-        unique_together = ('level', 'classroom', 'discipline_item')
+        unique_together = ('level', 'classroom', 'discipline_item', 'school_year')
 
 
 class StudentDisciplineReport(AbstractWatchModel):
@@ -49,7 +49,7 @@ class SessionReport(Model, ResultsTracker):
     level = models.ForeignKey(Level, null=True)
 
     class Meta:
-        unique_together = ('level', 'classroom', 'subject')
+        unique_together = ('level', 'classroom', 'subject', 'school_year')
 
     def get_students_having_score(self, value):
         student_list = [score.student
@@ -74,7 +74,7 @@ class SessionGroupReport(Model, ResultsTracker):
     level = models.ForeignKey(Level, null=True)
 
     class Meta:
-        unique_together = ('level', 'classroom', 'subject')
+        unique_together = ('level', 'classroom', 'subject', 'school_year')
 
     def get_students_having_score(self, value):
         student_list = [score.student
@@ -99,7 +99,7 @@ class YearReport(Model, ResultsTracker):
     level = models.ForeignKey(Level, null=True)
 
     class Meta:
-        unique_together = ('level', 'classroom', 'subject')
+        unique_together = ('level', 'classroom', 'subject', 'school_year')
 
 
 class ReportCardBatch(Model):
