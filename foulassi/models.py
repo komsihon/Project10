@@ -76,7 +76,8 @@ class Student(Model):
     first_name = models.CharField(max_length=100, db_index=True)
     last_name = models.CharField(max_length=100, db_index=True)
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES, db_index=True)
-    dob = models.DateField(_("Date of birth"))
+    dob = models.DateField(_("Date of birth"), db_index=True)
+    birthday = models.IntegerField(blank=True, null=True, db_index=True)
     photo = MultiImageField(upload_to=UPLOAD_TO, blank=True, null=True,
                             max_size=600, small_size=200, thumb_size=100, editable=False)
     classroom = models.ForeignKey('school.Classroom')
@@ -96,6 +97,11 @@ class Student(Model):
 
     def __unicode__(self):
         return self.last_name + ' ' + self.first_name
+
+    def save(self, **kwargs):
+        if self.dob:
+            self.birthday = int(self.dob.strftime('%m%d'))
+        super(Student, self).save(**kwargs)
 
     def get_score_list(self, subject, using='default'):
         from ikwen_foulassi.school.models import Score
@@ -297,7 +303,7 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
 
 
 class Invoice(AbstractInvoice):
-    school = models.ForeignKey(Service, default=get_service_instance, blank=True, null=True)
+    school = models.ForeignKey(Service, default=get_service_instance, blank=True, null=True, related_name='+')
     student = models.ForeignKey(Student, blank=True, null=True)
     school_year = models.IntegerField(default=get_school_year, db_index=True)
     is_tuition = models.BooleanField(default=False)
@@ -354,9 +360,9 @@ def sync_teacher(sender, **kwargs):
     and delete the Teacher object when the Member is moved out of the
     Teacher Group
     """
-    if get_service_instance().app.slug != 'foulassi':
-        return
     if sender != UserPermissionList:  # Avoid unending recursive call
+        return
+    if get_service_instance().app.slug != 'foulassi':
         return
     instance = kwargs['instance']
     try:

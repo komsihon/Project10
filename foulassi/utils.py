@@ -147,7 +147,7 @@ def remove_student_from_parent_profile(student, parent_email, parent_phone):
     member_list = list(Member.objects.using(UMBRELLA).filter(Q(email=parent_email) | Q(phone=parent_phone)))
     for profile in ParentProfile.objects.using(UMBRELLA).filter(member__in=member_list):
         try:
-            profile.student_list.remove(student)
+            profile.student_fk_list.remove(student.id)
             profile.save()
         except:
             continue

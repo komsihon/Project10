@@ -30,6 +30,19 @@
         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
             {% if object_list %}
                 <div class="suggestion-list school-list">
+                    <div class="search-school">
+                        <form class="col-sm-8 col-sm-offset-2">
+                            <label for="school-name" class="sr-only">{% trans "Invite a school" %}</label>
+                            <div class="input-group">
+                                <input id="school-name" class="form-control" type="text" name="q"
+                                       placeholder="{% trans "Search school" %}" autofocus autocomplete="off"/>
+                                <div class="do-search input-group-addon">
+                                    <i class="fa fa-search" style="color: #555"></i>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="clearfix"></div>
+                    </div>
                     <h3 class="main-title">{% trans "Schools" %}</h3>
                     <ul class="object-list" style="padding-left: 0">
                         {% for school in object_list %}
@@ -91,6 +104,8 @@
                         <button class="btn btn-green btn-md btn-block do-invite-school">
                             {% include 'core/snippets/button_spinner.html' %}
                             <span>{% trans "Submit" %}</span>
+                            <span class="visible-sm">{% trans "Submit"|truncatechars:"20" %}</span>
+                            <span class="visible-xs">{% trans "Submit"|truncatechars:"20" %}</span>
                         </button>
                     </div>
                     <div class="clearfix"></div>

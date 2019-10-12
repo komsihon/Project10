@@ -48,6 +48,14 @@ else:
 CLOUD_FOLDER = CLOUD_HOME + 'Foulassi/'
 SMS_API_URL = 'http://websms.mobinawa.com/http_api?action=sendsms&username=675187705&password=depotguinness&from=$label&to=$recipient&msg=$text'
 
+# Calculate default back to school date; 1st monday of September
+now = datetime.now()
+year = now.year
+back_to_school_date = datetime(year, 9, 1, 7, 30)
+
+while back_to_school_date.weekday() != 0:
+    back_to_school_date += timedelta(days=1)
+
 
 class DeploymentForm(forms.Form):
     """
@@ -226,7 +234,8 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
     config = SchoolConfig(service=service, ikwen_share_rate=billing_plan.tx_share_rate,
                           theme=theme, currency_code='XAF', currency_symbol='XAF', decimal_precision=0,
                           signature=mail_signature, company_name=project_name, contact_email=member.email,
-                          contact_phone=member.phone, sms_api_script_url=SMS_API_URL)
+                          contact_phone=member.phone, sms_api_script_url=SMS_API_URL,
+                          back_to_school_date=back_to_school_date)
     config.save(using=UMBRELLA)
     base_config = config.get_base_config()
     base_config.save(using=UMBRELLA)
