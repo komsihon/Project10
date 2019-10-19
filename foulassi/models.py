@@ -222,16 +222,36 @@ class ResultsTracker(StudentsPopulation):
     success_history = property(_get_success_history)
 
     def _get_boys_success_percent_history(self):
-        return [float(x[0] * 100)/x[1] for x in zip(self.boys_success_history, self.boys_participation_history)]
+        pairs = zip(self.boys_success_history, self.boys_participation_history)
+        history = []
+        for x in pairs:
+            if x[1] > 0:
+                history.append(float(x[0] * 100)/x[1])
+            else:
+                history.append(0)
+        return history
     boys_success_percent_history = property(_get_boys_success_percent_history)
 
     def _get_girls_success_percent_history(self):
-        return [float(x[0] * 100)/x[1] for x in zip(self.girls_success_history, self.girls_participation_history)]
+        pairs = zip(self.girls_success_history, self.girls_participation_history)
+        history = []
+        for x in pairs:
+            if x[1] > 0:
+                history.append(float(x[0] * 100)/x[1])
+            else:
+                history.append(0)
+        return history
     girls_success_percent_history = property(_get_girls_success_percent_history)
 
     def _get_success_percent_history(self):
-        return [float(sum(x[:-1]) * 100)/x[-1]
-                for x in zip(self.girls_success_history, self.boys_success_history, self.participation_history)]
+        pairs = zip(self.girls_success_history, self.boys_success_history, self.participation_history)
+        history = []
+        for x in pairs:
+            if x[1] > 0:
+                history.append(float(sum(x[:-1]) * 100)/x[-1])
+            else:
+                history.append(0)
+        return history
     success_percent_history = property(_get_success_percent_history)
 
 

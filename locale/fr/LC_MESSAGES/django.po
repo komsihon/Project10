@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 14:40+0000\n"
-"PO-Revision-Date: 2019-09-28 13:35+0100\n"
+"POT-Creation-Date: 2019-10-19 12:36+0000\n"
+"PO-Revision-Date: 2019-10-19 13:40+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -87,52 +87,48 @@ msgstr "Social"
 msgid "External scripts"
 msgstr "Scripts externes"
 
-#: foulassi/cloud_setup.py:52
-msgid "Secretary"
-msgstr "Secrétariat"
-
-#: foulassi/cloud_setup.py:288
+#: foulassi/cloud_setup.py:294
 #, python-format
 msgid "Your platform %s was created"
 msgstr "Votre plateforme %s a été créé"
 
-#: foulassi/models.py:85
+#: foulassi/models.py:86
 msgid "Year when student joined this school"
 msgstr "Année d'entrée à l'école"
 
-#: foulassi/models.py:127
+#: foulassi/models.py:133
 msgid "Full name of the person"
 msgstr "Nom complet"
 
-#: foulassi/models.py:131
+#: foulassi/models.py:137
 msgid "Relationship that links the person to the student"
 msgstr "Relation entre la personne à l'élève"
 
-#: foulassi/models.py:243
+#: foulassi/models.py:269
 msgid "Average of sessions'scores"
 msgstr "Moyenne de toutes les séquences"
 
-#: foulassi/models.py:244
+#: foulassi/models.py:270
 msgid "Best score of all sessions"
 msgstr "Meilleur note de toutes les séquences"
 
-#: foulassi/models.py:248
+#: foulassi/models.py:274
 msgid "Registration fees"
 msgstr "Frais d'inscription"
 
-#: foulassi/models.py:250
+#: foulassi/models.py:276
 msgid "First instalment"
 msgstr "Première tranche"
 
-#: foulassi/models.py:252
+#: foulassi/models.py:278
 msgid "Second instalment"
 msgstr "Deuxième tranche"
 
-#: foulassi/models.py:254
+#: foulassi/models.py:280
 msgid "Third instalment"
 msgstr "Troisième tranche"
 
-#: foulassi/models.py:257
+#: foulassi/models.py:283
 msgid ""
 "Method of calculation of Term score. Average of sessions scores or best "
 "score of all sessions."
@@ -140,55 +136,59 @@ msgstr ""
 "Méthode de calcul de notes du Trimestre. Moyenne de notes de séquences ou "
 "meilleure de toutes les séquences."
 
-#: foulassi/models.py:261
+#: foulassi/models.py:287
 msgid "Annual fees"
 msgstr "Frais annuels"
 
-#: foulassi/models.py:262
+#: foulassi/models.py:288
 msgid "Payment period"
 msgstr "Délai de paiement"
 
-#: foulassi/models.py:263
+#: foulassi/models.py:289
 msgid "Number of days left for parent to pay for the service."
 msgstr "Nombre de jours accordé aux parents pour payer ces frais."
 
-#: foulassi/scripts.py:13
+#: foulassi/scripts.py:11
+msgid "Secretary"
+msgstr "Secrétariat"
+
+#: foulassi/scripts.py:16
 msgid "Access students info"
 msgstr "Accéder aux fiches des élèves"
 
-#: foulassi/scripts.py:15 foulassi/templates/foulassi/admin_home.html:89
+#: foulassi/scripts.py:18 foulassi/templates/foulassi/admin_home.html:93
 msgid "Manage teachers"
 msgstr "Gérer les enseignants"
 
-#: foulassi/scripts.py:17
+#: foulassi/scripts.py:20
 msgid "Manage school setup"
 msgstr "Gérer les infos de l’Ets"
 
-#: foulassi/scripts.py:19
+#: foulassi/scripts.py:22
 msgid "Access student scores"
 msgstr "Voir les notes des élèves"
 
-#: foulassi/scripts.py:21
+#: foulassi/scripts.py:24
 msgid "View dashboard"
 msgstr "Voir le tableau de bord"
 
-#: foulassi/scripts.py:23
+#: foulassi/scripts.py:26
 msgid "Manage report cards"
 msgstr "Télécharger les bulletins"
 
-#: foulassi/scripts.py:25
+#: foulassi/scripts.py:28
 msgid "View events"
 msgstr "Voir les événements/notifications"
 
-#: foulassi/scripts.py:27
+#: foulassi/scripts.py:30
 msgid "Website admin"
 msgstr "Administration site web"
 
-#: foulassi/scripts.py:29
+#: foulassi/scripts.py:32
 msgid "Manage payments"
 msgstr "Gérer les paiements"
 
-#: foulassi/scripts.py:31
+#: foulassi/scripts.py:34
 msgid "Manage transactions"
 msgstr "Voir le journal des transactions"
 
@@ -221,27 +221,27 @@ msgstr ""
 "Confirmation de paiement de %(amount).2f %(currency)s pour les frais "
 "scolaires de l'élève %(student_name)s. Merci."
 
-#: foulassi/views.py:298
+#: foulassi/views.py:291
 #, python-format
 msgid "Mrs %s"
 msgstr "Mme %s"
 
-#: foulassi/views.py:300
+#: foulassi/views.py:293
 #, python-format
 msgid "Mr %s"
 msgstr "M. %s"
 
-#: foulassi/views.py:302
+#: foulassi/views.py:295
 #, python-format
 msgid "The parent %s"
 msgstr "Le parent %s"
 
-#: foulassi/views.py:303
+#: foulassi/views.py:296
 msgid "I would like to follow my kids in your school on Foulassi."
 msgstr ""
 "J'aimerais pouvoir suivre mes enfants dans votre établissement sur Foulassi."
 
-#: foulassi/views.py:316
+#: foulassi/views.py:309
 #, python-format
 msgid ""
 "%(parent_name)s would like to follow his kid(s) below on ikwen Foulassi:\n"
@@ -251,11 +251,11 @@ msgstr ""
 "Foulassi:\n"
 "%(kids_details)s"
 
-#: foulassi/views.py:520
+#: foulassi/views.py:513
 msgid "Foulassi deployment"
 msgstr "Déploiement Foulassi"
 
-#: foulassi/views.py:524
+#: foulassi/views.py:517
 msgid "Website theme"
 msgstr "Thème du site web"
 
@@ -365,11 +365,11 @@ msgstr "Gérer les niveaux"
 msgid "Manage classrooms"
 msgstr "Gérer les classes"
 
-#: foulassi/templates/foulassi/admin_home.html:58
+#: foulassi/templates/foulassi/admin_home.html:60
 msgid "General configurations"
 msgstr "Configurations générales"
 
-#: foulassi/templates/foulassi/admin_home.html:65
+#: foulassi/templates/foulassi/admin_home.html:67
 msgid ""
 "\n"
 "                                Configure things like payment installments "
@@ -383,16 +383,16 @@ msgstr ""
 "session, les frais MyKids, les liens des réseaux sociaux, etc.\n"
 "                                "
 
-#: foulassi/templates/foulassi/admin_home.html:72
+#: foulassi/templates/foulassi/admin_home.html:74
 #: templates/core/base_admin.html:166
 msgid "Configuration"
 msgstr "Configuration"
 
-#: foulassi/templates/foulassi/admin_home.html:77
+#: foulassi/templates/foulassi/admin_home.html:81
 msgid "Teachers and staffs"
 msgstr "Enseignants et personnel"
 
-#: foulassi/templates/foulassi/admin_home.html:83
+#: foulassi/templates/foulassi/admin_home.html:87
 msgid ""
 "\n"
 "                                Invite school staff and teachers to "
@@ -404,15 +404,15 @@ msgstr ""
 "<em>Join</em> sur la plateforme et commencez à collaborer.\n"
 "                        "
 
-#: foulassi/templates/foulassi/admin_home.html:90
+#: foulassi/templates/foulassi/admin_home.html:94
 msgid "Manage staffs"
 msgstr "Gérer le personnel"
 
-#: foulassi/templates/foulassi/admin_home.html:95
+#: foulassi/templates/foulassi/admin_home.html:101
 msgid "Foulassi MyKids"
 msgstr ""
 
-#: foulassi/templates/foulassi/admin_home.html:101
+#: foulassi/templates/foulassi/admin_home.html:107
 msgid ""
 "\n"
 "                                Invite parents to follow their children on "
@@ -425,15 +425,15 @@ msgstr ""
 "service.\n"
 "                        "
 
-#: foulassi/templates/foulassi/admin_home.html:107
+#: foulassi/templates/foulassi/admin_home.html:113
 msgid "Configure fees"
 msgstr "Configurez les frais"
 
-#: foulassi/templates/foulassi/admin_home.html:112
+#: foulassi/templates/foulassi/admin_home.html:120
 msgid "Website preview"
 msgstr "Aperçu du site web"
 
-#: foulassi/templates/foulassi/admin_home.html:115
+#: foulassi/templates/foulassi/admin_home.html:123
 #, python-format
 msgid ""
 "\n"
@@ -454,15 +454,15 @@ msgstr ""
 "informations correctes et tout bien configuré avant de le faire.<br>\n"
 "                        "
 
-#: foulassi/templates/foulassi/admin_home.html:131
+#: foulassi/templates/foulassi/admin_home.html:139
 msgid "Go to public Website"
 msgstr "Allez au site web"
 
-#: foulassi/templates/foulassi/admin_home.html:136
+#: foulassi/templates/foulassi/admin_home.html:144
 msgid "Homepage slideshow"
 msgstr "Slides d'accueil"
 
-#: foulassi/templates/foulassi/admin_home.html:143
+#: foulassi/templates/foulassi/admin_home.html:151
 msgid ""
 "\n"
 "                                    Create and manipulate big images that "
@@ -486,15 +486,15 @@ msgstr ""
 "déposer pour organiser l'ordre d'apparence sur le site web.\n"
 "                                "
 
-#: foulassi/templates/foulassi/admin_home.html:153
+#: foulassi/templates/foulassi/admin_home.html:161
 msgid "Add slide"
 msgstr "Ajouter une slide"
 
-#: foulassi/templates/foulassi/admin_home.html:158
+#: foulassi/templates/foulassi/admin_home.html:166
 msgid "Website appearance and logo"
 msgstr "Aperçu du site web et logo"
 
-#: foulassi/templates/foulassi/admin_home.html:165
+#: foulassi/templates/foulassi/admin_home.html:173
 msgid ""
 "\n"
 "                                Choose your preferred template and configure "
@@ -510,15 +510,15 @@ msgstr ""
 "les produits seront disposés. Compact, cozy ou confortable.\n"
 "                                "
 
-#: foulassi/templates/foulassi/admin_home.html:173
+#: foulassi/templates/foulassi/admin_home.html:181
 msgid "Configure appearance"
 msgstr "Configurer l'apparence"
 
-#: foulassi/templates/foulassi/admin_home.html:178
+#: foulassi/templates/foulassi/admin_home.html:188
 msgid "Help & Support"
 msgstr "Aide & Support"
 
-#: foulassi/templates/foulassi/admin_home.html:185
+#: foulassi/templates/foulassi/admin_home.html:195
 msgid ""
 "\n"
 "                                    If you are still having issues getting "
@@ -534,7 +534,7 @@ msgstr ""
 "détailler pour faire à peu près tout ce que vous souhaitez.\n"
 "                                "
 
-#: foulassi/templates/foulassi/admin_home.html:196
+#: foulassi/templates/foulassi/admin_home.html:206
 msgid "See documentation"
 msgstr "Voir la documentation"
 
@@ -1157,7 +1157,7 @@ msgid "Add a person in charge"
 msgstr "Ajouter une personne en charge"
 
 #: foulassi/templates/foulassi/kid_detail.html:115
-#: foulassi/templates/foulassi/kid_list.html:223
+#: foulassi/templates/foulassi/kid_list.html:221
 #: school/templates/school/classroom/classroom_detail.html:46
 #: school/templates/school/classroom/classroom_list.html:38
 #: school/templates/school/student/student_detail.html:101
@@ -1169,15 +1169,15 @@ msgid "Suggestions"
 msgstr "Suggestions"
 
 #: foulassi/templates/foulassi/kid_list.html:47
-#: foulassi/templates/foulassi/kid_list.html:168
-#: foulassi/templates/foulassi/kid_list.html:192
+#: foulassi/templates/foulassi/kid_list.html:166
+#: foulassi/templates/foulassi/kid_list.html:190
 #: foulassi/templates/foulassi/events/report_cards_generated.html:41
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:42
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:87
-#: school/templates/school/teacher_detail.html:126
+#: school/templates/school/teacher_detail.html:127
 #: school/templates/school/teacher_list.html:96
-#: school/templates/school/classroom/classroom_detail.html:134
-#: school/templates/school/classroom/classroom_detail.html:260
+#: school/templates/school/classroom/classroom_detail.html:142
+#: school/templates/school/classroom/classroom_detail.html:268
 #: school/templates/school/snippets/student/modals.html:76
 #: school/templates/school/snippets/student/modals.html:111
 #: school/templates/school/snippets/student/modals.html:139
@@ -1189,29 +1189,31 @@ msgstr "Annuler"
 msgid "Accept"
 msgstr "Accepter"
 
-#: foulassi/templates/foulassi/kid_list.html:58
+#: foulassi/templates/foulassi/kid_list.html:57
 msgid "Your kids"
 msgstr "Vos enfants"
 
-#: foulassi/templates/foulassi/kid_list.html:93
+#: foulassi/templates/foulassi/kid_list.html:91
 msgid "Looking for another school ?"
 msgstr "Cherchez-vous une autre école ?"
 
-#: foulassi/templates/foulassi/kid_list.html:96
-#: foulassi/templates/foulassi/kid_list.html:114
+#: foulassi/templates/foulassi/kid_list.html:94
+#: foulassi/templates/foulassi/kid_list.html:112
+#: foulassi/templates/foulassi/search_school.html:35
 msgid "Invite a school"
 msgstr "Inviter une école"
 
-#: foulassi/templates/foulassi/kid_list.html:99
-#: foulassi/templates/foulassi/kid_list.html:117
+#: foulassi/templates/foulassi/kid_list.html:97
+#: foulassi/templates/foulassi/kid_list.html:115
+#: foulassi/templates/foulassi/search_school.html:38
 msgid "Search school"
 msgstr "Rechercher un établissement"
 
-#: foulassi/templates/foulassi/kid_list.html:111
+#: foulassi/templates/foulassi/kid_list.html:109
 msgid "Sorry! We could not find any of your children"
 msgstr "Désolé! Nous n'avons pu trouver aucun de vos enfants"
 
-#: foulassi/templates/foulassi/kid_list.html:128
+#: foulassi/templates/foulassi/kid_list.html:126
 #, python-format
 msgid ""
 "\n"
@@ -1279,31 +1281,31 @@ msgstr ""
 "                                </li>\n"
 "                            </ol>"
 
-#: foulassi/templates/foulassi/kid_list.html:172
+#: foulassi/templates/foulassi/kid_list.html:170
 msgid "Yes, add"
 msgstr "Oui, ajouter"
 
-#: foulassi/templates/foulassi/kid_list.html:196
+#: foulassi/templates/foulassi/kid_list.html:194
 msgid "Yes, remove"
 msgstr "Oui, retirer"
 
-#: foulassi/templates/foulassi/kid_list.html:231
+#: foulassi/templates/foulassi/kid_list.html:229
 msgid "Don't add"
 msgstr "Ne pas ajouter"
 
-#: foulassi/templates/foulassi/search_school.html:33
+#: foulassi/templates/foulassi/search_school.html:46
 msgid "Schools"
 msgstr "Établissements"
 
-#: foulassi/templates/foulassi/search_school.html:54
+#: foulassi/templates/foulassi/search_school.html:69
 msgid "Invite"
 msgstr "Inviter"
 
-#: foulassi/templates/foulassi/search_school.html:65
+#: foulassi/templates/foulassi/search_school.html:80
 msgid "Sorry! No result found."
 msgstr "Désolé ! Aucun résultat."
 
-#: foulassi/templates/foulassi/search_school.html:80
+#: foulassi/templates/foulassi/search_school.html:95
 msgid ""
 "Please write the names and classrooms of your kid(s) so that we can easily "
 "find and link them to you."
@@ -1311,25 +1313,27 @@ msgstr ""
 "Prière d'écrire les noms et classes de vos enfants pour qu'on puisse "
 "facilement les retrouver et faire le lien avec vous."
 
-#: foulassi/templates/foulassi/search_school.html:83
+#: foulassi/templates/foulassi/search_school.html:98
 msgid "Kids'details"
 msgstr "Détails des enfants"
 
-#: foulassi/templates/foulassi/search_school.html:85
+#: foulassi/templates/foulassi/search_school.html:100
 msgid "Simo Mballa, Form 6 A&#10;Youego Mballa, Form 2 C"
 msgstr "Simo Mballa, 6ème 3&#10;Youego Mballa, 4ème Esp"
 
-#: foulassi/templates/foulassi/search_school.html:91
-#: school/templates/school/classroom/classroom_detail.html:142
+#: foulassi/templates/foulassi/search_school.html:106
+#: foulassi/templates/foulassi/search_school.html:107
+#: foulassi/templates/foulassi/search_school.html:108
+#: school/templates/school/classroom/classroom_detail.html:150
 msgid "Submit"
 msgstr "Soumettre"
 
-#: foulassi/templates/foulassi/search_school.html:115
+#: foulassi/templates/foulassi/search_school.html:132
 msgctxt "invite school ..."
 msgid "Invite"
 msgstr "Inviter"
 
-#: foulassi/templates/foulassi/search_school.html:132
+#: foulassi/templates/foulassi/search_school.html:149
 msgid "Your request was submitted"
 msgstr "Votre requête a été soumise"
 
@@ -1391,7 +1395,7 @@ msgstr ""
 "                    <p>C'est tout simple et cela vous prendra juste quelques "
 "minutes !</p>"
 
-#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:50
+#: foulassi/templates/foulassi/cloud_setup/successful_deployment.html:51
 msgid "Continue"
 msgstr "Continuer"
 
@@ -2023,7 +2027,7 @@ msgstr "Nouveau Justificatif"
 #: school/templates/school/change_level.html:52
 #: school/templates/school/change_session.html:38
 #: school/templates/school/change_subject.html:38
-#: school/templates/school/teacher_detail.html:94
+#: school/templates/school/teacher_detail.html:95
 #: school/templates/school/classroom/change_classroom.html:65
 #: school/templates/school/student/student_detail.html:106
 msgid "Save"
@@ -2148,20 +2152,20 @@ msgstr "Ajouter une matière"
 msgid "Responsibilities"
 msgstr "Responsabilités"
 
-#: school/templates/school/teacher_detail.html:88
+#: school/templates/school/teacher_detail.html:89
 msgid "Click + to add new subjects for this teacher"
 msgstr "Cliquer sur + pour ajouter de nouvelles matières pour cet enseignant"
 
-#: school/templates/school/teacher_detail.html:103
+#: school/templates/school/teacher_detail.html:104
 msgid "Add Subject"
 msgstr "Ajouter"
 
-#: school/templates/school/teacher_detail.html:109
-#: school/templates/school/classroom/classroom_detail.html:226
+#: school/templates/school/teacher_detail.html:110
+#: school/templates/school/classroom/classroom_detail.html:234
 msgid "Subject"
 msgstr "Matière"
 
-#: school/templates/school/teacher_detail.html:194
+#: school/templates/school/teacher_detail.html:195
 msgid "Teacher responsibilities updated"
 msgstr "Les responsabilités des enseignants ont été mises à jour"
 
@@ -2241,7 +2245,7 @@ msgid "Add new student"
 msgstr "Ajouter un nouvel élève"
 
 #: school/templates/school/classroom/classroom_detail.html:49
-#: school/templates/school/classroom/classroom_detail.html:456
+#: school/templates/school/classroom/classroom_detail.html:464
 msgid "Import student list from CSV file"
 msgstr "Importer une liste des élèves d'un fichier CSV"
 
@@ -2266,7 +2270,7 @@ msgid "Mark"
 msgstr "Noter"
 
 #: school/templates/school/classroom/classroom_detail.html:71
-#: school/templates/school/classroom/classroom_detail.html:221
+#: school/templates/school/classroom/classroom_detail.html:229
 msgid "Add lesson done"
 msgstr "Ajouter une leçon faite"
 
@@ -2274,73 +2278,80 @@ msgstr "Ajouter une leçon faite"
 msgid "Lessons"
 msgstr "Leçons"
 
-#: school/templates/school/classroom/classroom_detail.html:111
+#: school/templates/school/classroom/classroom_detail.html:112
+msgid ""
+"Student list must be added to class first. Please contact administrator."
+msgstr ""
+"La liste des élèves doit préalablement être ajoutée par l'administrateur. "
+"Prière de le contacter SVP."
+
+#: school/templates/school/classroom/classroom_detail.html:118
 #, python-format
 msgid "Add some students in %(classroom)s."
 msgstr "Ajouter des élèves en %(classroom)s."
 
-#: school/templates/school/classroom/classroom_detail.html:115
+#: school/templates/school/classroom/classroom_detail.html:122
 msgid "Add student"
 msgstr "Ajouter un élève"
 
-#: school/templates/school/classroom/classroom_detail.html:123
+#: school/templates/school/classroom/classroom_detail.html:130
 msgid "Import from CSV File"
 msgstr "Importer d'un fichier CSV"
 
-#: school/templates/school/classroom/classroom_detail.html:169
+#: school/templates/school/classroom/classroom_detail.html:177
 msgid "No professor"
 msgstr "Aucun professeur titulaire"
 
-#: school/templates/school/classroom/classroom_detail.html:172
-#: school/templates/school/classroom/classroom_detail.html:201
+#: school/templates/school/classroom/classroom_detail.html:180
+#: school/templates/school/classroom/classroom_detail.html:209
 msgid "Set now"
 msgstr "Renseigner maintenant"
 
-#: school/templates/school/classroom/classroom_detail.html:184
+#: school/templates/school/classroom/classroom_detail.html:192
 msgctxt "class size"
 msgid "Size"
 msgstr "Effectif"
 
-#: school/templates/school/classroom/classroom_detail.html:188
+#: school/templates/school/classroom/classroom_detail.html:196
 msgctxt "class leader"
 msgid "Leader"
 msgstr "Chef de classe"
 
-#: school/templates/school/classroom/classroom_detail.html:195
-#: school/templates/school/classroom/classroom_detail.html:364
+#: school/templates/school/classroom/classroom_detail.html:203
+#: school/templates/school/classroom/classroom_detail.html:372
 #: templates/core/service_detail.html:83
 msgid "Change"
 msgstr "Changer"
 
-#: school/templates/school/classroom/classroom_detail.html:199
+#: school/templates/school/classroom/classroom_detail.html:207
 msgid "Not set"
 msgstr "Non renseigné"
 
-#: school/templates/school/classroom/classroom_detail.html:237
+#: school/templates/school/classroom/classroom_detail.html:245
 msgid "Title"
 msgstr "Titre"
 
-#: school/templates/school/classroom/classroom_detail.html:243
+#: school/templates/school/classroom/classroom_detail.html:251
 msgid "Hours count"
 msgstr "Nombre d'heures"
 
-#: school/templates/school/classroom/classroom_detail.html:250
+#: school/templates/school/classroom/classroom_detail.html:258
 msgid "Lesson complete ?"
 msgstr "Leçon terminée ?"
 
-#: school/templates/school/classroom/classroom_detail.html:273
+#: school/templates/school/classroom/classroom_detail.html:281
 msgid "Import from CSV file"
 msgstr "Importer d'un fichier CSV"
 
-#: school/templates/school/classroom/classroom_detail.html:278
+#: school/templates/school/classroom/classroom_detail.html:286
 msgid "Download CSV file model..."
 msgstr "Télécharger unlefichier CSV modèle..."
 
-#: school/templates/school/classroom/classroom_detail.html:287
+#: school/templates/school/classroom/classroom_detail.html:295
 msgid "Set invoices"
 msgstr "Émettre des factures"
 
-#: school/templates/school/classroom/classroom_detail.html:290
+#: school/templates/school/classroom/classroom_detail.html:298
 msgid ""
 "\n"
 "                                    Tuition fees for those student will be "
@@ -2356,7 +2367,7 @@ msgstr ""
 "paiement par les parents.\n"
 "                                "
 
-#: school/templates/school/classroom/classroom_detail.html:294
+#: school/templates/school/classroom/classroom_detail.html:302
 msgid ""
 "\n"
 "                                    Tuition fees for those student will be "
@@ -2372,27 +2383,27 @@ msgstr ""
 "strong>\n"
 "                                "
 
-#: school/templates/school/classroom/classroom_detail.html:307
+#: school/templates/school/classroom/classroom_detail.html:315
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: school/templates/school/classroom/classroom_detail.html:356
+#: school/templates/school/classroom/classroom_detail.html:364
 msgid "Click on the desired student now."
 msgstr "Cliquez maintenant sur l'élève désiré."
 
-#: school/templates/school/classroom/classroom_detail.html:379
+#: school/templates/school/classroom/classroom_detail.html:387
 msgid "Some scores have not been set."
 msgstr "Certaines notes n'ont pas été renseignées."
 
-#: school/templates/school/classroom/classroom_detail.html:384
+#: school/templates/school/classroom/classroom_detail.html:392
 msgid "Please, review before you submit."
 msgstr "S'il vous plaît, vérifiez avant de soumettre."
 
-#: school/templates/school/classroom/classroom_detail.html:412
+#: school/templates/school/classroom/classroom_detail.html:420
 msgid "Scores successfully saved"
 msgstr "Les notes ont été sauvegardées avec succès"
 
-#: school/templates/school/classroom/classroom_detail.html:463
+#: school/templates/school/classroom/classroom_detail.html:471
 msgid "Upload student from CSV file"
 msgstr "Uploader les élève à partir d'un fichier CSV"
 

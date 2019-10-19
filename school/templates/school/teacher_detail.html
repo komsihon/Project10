@@ -49,13 +49,14 @@
                         {% for subject in teacher_subject_list %}
                         <div role="presentation" class="tab {{ subject.slug }}{% if forloop.counter == 1 %} active{% endif %}"
                              data-subject-id="{{ subject.id }}">
-                            <a href="#{{ subject.id }}" aria-controls="{{ subject.id }}"
-                               role="tab" data-toggle="tab">{{ subject }}</a>
+                            <a href="#{{ subject.id }}" aria-controls="{{ subject.id }}" role="tab" data-toggle="tab">
+                                <span class="hidden-xs">{{ subject }}</span>
+                                <span class="visible-xs">{{ subject|truncatechars:"12" }}</span>
+                            </a>
                         </div>
                         {% endfor %}
                         <div role="presentation" class="tab show-add-subject">
-                            <a href="javascript:;" aria-controls="student-list"
-                               role="tab" data-toggle="tab">
+                            <a href="javascript:;" aria-controls="student-list" role="tab" data-toggle="tab">
                                 <i class="fa fa-plus"></i>
                             </a>
                         </div>

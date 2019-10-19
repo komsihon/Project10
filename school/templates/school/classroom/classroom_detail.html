@@ -106,26 +106,34 @@
                             {% include 'school/snippets/classroom/student_list.html' %}
                         </ul>
                     {% else %}
-                        <div class="col-sm-10 col-sm-offset-1">
-                            <div class="empty-list">
-                                <p class="notice">{% blocktrans %}Add some students in {{ classroom }}.{% endblocktrans %}</p>
-                                <div>
-                                    <a href="{{ change_student_url }}" class="btn btn-success btn-green" style="margin-bottom: 2vh">
-                                        <i class="glyphicon glyphicon-plus"></i>
-                                        {% trans "Add student" %}
-                                    </a>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div>
-                                    <button class="btn btn-success btn-green" style="clear: both"
-                                       data-toggle="modal" data-target="#modal-import">
-                                        <i class="fa fa-file-import"></i>
-                                        {% trans "Import from CSV File" %}
-                                    </button>
-                                    <div class="clearfix"></div>
+                        {% if request.session.is_teacher %}
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <div class="empty-list">
+                                    <p class="notice">{% trans "Student list must be added to class first. Please contact administrator." %}</p>
                                 </div>
                             </div>
-                        </div>
+                        {% else %}
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <div class="empty-list">
+                                    <p class="notice">{% blocktrans %}Add some students in {{ classroom }}.{% endblocktrans %}</p>
+                                    <div>
+                                        <a href="{{ change_student_url }}" class="btn btn-success btn-green" style="margin-bottom: 2vh">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            {% trans "Add student" %}
+                                        </a>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-success btn-green" type="button" style="clear: both"
+                                           data-toggle="modal" data-target="#modal-import">
+                                            <i class="fa fa-file-import"></i>
+                                            {% trans "Import from CSV File" %}
+                                        </button>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endif %}
                     {% if student_list|length > 0 and request.session.is_teacher %}
                     <div class="submit-scores tpl">
@@ -274,7 +282,7 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <div class="hidden-xs" style="padding-top: 1.5vh;">
+                        <div style="padding-top: 1.5vh;">
                             <a href="{% static "foulassi/ikwen_Foulassi_import_student.csv" %}" style="text-decoration: none;">{% trans "Download CSV file model..." %}</a>
                         </div>
                         <div id="upload-container" class="upload-container text-center" style="padding-top: 1vh;width: 100%">
