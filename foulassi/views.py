@@ -81,6 +81,8 @@ class AdminHome(TemplateView):
                 next_url = reverse('school:subject_list') + '?first_setup=yes'
                 return HttpResponseRedirect(next_url)
         elif user.is_anonymous() or (user.is_authenticated() and not user.is_staff):
+            if user.is_authenticated():
+                logout(request)
             next_url = reverse('ikwen:sign_in') + '?next=' + reverse('foulassi:admin_home')
             return HttpResponseRedirect(next_url)
         return super(AdminHome, self).get(request, *args, **kwargs)
