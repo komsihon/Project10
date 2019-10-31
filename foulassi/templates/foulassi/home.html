@@ -21,7 +21,7 @@
 
 {% block head_style %}
     {{ block.super }}
-    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />
+    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?V=31.10.19.19.09" />
     <style type="text/css">
         .edge-panel-left .wrapper {padding: 0 0 120px;}
         section.main-feat {background:url("{% static 'foulassi/img/foulassi-home-bg.jpg' %}") center;background-size: cover;}
@@ -179,6 +179,13 @@
             .for-schools {background-position-x: 360px}
         }
     </style>
+{% endblock %}
+
+{% block header_brand %}
+    <a class="navbar-brand hidden-xs" href="{{ service.url }}">
+        <img style="height: 30px" src="{% static 'website/img/logo-ikwen_for-header_white.png' %}"/>
+    </a>
+    <strong class="navbar-brand visible-xs">{{ service.project_name }}</strong>
 {% endblock %}
 
 {% block head_js %}
