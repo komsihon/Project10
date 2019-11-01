@@ -1,6 +1,11 @@
 
 @import url('https://fonts.googleapis.com/css?family=Hind+Madurai:700&display=swap');
-.edge-panel-left .wrapper {padding: 0 0 120px;}
+.edge-panel-left .wrapper {padding: 0 0 120px;}#navbar-search input {background: #f6f6f6;}
+.navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a { color: #217DBB!important; }
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover { color: #1f356a!important; }
+.dropdown-menu>li>a { color: #217DBB !important; }
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {color: #FFF !important;background-color: #217DBB !important;}
+.dropdown-menu .username { color: #233682 }
 body {background: none; color: #616675}
 h1, h2 {font-family: "Hind Madurai", Lato, sans-serif; font-weight: 700}
 footer {clear: both; display: block; float: none; height: 75vh; margin: 0;}
@@ -10,11 +15,9 @@ section.address .cover h2 {font-size: 33px; font-weight: 600; padding-top: 10vh}
 section.address .cover p {font-size: 18px}
 section.address a {color: #2f2f2f;font-size: 18px;font-weight: 300;}
 section.site {min-height: 100px; padding: 137px 0}
-#navbar .glyphicon, #navbar .glyphicon.glyphicon-search, section.site h1 {color: #171b36}
 section.site:nth-child(2n) {background-color: #fff}
 section.site img {width: 60%;}
 section.site h2 {color: #201a3a}
-#navbar .btn {background: #FFF !important; color: #233682 !important;}
 .effective-solution h3 {color: #7d87a0; font-size: 14px; font-weight: 700}
 section.why-foulassi h3 {font-size: 21px;color: #29163e}
 section.why-foulassi img {width: 60px}
@@ -25,11 +28,6 @@ section.why-foulassi img {width: 60px}
 .features.site {margin-top: 0}
 .features.site h1 {color: #2d2d2d}
 section.site.main-feat.banner {height: 100vh;padding-top: 20vh;}
-#navbar {background: transparent}
-.navbar-brand strong {color: #fff}
-.navbar-default .navbar-nav>li>a , .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a{color: #171b36}
-#navbar-search {display: none}
-#navbar-search input {background: #f6f6f6;}
 section.site .btn.cta {background: #4aa1e9; border: #4aa1e9; color: #ffffff; font-family: Lato; font-size: 16px; line-height: 28px; letter-spacing: 3px}
 section.site.banner {margin-top: 0}
 section.good-company h3 {font-size: 18px; font-weight: 700}
@@ -97,7 +95,6 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     section.site.banner h1 {font-size: 33px;line-height: 38px;font-weight: 600;}
     section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px;}
     section.site p {margin-top: 15px;text-align: justify;font-size: 16px;font-weight: 400;line-height: 24px;}
-    #navbar-search input {background: none}
     section.why-foulassi img {width: 60px}
     section.why-foulassi .features > div {margin-bottom: 24px}
     section.good-company h3 {font-size: 18px; font-weight: 700}
@@ -146,7 +143,6 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
 }
 
 @media only screen and (min-width : 992px) {
-    .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {color: #fff}
     section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 130px;}
     section.header h3 {color: #000; font-size: 33px;font-weight: 400;  line-height: 94px;}
     section.header {height: 900px}
@@ -170,7 +166,6 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
 }
 
 @media only screen and (min-width : 1200px) {
-    #navbar-search {display: block}
     section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 170px;}
     section.site {padding: 135px 0}
     .screenshots section.site {padding: 0}

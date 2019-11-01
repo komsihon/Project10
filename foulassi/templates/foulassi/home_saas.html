@@ -7,6 +7,7 @@
 {% block meta %}
     {% include 'foulassi/snippets/color_and_icons.html' %}
     <meta name="apple-mobile-web-app-title" content="Foulassi" />
+    <meta name="copyright" content="ikwen." >
 
     <meta name="abstract" content="{% trans "Effective school management solution" %}"/>
     <meta name="description" content="{% trans "Foulassi lets staffs, teachers and parents connect and work together to manage the school and students." %}"/>
@@ -21,8 +22,16 @@
 {% block head_style %}
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />
-    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=19.9.15" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=19.11.1.12.35" />
 {% endblock %}
+{% block header_brand %}
+    <a class="navbar-brand hidden-xs" href="{{ service.url }}">
+        <img src="{% static 'website/img/logo-ikwen_for-header.png' %}">
+    </a>
+    <strong class="navbar-brand visible-xs">{{ service.project_name }}</strong>
+{% endblock %}
+
+
 
 {% block page_content %}
     <section class="main-feat banner site">
@@ -424,15 +433,16 @@
     {{ block.super }}
     <script>
         (() => {
-            var scrollBreakPoint = 90;
+            let scrollBreakPoint = 90;
             $(window).scroll((event) => {
-                var scrollTop = $(this).scrollTop();
+                let scrollTop = $(this).scrollTop();
                 if (scrollTop > scrollBreakPoint){
-                    var opacity = Math.abs(scrollBreakPoint - scrollTop) / 100;
-                    $('#navbar').css("background-color", `rgba(255, 255, 255, ${opacity})`);
+                    let opacity = Math.abs(scrollBreakPoint - scrollTop) / 100;
+                    $('#navbar').css("background-color", `rgba(255, 255, 255, ${opacity})`).addClass('has-shade');
+
                     {#if ($(window).width() > 767) $('#navbar-search input').css("background-color", `rgba(26, 39, 93, ${opacity})`);#}
                 } else {
-                    $('#navbar').css("background-color", "transparent");
+                    $('#navbar').css("background-color", "transparent").removeClass('has-shade');
                     {#if ($(window).width() > 767) $('#navbar-search input').css("background-color", "rgba(102, 102, 102, .4)");#}
                 }
             });
