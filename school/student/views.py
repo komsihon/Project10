@@ -354,7 +354,7 @@ class StudentDetail(ChangeObjectBase):
         if invoice.is_my_kids:
             return HttpResponse(json.dumps({'error': "Not allowed"}))
         payment = Payment.objects.create(invoice=invoice, amount=amount, method=Payment.CASH, cashier=self.request.user)
-        invoice.paid = amount
+        invoice.paid += amount
         invoice.save()
         invoice.save(using=UMBRELLA)
         response = {'success': True}

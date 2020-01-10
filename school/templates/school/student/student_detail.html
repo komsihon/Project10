@@ -89,7 +89,7 @@
                                             <input id="parent-phone" class="form-control input-sm" placeholder="{% trans "Phone" %}" />
                                         </div>
                                         <div class="col-sm-4 form-group">
-                                            <input id="parent-email" class="form-control input-sm" placeholder="{% trans "Email" %}" />
+                                            <input id="parent-email" type="email" class="form-control input-sm" placeholder="{% trans "Email" %}" />
                                         </div>
                                         <div class="col-sm-2 form-group">
                                             <button type="button" class="btn btn-sm btn-success save-parent">OK</button>
@@ -265,9 +265,11 @@
                 }
                 $.getJSON('', params, function(data) {
                     if (data.success) {
-                        var toBePaid = $('#' + invoiceId).data('to-be-paid'),
+                        let $invoice = $(`#${invoiceId}`),
+                            toBePaid = $invoice.data('to-be-paid'),
                             rest = toBePaid - amount;
-                        $('#' + invoiceId + ' .amount .value').text(rest.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                        $invoice.data('to-be-paid', rest);
+                        $(`#${invoiceId} .amount .value`).text(rest.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
                         var $payment = $('li.payment.tpl').clone().removeClass('tpl');
                         $payment.find('.amount').text(amount.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
                         $payment.find('.details').text(title);
@@ -305,7 +307,7 @@
                         $('#parent-name, #parent-relation, #parent-phone, #parent-email').val('')
                     }
                 })
-            })
+            });
             {% if request.GET.showTab %}
                 var tabName = '{{ request.GET.showTab }}',
                     _$tab = $('.tab.{{ request.GET.showTab }}');

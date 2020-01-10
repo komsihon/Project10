@@ -72,17 +72,17 @@ class Student(Model):
     UPLOAD_TO = 'foulassi/students'
     school = models.ForeignKey(Service, blank=True, null=True,
                                related_name='+', default=get_service_instance)
-    registration_number = models.CharField(max_length=30, unique=True)
-    first_name = models.CharField(max_length=100, db_index=True)
-    last_name = models.CharField(max_length=100, db_index=True)
-    gender = models.CharField(max_length=15, choices=GENDER_CHOICES, db_index=True)
+    registration_number = models.CharField(_("Registration number"), max_length=30, unique=True)
+    first_name = models.CharField(_("First name"), max_length=100, db_index=True)
+    last_name = models.CharField(_("Last name"), max_length=100, db_index=True)
+    gender = models.CharField(_("Gender"), max_length=15, choices=GENDER_CHOICES, db_index=True)
     dob = models.DateField(_("Date of birth"), db_index=True)
     birthday = models.IntegerField(blank=True, null=True, db_index=True)
     photo = MultiImageField(upload_to=UPLOAD_TO, blank=True, null=True,
                             max_size=600, small_size=200, thumb_size=100, editable=False)
-    classroom = models.ForeignKey('school.Classroom')
-    is_repeating = models.BooleanField(default=False)
-    year_joined = models.IntegerField(default=get_school_year, db_index=True,
+    classroom = models.ForeignKey('school.Classroom', verbose_name=_("Classroom"))
+    is_repeating = models.BooleanField(_("Repeats the class ?"), default=False)
+    year_joined = models.IntegerField(_("Year joined"), default=get_school_year, db_index=True,
                                       help_text=_("Year when student joined this school"))
     score_history = ListField()
     school_year = models.IntegerField(default=get_school_year, db_index=True)
@@ -271,14 +271,18 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
     )
     theme = models.ForeignKey(Theme, blank=True, null=True)
     back_to_school_date = models.DateTimeField(blank=True, null=True)
-    registration_fees_title = models.CharField(max_length=60, default=_("Registration fees"))
-    registration_fees_deadline = models.DateField(blank=True, null=True)
-    first_instalment_title = models.CharField(max_length=60, default=_("First instalment"))
-    first_instalment_deadline = models.DateField(blank=True, null=True)
-    second_instalment_title = models.CharField(max_length=60, default=_("Second instalment"))
-    second_instalment_deadline = models.DateField(blank=True, null=True)
-    third_instalment_title = models.CharField(max_length=60, default=_("Third instalment"))
-    third_instalment_deadline = models.DateField(blank=True, null=True)
+    registration_fees_title = models.CharField(_("Registration fees title"), max_length=60,
+                                               default=_("Registration fees"))
+    registration_fees_deadline = models.DateField(_("Registration fees deadline"), blank=True, null=True)
+    first_instalment_title = models.CharField(_("First instalment title"), max_length=60,
+                                              default=_("First instalment"))
+    first_instalment_deadline = models.DateField(_("First instalment deadline"), blank=True, null=True)
+    second_instalment_title = models.CharField(_("Second instalment title"), max_length=60,
+                                               default=_("Second instalment"))
+    second_instalment_deadline = models.DateField(_("Second instalment deadline"), blank=True, null=True)
+    third_instalment_title = models.CharField(_("Third instalment title"), max_length=60,
+                                              default=_("Third instalment"))
+    third_instalment_deadline = models.DateField(_("Third instalment deadline"), blank=True, null=True)
     session_group_avg = models.CharField(max_length=60, choices=SESSION_AVG_CALCULATION_CHOICES, default=AVERAGE_OF_ALL,
                                          help_text=_("Method of calculation of Term score. Average of sessions "
                                                      "scores or best score of all sessions."))

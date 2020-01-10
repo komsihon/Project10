@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 
 from django.contrib import messages
@@ -94,9 +96,9 @@ class ChangeLevel(ChangeObjectBase):
             obj.save()
             next_url = self.get_object_list_url(request, obj)
             if object_id:
-                notice = obj._meta.verbose_name.capitalize() + ' <strong>' + str(obj).decode('utf8') + '</strong> ' + _('successfully updated')
+                notice = u'%s <strong>%s</strong> %s' % (obj._meta.verbose_name.capitalize(), unicode(obj), _('successfully updated'))
             else:
-                notice = obj._meta.verbose_name.capitalize() + ' <strong>' + str(obj).decode('utf8') + '</strong> ' + _('successfully created')
+                notice = u'%s <strong>%s</strong> %s' % (obj._meta.verbose_name.capitalize(), unicode(obj), _('successfully created'))
             messages.success(request, notice)
             return HttpResponseRedirect(next_url)
         else:

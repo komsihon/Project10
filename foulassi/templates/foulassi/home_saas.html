@@ -24,14 +24,13 @@
     <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />
     <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=19.11.1.12.35" />
 {% endblock %}
+
 {% block header_brand %}
     <a class="navbar-brand hidden-xs" href="{{ service.url }}">
         <img src="{% static 'website/img/logo-ikwen_for-header.png' %}">
     </a>
     <strong class="navbar-brand visible-xs">{{ service.project_name }}</strong>
 {% endblock %}
-
-
 
 {% block page_content %}
     <section class="main-feat banner site">
@@ -41,7 +40,7 @@
                     <img src="{% static 'foulassi/img/foulassi-one-platform-everyone.png' %}" alt="One platform, everyone" style="width: 100%"/>
                 </div>
                 <div class="col-sm-5">
-                    <h1>{% blocktrans %}One Platform<br/>Everybody{% endblocktrans %}</h1>
+                    <h1 style="color: #201a3a">{% blocktrans %}One Platform<br/>Everybody{% endblocktrans %}</h1>
                     <p>
                         {% blocktrans %}
                             Built with the idea of collaborative and social platform, Foulassi lets staffs,

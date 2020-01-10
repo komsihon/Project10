@@ -29,7 +29,7 @@ from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen_foulassi.foulassi.models import Student, Teacher, Invoice, get_school_year, Parent
 from ikwen_foulassi.foulassi.utils import remove_student_from_parent_profile, set_student_counts, check_all_scores_set
 from ikwen_foulassi.reporting.utils import set_counters, calculate_session_report, \
-    calculate_session_group_report, set_stats, set_daily_counters, set_daily_counters_many
+    calculate_session_group_report, set_stats, set_daily_counters_many
 from ikwen_foulassi.foulassi.admin import StudentResource
 from ikwen_foulassi.reporting.models import SessionReport, LessonReport
 from ikwen_foulassi.school.admin import ClassroomAdmin

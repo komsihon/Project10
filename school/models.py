@@ -18,13 +18,13 @@ class Level(Model, ResultsTracker):
     """
     A school level
     """
-    name = models.CharField(max_length=30,
+    name = models.CharField(_("Name"), max_length=30,
                             help_text=_("<strong>Eg:</strong> Form1, Form2, ..."))
     slug = models.SlugField()
-    registration_fees = models.IntegerField(default=0)
-    first_instalment = models.IntegerField(default=0)
-    second_instalment = models.IntegerField(default=0)
-    third_instalment = models.IntegerField(default=0)
+    registration_fees = models.IntegerField(_("Registration fees"), default=0)
+    first_instalment = models.IntegerField(_("First instalment"), default=0)
+    second_instalment = models.IntegerField(_("Second instalment"), default=0)
+    third_instalment = models.IntegerField(_("Third instalment"), default=0)
     order_of_appearance = models.IntegerField(default=0)
     subject_coefficient_list = ListField(EmbeddedModelField('SubjectCoefficient'))
 
@@ -40,16 +40,16 @@ class Level(Model, ResultsTracker):
 
 
 class Classroom(Model, ResultsTracker):
-    level = models.ForeignKey(Level)
-    name = models.CharField(max_length=30,
+    level = models.ForeignKey(Level, verbose_name=_("Level"))
+    name = models.CharField(_("Name"), max_length=30,
                             help_text=_("Raw name of the class. Don't write the level again. <br>Eg: A, B ... "
                                         "The level will be added to get the full name."))
     slug = models.SlugField()
-    registration_fees = models.IntegerField(default=0)
-    first_instalment = models.IntegerField(default=0)
-    second_instalment = models.IntegerField(default=0)
-    third_instalment = models.IntegerField(default=0)
-    professor = models.ForeignKey(Teacher, blank=True, null=True)
+    registration_fees = models.IntegerField(_("Registration fees"), default=0)
+    first_instalment = models.IntegerField(_("First instalment"), default=0)
+    second_instalment = models.IntegerField(_("Second instalment"), default=0)
+    third_instalment = models.IntegerField(_("Third instalment"), default=0)
+    professor = models.ForeignKey(Teacher, verbose_name=_("Professor"), blank=True, null=True)
     leader = models.ForeignKey(Student, related_name='leaders', blank=True, null=True)
     subject_coefficient_list = ListField(EmbeddedModelField('SubjectCoefficient'))
 
@@ -74,7 +74,7 @@ class Classroom(Model, ResultsTracker):
 
 
 class Subject(Model):
-    name = models.CharField(max_length=60, unique=True)
+    name = models.CharField(_("Name"), max_length=60, unique=True)
     slug = models.SlugField(unique=True)
     is_visible = models.BooleanField(default=True)
 
@@ -168,10 +168,10 @@ class SessionGroup(Model, ResultsTracker):
     """
     A group of exam sessions (Term, Semester, ...)
     """
-    name = models.CharField(max_length=60)
+    name = models.CharField(_("Name"), max_length=60)
     slug = models.SlugField(blank=True, null=True)
-    starts_on = models.DateField(default=datetime.now)
-    ends_on = models.DateField(default=datetime.now)
+    starts_on = models.DateField(_("Starts on"), default=datetime.now)
+    ends_on = models.DateField(_("Ends on"), default=datetime.now)
 
     class Meta:
         ordering = ('id', 'name', )
@@ -185,14 +185,17 @@ class SessionGroup(Model, ResultsTracker):
         return all_sessions.index(self)
     order_number = property(_get_order_number)
 
+    def get_obj_details(self):
+        return self.starts_on.strftime('%Y, %m/%d') + ' - ' + self.ends_on.strftime('%Y, %m/%d')
+
 
 class Session(Model, ResultsTracker):
     """
     An examination session
     """
-    name = models.CharField(max_length=60)
+    name = models.CharField(_("Name"), max_length=60)
     slug = models.SlugField(blank=True, null=True)
-    session_group = models.ForeignKey(SessionGroup, blank=True, null=True)
+    session_group = models.ForeignKey(SessionGroup, verbose_name=_("Session group"), blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_current = models.BooleanField(default=False)
     all_scores_set_on = models.DateTimeField(blank=True, null=True)
@@ -211,6 +214,9 @@ class Session(Model, ResultsTracker):
         all_sessions = list(Session.objects.filter(school_year=get_school_year()))
         return all_sessions.index(self)
     order_number = property(_get_order_number)
+
+    def get_obj_details(self):
+        return self.starts_on.strftime('%Y, %m/%d') + ' - ' + self.ends_on.strftime('%Y, %m/%d')
 
     @staticmethod
     def get_current():
@@ -233,10 +239,10 @@ class Lesson(Model):
     """
     Lesson taught by a teacher in a Classroom session
     """
-    classroom = models.ForeignKey(Classroom)
-    subject = models.ForeignKey(Subject)
-    teacher = models.ForeignKey(Teacher)
-    title = models.CharField(max_length=150, blank=True, null=True)
+    classroom = models.ForeignKey(Classroom, verbose_name=_("Classroom"))
+    subject = models.ForeignKey(Subject, verbose_name=_("Subject"))
+    teacher = models.ForeignKey(Teacher, verbose_name=_("Teacher"))
+    title = models.CharField(_("Title"), max_length=150, blank=True, null=True)
     hours_count = models.IntegerField()
     is_complete = models.BooleanField(default=False)
     school_year = models.IntegerField(default=get_school_year, db_index=True)
@@ -293,12 +299,12 @@ class DisciplineItem(Model):
     PARENT_CONVOCATION = 'parent-convocation'
     TEMPORARY_EXCLUSION = 'temporary-exclusion'
     EXCLUSION = 'exclusion'
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(_("Title"), max_length=100, unique=True)
     slug = models.SlugField(unique=True)
-    unit = models.CharField(max_length=15, blank=True, null=True)
+    unit = models.CharField(_("Unit"), max_length=15, blank=True, null=True)
     editable = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
-    has_count = models.BooleanField(default=True)
+    has_count = models.BooleanField(_("With counter ?"), default=True)
 
     def __unicode__(self):
         return self.name
