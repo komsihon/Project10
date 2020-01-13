@@ -72,7 +72,7 @@
                     <div class="di-details text-muted">{{ payment.invoice.get_title }}</div>
                 </div>
                 <div class="col-xs-2">
-                    <div class="di-happened-on pull-right">{{ payment.happened_on|date }}</div>
+                    <div class="di-happened-on pull-right">{{ payment.created_on|date:"Y-m-d H:i" }}</div>
                 </div>
             </div>
         </li>

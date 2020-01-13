@@ -84,12 +84,18 @@
                         {% for subject in subject_list %}
                             <div role="presentation" data-id="{{ subject.id }}" class="tab {{ subject.slug }}{% if forloop.counter == 1 %} active{% endif %}">
                                 <a href="#tab-{{ forloop.counter0 }}" aria-controls="student-list-stage"
-                                   role="tab" data-toggle="tab">
-                                    <span class="hidden-xs">{{ subject }}</span>
+                                   role="tab" data-toggle="tab" title="{{ subject }}">
+                                    <span class="hidden-xs">{{ subject|truncatechars:"15" }}</span>
                                     <span class="visible-xs">{{ subject|truncatechars:"10" }}</span>
                                 </a>
                             </div>
                         {% endfor %}
+                    </div>
+                    <div class="swiper-button-next has-shade hidden-xs">
+                        <i class="fa fa-angle-right"></i>
+                    </div>
+                    <div class="swiper-button-prev has-shade hidden-xs">
+                        <i class="fa fa-angle-left"></i>
                     </div>
                 </div>
             </div>
@@ -283,7 +289,7 @@
                 <div class="modal-body">
                     <div>
                         <div style="padding-top: 1.5vh;">
-                            <a href="{% static "foulassi/ikwen_Foulassi_import_student.csv" %}" style="text-decoration: none;">{% trans "Download CSV file model..." %}</a>
+                            <a href="{% get_static_prefix %}foulassi/ikwen_Foulassi_import_student_{{ LANGUAGE_CODE|lower }}.csv" style="text-decoration: none;">{% trans "Download CSV file model..." %}</a>
                         </div>
                         <div id="upload-container" class="upload-container text-center" style="padding-top: 1vh;width: 100%">
                             <div class="uploader" style="display: block; margin: auto; position: static; height: 120px"></div>

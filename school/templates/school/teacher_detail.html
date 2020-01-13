@@ -8,6 +8,9 @@
 {% block head_style %}
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'ikwen/swiper/css/swiper.min.css' %}" />
+    <style>
+        .tab.show-add-subject a {text-align: left}
+    </style>
 {% endblock %}
 
 {% block head_js %}
@@ -49,17 +52,24 @@
                         {% for subject in teacher_subject_list %}
                         <div role="presentation" class="tab {{ subject.slug }}{% if forloop.counter == 1 %} active{% endif %}"
                              data-subject-id="{{ subject.id }}">
-                            <a href="#{{ subject.id }}" aria-controls="{{ subject.id }}" role="tab" data-toggle="tab">
-                                <span class="hidden-xs">{{ subject }}</span>
-                                <span class="visible-xs">{{ subject|truncatechars:"12" }}</span>
+                            <a href="#{{ subject.id }}" aria-controls="{{ subject.id }}" role="tab" data-toggle="tab"
+                               title="{{ subject }}">
+                                <span class="hidden-xs">{{ subject|truncatechars:"15" }}</span>
+                                <span class="visible-xs">{{ subject|truncatechars:"10" }}</span>
                             </a>
                         </div>
                         {% endfor %}
                         <div role="presentation" class="tab show-add-subject">
-                            <a href="javascript:;" aria-controls="student-list" role="tab" data-toggle="tab">
+                            <a href="javascript:;" role="tab" data-toggle="tab">
                                 <i class="fa fa-plus"></i>
                             </a>
                         </div>
+                    </div>
+                    <div class="swiper-button-next has-shade hidden hidden-xs">
+                        <i class="fa fa-angle-right"></i>
+                    </div>
+                    <div class="swiper-button-prev has-shade hidden hidden-xs">
+                        <i class="fa fa-angle-left"></i>
                     </div>
                 </div>
             </div>
@@ -144,7 +154,8 @@
             }).on('click', '#add-subject button.ok', function() {
                 var subjectId = $('#new-subject').val(),
                     subjectName = $('#new-subject option:selected').text(),
-                    params = {'action': 'add_subject', 'subject_id': subjectId};
+                    params = {'action': 'add_subject', 'subject_id': subjectId},
+                    max = $(window).width() < 768 ? 10: 15;
                 $.ajax({
                     data: params,
                     error: function() {
@@ -160,8 +171,10 @@
                             $('.tab').removeClass('active');
                             $('.tab.show-add-subject').clone().removeClass('show-add-subject').addClass('active')
                                 .insertBefore('.tab.show-add-subject').data('subject-id',subjectId).find('a')
-                                .attr('href', '#' + subjectId).prop('aria-controls', subjectId).text(subjectName);
-                            $(response).insertBefore('#admin-content .tab-content .clearfix');
+                                .prop({href: `#${subjectId}`, title: subjectName}).text(subjectName.substr(0, max));
+                            $(response).insertAfter('#admin-content .tab-content .tab-pane:last');
+                            ikwen.reloadTabView();
+                            $('#new-subject option:selected').remove();
                             $('#add-subject').modal('hide');
                         }
                     }

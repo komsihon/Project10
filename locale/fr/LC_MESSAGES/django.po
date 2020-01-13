@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-10 11:16+0000\n"
-"PO-Revision-Date: 2020-01-10 14:10+0100\n"
+"POT-Creation-Date: 2020-01-11 17:11+0000\n"
+"PO-Revision-Date: 2020-01-11 18:12+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1218,7 +1218,7 @@ msgstr "Suggestions"
 #: foulassi/templates/foulassi/events/report_cards_generated.html:41
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:42
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:87
-#: school/templates/school/teacher_detail.html:127
+#: school/templates/school/teacher_detail.html:128
 #: school/templates/school/teacher_list.html:96
 #: school/templates/school/classroom/classroom_detail.html:142
 #: school/templates/school/classroom/classroom_detail.html:268
@@ -1804,16 +1804,12 @@ msgstr "Fin"
 msgid "Session group"
 msgstr "Groupe"
 
-#: school/models.py:219
-msgid "%Y, %m/%d"
-msgstr "%Y, %d/%m"
-
-#: school/models.py:243 school/templates/school/teacher_detail.html:110
+#: school/models.py:243 school/templates/school/teacher_detail.html:111
 #: school/templates/school/classroom/classroom_detail.html:234
 msgid "Subject"
 msgstr "Matière"
 
-#: school/models.py:244 school/views.py:226
+#: school/models.py:244 school/views.py:228
 #: school/templates/school/classroom/change_classroom.html:14
 #: school/templates/school/classroom/change_classroom.html:30
 msgid "Teacher"
@@ -1832,12 +1828,16 @@ msgstr "Unité"
 msgid "With counter ?"
 msgstr "Compteur ?"
 
-#: school/views.py:97 school/views.py:99 school/classroom/views.py:361
-#: school/student/views.py:667
+#: school/views.py:99 school/classroom/views.py:361 school/student/views.py:667
 msgid "successfully updated"
 msgstr "mis à jour avec succès"
 
-#: school/views.py:227 templates/core/app_base_admin.html:43
+#: school/views.py:101 school/classroom/views.py:363
+#: school/student/views.py:669
+msgid "successfully created"
+msgstr "créé avec succès"
+
+#: school/views.py:229 templates/core/app_base_admin.html:43
 msgid "Teachers"
 msgstr "Enseignants"
 
@@ -2013,10 +2013,6 @@ msgstr ""
 msgid "All your classrooms"
 msgstr "Toutes vos classes"
 
-#: school/classroom/views.py:363 school/student/views.py:669
-msgid "successfully created"
-msgstr "créé avec succès"
-
 #: school/classroom/views.py:419
 msgid "No session created. Create sessions first."
 msgstr "Aucune séquence créée. Veuillez d'abord créer des séquences."
@@ -2110,7 +2106,7 @@ msgstr "Nouveau Justificatif"
 #: school/templates/school/change_level.html:52
 #: school/templates/school/change_session.html:38
 #: school/templates/school/change_subject.html:38
-#: school/templates/school/teacher_detail.html:95
+#: school/templates/school/teacher_detail.html:96
 #: school/templates/school/classroom/change_classroom.html:65
 #: school/templates/school/student/student_detail.html:106
 msgid "Save"
@@ -2236,15 +2232,15 @@ msgstr "Ajouter une matière"
 msgid "Responsibilities"
 msgstr "Responsabilités"
 
-#: school/templates/school/teacher_detail.html:89
+#: school/templates/school/teacher_detail.html:90
 msgid "Click + to add new subjects for this teacher"
 msgstr "Cliquer sur + pour ajouter de nouvelles matières pour cet enseignant"
 
-#: school/templates/school/teacher_detail.html:104
+#: school/templates/school/teacher_detail.html:105
 msgid "Add Subject"
 msgstr "Ajouter"
 
-#: school/templates/school/teacher_detail.html:195
+#: school/templates/school/teacher_detail.html:198
 msgid "Teacher responsibilities updated"
 msgstr "Les responsabilités des enseignants ont été mises à jour"
 
@@ -3051,6 +3047,9 @@ msgstr "Articles liés"
 #: templates/webnode/dreamer/detail.html:54
 msgid "Share"
 msgstr "Partager"
+
+#~ msgid "%Y, %m/%d"
+#~ msgstr "%Y, %d/%m"
 
 #~ msgid ""
 #~ "\n"
