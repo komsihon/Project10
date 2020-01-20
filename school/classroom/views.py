@@ -41,11 +41,13 @@ from import_export.formats.base_formats import XLS
 
 def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
     abs_path = getattr(settings, 'MEDIA_ROOT') + filename
+    # fh2 = processed_path = open(abs_path, 'w')
     fh = open(abs_path, 'r')
     line = fh.readline()
+    # fh2.write(line + '\n')
     fh.close()
     data = line.split(',')
-    delimiter = ',' if len(data) > 0 else ';'
+    delimiter = ',' if len(data) > 2 else ';'
     error = None
     row_length = 7
     row_length2 = 11  # Student info plus information of one parent. Parent info take 4 columns
@@ -114,12 +116,16 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                           "Please check." % {'year_joined': year_joined, 'line': i + 1})
                 break
             year = get_school_year()
-            if year_joined > year or year_joined < year - 3:
+            if year_joined > year:
                 error = _("Year joined <strong>%(year_joined)s</strong> on line %(line)d seems incorrect. "
                           "Please check." % {'year_joined': year_joined, 'line': i + 1})
                 break
 
-            if len(row) > row_length:  # Information for one parent were set
+            parent1_name, parent1_relationship, parent1_email, parent1_phone = None, None, None, None
+            parent2_name, parent2_relationship, parent2_email, parent2_phone = None, None, None, None
+
+            parent1_is_set = row[7] or row[8] or row[9] or row[10]
+            if parent1_is_set:  # Information for one parent were set
                 parent1_name = row[7]
                 if not parent1_name:
                     error = _("Missing parent name on line %d" % (i + 1))
@@ -143,7 +149,8 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                               "Phone must be composed of 9 digits." % {'phone': parent1_phone, 'line': (i + 1)})
                     break
 
-            if len(row) > row_length2:  # Information for second parent were set
+            parent2_is_set = row[11] or row[12] or row[13] or row[14]  # Information for second parent were set
+            if parent2_is_set:
                 parent2_name = row[11].strip()
                 if not parent2_name:
                     error = _("2nd parent name missing on line %d" % (i + 1))
@@ -174,10 +181,11 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                                   "Please change." % {'email': parent2_email, 'line': (i + 1)})
                         break
                 parent2_phone = row[14]
-                if not re.match('\d{9}', slugify(parent2_phone).replace('-', '')):
-                    error = _("2nd parent phone <strong>%(phone)s</strong> missing or incorrect on line %(line)d. "
-                              "Phone must be composed of 9 digits." % {'phone': parent2_phone, 'line': (i + 1)})
-                    break
+                if parent2_phone:
+                    if not re.match('\d{9}', slugify(parent2_phone).replace('-', '')):
+                        error = _("2nd parent phone <strong>%(phone)s</strong> missing or incorrect on line %(line)d. "
+                                  "Phone must be composed of 9 digits." % {'phone': parent2_phone, 'line': (i + 1)})
+                        break
                 if parent2_phone == parent1_phone:
                     error = _("1st and 2nd parent have the same phone <strong>%(phone)s</strong> on line %(line)d. "
                               "Please change." % {'phone': parent2_phone, 'line': (i + 1)})
@@ -196,13 +204,13 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                             .create(id=student.id, classroom=classroom, registration_number=reg_num,
                                     first_name=first_name, last_name=last_name, gender=gender, dob=dob,
                                     is_repeating=is_repeating, year_joined=year_joined, tags=tags)
-                        if len(row) > row_length:
+                        if parent1_is_set:
                             parent1 = Parent.objects.create(student=student, name=parent1_name, phone=parent1_phone,
                                                             email=parent1_email, relation=parent1_relationship)
                             Parent.objects.using(UMBRELLA)\
                                 .create(id=parent1.id, student=student_u, name=parent1_name, phone=parent1_phone,
                                         email=parent1_email, relation=parent1_relationship)
-                        if len(row) > row_length2:
+                        if parent2_is_set:
                             parent2 = Parent.objects.create(student=student, name=parent2_name, phone=parent2_phone,
                                                             email=parent2_email, relation=parent2_relationship)
                             Parent.objects.using(UMBRELLA)\

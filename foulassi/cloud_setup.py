@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
-import string
 import subprocess
 from datetime import datetime, timedelta
-from random import random
 from threading import Thread
+import logging
 
 from django import forms
 from django.conf import settings
@@ -16,16 +15,14 @@ from django.template import Context
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
 from django.utils.translation import gettext as _
-from ikwen_kakocase.kako.models import Product
-from ikwen_kakocase.kakocase.models import OperatorProfile, DeliveryOption
 from permission_backend_nonrel.models import UserPermissionList, GroupPermissionList
 
 from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen.accesscontrol.models import SUDO, Member
 from ikwen.billing.models import Invoice, PaymentMean, InvoicingConfig, SupportCode
 from ikwen.billing.utils import get_next_invoice_number
-from ikwen.conf.settings import STATIC_ROOT, STATIC_URL, CLUSTER_MEDIA_ROOT, CLUSTER_MEDIA_URL, WALLETS_DB_ALIAS
-from ikwen.core.models import Service, OperatorWallet, SERVICE_DEPLOYED, Application
+from ikwen.conf.settings import STATIC_ROOT, STATIC_URL, CLUSTER_MEDIA_ROOT, CLUSTER_MEDIA_URL
+from ikwen.core.models import Service, SERVICE_DEPLOYED, Application
 from ikwen.core.tools import generate_django_secret_key, generate_random_key, reload_server
 from ikwen.core.utils import add_database_to_settings, add_event, get_mail_content, \
     get_service_instance
@@ -34,9 +31,8 @@ from ikwen.partnership.models import PartnerProfile
 from ikwen.theming.models import Template, Theme
 from ikwen_foulassi.foulassi.models import SchoolConfig
 
-from echo.models import Balance
+from daraja.models import DARAJA
 
-import logging
 logger = logging.getLogger('ikwen')
 
 
@@ -262,15 +258,15 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
     invoice_total = 0
     for entry in invoice_entries:
         invoice_total += entry.item.amount * entry.quantity
-    invoice = Invoice(subscription=service, amount=invoice_total, number=number, due_date=expiry, last_reminder=now,
-                      reminders_sent=1, is_one_off=True, entries=invoice_entries,
+    invoice = Invoice(subscription=service, member=member, amount=invoice_total, number=number, due_date=expiry,
+                      last_reminder=now, reminders_sent=1, is_one_off=True, entries=invoice_entries,
                       months_count=billing_plan.setup_months_count)
     invoice.save(using=UMBRELLA)
     vendor = get_service_instance()
 
     if member != vendor.member:
         add_event(vendor, SERVICE_DEPLOYED, member=member, object_id=invoice.id)
-    if partner_retailer:
+    if partner_retailer and partner_retailer.app.slug != DARAJA:
         partner_profile = PartnerProfile.objects.using(UMBRELLA).get(service=partner_retailer)
         try:
             Member.objects.get(pk=member.id)

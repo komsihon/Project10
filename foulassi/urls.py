@@ -15,7 +15,7 @@ urlpatterns = patterns(
     url(r'^(?P<ikwen_name>[-\w]+)/justificatory/(?P<object_id>[-\w]+)$', login_required(ShowJustificatory.as_view()),
         name='show_justificatory'),
     url(r'^accessDenied/$', AccessDenied.as_view(), name='access_denied'),
-    url(r'^confirm_invoice_payment/(?P<tx_id>[-\w]+)/(?P<signature>[-\w]+)/(?P<lang>[-\w]+)$', confirm_invoice_payment, name='confirm_invoice_payment'),
+    url(r'^confirm_invoice_payment/(?P<tx_id>[-\w]+)/(?P<signature>[-\w]+)$', confirm_invoice_payment, name='confirm_invoice_payment'),
     url(r'^events/$', permission_required('foulassi.ik_view_event')(EventList.as_view()), name='event_list'),
 
     url(r'^deploy$', login_required(DeployCloud.as_view()), name='deploy_cloud'),

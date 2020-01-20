@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import logging
 from datetime import datetime
 
+from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
@@ -9,13 +11,19 @@ from permission_backend_nonrel.models import UserPermissionList
 from permission_backend_nonrel.utils import add_permission_to_user
 
 from ikwen.core.constants import FEMALE, MALE
-from ikwen.core.utils import get_service_instance
+from ikwen.core.utils import get_service_instance, add_database
+from ikwen.core.models import Service
 from ikwen.accesscontrol.models import Member
 from ikwen.accesscontrol.backends import UMBRELLA
+from ikwen.billing.utils import set_dara_stats
 
 from ikwen_foulassi.school.models import Classroom, get_subject_list, Score, Level
 from ikwen_foulassi.foulassi.models import get_school_year, ParentProfile, EventType, Event, \
     ALL_SCORES_SET
+
+from daraja.models import DARAJA, DarajaConfig
+
+logger = logging.getLogger('ikwen')
 
 
 def get_payment_confirmation_email_message(payment, parent_name, student_name):
@@ -176,3 +184,28 @@ def set_student_counts():
     school.girls_count = total_girls
     school.boys_count = total_boys
     school.save()
+
+
+def share_payment_and_set_stats(invoice, payment_mean_slug):
+    school = invoice.school
+    service_umbrella = Service.objects.get(pk=school.id)
+    partner = service_umbrella.retailer
+    if not partner:
+        return
+    partner_is_dara = True if partner.app.slug == DARAJA else False
+    if not (invoice.is_my_kids and partner_is_dara):
+        return
+    try:
+        dara_share = DarajaConfig.objects.get(service=get_service_instance()).referrer_share_rate
+        ikwen_earnings = invoice.amount * (100 - dara_share) / 100
+    except:
+        logger.error("Error calculating Dara earnings. Invoice #%s - Service %s" % (
+        invoice.number, service_umbrella.project_name))
+        return
+    partner_earnings = invoice.amount - ikwen_earnings
+    add_database(partner.database)
+    partner_original = Service.objects.select_related('member').using(partner.database).get(pk=partner.id)
+
+    partner.raise_balance(partner_earnings, payment_mean_slug)
+    service_partner = Service.objects.using(partner.database).get(pk=getattr(settings, 'IKWEN_SERVICE_ID'))
+    set_dara_stats(partner_original, service_partner, invoice, partner_earnings)

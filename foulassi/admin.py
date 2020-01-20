@@ -84,6 +84,8 @@ class SchoolConfigAdmin(admin.ModelAdmin):
     list_display = ('service', 'company_name')
     fieldsets = _fieldsets
     list_filter = ('company_name', 'contact_email', )
+    if not getattr(settings, 'IS_IKWEN', False):
+        readonly_fields = ('my_kids_fees', 'my_kids_payment_period', )
     save_on_top = True
 
     def delete_model(self, request, obj):
