@@ -205,12 +205,14 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                                     first_name=first_name, last_name=last_name, gender=gender, dob=dob,
                                     is_repeating=is_repeating, year_joined=year_joined, tags=tags)
                         if parent1_is_set:
+                            parent1_phone = slugify(parent1_phone).replace('-', '')
                             parent1 = Parent.objects.create(student=student, name=parent1_name, phone=parent1_phone,
                                                             email=parent1_email, relation=parent1_relationship)
                             Parent.objects.using(UMBRELLA)\
                                 .create(id=parent1.id, student=student_u, name=parent1_name, phone=parent1_phone,
                                         email=parent1_email, relation=parent1_relationship)
                         if parent2_is_set:
+                            parent2_phone = slugify(parent2_phone).replace('-', '')
                             parent2 = Parent.objects.create(student=student, name=parent2_name, phone=parent2_phone,
                                                             email=parent2_email, relation=parent2_relationship)
                             Parent.objects.using(UMBRELLA)\
@@ -388,7 +390,7 @@ class ClassroomDetail(ChangeObjectBase):
         classroom = context['classroom']
         member = self.request.user
         school_year = get_school_year(self.request)
-        student_list = classroom.student_set.filter(is_excluded=False)
+        student_list = classroom.student_set.filter(is_excluded=False).order_by('last_name')
         if member.has_perm('school.ik_access_scores'):
             try:
                 teacher = Teacher.objects.get(member=member, school_year=school_year)

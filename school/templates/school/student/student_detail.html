@@ -141,7 +141,7 @@
             $('#id_dob').keyup(function() {
                 var dob = $(this).val();
                 if (dob.length >= 10) $(this).datepicker("setDate", dob);
-            }).datepicker("option", {dateFormat: "dd/mm/yy"}).datepicker("setDate", {{ obj.dob|date:"d/m/Y" }});
+            }).datepicker("option", {dateFormat: "dd/mm/yy"}).datepicker("setDate", "{{ obj.dob|date:"d/m/Y" }}");
             $('#discipline-item-happened-on').datepicker({
                 altField: "#happened-on-alt",
                 altFormat: "yy-mm-dd"
