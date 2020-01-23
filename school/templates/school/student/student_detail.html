@@ -56,12 +56,15 @@
                             <ul class="list-group" style="padding: 0">
                                 {% for parent in student.parent_set.all %}
                                 <li class="list-group-item ik-li parent" id="{{ parent.id }}" data-id="{{ parent.id }}" data-model-name="foulassi.Parent">
-                                    <div class="parent-title">{{ parent.name }}: <span class="text-muted">{{ parent.relation }}</span></div>
+                                    <div class="parent-title">
+                                        <span class="name">{{ parent.name }}</span>:
+                                        <span class="relation text-muted">{{ parent.relation }}</span>
+                                    </div>
                                     <div class="parent-contact text-muted">
-                                        <span class="phone">{{ parent.phone }}</span>
-                                        <span>{% if parent.email %}, {{ parent.email }}{% endif %}</span>
+                                        <span class="phone">{{ parent.phone }}</span>{% if parent.email %}, <span class="email">{{ parent.email }}</span>{% endif %}
                                     </div>
                                     <div class="actions">
+                                        <i class="glyphicon glyphicon-edit edit-parent" title="{% trans "Change item" %}"></i>
                                         <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
                                     </div>
                                 </li>
@@ -74,10 +77,12 @@
                                         <span class="email"></span>
                                     </div>
                                     <div class="actions">
+                                        <i class="glyphicon glyphicon-edit" title="{% trans "Change item" %}"></i>
                                         <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
                                     </div>
                                 </li>
                                 <li class="list-group-item add-parent-form" style="border: none; clear: both; display: none">
+                                    <input type="hidden" id="parent-id" />
                                     <div class="row">
                                         <div class="col-sm-4 form-group">
                                             <input id="parent-name" class="form-control input-sm" placeholder="{% trans "Name" %}" />
@@ -92,7 +97,10 @@
                                             <input id="parent-email" type="email" class="form-control input-sm" placeholder="{% trans "Email" %}" />
                                         </div>
                                         <div class="col-sm-2 form-group">
-                                            <button type="button" class="btn btn-sm btn-success save-parent">OK</button>
+                                            <button type="button" class="btn btn-sm btn-success save-parent">
+                                                {% include 'core/snippets/button_spinner.html' %}
+                                                <span>OK</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </li>
@@ -139,7 +147,7 @@
             $('#id_classroom').val('{{ classroom.id }}').prop('disabled', true).removeAttr('name');
             $('<input type="hidden" name="classroom" value="{{ classroom.id }}" />').insertBefore('#id_classroom');
             $('#id_dob').keyup(function() {
-                var dob = $(this).val();
+                let dob = $(this).val();
                 if (dob.length >= 10) $(this).datepicker("setDate", dob);
             }).datepicker("option", {dateFormat: "dd/mm/yy"}).datepicker("setDate", "{{ obj.dob|date:"d/m/Y" }}");
             $('#discipline-item-happened-on').datepicker({
@@ -155,7 +163,7 @@
                 }
             });
             $('body').on('click', '#admin-content .tab', function (e) {
-                var _$tab = $(this),
+                let _$tab = $(this),
                     tabName = _$tab.data('tab');
                 if (tabName === 'details' || _$tab.hasClass('loaded')) {
                     $('#admin-content').animate({'scrollTop': 0}, '50');
@@ -172,7 +180,7 @@
                     }
                 }).find('.spinner').show();
             }).on('click', '.show-modal-discipline-entry', function() {
-                var title = "{% trans "Add new entry" %}";
+                let title = "{% trans "Add new entry" %}";
                 if ($(this).hasClass('parent-convocation')) {
                     title = "{% trans "Summon parent" %}";
                     $('#discipline-item-id').val('{{ parent_convocation.id }}');
@@ -279,9 +287,26 @@
                 })
             });
             $('#admin-content').on('click', '.add-parent', function() {
-                    $('.add-parent-form').show()
-            }).on('click', '.save-parent', function() {
-                var name = $('#parent-name').val(),
+                $('.parent:not(.tpl)').show();
+                $('.add-parent-form').insertBefore('.parent.tpl').show();
+                $('#parent-id').val('');
+                $('#parent-name').val('').focus();
+                $('#parent-relation').val('');
+                $('#parent-phone').val('');
+                $('#parent-email').val('');
+            }).on('click', '.edit-parent', function() {
+                let $parent = $(this).parents('.ik-li');
+                $('#parent-id').val($parent.data('id'));
+                $('#parent-name').val($parent.find('.name').text()).focus();
+                $('#parent-relation').val($parent.find('.relation').text());
+                $('#parent-phone').val($parent.find('.phone').text());
+                $('#parent-email').val($parent.find('.email').text());
+                $parent.hide();
+                $('.add-parent-form').insertBefore($parent).show();
+            }).on('click', '.save-parent:not(.processing)', function() {
+                $(this).addClass('processing');
+                let parentId = $('#parent-id').val(),
+                    name = $('#parent-name').val(),
                     relation = $('#parent-relation').val(),
                     phone = $('#parent-phone').val(),
                     email = $('#parent-email').val();
@@ -292,17 +317,21 @@
                     $('#parent-phone').parent('.form-group').addClass('has-error');
                     return;
                 } else $('.people-in-charge .form-group').removeClass('has-error');
-                var params = {action: 'add_parent', name: name, relation: relation, phone: phone, email: email};
+                let params = {action: 'save_parent', parent_id: parentId, name: name, relation: relation, phone: phone, email: email};
                 $.getJSON('', params, function(data) {
+                    $('.save-parent').removeClass('processing');
                     if (data.error) {
                         ikwen.showFloatingNotice(data.error)
                     } else if (data.success) {
-                        var $parent = $('li.parent.tpl').clone().removeClass('tpl').attr('id', data.id).data('id', data.id);
+                        let $parent = $(`#${data.id}`);
+                        if ($parent.length === 0) {  // If no previous parent with the ID
+                            $parent = $('li.parent.tpl').clone().removeClass('tpl').attr('id', data.id).data('id', data.id).insertBefore('li.parent.tpl');
+                        }
                         $parent.find('.name').text(name);
                         $parent.find('.relation').text(relation);
                         $parent.find('.phone').text(phone);
                         $parent.find('.email').text(email);
-                        $parent.insertBefore('li.parent.tpl').fadeIn();
+                        $parent.fadeIn();
                         $('.add-parent-form').hide();
                         $('#parent-name, #parent-relation, #parent-phone, #parent-email').val('')
                     }

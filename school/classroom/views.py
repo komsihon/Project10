@@ -41,10 +41,8 @@ from import_export.formats.base_formats import XLS
 
 def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
     abs_path = getattr(settings, 'MEDIA_ROOT') + filename
-    # fh2 = processed_path = open(abs_path, 'w')
     fh = open(abs_path, 'r')
     line = fh.readline()
-    # fh2.write(line + '\n')
     fh.close()
     data = line.split(',')
     delimiter = ',' if len(data) > 2 else ';'
@@ -81,6 +79,14 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
             if not first_name:
                 error = _("Missing first name on line %d" % (i + 1))
                 break
+            try:
+                last_name.decode('utf8')
+                first_name.decode('utf8')
+            except:
+                error = _("Unreadable student name on line %d. Please replace or remove all suspect "
+                          "whitespaces and special characters in cells to avoid malicious symbols." % (i + 1))
+                break
+
             gender = row[3].strip()
             if gender.lower().startswith("m"):
                 gender = MALE
@@ -126,36 +132,48 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
 
             parent1_is_set = row[7] or row[8] or row[9] or row[10]
             if parent1_is_set:  # Information for one parent were set
-                parent1_name = row[7]
-                if not parent1_name:
-                    error = _("Missing parent name on line %d" % (i + 1))
+                parent1_name = row[7].strip()
+                try:
+                    parent1_name.decode('utf8')
+                except:
+                    error = _("Unreadable Parent 1 name on line %d. Please replace or remove all suspect "
+                              "whitespaces and special characters to avoid malicious symbols." % (i + 1))
                     break
-                parent1_relationship = row[8]
+                parent1_relationship = row[8].strip()
                 if not parent1_relationship:
-                    error = _("Missing parent relationship on line %d. Use one of "
+                    error = _("Missing parent 1 relationship on line %d. Use one of "
                               "<strong>Father</strong>, <strong>Mother</strong>, <strong>Uncle</strong>, etc" % (i + 1))
                     break
-                parent1_email = row[9]
+                try:
+                    parent1_relationship = parent1_relationship.decode('utf8')
+                except:
+                    error = _("Unreadable parent 1 relationship on line %d. Please replace or remove all suspect "
+                              "whitespaces and special characters to avoid malicious symbols." % (i + 1))
+                    break
+                parent1_email = row[9].strip()
                 if parent1_email:
                     try:
                         validate_email(parent1_email)
                     except ValidationError:
-                        error = _("Incorrect parent email <strong>%(email)s</strong> on "
+                        error = _("Incorrect parent 1 email <strong>%(email)s</strong> on "
                                   "line %(line)d" % {'email': parent1_email, 'line': (i + 1)})
                         break
                 parent1_phone = row[10]
                 if not re.match('\d{9}', slugify(parent1_phone).replace('-', '')):
-                    error = _("Missing or incorrect parent phone <strong>%(phone)s</strong> on line %(line)d. "
+                    error = _("Missing or incorrect parent 1 phone <strong>%(phone)s</strong> on line %(line)d. "
                               "Phone must be composed of 9 digits." % {'phone': parent1_phone, 'line': (i + 1)})
                     break
 
             parent2_is_set = row[11] or row[12] or row[13] or row[14]  # Information for second parent were set
             if parent2_is_set:
                 parent2_name = row[11].strip()
-                if not parent2_name:
-                    error = _("2nd parent name missing on line %d" % (i + 1))
+                try:
+                    parent2_name.decode('utf8')
+                except:
+                    error = _("Unreadable Parent 2 name on line %d. Please replace or remove all suspect "
+                              "whitespaces and special characters to avoid malicious symbols." % (i + 1))
                     break
-                if parent2_name == parent1_name:
+                if (parent1_name and parent2_name) and parent2_name == parent1_name:
                     error = _("1st and 2nd parent have the same name <strong>%(name)s</strong> "
                               "on line %(line)d. Please change." % {'name': parent2_name, 'line': (i + 1)})
                     break
@@ -168,7 +186,13 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                     error = _("1st and 2nd parent have the same relationship <strong>%(relation)s</strong> "
                               "on line %(line)d. Please change." % {'relation': parent2_relationship, 'line': (i + 1)})
                     break
-                parent2_email = row[13]
+                try:
+                    parent2_relationship = parent2_relationship.decode('utf8')
+                except:
+                    error = _("Unreadable parent 2 relationship on line %d. Please replace or remove all suspect"
+                              "whitespaces and special characters to avoid malicious symbols." % (i + 1))
+                    break
+                parent2_email = row[13].strip()
                 if parent2_email:
                     try:
                         validate_email(parent2_email)

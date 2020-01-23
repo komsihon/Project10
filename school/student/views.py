@@ -247,7 +247,8 @@ class StudentDetail(ChangeObjectBase):
             context['errors'] = form.errors
             return render(request, self.template_name, context)
 
-    def add_parent(self, student):
+    def save_parent(self, student):
+        parent_id = self.request.GET['parent_id'].strip()
         name = self.request.GET['name'].strip()
         relation = self.request.GET['relation'].strip()
         phone = slugify(self.request.GET['phone']).replace('-', '')
@@ -257,13 +258,20 @@ class StudentDetail(ChangeObjectBase):
         except ValidationError:
             response = {'error': "Invalid email"}
             return HttpResponse(json.dumps(response))
-        if Parent.objects.filter(student=student, email=email).count() >= 1:
-            response = {'error': _("A parent with this email already exists.")}
-            return HttpResponse(json.dumps(response))
-        if Parent.objects.filter(student=student, phone=phone).count() >= 1:
-            response = {'error': _("A parent with this phone already exists.")}
-            return HttpResponse(json.dumps(response))
-        parent = Parent(student=student, name=name, relation=relation, phone=phone, email=email)
+        if parent_id:
+            parent = Parent.objects.get(pk=parent_id)
+        else:
+            if Parent.objects.filter(student=student, email=email).count() >= 1:
+                response = {'error': _("A parent with this email already exists.")}
+                return HttpResponse(json.dumps(response))
+            if Parent.objects.filter(student=student, phone=phone).count() >= 1:
+                response = {'error': _("A parent with this phone already exists.")}
+                return HttpResponse(json.dumps(response))
+            parent = Parent(student=student)
+        parent.name = name
+        parent.relation = relation
+        parent.phone = phone
+        parent.email = email
         parent.save()
         parent.save(using=UMBRELLA)
         response = {'success': True, 'id': parent.id}
@@ -556,8 +564,8 @@ class StudentDetail(ChangeObjectBase):
             return self.render_discipline(context)
         elif tab == 'billing':
             return self.render_billing(context)
-        elif action == 'add_parent':
-            return self.add_parent(context['student'])
+        elif action == 'save_parent':
+            return self.save_parent(context['student'])
         elif action == 'add_invoice':
             return self.add_invoice(context)
         elif action == 'cash_in':
