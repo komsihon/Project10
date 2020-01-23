@@ -301,6 +301,7 @@
                 $('#parent-relation').val($parent.find('.relation').text());
                 $('#parent-phone').val($parent.find('.phone').text());
                 $('#parent-email').val($parent.find('.email').text());
+                $('.parent:not(.tpl)').show();
                 $parent.hide();
                 $('.add-parent-form').insertBefore($parent).show();
             }).on('click', '.save-parent:not(.processing)', function() {

@@ -16,7 +16,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from ikwen.billing.models import InvoiceItem, InvoiceEntry
