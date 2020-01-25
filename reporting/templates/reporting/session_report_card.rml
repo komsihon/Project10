@@ -11,29 +11,18 @@
                 <drawString x="373" y="770">{{ country_name|safe }}</drawString>
                 <drawString x="403" y="758">{{ country_motto|safe }}</drawString>
                 <drawString x="333" y="740">{{ country_ministry|safe }}</drawString>
-                <drawString x="353" y="720">{% blocktrans with session=sequence_number|safe %}
-                    Report Card {{ session }}
-                {% endblocktrans %}</drawString>
+                <drawString x="353" y="720">{% blocktrans with session=sequence_number|safe %}Report Card {{ session }}{% endblocktrans %}</drawString>
 
                 <setFont name="Helvetica-Bold" size="9"/>
                 <!-- This set font-size for minor elements in header -->
                 <drawString x="117" y="795">{{ school_motto|safe }}</drawString>
                 <drawString x="117" y="780">BP : {{ school_address|safe }}</drawString>
                 <drawString x="117" y="765">Tel : {{ school_contact }}</drawString>
-                <drawString x="398" y="705">
-                    {% trans "School year" %} : {{ school_year }}
-                </drawString>
+                <drawString x="398" y="705">{% trans "School year" %} : {{ school_year }}</drawString>
 
-                <drawString x="117" y="690">
-                    {% trans "Registration number" %} : {{ student.registration_number|safe }}
-{#                    Matricule de l'el&#232;ve : {{ student.registration_number }}#}
-                </drawString>
-                <drawString x="117" y="675">
-                    {% trans "Student name" %} : {{ last_name|safe }} {{ first_name|safe }}
-                </drawString>
-                <drawString x="117" y="660">
-                    {% trans "Classroom / Size" %} : {{ classroom_name|safe }} / {{ classroom.size }}
-                </drawString>
+                <drawString x="117" y="690">{% trans "Registration number" %} : {{ student.registration_number|safe }}</drawString>
+                <drawString x="117" y="675">{% trans "Student name" %} : {{ last_name|safe }} {{ first_name|safe }}</drawString>
+                <drawString x="117" y="660">{% trans "Classroom / Size" %} : {{ classroom_name|safe }} / {{ classroom.size }}</drawString>
                 {% if ministry_logo %}
                     <image file="{{ ministry_logo }}" x="14" y="750" width="85" height="85"></image>
                 {% endif %}
