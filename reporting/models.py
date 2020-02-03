@@ -1,11 +1,37 @@
 from django.db import models
 from djangotoolbox.fields import ListField
+from django.utils.translation import gettext_lazy as _
 from ikwen.core.models import Model, AbstractWatchModel, Service
 from ikwen.core.constants import MALE, FEMALE
+from ikwen.core.utils import get_service_instance
 from ikwen.accesscontrol.models import Member
 from ikwen_foulassi.foulassi.models import Student, ResultsTracker, DisciplineTracker, get_school_year
 from ikwen_foulassi.school.models import Classroom, Subject, Level, Session, Lesson, SessionGroup, DisciplineItem, \
     Score, SessionGroupScore
+
+
+LANG_CHOICES = (
+    ('en', _('English')),
+    ('fr', _('French')),
+)
+
+
+class ReportCardHeader(Model):
+    UPLOAD_TO = 'Foulassi/logo/'
+    lang = models.CharField(max_length=10, choices=LANG_CHOICES, default='en', verbose_name="Language")
+    school = models.ForeignKey(Service, related_name='+', default=get_service_instance)
+    country_name = models.CharField(_("Country name"), max_length=150)
+    country_moto = models.CharField(_("Country moto"), max_length=150)
+    head_organization = models.CharField(_("Head organization"), max_length=250)
+    head_organization_logo = models.ImageField(upload_to=UPLOAD_TO,
+                                               help_text=_("500 x 500px ; will appear on Report Card"),
+                                               verbose_name=_("Head organization logo"))
+
+    def __unicode__(self):
+        return self.country_name + ' | ' + self.lang
+
+    def get_obj_details(self):
+        return self.country_moto
 
 
 class LessonReport(AbstractWatchModel):

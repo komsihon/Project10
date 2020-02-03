@@ -8,7 +8,7 @@ from django.db.models import Sum
 from django.template import Context
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, get_language
 
 from trml2pdf import trml2pdf
 
@@ -18,7 +18,7 @@ from ikwen.core.utils import get_service_instance
 from ikwen_foulassi.foulassi.models import BEST_OF_ALL, Student
 from ikwen_foulassi.school.models import Score, SessionGroupScore, DisciplineItem, Subject, get_subject_list, Classroom, \
     Level, Session
-from ikwen_foulassi.reporting.models import SessionReport, SessionGroupReport
+from ikwen_foulassi.reporting.models import SessionReport, SessionGroupReport, ReportCardHeader
 
 from ikwen_foulassi.foulassi.models import get_school_year
 from ikwen_foulassi.school.models import DisciplineLogEntry
@@ -587,12 +587,21 @@ def generate_session_report_card(classroom, session, batch):
         except IndexError:
             exclusion_count = 0
 
+        lang = get_language()
+        if ReportCardHeader.objects.filter(lang=lang).count() < ReportCardHeader.objects.filter(lang='en').count():
+            lang = 'en'
+        while True:
+            try:
+                header_report = ReportCardHeader.objects.get(service=service, lang=lang)
+                break
+            except ReportCardHeader.DoesNotExist:
+                pass
+
         from ikwen.conf import settings as ikwen_settings
-        static_root = getattr(settings, 'STATIC_ROOT')
         media_root = getattr(settings, 'MEDIA_ROOT')
-        ministry_logo = static_root + 'foulassi/img/logo_minesec.jpg'
-        if not os.path.exists(ministry_logo):
-            ministry_logo = ''
+        head_organization_logo = media_root + header_report.head_organization_logo
+        if not os.path.exists(head_organization_logo):
+            head_organization_logo = ''
         school_logo = media_root + config.logo.name
         if not os.path.exists(school_logo):
             school_logo = ''
@@ -601,13 +610,13 @@ def generate_session_report_card(classroom, session, batch):
             student_photo = ''
 
         context = Context({
-            'ministry_logo': ministry_logo,
+            'ministry_logo': head_organization_logo,
             'school_logo': school_logo,
             'student_photo': student_photo,
 
-            'country_name': _("REPUBLIC OF CAMEROON").encode('ascii', 'xmlcharrefreplace'),
-            'country_motto': _("Peace - Work - Fatherland").encode('ascii', 'xmlcharrefreplace'),
-            'country_ministry': _("MINISTRY OF SECONDARY EDUCATION").encode('ascii', 'xmlcharrefreplace'),
+            'country_name': header_report.country_name.encode('ascii', 'xmlcharrefreplace'),
+            'country_motto': header_report.country_moto.encode('ascii', 'xmlcharrefreplace'),
+            'head_organization': header_report.head_organization.encode('ascii', 'xmlcharrefreplace'),
             'sequence_number': session.name.encode('ascii', 'xmlcharrefreplace'),
             'school_address': config.address.encode('ascii', 'xmlcharrefreplace'),
             'school_contact': config.contact_phone.encode('ascii', 'xmlcharrefreplace'),
@@ -857,12 +866,21 @@ def generate_session_group_report_card(classroom, session_group, batch):
         except IndexError:
             exclusion_count = 0
 
+        lang = get_language()
+        if ReportCardHeader.objects.filter(lang=lang).count() < ReportCardHeader.objects.filter(lang='en').count():
+            lang = 'en'
+        while True:
+            try:
+                header_report = ReportCardHeader.objects.get(service=service, lang=lang)
+                break
+            except ReportCardHeader.DoesNotExist:
+                pass
+
         from ikwen.conf import settings as ikwen_settings
-        static_root = getattr(settings, 'STATIC_ROOT')
         media_root = getattr(settings, 'MEDIA_ROOT')
-        ministry_logo = static_root + 'foulassi/img/logo_minesec.jpg'
-        if not os.path.exists(ministry_logo):
-            ministry_logo = ''
+        head_organization_logo = media_root + header_report.head_organization_logo
+        if not os.path.exists(head_organization_logo):
+            head_organization_logo = ''
         school_logo = media_root + config.logo.name
         if not os.path.exists(school_logo):
             school_logo = ''
@@ -871,13 +889,13 @@ def generate_session_group_report_card(classroom, session_group, batch):
             student_photo = ''
 
         context = Context({
-            'ministry_logo': ministry_logo,
+            'ministry_logo': head_organization_logo,
             'school_logo': school_logo,
             'student_photo': student_photo,
 
-            'country_name': _("REPUBLIC OF CAMEROON").encode('ascii', 'xmlcharrefreplace'),
-            'country_motto': _("Peace - Work - Fatherland").encode('ascii', 'xmlcharrefreplace'),
-            'country_ministry': _("MINISTRY OF SECONDARY EDUCATION").encode('ascii', 'xmlcharrefreplace'),
+            'country_name': header_report.country_name.encode('ascii', 'xmlcharrefreplace'),
+            'country_motto': header_report.country_moto.encode('ascii', 'xmlcharrefreplace'),
+            'head_organization': header_report.head_organization.encode('ascii', 'xmlcharrefreplace'),
             'sequence_number': session_group.name.encode('ascii', 'xmlcharrefreplace'),
             'school_address': config.address.encode('ascii', 'xmlcharrefreplace'),
             'school_contact': config.contact_phone.encode('ascii', 'xmlcharrefreplace'),

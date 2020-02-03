@@ -16,7 +16,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.views.generic import TemplateView
-
+from ikwen.core.views import ChangeObjectBase, HybridListView
 from ikwen.core.utils import set_counters, calculate_watch_info, slice_watch_objects, rank_watch_objects, \
     get_service_instance
 from ikwen.accesscontrol.backends import UMBRELLA
@@ -24,9 +24,11 @@ from ikwen_foulassi.foulassi.models import get_school_year, Invoice, Student, Ev
     REPORT_CARDS_FAILED_TO_GENERATE
 from ikwen_foulassi.school.models import DisciplineItem, Session, SessionGroup, Classroom, Level, Score
 from ikwen_foulassi.reporting.models import DisciplineReport, StudentDisciplineReport, SessionReport, \
-    SessionGroupReport, LessonReport, ReportCardBatch
+    SessionGroupReport, LessonReport, ReportCardBatch, ReportCardHeader
 from ikwen_foulassi.reporting.utils import generate_session_report_card, REPORT_CARDS_FOLDER, \
     generate_session_group_report_card, SUMMARY_FOLDER
+
+from reporting.admin import ReportCardHeaderAdmin
 
 logger = logging.getLogger('ikwen')
 
@@ -159,6 +161,15 @@ class Dashboard(TemplateView):
 
 class DisciplineDetail(TemplateView):
     template_name = 'reporting/discipline_detail.html'
+
+
+class ReportCardHeaderList(HybridListView):
+    model = ReportCardHeader
+
+
+class ChangeReportCardHeader(ChangeObjectBase):
+    model = ReportCardHeader
+    model_admin = ReportCardHeaderAdmin
 
 
 class ReportCardDownloadList(TemplateView):
