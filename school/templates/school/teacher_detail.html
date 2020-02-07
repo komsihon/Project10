@@ -172,7 +172,7 @@
                             $('.tab.show-add-subject').clone().removeClass('show-add-subject').addClass('active')
                                 .insertBefore('.tab.show-add-subject').data('subject-id',subjectId).find('a')
                                 .prop({href: `#${subjectId}`, title: subjectName}).text(subjectName.substr(0, max));
-                            $(response).insertAfter('#admin-content .tab-content .tab-pane:last');
+                            $(response).appendTo('#admin-content .tab-content');
                             ikwen.reloadTabView();
                             $('#new-subject option:selected').remove();
                             $('#add-subject').modal('hide');
