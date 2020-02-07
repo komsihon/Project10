@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, pgettext
 from ikwen.billing.models import Payment, MoMoTransaction
 from ikwen_foulassi.foulassi.models import Student, Teacher, Event
 from ikwen_foulassi.school.models import Level, Score
@@ -9,6 +9,12 @@ from ikwen_webnode.web.models import HomepageSection
 
 
 group_secretary = _("Secretary")  # Simply causes this to appear in translation file
+convocation = _("Parent Convocation")  # Simply causes this to appear in translation file
+exclusion = _("Exclusion")  # Simply causes this to appear in translation file
+lateness = _("Lateness")  # Simply causes this to appear in translation file
+warning = pgettext("Student warning", "Warning")  # Simply causes this to appear in translation file
+censure = _("Censure")  # Simply causes this to appear in translation file
+absence = _("Absence")  # Simply causes this to appear in translation file
 
 
 def create_permissions():

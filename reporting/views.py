@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
 import os
-import shutil
 import subprocess
 import traceback
 import logging
-import zipfile
 from datetime import datetime
 from threading import Thread
 
@@ -17,24 +15,25 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.views.generic import TemplateView
 from ikwen.core.views import ChangeObjectBase, HybridListView
+from django.utils.translation import ugettext as _
+
 from ikwen.core.utils import set_counters, calculate_watch_info, slice_watch_objects, rank_watch_objects, \
     get_service_instance
-from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen_foulassi.foulassi.models import get_school_year, Invoice, Student, Event, EventType, REPORT_CARDS_GENERATED, \
     REPORT_CARDS_FAILED_TO_GENERATE
-from ikwen_foulassi.school.models import DisciplineItem, Session, SessionGroup, Classroom, Level, Score
+from ikwen_foulassi.school.models import DisciplineItem, Session, SessionGroup, Classroom, Score
 from ikwen_foulassi.reporting.models import DisciplineReport, StudentDisciplineReport, SessionReport, \
     SessionGroupReport, LessonReport, ReportCardBatch, ReportCardHeader
 from ikwen_foulassi.reporting.utils import generate_session_report_card, REPORT_CARDS_FOLDER, \
     generate_session_group_report_card, SUMMARY_FOLDER
 
-from reporting.admin import ReportCardHeaderAdmin
+from ikwen_foulassi.reporting.admin import ReportCardHeaderAdmin
 
 logger = logging.getLogger('ikwen')
 
 
 class Dashboard(TemplateView):
-    template_name = 'reporting/main.html'
+    template_name = 'reporting/dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super(Dashboard, self).get_context_data(**kwargs)
@@ -48,7 +47,7 @@ class Dashboard(TemplateView):
             students_last_week = slice_watch_objects(StudentDisciplineReport, 7, 'last_add_on')
             students_last_28_days = slice_watch_objects(StudentDisciplineReport, 28, 'last_add_on')
             item_report_obj = {
-                'item': item,
+                'item': _(item.name),
                 'report': {
                     'yesterday': {
                         'summary': calculate_watch_info(discipline_report_obj.total_history, 1),
@@ -225,6 +224,12 @@ class ReportCardDownloadList(TemplateView):
 
 @permission_required('reporting.ik_manage_reporting')
 def generate_report_cards(request, *args, **kwargs):
+    lang = request.GET['lang']
+    try:
+        ReportCardHeader.objects.get(lang=lang)
+    except ReportCardHeader.DoesNotExist:
+        return HttpResponse({"error": _("Report card header not configured for %s." % lang), "header": True},
+                            'content-type: text/json')
     if getattr(settings, 'DEBUG', False):
         generate_report_card_files(request)
     else:
@@ -271,6 +276,8 @@ def generate_report_card_files(request):
         EventType.objects.create(codename=REPORT_CARDS_FAILED_TO_GENERATE,
                                  renderer='ikwen_foulassi.foulassi.events.render_report_cards_failed_to_generate')
 
+    lang = request.GET['lang']
+    report_card_header = ReportCardHeader.objects.get(lang=lang)
     report_cards_root = getattr(settings, 'REPORT_CARDS_ROOT')
     session_group_folder = report_cards_root + '%s_%d-%d/%s' % (REPORT_CARDS_FOLDER, school_year, school_year + 1,
                                                                 slugify(session.session_group.name).capitalize())
@@ -289,7 +296,8 @@ def generate_report_card_files(request):
             if classroom.student_set.filter(is_excluded=False).count == 0:
                 continue
             if is_term_end:
-                generate_session_group_report_card(classroom, session.session_group, session_group_batch)
+                generate_session_group_report_card(classroom, session.session_group,
+                                                   report_card_header, session_group_batch)
                 classroom_folder = summary_folder + '/' + slugify(str(classroom).decode('utf8'))
                 classroom_archive = classroom_folder + '.7z'
                 if os.path.exists(classroom_archive):
@@ -298,7 +306,7 @@ def generate_report_card_files(request):
                 subprocess.call(["7z", "a", "-x!*.7z", summary_archive, summary_folder + '/*'])
                 subprocess.call(["rm", "-fr", classroom_folder])
             else:
-                generate_session_report_card(classroom, session, batch)
+                generate_session_report_card(classroom, session, report_card_header, batch)
                 classroom_folder = session_folder + '/' + slugify(str(classroom).decode('utf8'))
                 classroom_archive = classroom_folder + '.7z'
                 if os.path.exists(classroom_archive):

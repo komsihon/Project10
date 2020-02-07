@@ -288,6 +288,8 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                                                      "scores or best score of all sessions."))
     is_public = models.BooleanField(default=False,
                                     help_text="Designates whether this school is a State school.")
+    show_discipline_report = models.BooleanField(_("Show discipline report"), default=True)
+    show_lectures_report = models.BooleanField(_("Show lectures report"), default=True)
     my_kids_fees = models.IntegerField(_("Annual fees"), default=1000)
     my_kids_payment_period = models.IntegerField(_("Payment period"), default=30,
                                                  help_text=_("Number of days left for parent to pay for the service."))

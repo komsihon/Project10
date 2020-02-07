@@ -96,9 +96,9 @@ class ChangeLevel(ChangeObjectBase):
             obj.save()
             next_url = self.get_object_list_url(request, obj)
             if object_id:
-                notice = u'%s <strong>%s</strong> %s' % (obj._meta.verbose_name.capitalize(), unicode(obj), _('successfully updated'))
+                notice = u'%s <strong>%s</strong> %s' % (obj._meta.verbose_name.capitalize(), str(obj).decode('utf8'), _('successfully updated'))
             else:
-                notice = u'%s <strong>%s</strong> %s' % (obj._meta.verbose_name.capitalize(), unicode(obj), _('successfully created'))
+                notice = u'%s <strong>%s</strong> %s' % (obj._meta.verbose_name.capitalize(), str(obj).decode('utf8'), _('successfully created'))
             messages.success(request, notice)
             return HttpResponseRedirect(next_url)
         else:

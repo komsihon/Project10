@@ -29,6 +29,7 @@ def wipe_test_data(db=None):
     """
     import ikwen_foulassi.foulassi.models
     import ikwen_foulassi.school.models
+    import ikwen_foulassi.reporting.models
     import ikwen.core.models
     import ikwen.accesscontrol.models
     OperatorWallet.objects.using('wallets').all().delete()
@@ -39,12 +40,19 @@ def wipe_test_data(db=None):
     for alias in aliases:
         if alias == 'wallets':
             continue
+        if not alias.startswith('test_'):
+            continue
         Group.objects.using(alias).all().delete()
-        for name in ('Teacher', 'Student', 'School', ):
+        for name in ('Teacher', 'Student', 'Parent', 'ParentProfile', 'SchoolConfig',
+                     'Invoice', 'Payment', 'EventType', 'Event', ):
             model = getattr(ikwen_foulassi.foulassi.models, name)
             model.objects.using(alias).all().delete()
         for name in ('Level', 'Classroom', 'Subject', 'Session', 'SubjectSession', 'TeacherResponsibility'):
             model = getattr(ikwen_foulassi.school.models, name)
+            model.objects.using(alias).all().delete()
+        for name in ('ReportCardHeader', 'LessonReport', 'DisciplineReport', 'StudentDisciplineReport',
+                     'SessionReport', 'SessionGroupReport', 'YearReport', 'ReportCardBatch'):
+            model = getattr(ikwen_foulassi.reporting.models, name)
             model.objects.using(alias).all().delete()
         for name in ('Member',):
             model = getattr(ikwen.accesscontrol.models, name)
@@ -64,7 +72,6 @@ class SchoolViewsTestCase(unittest.TestCase):
 
     def setUp(self):
         self.client = Client()
-        add_database_to_settings('test_kc_partner_jumbo')
         for fixture in self.fixtures:
             call_command('loaddata', fixture)
 

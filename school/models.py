@@ -221,7 +221,7 @@ class Session(Model, ResultsTracker):
     @staticmethod
     def get_current():
         try:
-            session = Session.objects.get(is_current=True)
+            session = Session.objects.get(is_current=True, school_year=get_school_year())
         except Session.DoesNotExist:
             try:
                 session = Session.objects.filter(school_year=get_school_year())[0]
@@ -230,7 +230,7 @@ class Session(Model, ResultsTracker):
             except IndexError:
                 return None
         except MultipleObjectsReturned:
-            session = Session.objects.filter(is_current=True).order_by('-id')[0]
+            session = Session.objects.filter(is_current=True, school_year=get_school_year()).order_by('-id')[0]
             Session.objects.exclude(pk=session.id).update(is_current=False)
         return session
 

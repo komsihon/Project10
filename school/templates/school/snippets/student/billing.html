@@ -12,7 +12,7 @@
                     <span class="currency text-muted">{{ currency_symbol }}</span>
                 </div>
                 <div style="margin-top: 10px">
-                    {% if settings.IS_UMBRELLA %}
+                    {% if settings.IS_IKWEN %}
                         <button class="btn btn-sm btn-success payment-start"
                            data-product-id="{{ invoice.id }}">{% trans "Pay now" %}</button>
                     {% elif perms.billing.ik_cash_in and not invoice.is_my_kids %}
@@ -43,7 +43,7 @@
             </div>
         </li>
     </ul>
-    {% if not settings.IS_UMBRELLA %}
+    {% if not settings.IS_IKWEN %}
     <div class="actions dropdown" style="cursor: pointer; float: right; margin: -10px 24px 0 0">
         <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <i class="action glyphicon glyphicon-option-vertical text-muted"></i>

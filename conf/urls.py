@@ -1,9 +1,7 @@
 from django.conf.urls import patterns, include, url
 
-from django.contrib.auth.decorators import permission_required
 from django.contrib import admin
-from ikwen_foulassi.foulassi.views import EventList
-from ikwen_webnode.webnode.views import Home, AdminHome, FlatPageView
+from ikwen_webnode.webnode.views import Home, FlatPageView
 
 admin.autodiscover()
 

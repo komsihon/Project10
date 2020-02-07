@@ -576,7 +576,7 @@ class ClassroomDetail(ChangeObjectBase):
         elif action == 'add_invoice':
             return self.add_invoice(context)
         elif action == 'generate_report_cards':
-            from ikwen_foulassi.reporting.models import ReportCardBatch
+            from ikwen_foulassi.reporting.models import ReportCardBatch, ReportCardHeader
             from ikwen_foulassi.reporting.utils import generate_session_report_card
             member = self.request.user
             school_year = get_school_year(self.request)
@@ -584,7 +584,13 @@ class ClassroomDetail(ChangeObjectBase):
             total = Student.objects.filter(school_year=school_year, is_excluded=False).count()
             batch = ReportCardBatch.objects.create(member=member, session=session, total=total)
             t0 = datetime.now()
-            generate_session_report_card(classroom, session, batch)
+            lang = self.request.GET['lang']
+            try:
+                report_card_header = ReportCardHeader.objects.get(lang=lang)
+            except ReportCardHeader.DoesNotExist:
+                return HttpResponse({"error": _("Report card header not configured for %s." % lang), "header": True},
+                                    'content-type: text/json')
+            generate_session_report_card(classroom, session, report_card_header, batch)
             diff = datetime.now() - t0
             batch.duration = diff.total_seconds()
             return HttpResponse({"success": True}, 'content-type: text/json')

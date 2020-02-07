@@ -67,16 +67,17 @@
                             <ul class="list-group" style="padding: 0">
                                 {% for parent in student.parent_set.all %}
                                 <li class="list-group-item ik-li parent" id="{{ parent.id }}" data-id="{{ parent.id }}" data-model-name="foulassi.Parent">
-                                    <div class="parent-title">{{ parent.name }}: <span class="text-muted">{{ parent.relation }}</span></div>
-                                    <div class="parent-contact text-muted">
-                                        <span class="phone">{{ parent.phone }}</span>
-                                        <span>{% if parent.email %}, {{ parent.email }}{% endif %}</span>
+                                    <div class="parent-title">
+                                        <span class="name">{{ parent.name }}</span>:
+                                        <span class="relation text-muted">{{ parent.relation }}</span>
                                     </div>
-                                    {% if is_first_parent and forloop.counter > 1 %}
+                                    <div class="parent-contact text-muted">
+                                        <span class="phone">{{ parent.phone }}</span>{% if parent.email %}, <span class="email">{{ parent.email }}</span>{% endif %}
+                                    </div>
                                     <div class="actions">
+                                        <i class="glyphicon glyphicon-edit edit-parent" title="{% trans "Change item" %}"></i>
                                         <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
                                     </div>
-                                    {% endif %}
                                 </li>
                                 {% endfor %}
                                 <li class="list-group-item ik-li parent tpl" style="display: none">
@@ -87,10 +88,12 @@
                                         <span class="email"></span>
                                     </div>
                                     <div class="actions">
+                                        <i class="glyphicon glyphicon-edit" title="{% trans "Change item" %}"></i>
                                         <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
                                     </div>
                                 </li>
                                 <li class="list-group-item add-parent-form" style="border: none; clear: both; display: none">
+                                    <input type="hidden" id="parent-id" />
                                     <div class="row">
                                         <div class="col-sm-4 form-group">
                                             <input id="parent-name" class="form-control input-sm" placeholder="{% trans "Name" %}" />
@@ -102,10 +105,13 @@
                                             <input id="parent-phone" class="form-control input-sm" placeholder="{% trans "Phone" %}" />
                                         </div>
                                         <div class="col-sm-4 form-group">
-                                            <input id="parent-email" class="form-control input-sm" placeholder="{% trans "Email" %}" />
+                                            <input id="parent-email" type="email" class="form-control input-sm" placeholder="{% trans "Email" %}" />
                                         </div>
                                         <div class="col-sm-2 form-group">
-                                            <button type="button" class="btn btn-sm btn-success save-parent">OK</button>
+                                            <button type="button" class="btn btn-sm btn-success save-parent">
+                                                {% include 'core/snippets/button_spinner.html' %}
+                                                <span>OK</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </li>
@@ -135,7 +141,5 @@
             </div>
         </div>
     </div>
-    {% with payment_conf='foulassi_invoice_payment' %}
-        {% include 'billing/snippets/modal_payment_options.html' %}
-    {% endwith %}
+    {% include 'billing/snippets/modal_payment_options.html' %}
 {% endblock %}

@@ -1,6 +1,6 @@
 
 from django.conf.urls import patterns, url
-from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from django.contrib.auth.decorators import login_required, permission_required
 
 from ikwen_foulassi.foulassi.views import KidList, KidDetail, ShowJustificatory, AccessDenied, confirm_invoice_payment, \
     Home, HomeSaaS, SearchSchool, EventList, DeployCloud, SuccessfulDeployment, AdminHome

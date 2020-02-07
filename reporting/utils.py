@@ -388,7 +388,7 @@ def set_stats(classroom_stats, level_stats, school_stats, session,
         calculate_session_group_participation_and_success(session, level_stats, school_stats)
 
 
-def generate_session_report_card(classroom, session, batch):
+def generate_session_report_card(classroom, session, report_card_header, batch):
     student_list = classroom.student_set.filter(is_excluded=False)
     if student_list.count() == 0:
         return
@@ -587,19 +587,9 @@ def generate_session_report_card(classroom, session, batch):
         except IndexError:
             exclusion_count = 0
 
-        lang = get_language()
-        if ReportCardHeader.objects.filter(lang=lang).count() < ReportCardHeader.objects.filter(lang='en').count():
-            lang = 'en'
-        while True:
-            try:
-                header_report = ReportCardHeader.objects.get(service=service, lang=lang)
-                break
-            except ReportCardHeader.DoesNotExist:
-                pass
-
         from ikwen.conf import settings as ikwen_settings
         media_root = getattr(settings, 'MEDIA_ROOT')
-        head_organization_logo = media_root + header_report.head_organization_logo
+        head_organization_logo = media_root + report_card_header.head_organization_logo
         if not os.path.exists(head_organization_logo):
             head_organization_logo = ''
         school_logo = media_root + config.logo.name
@@ -614,9 +604,9 @@ def generate_session_report_card(classroom, session, batch):
             'school_logo': school_logo,
             'student_photo': student_photo,
 
-            'country_name': header_report.country_name.encode('ascii', 'xmlcharrefreplace'),
-            'country_motto': header_report.country_moto.encode('ascii', 'xmlcharrefreplace'),
-            'head_organization': header_report.head_organization.encode('ascii', 'xmlcharrefreplace'),
+            'country_name': report_card_header.country_name.encode('ascii', 'xmlcharrefreplace'),
+            'country_motto': report_card_header.country_moto.encode('ascii', 'xmlcharrefreplace'),
+            'head_organization': report_card_header.head_organization.encode('ascii', 'xmlcharrefreplace'),
             'sequence_number': session.name.encode('ascii', 'xmlcharrefreplace'),
             'school_address': config.address.encode('ascii', 'xmlcharrefreplace'),
             'school_contact': config.contact_phone.encode('ascii', 'xmlcharrefreplace'),
@@ -659,7 +649,7 @@ def generate_session_report_card(classroom, session, batch):
         batch.save()
 
 
-def generate_session_group_report_card(classroom, session_group, batch):
+def generate_session_group_report_card(classroom, session_group, report_card_header, batch):
     student_list = classroom.student_set.filter(is_excluded=False)
     if student_list.count() == 0:
         return
@@ -866,19 +856,9 @@ def generate_session_group_report_card(classroom, session_group, batch):
         except IndexError:
             exclusion_count = 0
 
-        lang = get_language()
-        if ReportCardHeader.objects.filter(lang=lang).count() < ReportCardHeader.objects.filter(lang='en').count():
-            lang = 'en'
-        while True:
-            try:
-                header_report = ReportCardHeader.objects.get(service=service, lang=lang)
-                break
-            except ReportCardHeader.DoesNotExist:
-                pass
-
         from ikwen.conf import settings as ikwen_settings
         media_root = getattr(settings, 'MEDIA_ROOT')
-        head_organization_logo = media_root + header_report.head_organization_logo
+        head_organization_logo = media_root + report_card_header.head_organization_logo
         if not os.path.exists(head_organization_logo):
             head_organization_logo = ''
         school_logo = media_root + config.logo.name
@@ -893,9 +873,9 @@ def generate_session_group_report_card(classroom, session_group, batch):
             'school_logo': school_logo,
             'student_photo': student_photo,
 
-            'country_name': header_report.country_name.encode('ascii', 'xmlcharrefreplace'),
-            'country_motto': header_report.country_moto.encode('ascii', 'xmlcharrefreplace'),
-            'head_organization': header_report.head_organization.encode('ascii', 'xmlcharrefreplace'),
+            'country_name': report_card_header.country_name.encode('ascii', 'xmlcharrefreplace'),
+            'country_motto': report_card_header.country_moto.encode('ascii', 'xmlcharrefreplace'),
+            'head_organization': report_card_header.head_organization.encode('ascii', 'xmlcharrefreplace'),
             'sequence_number': session_group.name.encode('ascii', 'xmlcharrefreplace'),
             'school_address': config.address.encode('ascii', 'xmlcharrefreplace'),
             'school_contact': config.contact_phone.encode('ascii', 'xmlcharrefreplace'),

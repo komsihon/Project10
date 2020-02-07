@@ -140,7 +140,7 @@
     <script type="text/javascript">
         (function() {
             $('div#admin-nav .classrooms').addClass('active');
-            {% if settings.IS_UMBRELLA %}
+            {% if settings.IS_IKWEN %}
                 $('#student-details .basic input, #student-details .basic select').prop('disabled', true);
                 $('#id_classroom').html('<option value="' + "{{ classroom.id }}" + '">' + "{{ classroom }}" + '</option>');
             {% endif %}
