@@ -41,7 +41,7 @@ from ikwen_foulassi.foulassi.cloud_setup import DeploymentForm, deploy
 from ikwen_foulassi.foulassi.utils import can_access_kid_detail, share_payment_and_set_stats
 
 from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Payment, Event, Parent, EventType, \
-    PARENT_REQUEST_KID, KidRequest, SchoolConfig
+    PARENT_REQUEST_KID, KidRequest, SchoolConfig, Reminder
 from ikwen_foulassi.school.models import get_subject_list, Justificatory
 from ikwen_foulassi.school.student.views import StudentDetail, ChangeJustificatory
 
@@ -85,6 +85,17 @@ class AdminHome(TemplateView):
             next_url = reverse('ikwen:sign_in') + '?next=' + reverse('foulassi:admin_home')
             return HttpResponseRedirect(next_url)
         return super(AdminHome, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(AdminHome, self).get_context_data(**kwargs)
+        reminder_list = list(Reminder.objects.all())
+        total_missing = 0
+        for reminder in reminder_list:
+            total_missing += reminder.missing
+        context['reminder_list'] = reminder_list
+        context['total_missing'] = total_missing
+
+        return context
 
 
 class EventList(TemplateView):

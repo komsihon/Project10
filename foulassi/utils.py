@@ -19,7 +19,7 @@ from ikwen.billing.utils import set_dara_stats
 
 from ikwen_foulassi.school.models import Classroom, get_subject_list, Score, Level
 from ikwen_foulassi.foulassi.models import get_school_year, ParentProfile, EventType, Event, \
-    ALL_SCORES_SET
+    ALL_SCORES_SET, SchoolConfig, Student, Reminder
 
 from daraja.models import DARAJA, DarajaConfig
 
@@ -184,6 +184,55 @@ def set_student_counts():
     school.girls_count = total_girls
     school.boys_count = total_boys
     school.save()
+
+
+def check_setup_status(school):
+    """
+    Checks what has been done so far regarding insertion of Students and Parent contacts
+    """
+    missing_parents = 0
+    students_reminder = None
+    db = school.database
+    add_database(db)
+    school_config = SchoolConfig.objects.using(db).get(service=school)
+    expected_student_count = school_config.expected_student_count
+    student_count = Student.objects.using(db).filter(school=school).count()
+
+    if student_count < expected_student_count:
+        missing_students = expected_student_count - student_count
+        missing_parents = missing_students
+        print("%s missing students" % missing_students)
+        students_reminder, change = Reminder.objects.using(db).get_or_create(type=Reminder.UNREGISTERED_STUDENTS)
+        students_reminder.missing = missing_students
+        students_reminder.save()
+        for classroom in Classroom.objects.using(db).all():
+            if classroom.student_set.all().count() < Classroom.STUDENT_THRESHOLD:
+                classroom.has_student_reminder = True
+                classroom.has_parent_reminder = True
+            else:
+                classroom.has_student_reminder = False
+            classroom.save()
+    else:
+        Classroom.objects.using(db).update(has_student_reminder=False)
+
+    for classroom in Classroom.objects.using(db).all():
+        has_parent_reminder = False
+        for student in classroom.student_set.all():
+            if student.parent_set.all().count() == 0:
+                has_parent_reminder = True
+                missing_parents += 1
+        classroom.has_parent_reminder = has_parent_reminder
+        classroom.save()
+
+    print("%s missing parents" % missing_parents)
+    share_rate = school.billing_plan.tx_share_rate
+    estimated_loss = missing_parents * school_config.my_kids_fees * (100 - share_rate)/100
+    parents_reminder, update = Reminder.objects.using(db).get_or_create(type=Reminder.UNREGISTERED_PARENTS)
+    parents_reminder.missing = missing_parents
+    parents_reminder.estimated_loss = estimated_loss
+    parents_reminder.save()
+
+    return parents_reminder, students_reminder, estimated_loss
 
 
 def share_payment_and_set_stats(invoice, payment_mean_slug):

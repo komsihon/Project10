@@ -40,6 +40,7 @@ class Level(Model, ResultsTracker):
 
 
 class Classroom(Model, ResultsTracker):
+    STUDENT_THRESHOLD = 3  # Threshold above which we consider student were consistently populated
     level = models.ForeignKey(Level, verbose_name=_("Level"))
     name = models.CharField(_("Name"), max_length=30,
                             help_text=_("Raw name of the class. Don't write the level again. <br>Eg: A, B ... "
@@ -52,6 +53,8 @@ class Classroom(Model, ResultsTracker):
     professor = models.ForeignKey(Teacher, verbose_name=_("Professor"), blank=True, null=True)
     leader = models.ForeignKey(Student, related_name='leaders', blank=True, null=True)
     subject_coefficient_list = ListField(EmbeddedModelField('SubjectCoefficient'))
+    has_parent_reminder = models.BooleanField(default=False)
+    has_student_reminder = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('level', 'name', 'school_year')

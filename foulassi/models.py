@@ -101,6 +101,7 @@ class Student(Model):
     def save(self, **kwargs):
         if self.dob:
             self.birthday = int(self.dob.strftime('%m%d'))
+        self.set_has_new()
         super(Student, self).save(**kwargs)
 
     def get_score_list(self, subject, using='default'):
@@ -294,6 +295,10 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
     my_kids_payment_period = models.IntegerField(_("Payment period"), default=30,
                                                  help_text=_("Number of days left for parent to pay for the service."))
     ikwen_share_rate = models.IntegerField(default=0)
+    expected_student_count = models.IntegerField(default=0,
+                                                 help_text='Total number of students (registered or not) of the school')
+
+    gain_per_parent_registration = models.IntegerField(default=50)
 
     def __unicode__(self):
         return self.company_name
@@ -326,6 +331,15 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                     reset_my_kids_invoice()
                 else:
                     Thread(target=reset_my_kids_invoice).start()
+
+
+class Reminder(Model):
+    UNREGISTERED_STUDENTS = "UnregisteredStudents"
+    UNREGISTERED_PARENTS = "UnregisteredParents"
+
+    type = models.CharField(max_length=30)
+    missing = models.IntegerField(default=0)
+    estimated_loss = models.IntegerField(default=0, null=True)
 
 
 class Invoice(AbstractInvoice):

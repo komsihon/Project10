@@ -34,6 +34,40 @@
                     <div class="clearfix"></div>
                 </div>
                 {% if perms.school.ik_manage_school %}
+                    {% if total_missing > 0 %}
+                        <div class="card-section subtle-shade warning-alerts">
+                            <h2 class="card-section-title text-danger text-center">{% trans "Warnings" %}</h2>
+                            <div class="row-card-section">
+                                <div class="col-md-2 col-md-push-1 card-img">
+                                    <img style="max-width: 150px;" src="{% static 'foulassi/img/warning-icon.png' %}">
+                                </div>
+
+                                <ul class="col-md-6 col-sm-12 "  style="margin: auto; font-size: 16px; line-height: 40px;">
+                                    {% for reminder in reminder_list %}
+                                        {% if reminder.type == 'UnregisteredStudents' %}
+                                            <li>
+                                                <span class="text-left">{% blocktrans with missing=reminder.missing %}<strong>{{ missing }}</strong> students are not yet registered{% endblocktrans %}</span>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <span class="text-left">{% blocktrans with missing=reminder.missing %}<strong>{{ missing }}</strong> students have no parent contacts{% endblocktrans %}</span>
+                                            </li>
+                                            <div class="text-danger">
+                                            {% if reminder.estimated_loss > 0 %}
+                                                {% trans 'Estimated loss: ' %}<span><small>XAF</small><strong style="font-size: 30px"> {{ reminder.estimated_loss|intcomma }}</strong></span>
+                                            {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="text-center">
+                                <a href="{% url 'school:classroom_list' %}?has_reminder=yes" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh;">{% trans "Register them" %}</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                {% if perms.school.ik_manage_school %}
                 <div class="card-section subtle-shade">
                     <h4 class="card-section-title">{% trans "Subjects, levels and classrooms" %}</h4>
                     <div class="row-card-section">

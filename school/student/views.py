@@ -38,7 +38,7 @@ from ikwen.core.views import ChangeObjectBase
 from ikwen_foulassi.foulassi.admin import StudentAdmin
 from ikwen_foulassi.foulassi.models import Student, Parent, Invoice, Payment, get_school_year
 from ikwen_foulassi.foulassi.utils import get_payment_confirmation_email_message, get_payment_sms_text, \
-    remove_student_from_parent_profile, set_student_counts
+    remove_student_from_parent_profile, set_student_counts, check_setup_status
 from ikwen_foulassi.reporting.models import DisciplineReport, StudentDisciplineReport
 from ikwen_foulassi.reporting.utils import set_daily_counters_many
 from ikwen_foulassi.school.admin import JustificatoryAdmin
@@ -180,6 +180,7 @@ class ChangeStudent(ChangeObjectBase):
         obj.save()
         object_id = kwargs.get('object_id')
         Thread(target=set_student_counts).start()
+        Thread(target=check_setup_status, args=(obj.school,)).start()
         if object_id:
             return
         # It's a student under creation, so set a new Invoice for him

@@ -91,6 +91,10 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
 .parent-contact {margin-top: 5px}
 .add-parent {float: right; margin: 15px 0; min-width: 100px}
 
+.warning-alerts {border-color: rgba(202, 20, 30, 0.89);}
+.warning-alerts .row-card-section {margin: 30px 0;}
+/*.alert-error*/
+
 /***    Dashboard   ***/
 .overview {
     clear: both;

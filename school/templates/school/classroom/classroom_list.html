@@ -1,5 +1,24 @@
 {% extends "core/object_list_base.html" %}
 {% load i18n humanize static admin_list %}
+{% block head_style %}
+    {{ block.super }}
+    <style>
+        .blink-bullet {
+            font-size: .7em
+        }
+        #reminder ul {
+            list-style-type: none;
+            margin-top: 10px;
+        }
+        #reminder ul li {
+            margin-bottom: 15px;
+        }
+        #reminder .modal-body .title {
+            font-weight: 600;
+            line-height: 32px
+        }
+    </style>
+{% endblock %}
 
 {% block admin_content %}
     <div id="admin-content" class="has-edge-panel-right">
@@ -56,7 +75,15 @@
                                         {% if request.session.is_teacher %}
                                             <a href="{{ classroom_detail_url }}">{{ classroom }}</a>
                                         {% else %}
-                                            {{ classroom }}
+                                           {% if classroom.has_parent_reminder or classroom.has_student_reminder %}
+                                            <span class="pull-left" style="width: 15px">
+                                                {% if classroom.has_parent_reminder and not classroom.has_student_reminder %}
+                                                    <i class="fas fa-circle text-danger blink-bullet"></i>
+                                                {% endif %}
+                                                {% if classroom.has_student_reminder %}<i class="fas fa-circle text-warning blink-bullet"></i>{% endif %}
+                                            </span>
+                                            {% endif %}
+                                            <span>{{ classroom }}</span>
                                         {% endif %}
                                         <span class="text-muted">({{ classroom.size }})</span>
                                     </div>
@@ -160,6 +187,32 @@
             </div>
         </div>
     </div>
+    {#    Modal declaration : BEGIN #}
+        <div class="modal fade" id="reminder" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-info">
+                    <div class="modal-body text-center">
+                        <h4 class="title">{% blocktrans %}Some classrooms have unregistered students or/and parents. Please fix !{% endblocktrans %}</h4>
+                        <ul class="text-left list-unstyled text-muted">
+                            <li><i class="fas fa-circle text-danger"></i> classrooms with missing students</li>
+                            <li><i class="fas fa-circle text-warning"></i> classrooms with missing parents</li>
+                        </ul>
+                        <div>
+                            <div class="actions">
+                                <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                                    <button class="btn btn-success btn-block btn-sm btn-ok" data-dismiss="modal" aria-label="OK">{% trans "OK" %}</button>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-3 pull-left action">
+                                    <a href="{% url 'foulassi:admin_home' %}" class="btn btn-default btn-block btn-sm">{% trans 'Cancel' %}</a>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#    Modal declaration : END #}
 {% endblock %}
 
 {% block js %}
@@ -170,6 +223,15 @@
                 altField: "#happened-on-alt",
                 altFormat: "yy-mm-dd"
             });
+            {% if has_reminder %}
+                $('#reminder').modal({backdrop: 'static'});
+                $('#reminder .btn-ok').click(function () {
+                    $('.classroom .fas.fa-circle').effect("shake", {times: 5, distance: 3, speed: 100});
+                });
+                setInterval(() => {
+                    $('.classroom .fas.fa-circle').effect("shake", {times: 5, distance: 3, speed: 100});
+                }, 10000);
+            {% endif %}
         })()
     </script>
 {% endblock %}
