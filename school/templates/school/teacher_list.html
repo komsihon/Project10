@@ -17,6 +17,12 @@
                         <input type="text" id="context-search" class="tool search form-input input-sm" placeholder="{% blocktrans %}Search {{ verbose_name }}{% endblocktrans %}"/>
                     </div>
                 </form>
+                <div id="admin-tools-actions">
+                    <a class="btn btn-sm btn-success cta add pull-right action" title="Add new teacher" onclick="return false">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span class="hidden-xs">Add</span>
+                    </a>
+                </div>
             </div>
             <div id="results">
                 {% if object_list %}
@@ -102,6 +108,42 @@
         </div>
     </div>
     {#    Modal declaration : END #}
+
+    {#    Modal declaration : BEGIN #}
+    <div id="add-teacher" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="model-header text-center">
+                    <h2>{% blocktrans %}Just 2 steps to add a teacher !{% endblocktrans %}</h2>
+                </div>
+                <div class="modal-body text-center">
+                     <ol class="text-left text-muted">
+                        <li>
+                            <h5 style="margin-bottom: 20px;">
+                                {% trans 'Select the name in the list' %}
+                            </h5>
+                            <img src="{% static 'foulassi/img/member_list.png' %}" width="600" class="img-responsive">
+                        </li>
+                        <li style="margin-top: 30px;">
+                            <h5 style="margin-bottom: 20px;">
+                                {% trans "Press the button 'move to group' on the right side and select 'teachers'" %}
+                            </h5>
+                            <img src="{% static 'foulassi/img/move_member_to_teachers.png' %}" width="200" class="img-responsive">
+                        </li>
+                    </ol>
+                    <div>
+                        <div class="actions">
+                            <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                                <button class="btn btn-success btn-block btn-sm get-it" data-dismiss="modal" aria-label="get-it">{% trans "Got it !" %}</button>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#    Modal declaration : END #}
 {% endblock %}
 
 {% block js %}
@@ -112,6 +154,12 @@
                 var msg = $('#whatsapp-share-msg').val(),
                     url = 'https://ikwen.com/{{ service.project_name_slug }}/?invite%3Dyes%26group%3Dteachers';
                 window.location = 'https://api.whatsapp.com/send?text=' + url + '%0A%0A' + msg;
+            });
+            $('.cta.add').on('click', function () {
+               $('#add-teacher').modal({backdrop: 'static'});
+               $('.actions .get-it').click(function () {
+                  window.location = "{% url 'ikwen:community' %}";
+               });
             });
         })()
     </script>

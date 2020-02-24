@@ -9,6 +9,7 @@
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'ikwen/css/dashboard.css' %}" />
     <link rel='stylesheet' href="{% static 'foulassi/css/foulassi.css' %}" />
+{#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">#}
 {% endblock %}
 
 {% block breadcrumb_location %}
@@ -32,6 +33,30 @@
                                 <li data-stage="#discipline-report" data-target="last_week"><a>{% trans "Last week" %}</a></li>
                                 <li data-stage="#discipline-report" data-target="last_28_days"><a>{% trans "Last 28 days" %}</a></li>
                             </ul>
+                        </div>
+                        <div class="pull-right hidden-xs">
+                            <!-- Default switch -->
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="view-discipline">
+                              <label class="custom-control-label" for="view-discipline">{% trans 'View discipline' %}</label>
+                            </div>
+                            <!-- Default switch -->
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="view-lecture">
+                              <label class="custom-control-label" for="view-lecture">{% trans 'View lecture' %}</label>
+                            </div>
+                        </div>
+                        <div class="visible-xs" style="padding-top: 30px">
+                            <!-- Default switch -->
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="view-discipline">
+                              <label class="custom-control-label" for="view-discipline">{% trans 'View discipline' %}</label>
+                            </div>
+                            <!-- Default switch -->
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input" id="view-lecture">
+                              <label class="custom-control-label" for="view-lecture">{% trans 'View lecture' %}</label>
+                            </div>
                         </div>
                     </div>
                     <div class="clearfix"></div>
@@ -499,6 +524,12 @@
                 $(this).parents('.dropdown').find('.target').text(targetLabel);
                 $(this).parents('.dropdown').find('li').show();
                 $(this).hide();
+            });
+            $('#view-discipline').on('change', function () {
+                $('#discipline-report').toggleClass('tpl');
+            });
+            $('#view-lecture').on('checked', function () {
+                $('.classes').toggleClass('tpl');
             });
         })()
     </script>
