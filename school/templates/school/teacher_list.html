@@ -155,6 +155,7 @@
                     url = 'https://ikwen.com/{{ service.project_name_slug }}/?invite%3Dyes%26group%3Dteachers';
                 window.location = 'https://api.whatsapp.com/send?text=' + url + '%0A%0A' + msg;
             });
+
             $('.cta.add').on('click', function () {
                $('#add-teacher').modal({backdrop: 'static'});
                $('.actions .get-it').click(function () {
