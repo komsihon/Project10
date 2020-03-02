@@ -8,7 +8,7 @@ from django.db.models import Sum
 from django.template import Context
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
-from django.utils.translation import gettext as _, get_language
+from django.utils.translation import ugettext as _
 
 from trml2pdf import trml2pdf
 
@@ -18,7 +18,7 @@ from ikwen.core.utils import get_service_instance
 from ikwen_foulassi.foulassi.models import BEST_OF_ALL, Student
 from ikwen_foulassi.school.models import Score, SessionGroupScore, DisciplineItem, Subject, get_subject_list, Classroom, \
     Level, Session
-from ikwen_foulassi.reporting.models import SessionReport, SessionGroupReport, ReportCardHeader
+from ikwen_foulassi.reporting.models import SessionReport, SessionGroupReport
 
 from ikwen_foulassi.foulassi.models import get_school_year
 from ikwen_foulassi.school.models import DisciplineLogEntry
@@ -526,8 +526,8 @@ def generate_session_report_card(classroom, session, report_card_header, batch):
                     score = score_matrix[subject.slug]['score_list'][i]
                     teacher_name = subject.get_teacher(classroom).member.full_name
                     student_score_matrix[group_name]['subject_list'].append({
-                        'teacher_name': teacher_name.decode('utf8').encode('ascii', 'xmlcharrefreplace'),
-                        'subject_name': subject.name.decode('utf8').encode('ascii', 'xmlcharrefreplace'),
+                        'teacher_name': teacher_name.encode('ascii', 'xmlcharrefreplace'),
+                        'subject_name': subject.name.encode('ascii', 'xmlcharrefreplace'),
                         'coefficient': obj.coefficient,
                         'total_score': obj.coefficient * score.value,
                         'score': score,
@@ -589,17 +589,25 @@ def generate_session_report_card(classroom, session, report_card_header, batch):
 
         from ikwen.conf import settings as ikwen_settings
         media_root = getattr(settings, 'MEDIA_ROOT')
-        head_organization_logo = media_root + report_card_header.head_organization_logo
-        if not os.path.exists(head_organization_logo):
+        head_organization_logo = media_root + report_card_header.head_organization_logo.name
+        if not os.path.isfile(head_organization_logo):
             head_organization_logo = ''
         school_logo = media_root + config.logo.name
-        if not os.path.exists(school_logo):
+        if not os.path.isfile(school_logo):
             school_logo = ''
         student_photo = ikwen_settings.MEDIA_ROOT + student.photo.name
-        if not os.path.exists(student_photo):
+        if not os.path.isfile(student_photo):
             student_photo = ''
 
         context = Context({
+            # Special Labels
+            'label_school_year': _("School year").encode('ascii', 'xmlcharrefreplace'),
+            'label_student_name': _("Student name").encode('ascii', 'xmlcharrefreplace'),
+            'label_subjects': _("Subjects").encode('ascii', 'xmlcharrefreplace'),
+            'label_results': _("Results").encode('ascii', 'xmlcharrefreplace'),
+            'label_council_decision': _("Council decision").encode('ascii', 'xmlcharrefreplace'),
+            # End special labels
+
             'ministry_logo': head_organization_logo,
             'school_logo': school_logo,
             'student_photo': student_photo,
@@ -639,7 +647,7 @@ def generate_session_report_card(classroom, session, report_card_header, batch):
             'exclusion_count': exclusion_count,
             'date_generated': date_generated
         })
-        template = get_template('reporting/session_report_card.rml')
+        template = get_template('reporting/session_report_card.rml.html')
         xmlstring = template.render(context)
         pdfstr = trml2pdf.parseString(xmlstring)
         report_card = classroom_folder + slugify(str(student).decode('utf8')).capitalize() + '.pdf'
@@ -795,8 +803,8 @@ def generate_session_group_report_card(classroom, session_group, report_card_hea
                     score = score_matrix[subject.slug]['score_list'][i]
                     teacher_name = subject.get_teacher(classroom).member.full_name
                     student_score_matrix[group_name]['subject_list'].append({
-                        'teacher_name': teacher_name.decode('utf8').encode('ascii', 'xmlcharrefreplace'),
-                        'subject_name': subject.name.decode('utf8').encode('ascii', 'xmlcharrefreplace'),
+                        'teacher_name': teacher_name.encode('ascii', 'xmlcharrefreplace'),
+                        'subject_name': subject.name.encode('ascii', 'xmlcharrefreplace'),
                         'coefficient': obj.coefficient,
                         'total_score': obj.coefficient * score.value,
                         'score': score,
@@ -858,17 +866,25 @@ def generate_session_group_report_card(classroom, session_group, report_card_hea
 
         from ikwen.conf import settings as ikwen_settings
         media_root = getattr(settings, 'MEDIA_ROOT')
-        head_organization_logo = media_root + report_card_header.head_organization_logo
-        if not os.path.exists(head_organization_logo):
+        head_organization_logo = media_root + report_card_header.head_organization_logo.name
+        if not os.path.isfile(head_organization_logo):
             head_organization_logo = ''
         school_logo = media_root + config.logo.name
-        if not os.path.exists(school_logo):
+        if not os.path.isfile(school_logo):
             school_logo = ''
         student_photo = ikwen_settings.MEDIA_ROOT + student.photo.name
-        if not os.path.exists(student_photo):
+        if not os.path.isfile(student_photo):
             student_photo = ''
 
         context = Context({
+            # Special Labels
+            'label_school_year': _("School year").encode('ascii', 'xmlcharrefreplace'),
+            'label_student_name': _("Student name").encode('ascii', 'xmlcharrefreplace'),
+            'label_subjects': _("Subjects").encode('ascii', 'xmlcharrefreplace'),
+            'label_results': _("Results").encode('ascii', 'xmlcharrefreplace'),
+            'label_council_decision': _("Council decision").encode('ascii', 'xmlcharrefreplace'),
+            # End special labels
+
             'ministry_logo': head_organization_logo,
             'school_logo': school_logo,
             'student_photo': student_photo,
@@ -908,7 +924,7 @@ def generate_session_group_report_card(classroom, session_group, report_card_hea
             'exclusion_count': exclusion_count,
             'date_generated': date_generated
         })
-        template = get_template('reporting/session_group_report_card.rml')
+        template = get_template('reporting/session_group_report_card.rml.html')
         xmlstring = template.render(context)
         pdfstr = trml2pdf.parseString(xmlstring)
         report_card = classroom_folder + slugify(str(student).decode('utf8')).capitalize() + '.pdf'

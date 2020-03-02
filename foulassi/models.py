@@ -101,7 +101,6 @@ class Student(Model):
     def save(self, **kwargs):
         if self.dob:
             self.birthday = int(self.dob.strftime('%m%d'))
-        self.set_has_new()
         super(Student, self).save(**kwargs)
 
     def get_score_list(self, subject, using='default'):
@@ -119,7 +118,6 @@ class Student(Model):
         has_new_discipline_info = DisciplineLogEntry.objects.using(using).filter(student=self, was_viewed=False).count() > 0
         has_new_score = Score.objects.using(using).filter(student=self, was_viewed=False).count() > 0
         self.has_new = has_pending_invoice or has_new_discipline_info or has_new_score
-        self.save(using=using)
 
 
 class Parent(Model):
@@ -297,8 +295,6 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
     ikwen_share_rate = models.IntegerField(default=0)
     expected_student_count = models.IntegerField(default=0,
                                                  help_text='Total number of students (registered or not) of the school')
-
-    gain_per_parent_registration = models.IntegerField(default=50)
 
     def __unicode__(self):
         return self.company_name

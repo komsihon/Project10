@@ -128,11 +128,13 @@
                         </div>
                     </form>
                     <div class="actions">
-                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
-                            <button class="btn btn-success btn-block btn-sm ok" aria-label="OK">OK</button>
-                            {% include 'core/snippets/spinner.html' %}
+                        <div class="col-xs-12 col-sm-4 pull-right action">
+                            <button class="btn btn-success btn-block btn-sm ok" aria-label="OK">
+                                {% include 'core/snippets/button_spinner.html' %}
+                                <span>OK</span>
+                            </button>
                         </div>
-                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                        <div class="col-xs-12 col-sm-4 pull-right action">
                             <button class="btn btn-default btn-block btn-sm"
                                     data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
                         </div>
@@ -151,11 +153,13 @@
             $('body').on('click', '.show-add-subject a', function() {
                 $('#add-subject').modal('show');
                 return false;
-            }).on('click', '#add-subject button.ok', function() {
-                var subjectId = $('#new-subject').val(),
+            }).on('click', '#add-subject button.ok:not(.processing)', function() {
+                let _$btn = $(this),
+                    subjectId = $('#new-subject').val(),
                     subjectName = $('#new-subject option:selected').text(),
                     params = {'action': 'add_subject', 'subject_id': subjectId},
                     max = $(window).width() < 768 ? 10: 15;
+                _$btn.addClass('processing');
                 $.ajax({
                     data: params,
                     error: function() {
@@ -177,6 +181,9 @@
                             $('#new-subject option:selected').remove();
                             $('#add-subject').modal('hide');
                         }
+                    },
+                    complete: function() {
+                        _$btn.removeClass('processing');
                     }
                 });
                 $.getJSON('', params, function(data) {

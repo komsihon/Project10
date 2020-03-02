@@ -12,7 +12,8 @@
             <a href="{% url 'reporting:report_card_download_list' session.id %}" class="btn btn-success pull-right btn-sm download tpl"
                     data-event-id="{{ event.id }}">{% trans "Download" %}</a>
             {% if not event.is_processed %}
-                <button class="btn btn-success pull-right btn-sm generate-report-cards" data-event-id="{{ event.id }}"
+                <button class="btn btn-success pull-right btn-sm show-modal-choose-rc-lang"
+                        data-event-id="{{ event.id }}" data-toggle="modal" data-target="#modal-choose-report-cards-lang"
                         title="{% trans "Generate report cards again" %}">{% trans "Restart" %}</button>
                 <button class="btn btn-default pull-right btn-sm show-modal-close-session"
                         data-toggle="modal" data-target="#modal-confirm-close-session">{% trans "Close session" %}</button>
@@ -58,7 +59,7 @@
                 $.getJSON('{% url 'school:close_session' %}', {'event_id': eventId}, function(data) {
                     if (data.success) {
                         ikwen.showFloatingNotice("{% trans "Session successfully closed." %}");
-                        $('.show-modal-close-session, .generate-report-cards').hide()
+                        $('.show-modal-close-session, .show-modal-choose-rc-lang').hide()
                     }
                 }).fail(function() {
                     ikwen.showFloatingNotice("{% trans "Ooops! Something wrong happened." %}")

@@ -11,8 +11,8 @@
         {% endblocktrans %}
         {% if has_perm and not event.is_processed %}
         <div class="actions">
-            <button class="btn btn-success pull-right btn-sm generate-report-cards"
-                    data-event-id="{{ event.id }}">{% trans "Generate" %}</button>
+            <button class="btn btn-success pull-right btn-sm show-modal-choose-rc-lang" data-event-id="{{ event.id }}"
+                    data-toggle="modal" data-target="#modal-choose-report-cards-lang">{% trans "Generate" %}</button>
         </div>
         {% endif %}
         <div class="clearfix"></div>

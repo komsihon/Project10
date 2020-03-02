@@ -123,7 +123,7 @@ def check_all_scores_set(session):
     """
     all_scores_set = True
     school_year = get_school_year()
-    for classroom in Classroom.objects.filter(school_year=school_year):
+    for classroom in Classroom.objects.filter(school_year=school_year, mark_students=True):
         try:
             student = classroom.student_set.filter(is_excluded=False)[0]
         except:

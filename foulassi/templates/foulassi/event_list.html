@@ -107,6 +107,7 @@
             </div>
         </div>
     </div>
+    {% include 'reporting/snippets/modal_choose_report_cards_lang.html' %}
 {% endblock %}
 
 {% block js %}
@@ -118,17 +119,25 @@
             });
             $('.report-cards-generated:first .btn.download').show();
             $('body').on('click', '.generate-report-cards:not(.processing)', function() {
-                var _$btn = $(this),
-                    eventId = _$btn.data('event-id');
-                    _$btn.addClass('processing');
-                $.getJSON('{% url 'reporting:generate_report_cards' %}', {'event_id': eventId}, function(data) {
+                let _$btn = $(this),
+                    $select = $('#report-cards-language'),
+                    lang = $select.val(),
+                    langName = $select.find(':selected').text();
+                    eventId = $('.show-modal-choose-rc-lang').data('event-id');
+                if (!lang) {
+                    $select.parents('.form-group').addClass('has-error');
+                    return;
+                }
+                _$btn.addClass('processing');
+                $.getJSON('{% url 'reporting:generate_report_cards' %}', {event_id: eventId, lang: lang, lang_name: langName}, function(data) {
+                    _$btn.removeClass('processing');
+                    $('#modal-choose-report-cards-lang').modal('hide');
                     if (data.success) {
                         ikwen.showFloatingNotice("{% trans "Reports cards creation was started." %}");
-                        _$btn.hide();
-                        $('.show-modal-close-session, .generate-report-cards').hide()
+                        $('.show-modal-choose-rc-lang').hide();
                     }
                 }).fail(function() {
-                    ikwen.showFloatingNotice("{% trans "Ooops! Something wrong happened." %}")
+                    ikwen.showFloatingNotice("{% trans "Ooops! Something wrong happened.  Please check your internet." %}")
                 })
             });
         })()

@@ -3,7 +3,6 @@
 
 {% block head_style %}
     {{ block.super }}
-    <link href="{% static 'ikwen/css/uploader-single.css' %}" media="screen" rel="stylesheet" type="text/css" />
     <style>
         @media (max-width: 767px) {
             #admin-tools + .content-tab-list {margin-top: 40px}
@@ -20,11 +19,6 @@
     </style>
 {% endblock %}
 
-{% block head_js %}
-    {{ block.super }}
-    <script src="{% static 'ikwen/ajaxuploader/js/fileuploader.js' %}"></script>
-{% endblock %}
-
 {% block admin_content %}
     <div id="admin-content" class="has-edge-panel-right">
         <div class="container-fluid">
@@ -39,35 +33,38 @@
                     </div>
                 </form>
                 {% if perms.foulassi.ik_manage_student %}
-                {% url 'school:change_student' classroom.id as change_student_url %}
-                <a href="{{ change_student_url }}" class="btn btn-sm btn-success cta pull-right action"
-                   style="margin-right: 0" title="{% trans "Add new student" %}">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span class="hidden-xs">{% trans "Add" %}</span>
-                </a>
-                <button class="btn btn-sm btn-success cta pull-right action"
-                   title="{% trans "Import student list from CSV file" %}"
-                   style="margin-right: 5px" data-toggle="modal" data-target="#modal-import">
-                    <i class="fa fa-file-import"></i>
-                    <span class="hidden-xs">{% trans "Import" %}</span>
-                </button>
-                <a href="?action=export" class="btn btn-sm btn-success cta pull-right action"
-                   style="margin-right: 5px" title="{% trans "Export student list to XL file" %}">
-                    <i class="fa fa-file-export"></i>
-                    <span class="hidden-xs">{% trans "Export" %}</span>
-                </a>
-{#                <a href="?action=generate_report_cards" class="btn btn-sm btn-success cta pull-right action"#}
-{#                   style="margin-right: 5px" title="{% trans "Export student list to XL file" %}">#}
-{#                    <i class="fa fa-file-export"></i>#}
-{#                    <span class="hidden-xs">{% trans "Report" %}</span>#}
-{#                </a>#}
+                    {% url 'school:change_student' classroom.id as change_student_url %}
+                    <a href="{{ change_student_url }}" class="btn btn-sm btn-success cta pull-right action"
+                       style="margin-right: 0" title="{% trans "Add new student" %}">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span class="hidden-xs">{% trans "Add" %}</span>
+                    </a>
+                    <button class="btn btn-sm btn-success cta pull-right action"
+                       title="{% trans "Import student list from CSV file" %}"
+                       style="margin-right: 5px" data-toggle="modal" data-target="#modal-import">
+                        <i class="fa fa-file-import"></i>
+                        <span class="hidden-xs">{% trans "Import" %}</span>
+                    </button>
+                    <a href="?action=export" class="btn btn-sm btn-success cta pull-right action"
+                       style="margin-right: 5px" title="{% trans "Export student list to XL file" %}">
+                        <i class="fa fa-file-export"></i>
+                        <span class="hidden-xs">{% trans "Export" %}</span>
+                    </a>
+{#                    {% if classroom.mark_students %}#}
+{#                        <button class="btn btn-sm btn-success cta pull-right action" data-toggle="modal" data-target="#modal-choose-report-cards-lang"#}
+{#                           style="margin-right: 5px" title="{% trans "Generate report cards" %}">#}
+{#                            <span class="hidden-xs">{% trans "Report" %}</span>#}
+{#                        </button>#}
+{#                    {% endif %}#}
                 {% endif %}
                 {% if subject_list and request.session.is_teacher %}
                 <div>
+                    {% if classroom.mark_students %}
                     <button class="btn btn-sm btn-success cta pull-right action mark" title="{% trans "Mark students" %}">
                         <i class="fa fa-marker" style="font-size: 18px"></i>
                         <span class="hidden-xs">{% trans "Mark" %}</span>
                     </button>
+                    {% endif %}
                     <button class="btn btn-sm btn-success cta pull-right action show-modal-add-lesson" title="{% trans "Add lesson done" %}"
                             data-toggle="modal" data-target="#modal-add-lesson" style="margin-right: 5px">
                         <i class="fa fa-tasks" style="font-size: 18px"></i>
@@ -152,8 +149,10 @@
                                     type="button">OK</button>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-lg-2 do-submit tpl">
-                            <button class="btn btn-sm btn-success btn-block"
-                                    type="button">{% trans "Submit" %}</button>
+                            <button class="btn btn-sm btn-success btn-block" type="button">
+                                {% include 'core/snippets/button_spinner.html' %}
+                                <span>{% trans "Submit" %}</span>
+                            </button>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -324,6 +323,7 @@
             </div>
         </div>
     </div>
+    {% include 'reporting/snippets/modal_choose_report_cards_lang.html' %}
 {% endblock %}
 
 {% block js %}
@@ -425,11 +425,35 @@
                         }
                         ikwen.showFloatingNotice("{% trans "Scores successfully saved" %}", '', 6);
                         $('.review-marking, .do-submit').toggle();
+                        $('#admin-content').animate({scrollTop: 0}, 'normal');
                     },
                     complete: function() {
                         _$btn.removeClass('processing');
                     }
                 });
+            }).on('click', '.generate-report-cards:not(.processing)', function() {
+                let _$btn = $(this),
+                    $select = $('#report-cards-language'),
+                    lang = $select.val(),
+                    langName = $select.find(':selected').text();
+                if (!lang) {
+                    $select.parents('.form-group').addClass('has-error');
+                    return;
+                }
+                _$btn.addClass('processing');
+                $.getJSON('', {action: 'generate_report_cards', lang: lang, lang_name: langName}, (response) => {
+                    _$btn.removeClass('processing');
+                    $('#modal-choose-report-cards-lang').modal('hide');
+                    if (response.error) ikwen.showNoticeDialog('success', response.error, response.tip, response.url);
+                    else {
+                        ikwen.showFloatingNotice('success', "{% trans "Generation of report cards started." %}");
+                        let count = $('.local-event-count .label').text();
+                        count = (count) ? parseInt(count) + 1 : 1;
+                        $('.local-event-count .label').show().text(count)
+                    }
+                }).fail(function() {
+                    ikwen.showFloatingNotice("{% trans "Ooops! Something wrong happened. Please check your internet." %}")
+                })
             }).on('click', '#modal-import .confirm-import', function() {
                 var setInvoices = $('#set-invoices').prop('checked') ? 'yes' : '';
                 $.ajax({

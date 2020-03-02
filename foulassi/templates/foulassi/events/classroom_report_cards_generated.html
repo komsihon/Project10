@@ -1,0 +1,24 @@
+{% load i18n static humanize %}
+<div class="subtle-shade event-detail report-cards-generated">
+    <div class="event-icon">
+        <img src="{% static 'foulassi/img/report-card-icon.png' %}">
+    </div>
+    <div class="event-content">
+        {% blocktrans %}
+            <strong class="event-title">Report cards generated</strong>
+            <p>Report cards of {{ classroom }} for <strong>{{ session }}</strong> were successfully generated.</p>
+        {% endblocktrans %}
+        <div class="actions">
+            <a href="{{ report_cards_download_url }}" class="btn btn-success pull-right btn-sm download">{% trans "Download" %}</a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+{% if not event.is_processed %}
+    <script>
+        (() => {
+            $.getJSON('', {'action': 'mark_as_processed', 'event_id': '{{ event.id }}'})
+        })()
+    </script>
+{% endif %}

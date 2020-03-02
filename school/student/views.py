@@ -314,6 +314,12 @@ class StudentDetail(ChangeObjectBase):
             except SessionGroupScore.DoesNotExist:
                 obj = {'session': '', 'value': '---', 'rank': '---'}
             score_list.append(obj)
+
+        if getattr(settings, 'IS_IKWEN', False):
+            Score.objects.using(db).filter(student=student).update(was_viewed=True)
+            student.set_has_new(db)
+            student.save()
+
         context['score_list'] = score_list
         return render(self.request, 'school/snippets/student/scores.html', context)
 
@@ -332,6 +338,12 @@ class StudentDetail(ChangeObjectBase):
         context['discipline_log'] = discipline_log
         context['parent_convocation'] = DisciplineItem.objects.using(db).get(slug=DisciplineItem.PARENT_CONVOCATION)
         context['exclusion'] = DisciplineItem.objects.using(db).get(slug=DisciplineItem.EXCLUSION)
+
+        if getattr(settings, 'IS_IKWEN', False):
+            DisciplineLogEntry.objects.using(db).filter(student=student).update(was_viewed=True)
+            student.set_has_new(db)
+            student.save()
+
         return render(self.request, 'school/snippets/student/discipline.html', context)
 
     def render_billing(self, context):
@@ -433,8 +445,6 @@ class StudentDetail(ChangeObjectBase):
             happened_on = datetime.now()
             text = _("We regret to inform you that your child %s has been excluded from our school." % student)
             student.is_excluded = True
-            student.save()
-            student.save(using=UMBRELLA)
             service = get_service_instance()
             for parent in student.parent_set.using(UMBRELLA).all():
                 member = parent.member
@@ -463,6 +473,9 @@ class StudentDetail(ChangeObjectBase):
         details = self.request.GET['details']
         entry = DisciplineLogEntry.objects.create(item=item, student=student,
                                                   details=details, count=count, happened_on=happened_on)
+        student.has_new = True
+        student.save()
+        student.save(using=UMBRELLA)
         classroom = student.classroom
         level = classroom.level
         discipline_report, update = DisciplineReport.objects.get_or_create(discipline_item=item, level=None, classroom=None)

@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.template import Context
 from django.template.loader import get_template
 
@@ -5,7 +6,7 @@ from ikwen.conf import settings as ikwen_settings
 from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen.accesscontrol.models import Member
 from ikwen_foulassi.foulassi.models import Student, KidRequest
-from ikwen_foulassi.school.models import Session
+from ikwen_foulassi.school.models import Session, Classroom
 
 
 def render_all_scores_set(event, request):
@@ -27,8 +28,22 @@ def render_report_cards_generated(event, request):
     except Session.DoesNotExist:
         event.delete()
         return ''
-    c = Context({'event': event, 'session': session})
-    template_name = 'foulassi/events/report_cards_generated.html'
+    classroom = None
+    try:
+        classroom = Classroom.objects.get(pk=event.object_id_list[1])
+    except IndexError:
+        pass
+    except Classroom.DoesNotExist:
+        event.delete()
+        return ''
+    if classroom:
+        report_cards_download_url = reverse('reporting:report_card_download_list', args=(session.id, classroom.id))
+        c = Context({'event': event, 'session': session,
+                     'classroom': classroom, 'report_cards_download_url': report_cards_download_url})
+        template_name = 'foulassi/events/classroom_report_cards_generated.html'
+    else:
+        c = Context({'event': event, 'session': session})
+        template_name = 'foulassi/events/report_cards_generated.html'
     html_template = get_template(template_name)
     return html_template.render(c)
 

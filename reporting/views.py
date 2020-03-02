@@ -9,13 +9,14 @@ from threading import Thread
 
 from django.conf import settings
 from django.contrib.auth.decorators import permission_required
+from django.core.urlresolvers import reverse
 from django.db.models import Sum, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.views.generic import TemplateView
 from ikwen.core.views import ChangeObjectBase, HybridListView
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, activate
 
 from ikwen.core.utils import set_counters, calculate_watch_info, slice_watch_objects, rank_watch_objects, \
     get_service_instance
@@ -169,6 +170,7 @@ class ReportCardHeaderList(HybridListView):
 class ChangeReportCardHeader(ChangeObjectBase):
     model = ReportCardHeader
     model_admin = ReportCardHeaderAdmin
+    label_field = 'country_name'
 
 
 class ReportCardDownloadList(TemplateView):
@@ -177,6 +179,7 @@ class ReportCardDownloadList(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ReportCardDownloadList, self).get_context_data(**kwargs)
         session_id = kwargs['session_id']
+        classroom_id = kwargs.get('classroom_id')
         session = get_object_or_404(Session, pk=session_id)
         school_year = get_school_year(self.request)
         report_cards_root = getattr(settings, 'REPORT_CARDS_ROOT')
@@ -186,7 +189,11 @@ class ReportCardDownloadList(TemplateView):
         session_folder = session_group_folder + slugify(session.name).capitalize()
         summary_folder = session_group_folder + SUMMARY_FOLDER
         classroom_list = []
-        for classroom in Classroom.objects.filter(school_year=school_year):
+        if classroom_id:
+            queryset = Classroom.objects.filter(pk=classroom_id)
+        else:
+            queryset = Classroom.objects.filter(school_year=school_year, mark_students=True)
+        for classroom in queryset:
             try:
                 if session.order_number % 2 == 0:
                     filename = session_folder + '/' + slugify(str(classroom).decode('utf8')) + '.7z'
@@ -225,11 +232,14 @@ class ReportCardDownloadList(TemplateView):
 @permission_required('reporting.ik_manage_reporting')
 def generate_report_cards(request, *args, **kwargs):
     lang = request.GET['lang']
+    lang_name = request.GET['lang_name']
     try:
         ReportCardHeader.objects.get(lang=lang)
     except ReportCardHeader.DoesNotExist:
-        return HttpResponse({"error": _("Report card header not configured for %s." % lang), "header": True},
-                            'content-type: text/json')
+        response = {"error": _("Report card header not configured for %s." % lang_name),
+                    "tip": _("Please configure report card header for %s " % lang_name),
+                    "url": reverse("reporting:change_reportcardheader") + "?lang=" + lang}
+        return HttpResponse(json.dumps(response), 'content-type: text/json')
     if getattr(settings, 'DEBUG', False):
         generate_report_card_files(request)
     else:
@@ -253,13 +263,20 @@ def get_report_card_generation_progress(request, *args, **kwargs):
     return HttpResponse(json.dumps(response))
 
 
-def generate_report_card_files(request):
+def generate_report_card_files(request, classroom=None):
     member = request.user
     school_year = get_school_year(request)
     session = Session.get_current()
     is_term_end = session.order_number % 2 != 0
     is_end_year = session.order_number == 5
-    total = Student.objects.filter(school_year=school_year, is_excluded=False).count()
+    if classroom:
+        classroom_list = [classroom]
+        total = classroom.student_set.filter(is_excluded=False).count()
+        event_object_id_list = [session.id, classroom.id]
+    else:
+        classroom_list = Classroom.objects.filter(school_year=school_year, mark_students=True)
+        total = Student.objects.filter(school_year=school_year, is_excluded=False).count()
+        event_object_id_list = [session.id]
     if is_term_end:
         session_group_batch = ReportCardBatch.objects.create(member=member, session_group=session.session_group, total=total)
     else:
@@ -277,6 +294,7 @@ def generate_report_card_files(request):
                                  renderer='ikwen_foulassi.foulassi.events.render_report_cards_failed_to_generate')
 
     lang = request.GET['lang']
+    activate(lang)
     report_card_header = ReportCardHeader.objects.get(lang=lang)
     report_cards_root = getattr(settings, 'REPORT_CARDS_ROOT')
     session_group_folder = report_cards_root + '%s_%d-%d/%s' % (REPORT_CARDS_FOLDER, school_year, school_year + 1,
@@ -292,7 +310,7 @@ def generate_report_card_files(request):
         if os.path.exists(session_archive):
             os.unlink(session_archive)
     try:
-        for classroom in Classroom.objects.filter(school_year=school_year):
+        for classroom in classroom_list:
             if classroom.student_set.filter(is_excluded=False).count == 0:
                 continue
             if is_term_end:
@@ -339,4 +357,4 @@ def generate_report_card_files(request):
             session_group_batch.save()
         else:
             batch.save()
-        Event.objects.create(type=event_type, object_id_list=[session.id])
+        Event.objects.create(type=event_type, object_id_list=event_object_id_list)

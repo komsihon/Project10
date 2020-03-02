@@ -55,6 +55,10 @@ class Classroom(Model, ResultsTracker):
     subject_coefficient_list = ListField(EmbeddedModelField('SubjectCoefficient'))
     has_parent_reminder = models.BooleanField(default=False)
     has_student_reminder = models.BooleanField(default=False)
+    mark_students = models.BooleanField(_("Mark students ?"), default=True,
+                                        help_text=_("Check if students of this classroom receive scores after "
+                                                    "evaluation. Uncheck if not. For example uncheck for nursery "
+                                                    "classrooms as they are not really marked."))
 
     class Meta:
         unique_together = ('level', 'name', 'school_year')

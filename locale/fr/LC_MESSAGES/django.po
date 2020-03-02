@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-15 21:27+0000\n"
-"PO-Revision-Date: 2020-02-07 19:01+0100\n"
+"POT-Creation-Date: 2020-03-02 13:07+0000\n"
+"PO-Revision-Date: 2020-03-02 17:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -17,10 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
-
-#: school_setup_reminder.py:61
-msgid "Complete your school setup"
-msgstr "Terminez la configuration de votre école"
 
 #: foulassi/admin.py:12 foulassi/models.py:77
 msgid "Last name"
@@ -31,7 +27,7 @@ msgid "First name"
 msgstr "Prénom"
 
 #: foulassi/admin.py:14 foulassi/models.py:78
-#: reporting/templates/reporting/dashboard.html:191
+#: reporting/templates/reporting/dashboard.html:216
 msgid "Gender"
 msgstr "Sexe"
 
@@ -41,8 +37,8 @@ msgstr "Date de naissance"
 
 #: foulassi/admin.py:16 foulassi/models.py:83
 #: reporting/templates/reporting/discipline_detail.html:39
-#: reporting/templates/reporting/report_card_download_list.html:57
-#: school/models.py:245
+#: reporting/templates/reporting/report_card_download_list.html:37
+#: school/models.py:249
 msgid "Classroom"
 msgstr "Classe"
 
@@ -54,7 +50,7 @@ msgstr "Reprend"
 msgid "Year joined"
 msgstr "Année d'entrée"
 
-#: foulassi/admin.py:19
+#: foulassi/admin.py:19 reporting/utils.py:604 reporting/utils.py:881
 msgid "School year"
 msgstr "Année scolaire"
 
@@ -111,71 +107,71 @@ msgstr "Reprend la classe ?"
 msgid "Year when student joined this school"
 msgstr "Année d'entrée à l'école"
 
-#: foulassi/models.py:134
+#: foulassi/models.py:132
 msgid "Full name of the person"
 msgstr "Nom complet"
 
-#: foulassi/models.py:138
+#: foulassi/models.py:136
 msgid "Relationship that links the person to the student"
 msgstr "Relation entre la personne à l'élève"
 
-#: foulassi/models.py:270
+#: foulassi/models.py:268
 msgid "Average of sessions'scores"
 msgstr "Moyenne de toutes les séquences"
 
-#: foulassi/models.py:271
+#: foulassi/models.py:269
 msgid "Best score of all sessions"
 msgstr "Meilleur note de toutes les séquences"
 
-#: foulassi/models.py:275
+#: foulassi/models.py:273
 msgid "Registration fees title"
 msgstr "Intitulé frais d'inscription"
 
-#: foulassi/models.py:276 school/models.py:24 school/models.py:49
+#: foulassi/models.py:274 school/models.py:24 school/models.py:49
 msgid "Registration fees"
 msgstr "Frais d'inscription"
 
-#: foulassi/models.py:277
+#: foulassi/models.py:275
 msgid "Registration fees deadline"
 msgstr "Date limite frais d'inscription"
 
-#: foulassi/models.py:278
+#: foulassi/models.py:276
 msgid "First instalment title"
 msgstr "Intitulé première tranche"
 
-#: foulassi/models.py:279 school/models.py:25 school/models.py:50
+#: foulassi/models.py:277 school/models.py:25 school/models.py:50
 msgid "First instalment"
 msgstr "Première tranche"
 
-#: foulassi/models.py:280
+#: foulassi/models.py:278
 msgid "First instalment deadline"
 msgstr "Date limite première tranche"
 
-#: foulassi/models.py:281
+#: foulassi/models.py:279
 msgid "Second instalment title"
 msgstr "Intitulé deuxième tranche"
 
-#: foulassi/models.py:282 school/models.py:26 school/models.py:51
+#: foulassi/models.py:280 school/models.py:26 school/models.py:51
 msgid "Second instalment"
 msgstr "Deuxième tranche"
 
-#: foulassi/models.py:283
+#: foulassi/models.py:281
 msgid "Second instalment deadline"
 msgstr "Date limite deuxième tranche"
 
-#: foulassi/models.py:284
+#: foulassi/models.py:282
 msgid "Third instalment title"
 msgstr "Intitulé troisième tranche"
 
-#: foulassi/models.py:285 school/models.py:27 school/models.py:52
+#: foulassi/models.py:283 school/models.py:27 school/models.py:52
 msgid "Third instalment"
 msgstr "Troisième tranche"
 
-#: foulassi/models.py:286
+#: foulassi/models.py:284
 msgid "Third instalment deadline"
 msgstr "Date limite troisième tranche"
 
-#: foulassi/models.py:288
+#: foulassi/models.py:286
 msgid ""
 "Method of calculation of Term score. Average of sessions scores or best "
 "score of all sessions."
@@ -183,25 +179,29 @@ msgstr ""
 "Méthode de calcul de notes du Trimestre. Moyenne de notes de séquences ou "
 "meilleure de toutes les séquences."
 
-#: foulassi/models.py:292
+#: foulassi/models.py:290
 msgid "Show discipline report"
 msgstr "Montrer le rapport de discipline"
 
-#: foulassi/models.py:293
+#: foulassi/models.py:291
 msgid "Show lectures report"
 msgstr "Montrer le rapport de cours"
 
-#: foulassi/models.py:294
+#: foulassi/models.py:292
 msgid "Annual fees"
 msgstr "Frais annuels"
 
-#: foulassi/models.py:295
+#: foulassi/models.py:293
 msgid "Payment period"
 msgstr "Délai de paiement"
 
-#: foulassi/models.py:296
+#: foulassi/models.py:294
 msgid "Number of days left for parent to pay for the service."
 msgstr "Nombre de jours accordé aux parents pour payer ces frais."
+
+#: foulassi/school_setup_reminder.py:61
+msgid "Complete your school setup"
+msgstr "Configurez votre établissement"
 
 #: foulassi/scripts.py:11
 msgid "Secretary"
@@ -211,11 +211,13 @@ msgstr "Secrétariat"
 msgid "Parent Convocation"
 msgstr "Convocation de parent"
 
-#: foulassi/scripts.py:13 reporting/utils.py:427 reporting/utils.py:688
+#: foulassi/scripts.py:13 reporting/utils.py:427 reporting/utils.py:696
+#: reporting/utils1.py:427 reporting/utils1.py:689
 msgid "Exclusion"
 msgstr "Exclusion"
 
-#: foulassi/scripts.py:14 reporting/utils.py:415 reporting/utils.py:676
+#: foulassi/scripts.py:14 reporting/utils.py:415 reporting/utils.py:684
+#: reporting/utils1.py:415 reporting/utils1.py:677
 msgid "Lateness"
 msgstr "Retard"
 
@@ -224,11 +226,13 @@ msgctxt "Student warning"
 msgid "Warning"
 msgstr "Avertissement"
 
-#: foulassi/scripts.py:16 reporting/utils.py:423 reporting/utils.py:684
+#: foulassi/scripts.py:16 reporting/utils.py:423 reporting/utils.py:692
+#: reporting/utils1.py:423 reporting/utils1.py:685
 msgid "Censure"
 msgstr "Blâme conduite"
 
-#: foulassi/scripts.py:17 reporting/utils.py:411 reporting/utils.py:672
+#: foulassi/scripts.py:17 reporting/utils.py:411 reporting/utils.py:680
+#: reporting/utils1.py:411 reporting/utils1.py:673
 msgid "Absence"
 msgstr "Absence"
 
@@ -407,7 +411,8 @@ msgstr ""
 
 #: foulassi/templates/foulassi/admin_home.html:5
 #: foulassi/templates/foulassi/admin_home.html:15
-#: templates/core/app_base_admin.html:8
+#: templates/core/app_base_admin.html:8 templates/webnode/dreamer/base.html:230
+#: templates/webnode/dreamer/home.html:8
 msgid "Home"
 msgstr "Accueil"
 
@@ -417,25 +422,25 @@ msgstr "Bienvenu(e) "
 
 #: foulassi/templates/foulassi/admin_home.html:39
 msgid "Warnings"
-msgstr "Alertes"
+msgstr "Avertissements"
 
 #: foulassi/templates/foulassi/admin_home.html:49
 #, python-format
 msgid "<strong>%(missing)s</strong> students are not yet registered"
-msgstr "<strong>%(missing)s</strong> élèves ne sont pas encore enregistrés"
+msgstr "<strong>%(missing)s</strong> élèves n'ont pas encore été enregistrés"
 
 #: foulassi/templates/foulassi/admin_home.html:53
 #, python-format
 msgid "<strong>%(missing)s</strong> students have no parent contacts"
-msgstr "<strong>%(missing)s</strong> élèves n'ont pas de contacts parents"
+msgstr "<strong>%(missing)s</strong> élèves n'ont pas de contacts de parents"
 
 #: foulassi/templates/foulassi/admin_home.html:57
 msgid "Estimated loss: "
-msgstr "Perte estimée: "
+msgstr "Perte potentielle: "
 
 #: foulassi/templates/foulassi/admin_home.html:65
 msgid "Register them"
-msgstr "Inscrivez-les"
+msgstr "Enregistrez-les"
 
 #: foulassi/templates/foulassi/admin_home.html:72
 msgid "Subjects, levels and classrooms"
@@ -485,7 +490,7 @@ msgstr ""
 "                                "
 
 #: foulassi/templates/foulassi/admin_home.html:108
-#: templates/core/base_admin.html:166
+#: templates/core/base_admin.html:165
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -649,15 +654,15 @@ msgstr "Générer"
 msgid "Refill"
 msgstr "Recharger"
 
-#: foulassi/templates/foulassi/event_list.html:126
+#: foulassi/templates/foulassi/event_list.html:136
 msgid "Reports cards creation was started."
 msgstr "La génération des bulletins de notes a commencé."
 
-#: foulassi/templates/foulassi/event_list.html:131
-#: foulassi/templates/foulassi/events/report_cards_generated.html:64
-#: templates/core/service_detail.html:241
-msgid "Ooops! Something wrong happened."
-msgstr "Ooops! Une erreur s'est produite."
+#: foulassi/templates/foulassi/event_list.html:140
+msgid "Ooops! Something wrong happened.  Please check your internet."
+msgstr ""
+"Ooops! Une erreur s'est produite. Veuillez vérifier votre connexion internet "
+"SVP."
 
 #: foulassi/templates/foulassi/home.html:4
 #: foulassi/templates/foulassi/home.html:11
@@ -799,19 +804,20 @@ msgstr "Découvrez"
 
 #: foulassi/templates/foulassi/home.html:340
 #: foulassi/templates/foulassi/home_saas.html:412
-#: templates/core/base_admin.html:197
+#: templates/core/base_admin.html:196
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
 #: foulassi/templates/foulassi/home.html:342
 #: foulassi/templates/foulassi/home_saas.html:414
-#: templates/core/base_admin.html:198
+#: templates/core/base_admin.html:197 templates/webnode/dreamer/base.html:275
 msgid "Legal mentions"
 msgstr "Mentions légales"
 
 #: foulassi/templates/foulassi/home.html:348
 #: foulassi/templates/foulassi/home_saas.html:420
 #: templates/core/app_base_admin.html:119
+#: templates/webnode/dreamer/base.html:256
 msgid "Blog"
 msgstr "Blog"
 
@@ -1003,7 +1009,7 @@ msgstr ""
 #: foulassi/templates/foulassi/home_saas.html:223
 #: foulassi/templates/foulassi/home_saas.html:233
 #: reporting/templates/reporting/dashboard.html:5
-#: reporting/templates/reporting/dashboard.html:15
+#: reporting/templates/reporting/dashboard.html:16
 #: reporting/templates/reporting/discipline_detail.html:5
 #: reporting/templates/reporting/discipline_detail.html:15
 #: templates/core/app_base_admin.html:16
@@ -1200,13 +1206,13 @@ msgid "Details"
 msgstr "Détails"
 
 #: foulassi/templates/foulassi/kid_detail.html:27
-#: reporting/templates/reporting/dashboard.html:162
+#: reporting/templates/reporting/dashboard.html:187
 #: school/templates/school/student/student_detail.html:25
 msgid "Scores"
 msgstr "Notes"
 
 #: foulassi/templates/foulassi/kid_detail.html:30
-#: reporting/templates/reporting/dashboard.html:24
+#: reporting/templates/reporting/dashboard.html:25
 #: reporting/templates/reporting/discipline_detail.html:24
 #: school/templates/school/student/student_detail.html:28
 msgid "Discipline"
@@ -1238,8 +1244,8 @@ msgid "Delete item"
 msgstr "Supprimer l'élément"
 
 #: foulassi/templates/foulassi/kid_detail.html:92 school/models.py:21
-#: school/models.py:45 school/models.py:80 school/models.py:174
-#: school/models.py:199 school/templates/school/student/student_detail.html:88
+#: school/models.py:45 school/models.py:84 school/models.py:178
+#: school/models.py:203 school/templates/school/student/student_detail.html:88
 msgid "Name"
 msgstr "Nom"
 
@@ -1265,7 +1271,7 @@ msgstr "Ajouter une personne en charge"
 
 #: foulassi/templates/foulassi/kid_detail.html:114
 #: foulassi/templates/foulassi/kid_list.html:221
-#: school/templates/school/classroom/classroom_detail.html:46
+#: school/templates/school/classroom/classroom_detail.html:40
 #: school/templates/school/classroom/classroom_list.html:57
 #: school/templates/school/student/student_detail.html:109
 msgid "Add"
@@ -1278,13 +1284,14 @@ msgstr "Suggestions"
 #: foulassi/templates/foulassi/kid_list.html:47
 #: foulassi/templates/foulassi/kid_list.html:166
 #: foulassi/templates/foulassi/kid_list.html:190
-#: foulassi/templates/foulassi/events/report_cards_generated.html:41
+#: foulassi/templates/foulassi/events/report_cards_generated.html:42
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:42
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:87
-#: school/templates/school/teacher_detail.html:137
-#: school/templates/school/teacher_list.html:96
-#: school/templates/school/classroom/classroom_detail.html:148
-#: school/templates/school/classroom/classroom_detail.html:274
+#: reporting/templates/reporting/snippets/modal_choose_report_cards_lang.html:32
+#: school/templates/school/teacher_detail.html:139
+#: school/templates/school/teacher_list.html:102
+#: school/templates/school/classroom/classroom_detail.html:145
+#: school/templates/school/classroom/classroom_detail.html:273
 #: school/templates/school/classroom/classroom_list.html:206
 #: school/templates/school/snippets/student/modals.html:76
 #: school/templates/school/snippets/student/modals.html:111
@@ -1432,7 +1439,7 @@ msgstr "Simo Mballa, 6ème 3&#10;Youego Mballa, 4ème Esp"
 #: foulassi/templates/foulassi/search_school.html:106
 #: foulassi/templates/foulassi/search_school.html:107
 #: foulassi/templates/foulassi/search_school.html:108
-#: school/templates/school/classroom/classroom_detail.html:156
+#: school/templates/school/classroom/classroom_detail.html:154
 msgid "Submit"
 msgstr "Soumettre"
 
@@ -1507,6 +1514,28 @@ msgstr ""
 msgid "Continue"
 msgstr "Continuer"
 
+#: foulassi/templates/foulassi/events/classroom_report_cards_generated.html:7
+#, python-format
+msgid ""
+"\n"
+"            <strong class=\"event-title\">Report cards generated</strong>\n"
+"            <p>Report cards of %(classroom)s for <strong>%(session)s</"
+"strong> were successfully generated.</p>\n"
+"        "
+msgstr ""
+"\n"
+"            <strong class=\"event-title\">Bulletins de notes générés</"
+"strong>\n"
+"            <p>Les bulletins de notes de %(classroom)s pour la séquence "
+"<strong>%(session)s</strong> ont été générés avec succès.</p>\n"
+"        "
+
+#: foulassi/templates/foulassi/events/classroom_report_cards_generated.html:12
+#: foulassi/templates/foulassi/events/report_cards_generated.html:13
+#: reporting/templates/reporting/report_card_download_list.html:45
+msgid "Download"
+msgstr "Télécharger"
+
 #: foulassi/templates/foulassi/events/parent_kid_request.html:9
 #, python-format
 msgid "Mr/Mrs %(name)s"
@@ -1560,28 +1589,25 @@ msgstr ""
 "strong> ont été générés avec succès.</p>\n"
 "        "
 
-#: foulassi/templates/foulassi/events/report_cards_generated.html:13
-msgid "Download"
-msgstr "Télécharger"
-
-#: foulassi/templates/foulassi/events/report_cards_generated.html:16
+#: foulassi/templates/foulassi/events/report_cards_generated.html:17
 msgid "Generate report cards again"
 msgstr "Générer les bulletins une fois de plus"
 
-#: foulassi/templates/foulassi/events/report_cards_generated.html:16
+#: foulassi/templates/foulassi/events/report_cards_generated.html:17
 msgid "Restart"
 msgstr "Recommencer"
 
-#: foulassi/templates/foulassi/events/report_cards_generated.html:18
+#: foulassi/templates/foulassi/events/report_cards_generated.html:19
 msgid "Close session"
 msgstr "Boucler cette séquence"
 
-#: foulassi/templates/foulassi/events/report_cards_generated.html:33
-#: reporting/utils.py:419 reporting/utils.py:680
+#: foulassi/templates/foulassi/events/report_cards_generated.html:34
+#: reporting/utils.py:419 reporting/utils.py:688 reporting/utils1.py:419
+#: reporting/utils1.py:681
 msgid "Warning"
 msgstr "Attention"
 
-#: foulassi/templates/foulassi/events/report_cards_generated.html:34
+#: foulassi/templates/foulassi/events/report_cards_generated.html:35
 msgid ""
 "\n"
 "                        A session is closed once for all. After the session "
@@ -1595,13 +1621,18 @@ msgstr ""
 "                       ne pourront plus être changées.\n"
 "                    "
 
-#: foulassi/templates/foulassi/events/report_cards_generated.html:45
+#: foulassi/templates/foulassi/events/report_cards_generated.html:46
 msgid "Yes, close"
 msgstr "Oui, fermer"
 
-#: foulassi/templates/foulassi/events/report_cards_generated.html:60
+#: foulassi/templates/foulassi/events/report_cards_generated.html:61
 msgid "Session successfully closed."
 msgstr "Séquence bouclée avec succès."
+
+#: foulassi/templates/foulassi/events/report_cards_generated.html:65
+#: templates/core/service_detail.html:241
+msgid "Ooops! Something wrong happened."
+msgstr "Ooops! Une erreur s'est produite."
 
 #: foulassi/templates/foulassi/events/session_scores_all_set.html:7
 #, python-format
@@ -1688,129 +1719,166 @@ msgid "500 x 500px; will appear on Report Card"
 msgstr "500x500px; ce logo apparaît sur le bulletin"
 
 #: reporting/models.py:20
+#: reporting/templates/reporting/snippets/modal_choose_report_cards_lang.html:12
 msgid "Language"
 msgstr "Langue"
 
-#: reporting/views.py:231 school/classroom/views.py:596
+#: reporting/utils.py:605 reporting/utils.py:882
+msgid "Student name"
+msgstr "Nom de l'élève"
+
+#: reporting/utils.py:606 reporting/utils.py:883
+#: school/templates/school/change_level.html:11
+#: school/templates/school/classroom/change_classroom.html:12
+#: templates/core/app_base_admin.html:37
+msgid "Subjects"
+msgstr "Matières"
+
+#: reporting/utils.py:607 reporting/utils.py:884
+msgid "Results"
+msgstr "Résultats"
+
+#: reporting/utils.py:608 reporting/utils.py:885
+msgid "Council decision"
+msgstr "Décisions du conseil de classe"
+
+#: reporting/utils1.py:608 reporting/utils1.py:878
+msgid "REPUBLIC OF CAMEROON"
+msgstr "RÉPUBLIQUE DU CAMEROUN"
+
+#: reporting/utils1.py:609 reporting/utils1.py:879
+msgid "Peace - Work - Fatherland"
+msgstr "Paix - Travail - Patrie"
+
+#: reporting/utils1.py:610 reporting/utils1.py:880
+msgid "MINISTRY OF SECONDARY EDUCATION"
+msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
+
+#: reporting/views.py:239
 #, python-format
 msgid "Report card header not configured for %s."
 msgstr "En-tête de bulletins non configurée pour la langue: %s."
 
-#: reporting/templates/reporting/dashboard.html:27
-#: reporting/templates/reporting/dashboard.html:31
-#: reporting/templates/reporting/dashboard.html:97
-#: reporting/templates/reporting/dashboard.html:104
-#: reporting/templates/reporting/dashboard.html:106
+#: reporting/views.py:240 school/classroom/views.py:598
+#, python-format
+msgid "Please configure report card header for %s "
+msgstr "Veuillez configurer l'en-tête des bulletins pour la langue: %s"
+
+#: reporting/templates/reporting/dashboard.html:28
+#: reporting/templates/reporting/dashboard.html:32
+#: reporting/templates/reporting/dashboard.html:122
+#: reporting/templates/reporting/dashboard.html:129
+#: reporting/templates/reporting/dashboard.html:131
 #: reporting/templates/reporting/discipline_detail.html:32
 msgid "Yesterday"
 msgstr "Hier"
 
-#: reporting/templates/reporting/dashboard.html:32
-#: reporting/templates/reporting/dashboard.html:108
+#: reporting/templates/reporting/dashboard.html:33
+#: reporting/templates/reporting/dashboard.html:133
 #: reporting/templates/reporting/discipline_detail.html:33
 msgid "Last week"
 msgstr "Semaine dernière"
 
-#: reporting/templates/reporting/dashboard.html:33
-#: reporting/templates/reporting/dashboard.html:109
+#: reporting/templates/reporting/dashboard.html:34
+#: reporting/templates/reporting/dashboard.html:134
 #: reporting/templates/reporting/discipline_detail.html:34
 msgid "Last 28 days"
 msgstr "Les 28 derniers jours"
 
-#: reporting/templates/reporting/dashboard.html:81
-#: reporting/templates/reporting/dashboard.html:135
-#: reporting/templates/reporting/dashboard.html:153
-#: reporting/templates/reporting/dashboard.html:425
-#: reporting/templates/reporting/dashboard.html:477
+#: reporting/templates/reporting/dashboard.html:106
+#: reporting/templates/reporting/dashboard.html:160
+#: reporting/templates/reporting/dashboard.html:178
+#: reporting/templates/reporting/dashboard.html:450
+#: reporting/templates/reporting/dashboard.html:502
 msgid "See All"
 msgstr "Voir tout"
 
-#: reporting/templates/reporting/dashboard.html:91
+#: reporting/templates/reporting/dashboard.html:116
 msgid "Classes"
 msgstr "Classes"
 
-#: reporting/templates/reporting/dashboard.html:95
-#: reporting/templates/reporting/dashboard.html:103
+#: reporting/templates/reporting/dashboard.html:120
+#: reporting/templates/reporting/dashboard.html:128
 #: reporting/templates/reporting/discipline_detail.html:27
 #: reporting/templates/reporting/discipline_detail.html:31
 msgid "Today"
 msgstr "Aujourd'hui"
 
-#: reporting/templates/reporting/dashboard.html:119
+#: reporting/templates/reporting/dashboard.html:144
 msgid "Hours done"
 msgstr "Heures effectuées"
 
-#: reporting/templates/reporting/dashboard.html:142
+#: reporting/templates/reporting/dashboard.html:167
 msgid "Lessons done"
 msgstr "Cours dispensés"
 
-#: reporting/templates/reporting/dashboard.html:195
-#: reporting/templates/reporting/dashboard.html:208
-#: reporting/templates/reporting/dashboard.html:224
-#: reporting/templates/reporting/dashboard.html:247
-#: reporting/templates/reporting/dashboard.html:263
-#: reporting/templates/reporting/dashboard.html:286
-#: reporting/templates/reporting/dashboard.html:302
-#: reporting/templates/reporting/dashboard.html:325
-#: reporting/templates/reporting/dashboard.html:347
-#: reporting/templates/reporting/dashboard.html:377
-#: reporting/templates/reporting/dashboard.html:401
+#: reporting/templates/reporting/dashboard.html:220
+#: reporting/templates/reporting/dashboard.html:233
+#: reporting/templates/reporting/dashboard.html:249
+#: reporting/templates/reporting/dashboard.html:272
+#: reporting/templates/reporting/dashboard.html:288
+#: reporting/templates/reporting/dashboard.html:311
+#: reporting/templates/reporting/dashboard.html:327
+#: reporting/templates/reporting/dashboard.html:350
+#: reporting/templates/reporting/dashboard.html:372
+#: reporting/templates/reporting/dashboard.html:402
+#: reporting/templates/reporting/dashboard.html:426
 msgid "Boys"
 msgstr "Garçons"
 
-#: reporting/templates/reporting/dashboard.html:196
-#: reporting/templates/reporting/dashboard.html:212
-#: reporting/templates/reporting/dashboard.html:228
-#: reporting/templates/reporting/dashboard.html:251
-#: reporting/templates/reporting/dashboard.html:267
-#: reporting/templates/reporting/dashboard.html:290
-#: reporting/templates/reporting/dashboard.html:306
+#: reporting/templates/reporting/dashboard.html:221
+#: reporting/templates/reporting/dashboard.html:237
+#: reporting/templates/reporting/dashboard.html:253
+#: reporting/templates/reporting/dashboard.html:276
+#: reporting/templates/reporting/dashboard.html:292
+#: reporting/templates/reporting/dashboard.html:315
 #: reporting/templates/reporting/dashboard.html:331
-#: reporting/templates/reporting/dashboard.html:353
-#: reporting/templates/reporting/dashboard.html:387
-#: reporting/templates/reporting/dashboard.html:411
+#: reporting/templates/reporting/dashboard.html:356
+#: reporting/templates/reporting/dashboard.html:378
+#: reporting/templates/reporting/dashboard.html:412
+#: reporting/templates/reporting/dashboard.html:436
 msgid "Girls"
 msgstr "Filles"
 
-#: reporting/templates/reporting/dashboard.html:197
-#: reporting/templates/reporting/dashboard.html:216
-#: reporting/templates/reporting/dashboard.html:232
-#: reporting/templates/reporting/dashboard.html:255
-#: reporting/templates/reporting/dashboard.html:271
-#: reporting/templates/reporting/dashboard.html:294
-#: reporting/templates/reporting/dashboard.html:310
-#: reporting/templates/reporting/dashboard.html:337
-#: reporting/templates/reporting/dashboard.html:359
+#: reporting/templates/reporting/dashboard.html:222
+#: reporting/templates/reporting/dashboard.html:241
+#: reporting/templates/reporting/dashboard.html:257
+#: reporting/templates/reporting/dashboard.html:280
+#: reporting/templates/reporting/dashboard.html:296
+#: reporting/templates/reporting/dashboard.html:319
+#: reporting/templates/reporting/dashboard.html:335
+#: reporting/templates/reporting/dashboard.html:362
+#: reporting/templates/reporting/dashboard.html:384
 msgid "Total"
 msgstr "Total"
 
-#: reporting/templates/reporting/dashboard.html:202
+#: reporting/templates/reporting/dashboard.html:227
 msgid "Registered"
 msgstr "Inscrits"
 
-#: reporting/templates/reporting/dashboard.html:241
+#: reporting/templates/reporting/dashboard.html:266
 msgid "Present"
 msgstr "Présents"
 
-#: reporting/templates/reporting/dashboard.html:280
+#: reporting/templates/reporting/dashboard.html:305
 msgid "N>=10"
 msgstr "N>=10"
 
-#: reporting/templates/reporting/dashboard.html:319
+#: reporting/templates/reporting/dashboard.html:344
 #, python-format
 msgid "%% Success"
 msgstr "%% Succès"
 
-#: reporting/templates/reporting/dashboard.html:370
+#: reporting/templates/reporting/dashboard.html:395
 msgid "Best score"
 msgstr "Meilleure note"
 
-#: reporting/templates/reporting/dashboard.html:434
+#: reporting/templates/reporting/dashboard.html:459
 #: templates/core/service_detail.html:61
 msgid "Billing"
 msgstr "Finances"
 
-#: reporting/templates/reporting/dashboard.html:454
+#: reporting/templates/reporting/dashboard.html:479
 msgid "Pending invoices"
 msgstr "Paiements en attente"
 
@@ -1826,13 +1894,180 @@ msgstr "Télécharger les bulletins"
 msgid "Report cards"
 msgstr "Bulletins de notes"
 
-#: reporting/templates/reporting/report_card_download_list.html:58
+#: reporting/templates/reporting/report_card_download_list.html:38
 msgid "Summary"
 msgstr "Résumé"
 
-#: reporting/templates/reporting/report_card_download_list.html:81
-msgid "Deactivate"
-msgstr "Désactiver"
+#: reporting/templates/reporting/session_group_report_card.rml.html:14
+#: reporting/templates/reporting/session_report_card.rml.html:14
+#, python-format
+msgid "Report Card %(session)s"
+msgstr "Bulletin de notes %(session)s"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:23
+#: reporting/templates/reporting/session_report_card.rml.html:23
+msgctxt "Report Card Template"
+msgid "Registration number"
+msgstr "Matricule"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:25
+#: reporting/templates/reporting/session_report_card.rml.html:25
+msgctxt "Report Card Template"
+msgid "Classroom / Size"
+msgstr "Classe / Effectif"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:136
+#: reporting/templates/reporting/session_group_report_card.rml.html:142
+msgctxt "Session"
+msgid "Ses"
+msgstr "Seq"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:158
+#: reporting/templates/reporting/session_report_card.rml.html:152
+msgctxt "Report Card Template"
+msgid "RK"
+msgstr "Rg"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:163
+#: reporting/templates/reporting/session_report_card.rml.html:157
+msgctxt "Report Card Template"
+msgid "Cl. Av"
+msgstr "Moy. Cl"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:253
+#: reporting/templates/reporting/session_group_report_card.rml.html:285
+#: reporting/templates/reporting/session_report_card.rml.html:242
+#: reporting/templates/reporting/session_report_card.rml.html:274
+msgctxt "Report Card Template"
+msgid "Average"
+msgstr "Moyenne"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:258
+#: reporting/templates/reporting/session_group_report_card.rml.html:290
+#: reporting/templates/reporting/session_group_report_card.rml.html:412
+#: reporting/templates/reporting/session_report_card.rml.html:247
+#: reporting/templates/reporting/session_report_card.rml.html:279
+#: reporting/templates/reporting/session_report_card.rml.html:403
+msgctxt "Report Card Template"
+msgid "Rank"
+msgstr "Rang"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:340
+#: reporting/templates/reporting/session_report_card.rml.html:330
+msgctxt "Report Card Template"
+msgid "Classroom"
+msgstr "Classe"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:390
+#: reporting/templates/reporting/session_report_card.rml.html:381
+msgctxt "Report Card Template"
+msgid "Work"
+msgstr "Travail"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:460
+#: reporting/templates/reporting/session_report_card.rml.html:452
+msgctxt "Report Card Template: Very Good"
+msgid "VG"
+msgstr "TB"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:465
+#: reporting/templates/reporting/session_report_card.rml.html:457
+msgctxt "Report Card Template: Good"
+msgid "G"
+msgstr "B"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:470
+#: reporting/templates/reporting/session_report_card.rml.html:462
+msgctxt "Report Card Template: Pretty Good"
+msgid "PG"
+msgstr "AB"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:475
+#: reporting/templates/reporting/session_report_card.rml.html:467
+msgctxt "Report Card Template"
+msgid "FAIR"
+msgstr "PASS"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:485
+#: reporting/templates/reporting/session_report_card.rml.html:477
+msgctxt "Report Card Template"
+msgid "Cl. Avg"
+msgstr "Moy. Cl"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:533
+#: reporting/templates/reporting/session_report_card.rml.html:525
+msgctxt "Report Card Template: Fair"
+msgid "POOR"
+msgstr "MED"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:543
+#: reporting/templates/reporting/session_report_card.rml.html:535
+msgctxt "Report Card Template"
+msgid "WEAK"
+msgstr "FAIB"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:548
+#: reporting/templates/reporting/session_report_card.rml.html:540
+msgctxt "Report Card Template"
+msgid "NIL"
+msgstr "NUL"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:581
+#: reporting/templates/reporting/session_report_card.rml.html:573
+msgctxt "Report Card Template"
+msgid "Latenesses"
+msgstr "Retards"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:604
+#: reporting/templates/reporting/session_report_card.rml.html:596
+msgctxt "Report Card Template"
+msgid "Efforts to be done in "
+msgstr "Un effort s'impose en"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:628
+#: reporting/templates/reporting/session_report_card.rml.html:620
+msgctxt "Report Card Template"
+msgid "Principal Visa"
+msgstr "Visa du Principal"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:717
+#: reporting/templates/reporting/session_report_card.rml.html:709
+msgctxt "Report Card Template"
+msgid "Warnings"
+msgstr "Avertissements"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:781
+#: reporting/templates/reporting/session_report_card.rml.html:773
+msgctxt "Report Card Template"
+msgid "Behaviour warnings"
+msgstr "Avertissements conduite"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:846
+#: reporting/templates/reporting/session_report_card.rml.html:838
+msgctxt "Report Card Template"
+msgid "Exclusions (in days)"
+msgstr "Exclusions (en jours)"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:910
+#: reporting/templates/reporting/session_report_card.rml.html:902
+msgctxt "Report Card Template"
+msgid "Parents visa"
+msgstr "Visa du parent ou tuteur"
+
+#: reporting/templates/reporting/session_group_report_card.rml.html:931
+#: reporting/templates/reporting/session_report_card.rml.html:923
+msgctxt "Report Card Template"
+msgid "Observations and visa of professor"
+msgstr "Observations et visa de l'enseignant titulaire"
+
+#: reporting/templates/reporting/session_report_card.rml.html:136
+msgctxt "Report Card Template"
+msgid "Score"
+msgstr "Notes"
+
+#: reporting/templates/reporting/snippets/modal_choose_report_cards_lang.html:7
+msgid "Choose language"
+msgstr "Choisissez la langue"
 
 #: school/admin.py:9 school/admin.py:18
 msgid "Tuition fees"
@@ -1854,48 +2089,62 @@ msgstr ""
 msgid "Professor"
 msgstr "Enseignant titulaire"
 
-#: school/models.py:176
+#: school/models.py:58
+msgid "Mark students ?"
+msgstr "Noter les élèves ?"
+
+#: school/models.py:59
+msgid ""
+"Check if students of this classroom receive scores after evaluation. Uncheck "
+"if not. For example uncheck for nursery classrooms as they are not really "
+"marked."
+msgstr ""
+"Cochez si les élèves de cette classe sont notés après les évaluations. "
+"Décochez sinon. Par exemple, décochez s'il s'agit d'une classe de maternelle "
+"puisqu'on y est pas noté."
+
+#: school/models.py:180
 msgid "Starts on"
 msgstr "Début"
 
-#: school/models.py:177
+#: school/models.py:181
 msgid "Ends on"
 msgstr "Fin"
 
-#: school/models.py:201
+#: school/models.py:205
 msgid "Session group"
 msgstr "Groupe"
 
-#: school/models.py:246 school/templates/school/teacher_detail.html:120
-#: school/templates/school/classroom/classroom_detail.html:240
+#: school/models.py:250 school/templates/school/teacher_detail.html:120
+#: school/templates/school/classroom/classroom_detail.html:239
 msgid "Subject"
 msgstr "Matière"
 
-#: school/models.py:247 school/views.py:228
+#: school/models.py:251 school/views.py:228
 #: school/templates/school/classroom/change_classroom.html:14
 #: school/templates/school/classroom/change_classroom.html:30
 msgid "Teacher"
 msgstr "Enseignant"
 
-#: school/models.py:248 school/models.py:305
-#: school/templates/school/classroom/classroom_detail.html:251
+#: school/models.py:252 school/models.py:309
+#: school/templates/school/classroom/classroom_detail.html:250
 msgid "Title"
 msgstr "Titre"
 
-#: school/models.py:307
+#: school/models.py:311
 msgid "Unit"
 msgstr "Unité"
 
-#: school/models.py:310
+#: school/models.py:314
 msgid "With counter ?"
 msgstr "Compteur ?"
 
-#: school/views.py:99 school/classroom/views.py:400 school/student/views.py:676
+#: school/views.py:99 school/classroom/views.py:396 school/student/views.py:689
 msgid "successfully updated"
 msgstr "mis à jour avec succès"
 
-#: school/views.py:101 school/classroom/views.py:402
-#: school/student/views.py:678
+#: school/views.py:101 school/classroom/views.py:398
+#: school/student/views.py:691
 msgid "successfully created"
 msgstr "créé avec succès"
 
@@ -1903,7 +2152,7 @@ msgstr "créé avec succès"
 msgid "Teachers"
 msgstr "Enseignants"
 
-#: school/classroom/views.py:67
+#: school/classroom/views.py:68
 #, python-format
 msgid ""
 "Missing information at line %(line)d. %(found)d tokens found, but "
@@ -1912,22 +2161,22 @@ msgstr ""
 "Information manquante à la ligne %(line)d. %(found)d infos trouvées, mais "
 "%(expected)d étaient attendues ."
 
-#: school/classroom/views.py:72
+#: school/classroom/views.py:73
 #, python-format
 msgid "Missing registration number on line %d"
 msgstr "Matricule manquant à la ligne %d"
 
-#: school/classroom/views.py:76
+#: school/classroom/views.py:77
 #, python-format
 msgid "Missing last name on line %d"
 msgstr "Nom manquant à la ligne %d"
 
-#: school/classroom/views.py:80
+#: school/classroom/views.py:81
 #, python-format
 msgid "Missing first name on line %d"
 msgstr "Prénom manquant à la ligne %d"
 
-#: school/classroom/views.py:86
+#: school/classroom/views.py:87
 #, python-format
 msgid ""
 "Unreadable student name on line %d. Please replace or remove all suspect "
@@ -1936,7 +2185,7 @@ msgstr ""
 "Nom d'élève illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:96
+#: school/classroom/views.py:97
 #, python-format
 msgid ""
 "Unknown gender <strong>%(gender)s</strong> on line %(line)s. Must be either "
@@ -1945,7 +2194,7 @@ msgstr ""
 "Le sexe <strong>%(gender)s</strong> à la ligne %(line)s est inconnu. Ce "
 "devrait être <b>Masculin</b> ou <b>Féminin</b>"
 
-#: school/classroom/views.py:108
+#: school/classroom/views.py:109
 #, python-format
 msgid ""
 "Incorrect date of birth <strong>%(dob)s</strong> on line %(line)d. Must be "
@@ -1954,7 +2203,7 @@ msgstr ""
 "Date de naissance incorrecte <strong>%(dob)s</strong> à la ligne %(line)d. "
 "Cela doit être en format <b>Jour-Mois-Année</b>"
 
-#: school/classroom/views.py:113
+#: school/classroom/views.py:114
 #, python-format
 msgid ""
 "Incorrect Repetition <strong>%(rep)s</strong> on line %(line)d. Must be "
@@ -1963,7 +2212,7 @@ msgstr ""
 "\"Répétition\" incorrecte <strong>%(rep)s</strong> à la ligne %(line)d. Doit "
 "être <b>Oui</b> ou <b>Non</b>"
 
-#: school/classroom/views.py:121
+#: school/classroom/views.py:122
 #, python-format
 msgid ""
 "Year joined <strong>%(year_joined)s</strong> on line %(line)d is incorrect. "
@@ -1972,7 +2221,7 @@ msgstr ""
 "Année d'entrée <strong>%(year_joined)s</strong> à la ligne %(line)d "
 "incorrecte. Veuillez vérifiez."
 
-#: school/classroom/views.py:126
+#: school/classroom/views.py:127
 #, python-format
 msgid ""
 "Year joined <strong>%(year_joined)s</strong> on line %(line)d seems "
@@ -1981,7 +2230,7 @@ msgstr ""
 "Année d'entrée <strong>%(year_joined)s</strong> à la ligne %(line)d semble "
 "incorrect. Veuillez vérifier."
 
-#: school/classroom/views.py:139
+#: school/classroom/views.py:140
 #, python-format
 msgid ""
 "Unreadable Parent 1 name on line %d. Please replace or remove all suspect "
@@ -1990,7 +2239,7 @@ msgstr ""
 "Nom du parent 1 illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:144
+#: school/classroom/views.py:145
 #, python-format
 msgid ""
 "Missing parent 1 relationship on line %d. Use one of <strong>Father</"
@@ -2000,7 +2249,7 @@ msgstr ""
 "propositions suivantes <strong>Papa</strong>, <strong>Maman</strong>, "
 "<strong> Oncle</strong>, etc"
 
-#: school/classroom/views.py:150
+#: school/classroom/views.py:151
 #, python-format
 msgid ""
 "Unreadable parent 1 relationship on line %d. Please replace or remove all "
@@ -2010,13 +2259,13 @@ msgstr ""
 "les espaces et caractères spéciaux suspects pour éviter tout symbole "
 "malicieux."
 
-#: school/classroom/views.py:158
+#: school/classroom/views.py:159
 #, python-format
 msgid "Incorrect parent 1 email <strong>%(email)s</strong> on line %(line)d"
 msgstr ""
 "Email du parent 1 incorrect <strong>%(email)s</strong> à la ligne %(line)d"
 
-#: school/classroom/views.py:163
+#: school/classroom/views.py:164
 #, python-format
 msgid ""
 "Missing or incorrect parent 1 phone <strong>%(phone)s</strong> on line "
@@ -2026,7 +2275,7 @@ msgstr ""
 "%(line)d est absent ou incorrect. Le numéro de téléphone doit être composé "
 "de 9 chiffres."
 
-#: school/classroom/views.py:173
+#: school/classroom/views.py:174
 #, python-format
 msgid ""
 "Unreadable Parent 2 name on line %d. Please replace or remove all suspect "
@@ -2035,7 +2284,7 @@ msgstr ""
 "Nom du parent 2 illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:177
+#: school/classroom/views.py:178
 #, python-format
 msgid ""
 "1st and 2nd parent have the same name <strong>%(name)s</strong> on line "
@@ -2044,7 +2293,7 @@ msgstr ""
 "Les 1er et 2ème parents ont le même nom <strong>%(name)s</strong>à la ligne "
 "%(line)d,. Veuillez rectifier."
 
-#: school/classroom/views.py:182
+#: school/classroom/views.py:183
 #, python-format
 msgid ""
 "2nd parent parent relationship missing on line %d. Use one of "
@@ -2054,7 +2303,7 @@ msgstr ""
 "des propositions suivantes <strong>Père</strong>, <strong>Mère</strong>, "
 "<strong> Oncle</strong>, etc"
 
-#: school/classroom/views.py:186
+#: school/classroom/views.py:187
 #, python-format
 msgid ""
 "1st and 2nd parent have the same relationship <strong>%(relation)s</strong> "
@@ -2063,7 +2312,7 @@ msgstr ""
 "Les 1er et 2nd parent ont la même relation <strong>%(relation)s</strong> à "
 "la ligne %(line)d. Veuillez rectifier."
 
-#: school/classroom/views.py:192
+#: school/classroom/views.py:193
 #, python-format
 msgid ""
 "Unreadable parent 2 relationship on line %d. Please replace or remove all "
@@ -2072,14 +2321,14 @@ msgstr ""
 "Nom d'élève illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:200
+#: school/classroom/views.py:201
 #, python-format
 msgid "2nd parent email <strong>%(email)s</strong> incorrect on line %(line)d"
 msgstr ""
 "L' email du 2nd parent <strong>%(email)s</strong> à la ligne %(line)d est "
 "incorrect"
 
-#: school/classroom/views.py:204
+#: school/classroom/views.py:205
 #, python-format
 msgid ""
 "1st and 2nd parent have the same email <strong>%(email)s</strong> on line "
@@ -2088,7 +2337,7 @@ msgstr ""
 "Les 1er et 2ème parents ont le même email <strong>%(email)s</strong> à la "
 "ligne %(line)d. Veuillez changer."
 
-#: school/classroom/views.py:210
+#: school/classroom/views.py:211
 #, python-format
 msgid ""
 "2nd parent phone <strong>%(phone)s</strong> missing or incorrect on line "
@@ -2098,7 +2347,7 @@ msgstr ""
 "ou incorrect à la ligne %(line)d. Le numéro de téléphone doit être composé "
 "de 9 chiffres."
 
-#: school/classroom/views.py:214
+#: school/classroom/views.py:215
 #, python-format
 msgid ""
 "1st and 2nd parent have the same phone <strong>%(phone)s</strong> on line "
@@ -2107,19 +2356,31 @@ msgstr ""
 "Les 1er et 2ème parents ont le même numéro de téléphone <strong>%(phone)s</"
 "strong> à la ligne %(line)d. Veuillez changer."
 
-#: school/classroom/views.py:292
+#: school/classroom/views.py:288
 msgid "All your classrooms"
 msgstr "Toutes vos classes"
 
-#: school/classroom/views.py:458
+#: school/classroom/views.py:454
 msgid "No session created. Create sessions first."
 msgstr "Aucune séquence créée. Veuillez d'abord créer des séquences."
 
-#: school/classroom/views.py:461
+#: school/classroom/views.py:457
 msgid "Cannot mark on a terminated session."
 msgstr "Vous ne pouvez pas noter sur une séquence bouclée."
 
-#: school/classroom/views.py:609
+#: school/classroom/views.py:590
+msgid ""
+"Report card cannot be generated for classroom where students are not marked."
+msgstr ""
+"Les bulletins ne peuvent être générés pour une classe où les élèves ne sont "
+"pas notés."
+
+#: school/classroom/views.py:597
+#, fuzzy, python-format
+msgid "Report card header not configured for %s"
+msgstr "En-tête de bulletins non configurée pour la langue: %s."
+
+#: school/classroom/views.py:613
 #, python-format
 msgid ""
 "Cannot delete a confirmed student: %s. Exclude instead, only the head of "
@@ -2128,17 +2389,17 @@ msgstr ""
 "Vous ne pouvez pas supprimer l'élève inscrit: %s ; exclure plutôt. Seul, le "
 "chef d'établissement peut le faire."
 
-#: school/classroom/views.py:623
+#: school/classroom/views.py:627
 #, python-format
 msgid "%d item(s) deleted."
 msgstr "%d élément(s) supprimé(s)."
 
-#: school/classroom/views.py:639
+#: school/classroom/views.py:643
 #, python-format
 msgid "Class leader correctly set to %s"
 msgstr "%s a été choisi comme chef de classe"
 
-#: school/classroom/views.py:666
+#: school/classroom/views.py:670
 msgid "Lesson successfully added."
 msgstr "Leçon ajoutée avec succès."
 
@@ -2155,18 +2416,18 @@ msgstr "Un parent avec cet email existe déjà."
 msgid "A parent with this phone already exists."
 msgstr "Un parent avec ce numéro de téléphone existe déjà."
 
-#: school/student/views.py:360
+#: school/student/views.py:372
 msgid "Invalid amount"
 msgstr "Montant invalide"
 
-#: school/student/views.py:428
+#: school/student/views.py:440
 #, python-format
 msgid ""
 "You are summoned to school on %(summon_date)s about your child %(student)s"
 msgstr ""
 "Vous êtes convoqué à l'école le %(summon_date)s pour l'élève %(student)s"
 
-#: school/student/views.py:434
+#: school/student/views.py:446
 #, python-format
 msgid ""
 "We regret to inform you that your child %s has been excluded from our school."
@@ -2174,24 +2435,24 @@ msgstr ""
 "Nous sommes navré de vous informer que votre élève %s a été exclu de notre "
 "établissement."
 
-#: school/student/views.py:451
+#: school/student/views.py:461
 #, python-format
 msgid "Your child %(student)s has been %(count)s hour(s) late."
 msgstr "Votre enfant %(student)s a été en retard pendant %(count)s hour(s)."
 
-#: school/student/views.py:454
+#: school/student/views.py:464
 #, python-format
 msgid "Your child %(student)s has been absent for %(count)s hour(s)."
 msgstr "Votre enfant %(student)s a été en absent pendant %(count)s hour(s)."
 
-#: school/student/views.py:457
+#: school/student/views.py:467
 #, python-format
 msgid "New information about discipline of your child %s have been published."
 msgstr ""
 "De nouvelles informations sur la discipline de votre enfant %s ont été "
 "publiées."
 
-#: school/student/views.py:460
+#: school/student/views.py:470
 msgid "Cannot set an event earlier than Back to school date."
 msgstr "Vous ne pouvez créer un événement avant la rentrée scolaire."
 
@@ -2209,12 +2470,6 @@ msgstr "Nouveau Justificatif"
 #: school/templates/school/student/student_detail.html:114
 msgid "Save"
 msgstr "Enregistrer"
-
-#: school/templates/school/change_level.html:11
-#: school/templates/school/classroom/change_classroom.html:12
-#: templates/core/app_base_admin.html:37
-msgid "Subjects"
-msgstr "Matières"
 
 #: school/templates/school/change_level.html:13
 #: school/templates/school/change_level.html:34
@@ -2338,17 +2593,17 @@ msgstr "Cliquer sur + pour ajouter de nouvelles matières pour cet enseignant"
 msgid "Add Subject"
 msgstr "Ajouter"
 
-#: school/templates/school/teacher_detail.html:208
+#: school/templates/school/teacher_detail.html:215
 msgid "Teacher responsibilities updated"
 msgstr "Les responsabilités des enseignants ont été mises à jour"
 
 #: school/templates/school/teacher_list.html:17
-#: school/templates/school/classroom/classroom_detail.html:37
+#: school/templates/school/classroom/classroom_detail.html:31
 #, python-format
 msgid "Search %(verbose_name)s"
 msgstr "Rechercher %(verbose_name)s"
 
-#: school/templates/school/teacher_list.html:47
+#: school/templates/school/teacher_list.html:53
 msgid ""
 "\n"
 "                            You must invite teachers to create an account on "
@@ -2365,11 +2620,11 @@ msgstr ""
 "\n"
 "                            "
 
-#: school/templates/school/teacher_list.html:57
+#: school/templates/school/teacher_list.html:63
 msgid "Invite teachers"
 msgstr "Inviter des enseignants"
 
-#: school/templates/school/teacher_list.html:61
+#: school/templates/school/teacher_list.html:67
 #, python-format
 msgid ""
 "\n"
@@ -2386,15 +2641,15 @@ msgstr ""
 "<strong>Enseignants</strong> pour qu'il apparaisse ici.\n"
 "                            "
 
-#: school/templates/school/teacher_list.html:77
+#: school/templates/school/teacher_list.html:83
 msgid "Share on WhatsApp"
 msgstr "Partagez sur WhatsApp"
 
-#: school/templates/school/teacher_list.html:82
+#: school/templates/school/teacher_list.html:88
 msgid "Message"
 msgstr ""
 
-#: school/templates/school/teacher_list.html:85
+#: school/templates/school/teacher_list.html:91
 #, python-format
 msgid ""
 "Hello! This is our Foulassi platform for collaborating online in "
@@ -2402,6 +2657,24 @@ msgid ""
 msgstr ""
 "Bonjour. Ceci est notre plateforme Foulassi pour collaborer en ligne sur "
 "%(school_name)s. Enregistrez-vous pour qu'on puisse configurer vos accès."
+
+#: school/templates/school/teacher_list.html:117
+msgid "Just 2 steps to add a teacher !"
+msgstr ""
+
+#: school/templates/school/teacher_list.html:123
+msgid "Select the name in the list"
+msgstr ""
+
+#: school/templates/school/teacher_list.html:129
+msgid ""
+"Press the button 'move to group' on the right side and select 'teachers'"
+msgstr ""
+
+#: school/templates/school/teacher_list.html:137
+#, fuzzy
+msgid "Got it !"
+msgstr "Compris !"
 
 #: school/templates/school/classroom/change_classroom.html:14
 #: school/templates/school/classroom/change_classroom.html:29
@@ -2413,114 +2686,114 @@ msgstr "Ensg"
 msgid "Group"
 msgstr "Groupe"
 
-#: school/templates/school/classroom/classroom_detail.html:44
+#: school/templates/school/classroom/classroom_detail.html:38
 msgid "Add new student"
 msgstr "Ajouter un nouvel élève"
 
-#: school/templates/school/classroom/classroom_detail.html:49
-#: school/templates/school/classroom/classroom_detail.html:470
+#: school/templates/school/classroom/classroom_detail.html:43
+#: school/templates/school/classroom/classroom_detail.html:494
 msgid "Import student list from CSV file"
 msgstr "Importer une liste des élèves d'un fichier CSV"
 
-#: school/templates/school/classroom/classroom_detail.html:52
+#: school/templates/school/classroom/classroom_detail.html:46
 msgid "Import"
 msgstr "Importer"
 
-#: school/templates/school/classroom/classroom_detail.html:55
+#: school/templates/school/classroom/classroom_detail.html:49
 msgid "Export student list to XL file"
 msgstr "Exporter la liste des élèves en fichier XL"
 
-#: school/templates/school/classroom/classroom_detail.html:57
+#: school/templates/school/classroom/classroom_detail.html:51
 msgid "Export"
 msgstr "Exporter"
 
-#: school/templates/school/classroom/classroom_detail.html:67
+#: school/templates/school/classroom/classroom_detail.html:63
 msgid "Mark students"
 msgstr "Noter les élèves"
 
-#: school/templates/school/classroom/classroom_detail.html:69
+#: school/templates/school/classroom/classroom_detail.html:65
 msgid "Mark"
 msgstr "Noter"
 
-#: school/templates/school/classroom/classroom_detail.html:71
-#: school/templates/school/classroom/classroom_detail.html:235
+#: school/templates/school/classroom/classroom_detail.html:68
+#: school/templates/school/classroom/classroom_detail.html:234
 msgid "Add lesson done"
 msgstr "Ajouter une leçon faite"
 
-#: school/templates/school/classroom/classroom_detail.html:74
+#: school/templates/school/classroom/classroom_detail.html:71
 msgid "Lessons"
 msgstr "Leçons"
 
-#: school/templates/school/classroom/classroom_detail.html:118
+#: school/templates/school/classroom/classroom_detail.html:115
 msgid ""
 "Student list must be added to class first. Please contact administrator."
 msgstr ""
 "La liste des élèves doit préalablement être ajoutée par l'administrateur. "
 "Prière de le contacter SVP."
 
-#: school/templates/school/classroom/classroom_detail.html:124
+#: school/templates/school/classroom/classroom_detail.html:121
 #, python-format
 msgid "Add some students in %(classroom)s."
 msgstr "Ajouter des élèves en %(classroom)s."
 
-#: school/templates/school/classroom/classroom_detail.html:128
+#: school/templates/school/classroom/classroom_detail.html:125
 msgid "Add student"
 msgstr "Ajouter un élève"
 
-#: school/templates/school/classroom/classroom_detail.html:136
+#: school/templates/school/classroom/classroom_detail.html:133
 msgid "Import from CSV File"
 msgstr "Importer d'un fichier CSV"
 
-#: school/templates/school/classroom/classroom_detail.html:183
+#: school/templates/school/classroom/classroom_detail.html:182
 msgid "No professor"
 msgstr "Aucun professeur titulaire"
 
-#: school/templates/school/classroom/classroom_detail.html:186
-#: school/templates/school/classroom/classroom_detail.html:215
+#: school/templates/school/classroom/classroom_detail.html:185
+#: school/templates/school/classroom/classroom_detail.html:214
 msgid "Set now"
 msgstr "Renseigner maintenant"
 
-#: school/templates/school/classroom/classroom_detail.html:198
+#: school/templates/school/classroom/classroom_detail.html:197
 msgctxt "class size"
 msgid "Size"
 msgstr "Effectif"
 
-#: school/templates/school/classroom/classroom_detail.html:202
+#: school/templates/school/classroom/classroom_detail.html:201
 msgctxt "class leader"
 msgid "Leader"
 msgstr "Chef de classe"
 
-#: school/templates/school/classroom/classroom_detail.html:209
+#: school/templates/school/classroom/classroom_detail.html:208
 #: school/templates/school/classroom/classroom_detail.html:378
 #: templates/core/service_detail.html:83
 msgid "Change"
 msgstr "Changer"
 
-#: school/templates/school/classroom/classroom_detail.html:213
+#: school/templates/school/classroom/classroom_detail.html:212
 msgid "Not set"
 msgstr "Non renseigné"
 
-#: school/templates/school/classroom/classroom_detail.html:257
+#: school/templates/school/classroom/classroom_detail.html:256
 msgid "Hours count"
 msgstr "Nombre d'heures"
 
-#: school/templates/school/classroom/classroom_detail.html:264
+#: school/templates/school/classroom/classroom_detail.html:263
 msgid "Lesson complete ?"
 msgstr "Leçon terminée ?"
 
-#: school/templates/school/classroom/classroom_detail.html:287
+#: school/templates/school/classroom/classroom_detail.html:286
 msgid "Import from CSV file"
 msgstr "Importer d'un fichier CSV"
 
-#: school/templates/school/classroom/classroom_detail.html:292
+#: school/templates/school/classroom/classroom_detail.html:291
 msgid "Download CSV file model..."
 msgstr "Télécharger le fichier CSV modèle"
 
-#: school/templates/school/classroom/classroom_detail.html:301
+#: school/templates/school/classroom/classroom_detail.html:300
 msgid "Set invoices"
 msgstr "Émettre des factures"
 
-#: school/templates/school/classroom/classroom_detail.html:304
+#: school/templates/school/classroom/classroom_detail.html:303
 msgid ""
 "\n"
 "                                    Tuition fees for those student will be "
@@ -2536,7 +2809,7 @@ msgstr ""
 "paiement par les parents.\n"
 "                                "
 
-#: school/templates/school/classroom/classroom_detail.html:308
+#: school/templates/school/classroom/classroom_detail.html:307
 msgid ""
 "\n"
 "                                    Tuition fees for those student will be "
@@ -2552,7 +2825,7 @@ msgstr ""
 "strong>\n"
 "                                "
 
-#: school/templates/school/classroom/classroom_detail.html:321
+#: school/templates/school/classroom/classroom_detail.html:320
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -2572,7 +2845,17 @@ msgstr "S'il vous plaît, vérifiez avant de soumettre."
 msgid "Scores successfully saved"
 msgstr "Les notes ont été sauvegardées avec succès"
 
-#: school/templates/school/classroom/classroom_detail.html:477
+#: school/templates/school/classroom/classroom_detail.html:449
+msgid "Generation of report cards started."
+msgstr "La génération des bulletins a été lancée"
+
+#: school/templates/school/classroom/classroom_detail.html:455
+msgid "Ooops! Something wrong happened. Please check your internet."
+msgstr ""
+"Ooops! Une erreur s'est produite. Veuillez vérifier votre connexion internet "
+"SVP."
+
+#: school/templates/school/classroom/classroom_detail.html:501
 msgid "Upload student from CSV file"
 msgstr "Uploader les élève à partir d'un fichier CSV"
 
@@ -2615,22 +2898,22 @@ msgid "Manage"
 msgstr "Gérer"
 
 #: school/templates/school/classroom/classroom_list.html:104
-#: templates/core/base_admin.html:84
+#: templates/core/base_admin.html:83
 msgid "SMS Sending in progress"
 msgstr "Envoie de SMS en progression"
 
 #: school/templates/school/classroom/classroom_list.html:112
-#: templates/core/base_admin.html:92
+#: templates/core/base_admin.html:91
 msgid "Send SMS"
 msgstr "Envoyer le SMS"
 
 #: school/templates/school/classroom/classroom_list.html:117
-#: templates/core/base_admin.html:97
+#: templates/core/base_admin.html:96
 msgid "Mail Sending in progress"
 msgstr "Envoi de Mail en progression"
 
 #: school/templates/school/classroom/classroom_list.html:125
-#: templates/core/base_admin.html:105
+#: templates/core/base_admin.html:104
 msgid "Send Mail"
 msgstr "Envoi de Mail"
 
@@ -2684,8 +2967,8 @@ msgstr "Cliquez sur une classe dans la liste pour voir les détails."
 #: school/templates/school/classroom/classroom_list.html:195
 msgid "Some classrooms have unregistered students or/and parents. Please fix !"
 msgstr ""
-"Des classes sont attentes de remplissage de la liste d'élèves et/ou contacts "
-"parents. Veuillez le faire SVP !"
+"Des élèves ou contacts de parents n'ont pas encore été renseignés pour "
+"certaines classes. Veuillez corriger !"
 
 #: school/templates/school/snippets/classroom/student_list.html:32
 msgid "Delete student"
@@ -2925,67 +3208,67 @@ msgstr "Aller au site web"
 msgid "Events"
 msgstr "Événements"
 
-#: templates/core/base_admin.html:77
+#: templates/core/base_admin.html:76
 msgid "Send SMS or Mail to all parents"
 msgstr "Envoyer un SMS ou un Mail à tous les parents"
 
-#: templates/core/base_admin.html:136
+#: templates/core/base_admin.html:135
 msgid "Pages"
 msgstr "Pages"
 
-#: templates/core/base_admin.html:140
+#: templates/core/base_admin.html:139
 msgid "Theming"
 msgstr "Thème"
 
-#: templates/core/base_admin.html:145
+#: templates/core/base_admin.html:144
 msgid "Community"
 msgstr "Communauté"
 
-#: templates/core/base_admin.html:155
+#: templates/core/base_admin.html:154
 msgid "Payment means"
 msgstr "Moyens de paiement"
 
-#: templates/core/base_admin.html:161
+#: templates/core/base_admin.html:160
 msgid "Modules"
 msgstr "Modules"
 
-#: templates/core/base_admin.html:171 templates/core/service_detail.html:113
+#: templates/core/base_admin.html:170 templates/core/service_detail.html:113
 msgid "Invoices"
 msgstr "Factures"
 
-#: templates/core/base_admin.html:175 templates/core/service_detail.html:19
+#: templates/core/base_admin.html:174 templates/core/service_detail.html:19
 msgid "Info & Billing"
 msgstr "Info et Facturation"
 
-#: templates/core/base_admin.html:301
+#: templates/core/base_admin.html:300
 msgid "Confirm deletion ?"
 msgstr "Confirmer la suppression ?"
 
-#: templates/core/base_admin.html:349
+#: templates/core/base_admin.html:348
 msgid "SMS to parents of"
 msgstr "Envoyer le SMS aux parents de"
 
-#: templates/core/base_admin.html:351
+#: templates/core/base_admin.html:350
 msgid "SMS to all parents"
 msgstr "Envoyer le SMS à tous les parents"
 
-#: templates/core/base_admin.html:363
+#: templates/core/base_admin.html:362
 msgid "Mail to parents of"
 msgstr "Envoyer le mail aux parents de"
 
-#: templates/core/base_admin.html:365
+#: templates/core/base_admin.html:364
 msgid "Mail to all parents"
 msgstr "Envoyer le mail à tous les parents"
 
-#: templates/core/base_admin.html:371
+#: templates/core/base_admin.html:370
 msgid "Remind me later"
 msgstr "Rappeler plus tard"
 
-#: templates/core/base_admin.html:371
+#: templates/core/base_admin.html:370
 msgid "Got it!"
 msgstr "Compris !"
 
-#: templates/core/base_admin.html:371
+#: templates/core/base_admin.html:370
 msgid "Show Help"
 msgstr "Afficher l'aide"
 
@@ -3119,36 +3402,71 @@ msgstr "Cycle de facturation mis à jour avec succès."
 msgid "You are about to transfer ownership to "
 msgstr "Vous êtes sur le point de transférer votre propriété à "
 
-#~ msgid "REPUBLIC OF CAMEROON"
-#~ msgstr "RÉPUBLIQUE DU CAMEROUN"
+#: templates/webnode/dreamer/base.html:92
+#: templates/webnode/dreamer/base.html:193
+msgid "Account setup"
+msgstr "Infos compte"
 
-#~ msgid "Peace - Work - Fatherland"
-#~ msgstr "Paix - Travail - Patrie"
+#: templates/webnode/dreamer/base.html:94
+#: templates/webnode/dreamer/base.html:195
+#: templates/webnode/dreamer/base.html:241
+msgid "Logout"
+msgstr "Déconnexion"
 
-#~ msgid "MINISTRY OF SECONDARY EDUCATION"
-#~ msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
+#: templates/webnode/dreamer/base.html:100
+#: templates/webnode/dreamer/base.html:239
+msgid "Login"
+msgstr "Connexion"
 
-#~ msgid "Account setup"
-#~ msgstr "Infos compte"
+#: templates/webnode/dreamer/base.html:246
+msgid "Contacts"
+msgstr ""
 
-#~ msgid "Logout"
-#~ msgstr "Déconnexion"
+#: templates/webnode/dreamer/base.html:274
+msgid "All rights reserved"
+msgstr "Tous droits réservés"
 
-#~ msgid "Login"
-#~ msgstr "Connexion"
-
-#~ msgid "All rights reserved"
-#~ msgstr "Tous droits réservés"
-
+#: templates/webnode/dreamer/detail.html:6
 #, fuzzy
-#~ msgid "sur"
-#~ msgstr "Blâme conduite"
+msgid "sur"
+msgstr "Blâme conduite"
 
-#~ msgid "Related posts"
-#~ msgstr "Articles liés"
+#: templates/webnode/dreamer/detail.html:42
+msgid "Related posts"
+msgstr "Articles liés"
 
-#~ msgid "Share"
-#~ msgstr "Partager"
+#: templates/webnode/dreamer/detail.html:54
+msgid "Share"
+msgstr "Partager"
+
+#~ msgid "Generate report cards"
+#~ msgstr "Générer les bulletins"
+
+#~ msgid "Report"
+#~ msgstr "Bulletins"
+
+#~ msgctxt "Report Card Template"
+#~ msgid "School year"
+#~ msgstr "Ann&233;e scolaire"
+
+#~ msgctxt "Report Card Template"
+#~ msgid "Student name"
+#~ msgstr "Nom de l'&#233;l&#232;ve"
+
+#~ msgctxt "Report Card Template"
+#~ msgid "Subjects"
+#~ msgstr "Mati&#232;res"
+
+#~ msgctxt "Report Card Template"
+#~ msgid "Results"
+#~ msgstr "R&233;sultats"
+
+#~ msgctxt "Report Card Template: Fair"
+#~ msgid "F"
+#~ msgstr "PASS"
+
+#~ msgid "Deactivate"
+#~ msgstr "Désactiver"
 
 #~ msgid "Missing parent name on line %d"
 #~ msgstr "Nom du parent non renseigné à la ligne %d"
@@ -3196,9 +3514,6 @@ msgstr "Vous êtes sur le point de transférer votre propriété à "
 
 #~ msgid "Add new "
 #~ msgstr "Ajouter "
-
-#~ msgid "Report"
-#~ msgstr "Bulletins"
 
 #, fuzzy
 #~ msgid "Import from XL File"

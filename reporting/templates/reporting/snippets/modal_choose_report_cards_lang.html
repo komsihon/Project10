@@ -1,0 +1,39 @@
+{% load i18n %}
+<div class="modal fade" id="modal-choose-report-cards-lang" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-info">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{% trans "Choose language" %}</h4>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="return false" class="form-horizontal">
+                    <div class="form-group row">
+                        <label for="report-cards-language" class="col-sm-5 col-md-4">{% trans "Language" %} </label>
+                        <div class="col-sm-7 col-md-8">
+                            <select id="report-cards-language" class="form-control input-sm">
+                                <option value="">------</option>
+                                {% for lang in LANGUAGES %}
+                                    <option value="{{ lang.0 }}">{{ lang.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <div class="actions">
+                    <div class="col-xs-12 col-sm-4 pull-right action">
+                        <button class="btn btn-success btn-block btn-sm ok generate-report-cards" aria-label="OK">
+                            {% include 'core/snippets/button_spinner.html' %}
+                            <span>OK</span>
+                        </button>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 pull-right action">
+                        <button class="btn btn-default btn-block btn-sm"
+                                data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>

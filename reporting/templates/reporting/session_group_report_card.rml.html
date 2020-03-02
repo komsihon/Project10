@@ -1,7 +1,7 @@
 {% load i18n static humanize %}
-<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
 <!DOCTYPE document SYSTEM "rml.dtd">
-<document filename="Foulassi_ReportCard.pdf">
+<document filename="Bulletin.pdf">
     <template author="Wilfried Futchea" creator="w.futchea@ikwen.com" pageSize="(210mm, 297mm)" leftMargin="72" showBoundary="0">
         <pageTemplate id="main">
             <pageGraphics>
@@ -18,11 +18,11 @@
                 <drawString x="117" y="795">{{ school_motto|safe }}</drawString>
                 <drawString x="117" y="780">BP : {{ school_address|safe }}</drawString>
                 <drawString x="117" y="765">Tel : {{ school_contact }}</drawString>
-                <drawString x="398" y="705">{% trans "School year" %} : {{ school_year }}</drawString>
+                <drawString x="398" y="705">{{ label_school_year|safe }} : {{ school_year }}</drawString>
 
-                <drawString x="117" y="690">{% trans "Registration number" %} : {{ student.registration_number|safe }}</drawString>
-                <drawString x="117" y="675">{% trans "Student name" %} : {{ last_name|safe }} {{ first_name|safe }}</drawString>
-                <drawString x="117" y="660">{% trans "Classroom / Size" %} : {{ classroom_name|safe }} / {{ classroom.size }}</drawString>
+                <drawString x="117" y="690">{% trans "Registration number" context 'Report Card Template' %} : {{ student.registration_number|safe }}</drawString>
+                <drawString x="117" y="675">{{ label_student_name|safe }} : {{ last_name|safe }} {{ first_name|safe }}</drawString>
+                <drawString x="117" y="660">{% trans "Classroom / Size" context 'Report Card Template' %} : {{ classroom_name|safe }} / {{ classroom.size }}</drawString>
                 {% if ministry_logo %}
                     <image file="{{ ministry_logo }}" x="14" y="750" width="85" height="85"></image>
                 {% endif %}
@@ -124,16 +124,22 @@
 
     <story>
         <spacer length="1.8cm"/>
-        <blockTable style="table_header" rowHeights="0.75cm" colWidths="6cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,6cm">
+        <blockTable style="table_header" rowHeights="0.75cm" colWidths="5.5cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,5.2cm">
             <tr>
                 <td>
                     <para style="title">
-                        <b>{% trans "Subjects" %}</b>
+                        <b>{{ label_subjects|safe }}</b>
                     </para>
                 </td>
                 <td>
                     <para style="title">
-                        <b>{% trans "Score" %}
+                        <b>{% trans "Ses" context 'Session' %} 1
+                        /20</b>
+                    </para>
+                </td>
+                <td>
+                    <para style="title">
+                        <b>{% trans "Ses" context 'Session' %} 2
                         /20</b>
                     </para>
                 </td>
@@ -149,12 +155,12 @@
                 </td>
                 <td>
                     <para style="title">
-                        <b>{% trans "RK" %}</b>
+                        <b>{% trans "RK" context 'Report Card Template' %}</b>
                     </para>
                 </td>
                 <td>
                     <para style="title">
-                        <b>{% trans "Cl. Av" %}</b>
+                        <b>{% trans "Cl. Av" context 'Report Card Template' %}</b>
                     </para>
                 </td>
                 <td>
@@ -172,7 +178,7 @@
         </blockTable>
         {% for group, score_summary in student_score_matrix.items %}
         <blockTable style="table_style" rowHeights="{% for item in score_summary.subject_list  %}{% if forloop.counter != 1 %},{% endif %}0.7cm{% endfor %}"
-                    colWidths="6cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,6cm">
+                    colWidths="5.5cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,5.2cm">
             {% for item in score_summary.subject_list %}
             <tr>
                 <td>
@@ -185,7 +191,12 @@
                 </td>
                 <td>
                     <para style="score">
-                        {{ item.score.value|floatformat:"2" }}
+                        {{ item.score.value1|floatformat:"2" }}
+                    </para>
+                </td>
+                <td>
+                    <para style="score">
+                        {{ item.score.value2|floatformat:"2" }}
                     </para>
                 </td>
                 <td>
@@ -220,7 +231,7 @@
             </tr>
             {% endfor %}
         </blockTable>
-        <blockTable style="table_result" rowHeights="0.75cm" colWidths="6.2cm,3.1cm,3.1cm,4.3cm,3.1cm">
+        <blockTable style="table_result" rowHeights="0.7cm" colWidths="6.2cm,3.1cm,3.1cm,4.3cm,3.1cm">
             <tr>
                 <td>
                     <para style="title_left">
@@ -239,12 +250,12 @@
                 </td>
                 <td>
                     <para style="score">
-                    {% trans "Average" %}: {{ score_summary.avg_score.value|floatformat:"2" }}
+                    {% trans "Average" context 'Report Card Template' %}: {{ score_summary.avg_score.value|floatformat:"2" }}
                     </para>
                 </td>
                 <td>
                     <para style="score">
-                    {% trans "Rank" %}: {{ score_summary.avg_score.rank }}
+                    {% trans "Rank" context 'Report Card Template' %}: {{ score_summary.avg_score.rank }}
                     </para>
                 </td>
             </tr>
@@ -256,8 +267,7 @@
             <tr>
                 <td>
                     <para style="title_left">
-                        <b>{% trans "Results" %}</b>
-{#                        <b>R&#201;SULTATS S&#201;QUENTIELS</b>#}
+                        <b>{{ label_results|safe }}</b>
                     </para>
                 </td>
                 <td>
@@ -272,22 +282,21 @@
                 </td>
                 <td>
                     <para>
-                    {% trans "Average" %} : {{ session_score.value|floatformat:"2" }}
+                    {% trans "Average" context 'Report Card Template' %} : {{ session_score.value|floatformat:"2" }}
                     </para>
                 </td>
                 <td>
                     <para>
-                    {% trans "Rank" %} : {{ session_score.rank }}
+                    {% trans "Rank" context 'Report Card Template' %} : {{ session_score.rank }}
                     </para>
                 </td>
             </tr>
         </blockTable>
         <spacer length="0.5cm"/>
-
         <blockTable style="council_decision" rowHeights="0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm,0.5cm" colWidths="1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,1.3cm,0.5cm,1.2cm,1.3cm,2.2cm,1.3cm,1.6cm">
             <tr>
                 <td>
-                    <para style="title"> {% trans "Council decision" %} </para>
+                    <para style="title">{{ label_council_decision|safe }}</para>
                 </td>
                 <td>
                     <para>
@@ -328,8 +337,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        {% trans "Classroom" %}
-{#                        &#201;leve / Classe#}
+                        {% trans "Classroom" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -338,7 +346,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        {{ classroom_level_name|safe }}
+                        {{ student_grade }}
                     </para>
                 </td>
                 <td>
@@ -346,7 +354,7 @@
                         MENTION
                     </para>
                     <para style="mention">
-                        {{ student_mention|safe }}
+                        {{ student_mention }}
                     </para>
                 </td>
                 <td>
@@ -379,7 +387,7 @@
                 </td>
                 <td>
                     <para style="title">
-                        {% trans "Work" %}
+                        {% trans "Work" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -401,7 +409,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        {% trans "Rank" %}
+                        {% trans "Rank" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -410,7 +418,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        {{ session_score.rank }} / {{ classroom.size }}
+                        {{ student_rank }} / {{ classroom_count }}
                     </para>
                 </td>
                 <td>
@@ -430,6 +438,7 @@
                 </td>
                 <td>
                     <para style="score">
+
                     </para>
                 </td>
                 <td>
@@ -439,9 +448,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        {% if absence_count_justified %}
-                            {{ absence_count_justified }} ({{ absence_duration_justified }} H)
-                        {% endif %}
+                        {{ absences_count_J }}
                     </para>
                 </td>
                 <td>
@@ -450,22 +457,22 @@
                 </td>
                 <td>
                     <para style="score">
-                        TB
+                        {% trans "VG" context 'Report Card Template: Very Good' %}
                     </para>
                 </td>
                 <td>
                     <para style="score">
-                        B
+                        {% trans "G" context 'Report Card Template: Good' %}
                     </para>
                 </td>
                 <td>
                     <para style="score">
-                        AB
+                        {% trans "PG" context 'Report Card Template: Pretty Good' %}
                     </para>
                 </td>
                 <td>
                     <para style="score">
-                        PASS
+                        {% trans "FAIR" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -475,7 +482,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        {% trans "Cl. Avg" %}
+                        {% trans "Cl. Avg" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -523,7 +530,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        MED
+                        {% trans "POOR" context 'Report Card Template: Fair' %}
                     </para>
                 </td>
                 <td>
@@ -533,12 +540,12 @@
                 </td>
                 <td>
                     <para style="score">
-                        {% trans "WEAK" %}
+                        {% trans "WEAK" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
                     <para style="score">
-                        {% trans "NIL" %}
+                        {% trans "NIL" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -571,7 +578,7 @@
             <tr>
                 <td>
                     <para style="title_left">
-                        {% trans "Latenesses" %}
+                        {% trans "Latenesses" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -594,7 +601,7 @@
                 </td>
                 <td>
                     <para style="title_left">
-                        {% trans "Efforts to be done in " %}
+                        {% trans "Efforts to be done in " context 'Report Card Template' %}
                     </para>
                     <para style="warning">
                         {{ weakness }}
@@ -618,7 +625,7 @@
                 </td>
                 <td>
                     <para style="title">
-                        {% trans "Principal Visa" %}
+                        {% trans "Principal Visa" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -707,7 +714,7 @@
             <tr>
                 <td>
                     <para style="title_left">
-                        {% trans "Warnings" %}
+                        {% trans "Warnings" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -720,7 +727,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        {{ warning_satus }}
+                        {% if warning_count %}{{ warning_count }}{% endif %}
                     </para>
                 </td>
                 <td>
@@ -771,7 +778,7 @@
             <tr>
                 <td>
                     <para style="title_left">
-                        {% trans "Behaviour warnings" %}
+                        {% trans "Behaviour warnings" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -784,7 +791,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        {{ blame_status|safe }}
+                        {% if censure_count %}{{ censure_count }}{% endif %}
                     </para>
                 </td>
                 <td>
@@ -836,7 +843,7 @@
             <tr>
                 <td>
                     <para style="title_left">
-                        {% trans "Exclusions (in days)" %}
+                        {% trans "Exclusions (in days)" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -849,7 +856,7 @@
                 </td>
                 <td>
                     <para style="score">
-                        {{ exclusion_status }}
+                        {% if exclusion_count %}{{ exclusion_count }}{% endif %}
                     </para>
                 </td>
                 <td>
@@ -900,7 +907,7 @@
            <tr>
                 <td>
                     <para style="title">
-                        {% trans "Parents visa" %}
+                        {% trans "Parents visa" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>
@@ -921,7 +928,7 @@
                 </td>
                 <td>
                     <para style="title">
-                        {% trans "Observations and visa of professor" %}
+                        {% trans "Observations and visa of professor" context 'Report Card Template' %}
                     </para>
                 </td>
                 <td>

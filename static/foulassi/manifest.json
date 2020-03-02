@@ -29,6 +29,6 @@
     }],
   "start_url": "https://foulassi.ikwen.com?pwa=yes",
   "display": "standalone",
-  "background_color": "#233682",
-  "theme_color": "#233682"
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
 }

@@ -11,6 +11,7 @@ from ajaxuploader.views import AjaxFileUploader
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -443,7 +444,7 @@ class ClassroomDetail(ChangeObjectBase):
         #     if x['score'] == y['score']:
         #         return 0
         #     return 1 if x['score'] > y['score'] else -1
-
+        now = datetime.now()
         data = json.loads(request.body)
         subject_id = data['subject_id']
         subject = Subject.objects.get(pk=subject_id)
@@ -493,12 +494,19 @@ class ClassroomDetail(ChangeObjectBase):
                         girls_success += 1
                 try:
                     score = Score.objects.get(session=session, subject=subject, student=student)
-                    score.value = value
-                    score.save()
-                    score_update = Score(session=session, subject=subject, student=student, value=value)
-                    update_list.append(score_update)
+                    if score.value != value:
+                        diff = now - score.updated_on
+                        score.value = value
+                        score.save()
+                        student.has_new = True
+                        student.save(using=UMBRELLA)
+                        if diff.total_seconds() >= 86400:  # Suspicious score update after 24 hours
+                            score_update = Score(session=session, subject=subject, student=student, value=value)
+                            update_list.append(score_update)
                 except Score.DoesNotExist:
                     Score.objects.create(session=session, subject=subject, student=student, value=value)
+                    student.has_new = True
+                    student.save(using=UMBRELLA)
             except Student.DoesNotExist:
                 pass
 
@@ -576,24 +584,25 @@ class ClassroomDetail(ChangeObjectBase):
         elif action == 'add_invoice':
             return self.add_invoice(context)
         elif action == 'generate_report_cards':
-            from ikwen_foulassi.reporting.models import ReportCardBatch, ReportCardHeader
-            from ikwen_foulassi.reporting.utils import generate_session_report_card
-            member = self.request.user
-            school_year = get_school_year(self.request)
-            session = Session.get_current()
-            total = Student.objects.filter(school_year=school_year, is_excluded=False).count()
-            batch = ReportCardBatch.objects.create(member=member, session=session, total=total)
-            t0 = datetime.now()
+            from ikwen_foulassi.reporting.models import ReportCardHeader
+            from ikwen_foulassi.reporting.views import generate_report_card_files
+            if not classroom.mark_students:
+                response = {"error": _("Report card cannot be generated for classroom where students are not marked.")}
+                return HttpResponse(json.dumps(response), 'content-type: text/json')
             lang = self.request.GET['lang']
+            lang_name = self.request.GET['lang_name']
             try:
-                report_card_header = ReportCardHeader.objects.get(lang=lang)
+                ReportCardHeader.objects.get(lang=lang)
             except ReportCardHeader.DoesNotExist:
-                return HttpResponse({"error": _("Report card header not configured for %s." % lang), "header": True},
-                                    'content-type: text/json')
-            generate_session_report_card(classroom, session, report_card_header, batch)
-            diff = datetime.now() - t0
-            batch.duration = diff.total_seconds()
-            return HttpResponse({"success": True}, 'content-type: text/json')
+                response = {"error": _("Report card header not configured for %s" % lang_name),
+                            "tip": _("Please configure report card header for %s " % lang_name),
+                            "url": reverse("reporting:change_reportcardheader") + "?lang=" + lang}
+                return HttpResponse(json.dumps(response), 'content-type: text/json')
+            if getattr(settings, 'DEBUG', False):
+                generate_report_card_files(self.request, classroom)
+            else:
+                Thread(target=generate_report_card_files, args=(self.request, classroom)).start()
+            return HttpResponse(json.dumps({"success": True}), 'content-type: text/json')
         elif action == 'delete':
             selection = self.request.GET['selection'].strip(',').split(',')
             deleted = []

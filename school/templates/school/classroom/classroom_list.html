@@ -188,31 +188,31 @@
         </div>
     </div>
     {#    Modal declaration : BEGIN #}
-        <div class="modal fade" id="reminder" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content modal-info">
-                    <div class="modal-body text-center">
-                        <h4 class="title">{% blocktrans %}Some classrooms have unregistered students or/and parents. Please fix !{% endblocktrans %}</h4>
-                        <ul class="text-left list-unstyled text-muted">
-                            <li><i class="fas fa-circle text-danger"></i> classrooms with missing students</li>
-                            <li><i class="fas fa-circle text-warning"></i> classrooms with missing parents</li>
-                        </ul>
-                        <div>
-                            <div class="actions">
-                                <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
-                                    <button class="btn btn-success btn-block btn-sm btn-ok" data-dismiss="modal" aria-label="OK">{% trans "OK" %}</button>
-                                </div>
-                                <div class="col-xs-12 col-sm-4 col-md-3 pull-left action">
-                                    <a href="{% url 'foulassi:admin_home' %}" class="btn btn-default btn-block btn-sm">{% trans 'Cancel' %}</a>
-                                </div>
+    <div class="modal fade" id="reminder" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-info">
+                <div class="modal-body text-center">
+                    <h4 class="title">{% blocktrans %}Some classrooms have unregistered students or/and parents. Please fix !{% endblocktrans %}</h4>
+                    <ul class="text-left list-unstyled text-muted">
+                        <li><i class="fas fa-circle text-danger"></i> classrooms with missing students</li>
+                        <li><i class="fas fa-circle text-warning"></i> classrooms with missing parents</li>
+                    </ul>
+                    <div>
+                        <div class="actions">
+                            <div class="col-xs-12 col-sm-4 col-md-3 pull-right action">
+                                <button class="btn btn-success btn-block btn-sm btn-ok" data-dismiss="modal" aria-label="OK">{% trans "OK" %}</button>
                             </div>
-                            <div class="clearfix"></div>
+                            <div class="col-xs-12 col-sm-4 col-md-3 pull-left action">
+                                <a href="{% url 'foulassi:admin_home' %}" class="btn btn-default btn-block btn-sm">{% trans 'Cancel' %}</a>
+                            </div>
                         </div>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
         </div>
-        {#    Modal declaration : END #}
+    </div>
+    {#    Modal declaration : END #}
 {% endblock %}
 
 {% block js %}
