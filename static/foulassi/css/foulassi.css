@@ -68,7 +68,7 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
 .discipline-items li label, .pending-invoices li label {color: #444}
 .pending-invoice .amount {font-size: 36px; height: 37px; line-height: 40px}
 .pending-invoice .amount .currency {font-size: 15px}
-.tab.billing .attention {float: left;font-size: 10px;margin: 18px -10px 0 6px;}
+.tab.billing .attention {font-size: 10px;}
 
 .di-title .name {color: #444}
 .di-title .justified {color: #33CC00; margin-left: 10px}
@@ -225,7 +225,7 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
     #student-list-stage.tabs-hidden {margin-top: 40px}
     .count-report-detail .section-title {padding-right: 30px}
     .people-in-charge .form-group:last-child {padding-left: 15px}
-    .tab.billing .attention {font-size: 8px;margin: 10px -7px 0 3px;}
+    .tab.billing .attention {font-size: 8px;}
 }
 @media (min-width: 768px) {
     #student-details .student-photo {padding-left: 0}

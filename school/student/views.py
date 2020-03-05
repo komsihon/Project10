@@ -214,7 +214,7 @@ class StudentDetail(ChangeObjectBase):
         context['student_public_url'] = student_public_url
         context['discipline_item_list'] = DisciplineItem.objects.filter(is_active=True)\
             .exclude(slug__in=[DisciplineItem.PARENT_CONVOCATION, DisciplineItem.EXCLUSION])
-        context['pending_invoice_count'] = Invoice.objects.filter(student=student, status=Invoice.PENDING).count()
+        context['has_pending_invoice'] = Invoice.objects.filter(student=student, status=Invoice.PENDING).count() > 0
         return context
 
     def post(self, request, *args, **kwargs):

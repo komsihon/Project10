@@ -24,35 +24,47 @@
                             <a href="#student-details" aria-controls="student-details" role="tab" data-toggle="tab">{% trans "Details" %}</a>
                         </div>
                         <div role="presentation" class="tab scores" data-tab="scores">
-                            <a href="#student-scores" aria-controls="student-scores" role="tab" data-toggle="tab">{% trans "Scores" %}</a>
+                            <a href="#student-scores" aria-controls="student-scores" role="tab" data-toggle="tab">
+                                {% if has_new_score > 0 %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
+                                <span>{% trans "Scores" %}</span>
+                            </a>
                         </div>
                         <div role="presentation" class="tab discipline" data-tab="discipline">
-                            <a href="#student-discipline" aria-controls="student-discipline" role="tab" data-toggle="tab">{% trans "Discipline" %}</a>
+                            <a href="#student-discipline" aria-controls="student-discipline" role="tab" data-toggle="tab">
+                                {% if has_pending_disc > 0 %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
+                                <span>{% trans "Discipline" %}</span>
+                            </a>
                         </div>
                         <div role="presentation" class="tab billing" data-tab="billing">
-                            {% if pending_invoice_count > 0 %}<i class="fa fa-circle attention text-danger"></i>{% endif %}
-                            <a href="#student-billing" aria-controls="student-billing" role="tab" data-toggle="tab">{% trans "Billing" context 'Financial status' %}</a>
+                            <a href="#student-billing" aria-controls="student-billing" role="tab" data-toggle="tab">
+                                {% if has_pending_invoice > 0 %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
+                                <span>{% trans "Billing" context 'Financial status' %}</span>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="tab-content student-tab-panel">
                 <div id="student-details" class="tab-pane active admin-form" role="tabpanel" style="padding-top: 15px; padding-bottom: 90px">
-                    <div class="col-sm-4 col-lg-3 student-photo">
-                        <section class="photos" style="width: 100%">
-                            <div class="upload-container">
-                                <div class="image" style="background-image: url('{{ settings.IKWEN_MEDIA_URL }}{{ obj.photo.name }}')"></div>
-                            </div>
-                        </section>
-                    </div>
+                    {% if is_first_parent %}  {# First parent can change student photo #}
+                        <div class="col-sm-4 col-lg-3 student-photo">
+                            {% with model_name='foulassi.Student' image=obj.photo image_field_name='photo' label_field_name='last_name' img_help_text='Student photo: 560px x 480px' upload_to_ikwen='yes' %}
+                                {% include 'core/snippets/uploader_single.html' %}
+                            {% endwith %}
+                        </div>
+                    {% else %}
+                        <div class="col-sm-4 col-lg-3 student-photo">
+                            <section class="photos" style="width: 100%">
+                                <div class="upload-container">
+                                    <div class="image" style="background-image: url('{{ settings.IKWEN_MEDIA_URL }}{{ obj.photo.name }}')"></div>
+                                </div>
+                            </section>
+                        </div>
+                    {% endif %}
                     <div class="col-sm-8 col-lg-9">
                         <input type="hidden" id="dob-alt" name="dob" value="{{ student.dob|date:"Y-m-d" }}" />
                         <div class="basic">
                             {% include 'core/snippets/model_admin_form.html' %}
-{#                            <div class="form-group" style="word-wrap: break-word">#}
-{#                                <label style="display: block; clear: both; font-weight: 700">{% trans "Student URL" %}</label>#}
-{#                                <a href="{{ settings.IKWEN_FOULASSI_BASE_URL }}{{ student_public_url }}">{{ settings.IKWEN_FOULASSI_BASE_URL }}{{ student_public_url }}</a>#}
-{#                            </div>#}
                         </div>
                         <div class="divider row"></div>
                         <div class="people-in-charge">
@@ -67,10 +79,12 @@
                                     <div class="parent-contact text-muted">
                                         <span class="phone">{{ parent.phone }}</span>{% if parent.email %}, <span class="email">{{ parent.email }}</span>{% endif %}
                                     </div>
+                                    {% if is_first_parent %}
                                     <div class="actions">
                                         <i class="glyphicon glyphicon-edit edit-parent" title="{% trans "Change item" %}"></i>
                                         <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
                                     </div>
+                                    {% endif %}
                                 </li>
                                 {% endfor %}
                                 <li class="list-group-item ik-li parent tpl" style="display: none">

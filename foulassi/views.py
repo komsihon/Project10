@@ -42,7 +42,7 @@ from ikwen_foulassi.foulassi.utils import can_access_kid_detail, share_payment_a
 
 from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Payment, Event, Parent, EventType, \
     PARENT_REQUEST_KID, KidRequest, SchoolConfig, Reminder
-from ikwen_foulassi.school.models import get_subject_list, Justificatory
+from ikwen_foulassi.school.models import get_subject_list, Justificatory, DisciplineLogEntry, Score
 from ikwen_foulassi.school.student.views import StudentDetail, ChangeJustificatory
 
 logger = logging.getLogger('ikwen')
@@ -230,7 +230,9 @@ class KidDetail(StudentDetail):
         context['using'] = db
         parent1 = Parent.objects.filter(student=student)[0]
         context['is_first_parent'] = parent1.email == user.email or parent1.phone == user.phone
-        context['pending_invoice_count'] = Invoice.objects.using(db).filter(student=student, status=Invoice.PENDING).count()
+        context['has_pending_invoice'] = Invoice.objects.using(db).filter(student=student, status=Invoice.PENDING).count() > 0
+        context['has_pending_disc'] = DisciplineLogEntry.objects.using(db).filter(student=student, was_viewed=False).count() > 0
+        context['has_new_score'] = Score.objects.using(db).filter(student=student, was_viewed=False).count() > 0
         return context
 
     def get(self, request, *args, **kwargs):
