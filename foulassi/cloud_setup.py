@@ -292,7 +292,7 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
                                     extra_context={'service_activated': service, 'invoice': invoice,
                                                    'member': member, 'invoice_url': invoice_url})
     msg = EmailMessage(subject, html_content, sender, [member.email])
-    bcc = ['contact@ikwen.com']
+    bcc = ['contact@ikwen.com', 'support@ikwen.com']
     if vendor.config.contact_email:
         bcc.append(vendor.config.contact_email)
     msg.bcc = list(set(bcc))
