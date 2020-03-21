@@ -256,5 +256,6 @@ def share_payment_and_set_stats(invoice, payment_mean_slug):
     partner_original = Service.objects.select_related('member').using(partner.database).get(pk=partner.id)
 
     partner.raise_balance(partner_earnings, payment_mean_slug)
-    service_partner = Service.objects.using(partner.database).get(pk=getattr(settings, 'IKWEN_SERVICE_ID'))
+    from ikwen.conf.settings import IKWEN_SERVICE_ID
+    service_partner = Service.objects.using(partner.database).get(pk=IKWEN_SERVICE_ID)
     set_dara_stats(partner_original, service_partner, invoice, partner_earnings)
