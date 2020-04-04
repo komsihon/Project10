@@ -79,7 +79,7 @@
                                     <div class="parent-contact text-muted">
                                         <span class="phone">{{ parent.phone }}</span>{% if parent.email %}, <span class="email">{{ parent.email }}</span>{% endif %}
                                     </div>
-                                    {% if is_first_parent %}
+                                    {% if is_first_parent and forloop.counter > 1 %}
                                     <div class="actions">
                                         <i class="glyphicon glyphicon-edit edit-parent" title="{% trans "Change item" %}"></i>
                                         <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>

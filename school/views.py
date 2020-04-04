@@ -23,7 +23,6 @@ from ikwen_foulassi.school.models import Level, Session, Subject, DisciplineItem
 
 class LevelList(HybridListView):
     model = Level
-    template_name = 'school/level_list.html'
 
     def get_queryset(self):
         return Level.objects.filter(school_year=get_school_year(self.request))
@@ -35,7 +34,6 @@ class LevelList(HybridListView):
 
 
 class ChangeLevel(ChangeObjectBase):
-    template_name = 'school/change_level.html'
     model = Level
     model_admin = LevelAdmin
 
