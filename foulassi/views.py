@@ -363,7 +363,7 @@ def set_invoice_checkout(request, *args, **kwargs):
     notification_url = service.url + reverse('foulassi:confirm_invoice_payment', args=(tx.id, signature))
     cancel_url = request.META['HTTP_REFERER']
     return_url = request.META['HTTP_REFERER']
-    gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'https://payment.ikwen.com/v1')
+    gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'http://payment.ikwen.com/v1')
     endpoint = gateway_url + '/request_payment'
     params = {
         'username': getattr(settings, 'IKWEN_PAYMENT_GATEWAY_USERNAME', service.project_name_slug),

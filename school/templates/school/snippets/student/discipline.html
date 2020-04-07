@@ -47,9 +47,11 @@
             <div class="row">
                 <div class="col-xs-10">
                     <div class="di-title">
-                        <span class="name">{{ entry.item.name }}:</span>
-                        <span class="count text-muted">{{ entry.count }} {{ entry.item.unit }}</span>
+                    {% with item=entry.item unit=entry.item.unit %}
+                        <span class="name">{{ item.name }}:</span>
+                        <span class="count text-muted">{{ entry.count }} {% if unit %}{% blocktrans %}{{ unit }}{% endblocktrans %}{% endif %}</span>
                         {% if entry.is_justified %}<i class="fa fa-circle justified"></i>{% endif %}
+                    {% endwith %}
                     </div>
                     <div class="di-details text-muted">{{ entry.details }}</div>
                 </div>

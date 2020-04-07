@@ -57,8 +57,8 @@
         {% endif %}
         {% if perms.school.ik_manage_school %}
         <li role="presentation" class="discipline-items">
-            {% url 'reporting:reportcardheader_list' as reportcardheader_list %}
-            <a href="{{ reportcardheader_list }}">{% trans "Report Card header" %}</a>
+            {% url 'reporting:reportcardheader_list' as reportcardheader_list_url %}
+            <a href="{{ reportcardheader_list_url }}">{% trans "Report Card header" %}</a>
         </li>
         {% endif %}
     </ul>

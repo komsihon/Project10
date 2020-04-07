@@ -15,6 +15,8 @@ lateness = _("Lateness")  # Simply causes this to appear in translation file
 warning = pgettext("Student warning", "Warning")  # Simply causes this to appear in translation file
 censure = _("Censure")  # Simply causes this to appear in translation file
 absence = _("Absence")  # Simply causes this to appear in translation file
+hours = _("Hour(s)")  # Simply causes this to appear in translation file
+days = _("Day(s)")  # Simply causes this to appear in translation file
 
 
 def create_permissions():

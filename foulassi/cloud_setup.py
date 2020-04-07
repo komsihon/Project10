@@ -92,7 +92,7 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
     domain_type = Service.SUB
     is_naked_domain = False
     url = 'http://go.ikwen.com/' + pname
-    admin_url = url + '/ikwen' + reverse('ikwen:staff_router')
+    admin_url = url + '/ikwen/staffRouter/'
     now = datetime.now()
     expiry = now + timedelta(days=60)
 
