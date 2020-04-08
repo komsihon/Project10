@@ -33,9 +33,9 @@ from ikwen_foulassi.reporting.utils import set_counters, calculate_session_repor
     calculate_session_group_report, set_stats, set_daily_counters_many
 from ikwen_foulassi.foulassi.admin import StudentResource
 from ikwen_foulassi.reporting.models import SessionReport, LessonReport
-from ikwen_foulassi.school.admin import ClassroomAdmin
+from ikwen_foulassi.school.admin import ClassroomAdmin, AssignmentAdmin
 from ikwen_foulassi.school.models import Level, Classroom, Session, get_subject_list, Subject, Score, \
-    ScoreUpdateRequest, SubjectCoefficient, Lesson
+    ScoreUpdateRequest, SubjectCoefficient, Lesson, Assignment, TeacherResponsibility
 from ikwen_foulassi.school.student.views import set_student_invoices, set_my_kids_invoice
 from import_export.formats.base_formats import XLS
 
@@ -700,3 +700,67 @@ class ClassroomDetail(ChangeObjectBase):
         if action == 'mark':
             classroom = Classroom.objects.get(pk=kwargs['object_id'])
             return self.mark(request, classroom)
+
+
+class AssignmentList(HybridListView):
+    model = Assignment
+    search_field = 'subject'
+    list_filter = (
+        ('subject', _('Subjects')),
+        ('deadline', _('Deadlines'))
+    )
+    template_name = 'school/classroom/assignment_list.html'
+    html_results_template_name = 'school/snippets/classroom/assignment_list_results.html'
+
+    def get_queryset(self, **kwargs):
+        classroom_id = self.request.GET['classroom_id']
+        school_year = get_school_year(self.request)
+        try:
+            classroom = get_object_or_404(Classroom, pk=classroom_id)
+            teacher = Teacher.objects.get(member=self.request.user, school_year=school_year)
+            subject_list = list(teacher.get_subject_list(classroom))
+        except Teacher.DoesNotExist:
+            subject_list = []
+        queryset = Assignment.objects.filter(classroom=classroom_id, subject__in=subject_list)
+        return queryset
+
+    def get_change_object_url(self, request, **kwargs):
+        classroom_id = self.request.GET['classroom_id']
+        return reverse('school:change_assignment', args=(classroom_id, ))
+
+    def get_context_data(self, **kwargs):
+        context = super(AssignmentList, self).get_context_data(**kwargs)
+        classroom_id = self.request.GET['classroom_id']
+        context['classroom_id'] = classroom_id
+        context['classroom'] = Classroom.objects.get(pk=classroom_id)
+        context['classroom_list'] = Classroom.objects.all()
+        return context
+
+
+class ChangeAssignment(ChangeObjectBase):
+    model = Assignment
+    model_admin = AssignmentAdmin
+    template_name = 'school/classroom/change_assignment.html'
+    label_field = 'title'
+
+    def get_object_list_url(self, request, obj, *args, **kwargs):
+        classroom_id = kwargs['classroom_id']
+        return reverse('school:assignment_list') + '?classroom_id=' + classroom_id
+
+    def get_context_data(self, **kwargs):
+        context = super(ChangeAssignment, self).get_context_data(**kwargs)
+        classroom = Classroom.objects.get(pk=kwargs['classroom_id'])
+        assignment = context['obj']
+        context['classroom'] = classroom
+        school_year = get_school_year(self.request)
+        try:
+            teacher = Teacher.objects.get(member=self.request.user, school_year=school_year)
+            subject_list = list(teacher.get_subject_list(classroom))
+            context['authorized_teacher'] = True if not assignment else assignment.subject in subject_list
+        except Teacher.DoesNotExist:
+            subject_list = get_subject_list(classroom)
+        context['subject_list'] = subject_list
+        context['classroom_list'] = Classroom.objects.all()
+        context['classroom'] = assignment.classroom
+        return context
+

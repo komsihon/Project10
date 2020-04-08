@@ -41,9 +41,9 @@ from ikwen_foulassi.foulassi.utils import get_payment_confirmation_email_message
     remove_student_from_parent_profile, set_student_counts, check_setup_status
 from ikwen_foulassi.reporting.models import DisciplineReport, StudentDisciplineReport
 from ikwen_foulassi.reporting.utils import set_daily_counters_many
-from ikwen_foulassi.school.admin import JustificatoryAdmin
+from ikwen_foulassi.school.admin import JustificatoryAdmin, HomeworkAdmin
 from ikwen_foulassi.school.models import Classroom, Session, Score, DisciplineItem, DisciplineLogEntry, Justificatory, \
-    SessionGroupScore, STUDENT_EXCLUDED
+    SessionGroupScore, STUDENT_EXCLUDED, Assignment, Homework
 
 logger = logging.getLogger('ikwen')
 
@@ -323,6 +323,22 @@ class StudentDetail(ChangeObjectBase):
         context['score_list'] = score_list
         return render(self.request, 'school/snippets/student/scores.html', context)
 
+    def render_assignments(self, context):
+        db = context.pop('using', 'default')
+        student = context[self.context_object_name]
+        classroom = student.classroom
+        queryset = Assignment.objects.using(db).filter(classroom=classroom)
+        assignment_list = []
+        for asm in queryset:
+            try:
+                asm.homework = Homework.objects.using(db).get(assignment=asm, student=student)
+            except Homework.DoesNotExist:
+                pass
+            assignment_list.append(asm)
+        context['assignment_list'] = assignment_list
+        context['classroom'] = classroom
+        return render(self.request, 'school/snippets/student/assignments.html', context)
+
     def render_discipline(self, context):
         db = context.pop('using', 'default')
         student = context[self.context_object_name]
@@ -574,6 +590,8 @@ class StudentDetail(ChangeObjectBase):
         tab = self.request.GET.get('tab')
         if tab == 'scores':
             return self.render_scores(context)
+        elif tab == 'assignments':
+            return self.render_assignments(context)
         elif tab == 'discipline':
             return self.render_discipline(context)
         elif tab == 'billing':
@@ -694,3 +712,9 @@ class ChangeJustificatory(ChangeObjectBase):
             context = self.get_context_data(**kwargs)
             context['errors'] = form.errors
             return render(request, self.template_name, context)
+
+
+class ViewHomework(ChangeObjectBase):
+    model = Homework
+    model_admin = HomeworkAdmin
+    template_name = 'school/student/view_homework.html'

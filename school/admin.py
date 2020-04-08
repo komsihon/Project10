@@ -19,6 +19,14 @@ class ClassroomAdmin(admin.ModelAdmin):
     )
 
 
+class AssignmentAdmin(admin.ModelAdmin):
+    fields = ('subject', 'classroom', 'title', 'detail', 'attachment', 'deadline')
+
+
+class HomeworkAdmin(admin.ModelAdmin):
+    fields = ('assignment', 'student', 'attachment', )
+
+
 class SubjectAdmin(admin.ModelAdmin):
     fields = ('name', )
 
@@ -37,3 +45,4 @@ class DisciplineItemAdmin(admin.ModelAdmin):
 
 class JustificatoryAdmin(admin.ModelAdmin):
     fields = ('details', )
+

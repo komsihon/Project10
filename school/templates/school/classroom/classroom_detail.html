@@ -65,6 +65,10 @@
                         <span class="hidden-xs">{% trans "Mark" %}</span>
                     </button>
                     {% endif %}
+                    <a class="btn btn-sm btn-success cta pull-right action" href="{% url 'school:assignment_list' %}?classroom_id={{ obj.id }}" title="{% trans "Assignments" %}" style="margin-right: 5px">
+                        <i class="fa fa-book" style="font-size: 18px"></i>
+                        <span class="hidden-xs">{% trans "Assign." %}</span>
+                    </a>
                     <button class="btn btn-sm btn-success cta pull-right action show-modal-add-lesson" title="{% trans "Add lesson done" %}"
                             data-toggle="modal" data-target="#modal-add-lesson" style="margin-right: 5px">
                         <i class="fa fa-tasks" style="font-size: 18px"></i>

@@ -25,6 +25,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView
 from django.utils.translation import gettext as _
 
+from ikwen.core.generic import ChangeObjectBase
 from ikwen.conf.settings import WALLETS_DB_ALIAS, MEDIA_URL, MEMBER_AVATAR
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.models import Application, Service
@@ -42,7 +43,9 @@ from ikwen_foulassi.foulassi.utils import can_access_kid_detail, share_payment_a
 
 from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Payment, Event, Parent, EventType, \
     PARENT_REQUEST_KID, KidRequest, SchoolConfig, Reminder
-from ikwen_foulassi.school.models import get_subject_list, Justificatory, DisciplineLogEntry, Score
+from ikwen_foulassi.school.models import get_subject_list, Justificatory, DisciplineLogEntry, Score, Assignment, \
+    Homework
+from ikwen_foulassi.school.admin import HomeworkAdmin
 from ikwen_foulassi.school.student.views import StudentDetail, ChangeJustificatory
 
 logger = logging.getLogger('ikwen')
@@ -206,7 +209,7 @@ class KidDetail(StudentDetail):
         try:
             school = Service.objects.get(project_name_slug=ikwen_name)
             add_database(school.database)
-            student = Student.objects.using(school.database).select_related('school, classroom').get(pk=student_id)
+            student = Student.objects.using(school.database).select_related('school', 'classroom').get(pk=student_id)
             # if not student.kid_fees_paid:
             #     return HttpResponseRedirect(reverse('foulassi:kid_list', args=(ikwen_name, )))
         except ObjectDoesNotExist:
@@ -225,11 +228,13 @@ class KidDetail(StudentDetail):
             subject.score_list = student.get_score_list(subject, using=db)
         context['subject_list'] = subject_list
         kid_list = parent_profile.student_list
+        now = datetime.now()
         # kid_list.remove(student)
         context['kid_list'] = kid_list
         context['using'] = db
         parent1 = Parent.objects.filter(student=student)[0]
         context['is_first_parent'] = parent1.email == user.email or parent1.phone == user.phone
+        context['has_pending_assignment'] = Assignment.objects.using(db).filter(classroom=student.classroom, deadline__lt=now)
         context['has_pending_invoice'] = Invoice.objects.using(db).filter(student=student, status=Invoice.PENDING).count() > 0
         context['has_pending_disc'] = DisciplineLogEntry.objects.using(db).filter(student=student, was_viewed=False).count() > 0
         context['has_new_score'] = Score.objects.using(db).filter(student=student, was_viewed=False).count() > 0
@@ -245,6 +250,38 @@ class KidDetail(StudentDetail):
                 next_url = reverse('ikwen:sign_in') + '?next=' + request.get_full_path()
             return HttpResponseRedirect(next_url)
         return super(KidDetail, self).get(request, *args, **kwargs)
+
+
+class ChangeHomework(ChangeObjectBase):
+    model = Homework
+    model_admin = HomeworkAdmin
+    template_name = 'foulassi/change_homework.html'
+
+    def get_object_list_url(self, request, obj, *args, **kwargs):
+        ikwen_name = kwargs['ikwen_name']
+        student_id = kwargs['student_id']
+        url = reverse("foulassi:kid_detail", args=(ikwen_name, student_id))
+        return url + "?showTab=assignments"
+
+    def get_object(self, **kwargs):
+        ikwen_name = kwargs['ikwen_name']
+        homework_id = kwargs.get('homework_id')
+        try:
+            school = Service.objects.get(project_name_slug=ikwen_name)
+            self.db = school.database
+            add_database(self.db)
+            # student = Student.objects.using(school.database).select_related('school', 'classroom').get(pk=student_id)
+            if homework_id:
+                return Homework.objects.using(self.db).get(pk=homework_id)
+        except ObjectDoesNotExist:
+            raise Http404("School or student or homework not found")
+
+    def get_context_data(self, **kwargs):
+        context = super(ChangeHomework, self).get_context_data(**kwargs)
+        student = Student.objects.using(self.db).get(pk=kwargs['student_id'])
+        context['student'] = student
+        context['assignment'] = Assignment.objects.using(self.db).get(pk=kwargs['assignment_id'])
+        return context
 
 
 class ShowJustificatory(ChangeJustificatory):
@@ -578,3 +615,4 @@ class SuccessfulDeployment(VerifiedEmailTemplateView):
         if school.member != request.user:
             return HttpResponseForbidden("You're not allowed here")
         return render(request, self.template_name, context)
+

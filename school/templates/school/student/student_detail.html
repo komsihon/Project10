@@ -21,6 +21,9 @@
                         <div role="presentation" class="tab active" data-tab="details">
                             <a href="#student-details" aria-controls="student-details" role="tab" data-toggle="tab">{% trans "Details" %}</a>
                         </div>
+                        <div role="presentation" class="tab assignments" data-tab="assignments">
+                            <a href="#student-assignments" aria-controls="student-assignments" role="tab" data-toggle="tab">{% trans "Assignments" %}</a>
+                        </div>
                         <div role="presentation" class="tab scores" data-tab="scores">
                             <a href="#student-scores" aria-controls="student-scores" role="tab" data-toggle="tab">{% trans "Scores" %}</a>
                         </div>
@@ -119,6 +122,9 @@
                 </form>
 
                 <div id="student-scores" class="tab-pane student-info-tab" role="tabpanel">
+                    {% include 'core/snippets/spinner.html' %}
+                </div>
+                <div id="student-assignments" class="tab-pane student-info-tab" role="tabpanel">
                     {% include 'core/snippets/spinner.html' %}
                 </div>
 

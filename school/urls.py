@@ -1,8 +1,9 @@
 
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import permission_required, user_passes_test
-from ikwen_foulassi.school.student.views import ChangeStudent, StudentDetail, ChangeJustificatory
-from ikwen_foulassi.school.classroom.views import ClassroomList, ChangeClassroom, ClassroomDetail, upload_student_file
+from ikwen_foulassi.school.student.views import ChangeStudent, StudentDetail, ChangeJustificatory, ViewHomework
+from ikwen_foulassi.school.classroom.views import ClassroomList, ChangeClassroom, ClassroomDetail, upload_student_file, \
+    AssignmentList, ChangeAssignment
 from ikwen_foulassi.school.views import LevelList, ChangeLevel, SubjectList, ChangeSubject, ChangeSession, \
     SessionList, DisciplineItemList, ChangeDisciplineItem, TeacherList, TeacherDetail, SessionGroupList, \
     ChangeSessionGroup, close_session
@@ -40,6 +41,15 @@ urlpatterns = patterns(
         name='change_classroom'),
     url(r'^classroomDetail/(?P<object_id>[-\w]+)/$', user_passes_test(access_classroom)(ClassroomDetail.as_view()),
         name='classroom_detail'),
+
+    url(r'^assignments/$', user_passes_test(access_classroom)(AssignmentList.as_view()),
+        name='assignment_list'),
+    url(r'^assignment/(?P<classroom_id>[-\w]+)/$', user_passes_test(access_classroom)(ChangeAssignment.as_view()),
+        name='change_assignment'),
+    url(r'^assignment/(?P<classroom_id>[-\w]+)/(?P<object_id>[-\w]+)/$', user_passes_test(access_classroom)(ChangeAssignment.as_view()),
+        name='change_assignment'),
+    url(r'^homework/(?P<object_id>[-\w]+)/$', user_passes_test(access_classroom)(ViewHomework.as_view()), name='view_homework'),
+
 
     url(r'^upload_student_file/$', permission_required('foulassi.ik_manage_student')(upload_student_file), name='upload_student_file'),
     url(r'^newStudent/(?P<classroom_id>[-\w]+)/$', permission_required('foulassi.ik_manage_student')(ChangeStudent.as_view()), name='change_student'),

@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.utils import timezone
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
 from django_mongodb_engine.contrib import MongoDBManager
@@ -253,6 +254,38 @@ class Lesson(Model):
     hours_count = models.IntegerField()
     is_complete = models.BooleanField(default=False)
     school_year = models.IntegerField(default=get_school_year, db_index=True)
+
+
+class Assignment(Model):
+    """
+    Assignment given by a teacher
+    """
+    UPLOAD_TO = "foulassi/assignment"
+    subject = models.ForeignKey(Subject, verbose_name=_("Subject"))
+    classroom = models.ForeignKey(Classroom, verbose_name=_("Classroom"))
+    title = models.CharField(_('Title'), max_length=255)
+    detail = models.TextField(_('Detail'), blank=True)
+    attachment = models.ImageField(_("Attachment"), blank=True, null=True, upload_to=UPLOAD_TO)
+    deadline = models.DateField(_("Deadline"))
+
+    def get_obj_details(self):
+        return self.deadline
+
+    def __unicode__(self):
+        return "%s: %s" % (self.subject, self.title)
+
+
+class Homework(Model):
+    """
+    Homework sent by the student
+    """
+    UPLOAD_TO = "foulassi/homework"
+    assignment = models.ForeignKey(Assignment, verbose_name=_("Assignment"))
+    student = models.ForeignKey(Student, verbose_name=_("Student"))
+    attachment = models.ImageField(_("Attachment"), blank=True, null=True, upload_to=UPLOAD_TO)
+
+    def __unicode__(self):
+        return "%s: %s" % (self.assignment.subject, self.assignment.title)
 
 
 class AbstractScore(Model):
