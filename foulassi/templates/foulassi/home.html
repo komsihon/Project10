@@ -61,6 +61,31 @@
         .for-schools {background: url({% static 'foulassi/img/foulassi-school-building.png' %}) no-repeat right; background-size: auto 100%}
         .icon-bar {background: #fff}
 
+
+        .section-banniere-bottom { background: url(../img/architecture-entreprise.jpg) center center;
+                            -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover;
+                            background-size: cover; color: white; height: 300px; margin-top: 6.5vh !important; }
+        .section-banniere-inner {
+            width: inherit;
+            height: inherit;
+            background: rgb(2,0,36);
+            background: linear-gradient(90deg, rgba(2,0,36,0.7792637074360994) 0%,
+            rgba(9,9,121,0.49635054216999297) 35%, rgba(0,212,255,0.31707883348651966) 100%);
+            }
+
+        .address .cover .title {margin-bottom: 80px}
+        .address .cover .connection-section {text-align: left}
+        .connection-section {color: #fff}
+        .connection-section #android-only {font-size: .5em;}
+        .connection-section #android-only .fa-android {font-size: 1.5em}
+        .connection-section #android-only a {font-size: .5em}
+        .connection-section .action {margin-top: 40px;}
+        .connection-section .action a {font-weight: 600;  background-color: #fff}
+        .connection-section .action a:hover, .connect-section .action a:active, .connect-section .action a:focus {color: #2f2f2f!important;}
+
+
+
+
         @media only screen and (max-device-width : 767px) and (orientation: portrait) {
             section.header {height: 410px; margin-top: 0;}
             section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 70px;}
@@ -81,12 +106,15 @@
             section.main-feat {background-position: center}
             .contact-img {margin-top: 35px}
             section.site .cover h1 {padding: 0}
+            section.address {height: 137vh}
+            section.address .cover {height: inherit}
             a.btn {margin-top: 50px}
             section.site.banner a.btn {width: 100%}
             footer div {padding: 0}
             .section.address .cta a {font-size: 20px}
             section.install-pwa {background-position: right}
             #install-pwa {text-align: center}
+            footer section .address .action a {margin-top: 20px!important;}
         }
 
         @media only screen and (max-width : 767px) and (orientation: landscape) {
@@ -103,6 +131,7 @@
             section.site.banner h1 {font-size: 51px;line-height: 65px; font-weight: 700}
             .cta {text-align: center}
             a.btn {margin-top: 50px}
+            footer section .address .action a {margin-top: 20px!important;}
         }
 
         @media only screen and (max-device-width : 767px) {
@@ -112,6 +141,14 @@
             section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
             #navbar-search input {background: none}
             .for-schools {background-position-x: -10px}
+            footer {height: 122vh}
+            footer .address {height: inherit}
+            footer .address .cover {height: inherit}
+            footer .address .action {margin-top: 0}
+            footer .address .cover .title {padding-top: 1vh; margin-bottom: 38px; line-height: 45px}
+            footer .address .action a {width: inherit}
+            footer .address #android-only-container {text-align: center}
+            footer .address .cover .connection-section:last-child {margin-top: 12vh}
         }
 
         @media only screen and (min-width : 768px) and (orientation: landscape) {
@@ -294,16 +331,33 @@
 {% block footer %}
     <footer>
         <section class="address">
-            <div>
-                <div class="cover">
-                    <h2 class="title animated wow fadeInLeft">
-                        {% trans "Connect with your children now" %}
-                    </h2>
-                    <p class="lead animated wow fadeInDown">
-                        {% trans "And be next to them everyday for success." %}
+            <div class="cover">
+                <h2 class="title animated wow fadeInLeft">
+                    {% trans "Connect with your children now" %}
+                </h2>
+                <div class="col-sm-5 col-sm-offset-1 connection-section">
+                    <h3>{% blocktrans %}Download the app{% endblocktrans %}</h3>
+                    <p>
+                        {% blocktrans %}
+                            Install app on your Android device for faster accesss.
+                        {% endblocktrans %}
                     </p>
-                    <div class="cta" style="text-align: center">
-                        <a id="deploy" class="btn btn-sm" href="https://foulassi.ikwen.com" style="font-weight: 600">{% trans "Get connected" %}</a>
+                    <div class="action">
+                        <a id="download" class="btn btn-sm" href="{% url 'foulassi:download_app' %}" style="font-weight: 600;  background-color: #fff">{% trans "Download" %}</a>
+                    </div>
+                    <div id="android-only-container">
+                        <span id="android-only">( Android only <i class="fab fa-android"></i> )</span>
+                    </div>
+                </div>
+                <div class="col-sm-5 col-sm-offset-1 connection-section">
+                    <h3>{% trans "Web access" %}</h3>
+                    <p>
+                        {% blocktrans %}
+                            Access from your web browser on PC, Tablet, or Phone.
+                        {% endblocktrans %}
+                    </p>
+                    <div class="action">
+                        <a id="deploy" class="btn btn-sm" href="https://foulassi.ikwen.com">{% trans "Get connected" %}</a>
                     </div>
                 </div>
             </div>
@@ -326,7 +380,6 @@
                                         {% trans "Discover" context "Discover foulassi for schools" %}
                                         <i class="fa fa-arrow-circle-right"></i>
                                     </span>
-
                                 </a>
                             </div>
                         </div>

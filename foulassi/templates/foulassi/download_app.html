@@ -1,0 +1,101 @@
+{% extends "core/base_bs.html" %}
+{% load i18n static auth_tokens %}
+
+{% block page_title %}<title>{{ service.project_name }} - {% trans "Sign in" %} </title>{% endblock %}
+
+{% block meta %}
+    {% include 'foulassi/snippets/color_and_icons.html' %}
+    <meta name="apple-mobile-web-app-title" content="Foulassi" />
+
+    <meta name="abstract" content="{% trans "Follow your kids at school in real-time" %}"/>
+    <meta name="description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
+
+    <meta property="og:title" content="Foulassi - {% trans "Follow your kids at school in real-time" %}" />
+    <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
+    <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
+
+{#    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">#}
+    <link rel="manifest" href="/foulassi/manifest.json">
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <style  type="text/css">
+
+        #navbar.navbar-static-top, #navbar-search, #navbar .navbar-right {display: none}
+        label span {font-weight: normal}
+        #lg-username {text-transform: lowercase}
+        #terms-warning {color: #999; font-size: 11px}
+        .login-with-ikwen strong {color: #7ea6ca}
+        #install-overlay {width: 100%; height: 100%; position: fixed; top: 0; background-color: rgba(0, 0, 0, .6); transition: background-color .4s}
+        #install-overlay.visible {transition: background-color .4s}
+        .fas.fa-download {font-weight: 600; font-size: 2.8vw; color: #999}
+        footer {padding: 30px; margin: auto; position: fixed; left: 41%; bottom: 0}
+        @media (max-width: 767px) {
+            #login-form {border: none!important;}
+            .failure.android-only {margin: 12px}
+            .fas.fa-download {font-size: 12.8vw; margin-bottom: 30px}
+            footer {left: 13%}
+        }
+        @media (max-width: 767px) and (min-width: 425px) {
+            footer{ left: 27%}
+        }
+        @media (max-width: 990px) and (min-width: 768px)  {
+            footer {left: 33%}
+        }
+    </style>
+{% endblock %}
+
+{% block header_brand %}
+    <a class="navbar-brand hidden-xs" href="https://www.ikwen.com/foulassi/">
+        <strong>Foulassi</strong>
+    </a>
+    <strong class="navbar-brand visible-xs">Foulassi</strong>
+{% endblock %}
+
+{% block head_js %}
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then((reg) => {
+              console.log('Service worker registered.', reg);
+            });
+      });
+    }
+    </script>
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="form container">
+        <h3 class="text-center" style="font-weight: 900; line-height: 50px">{% trans "Download Foulassi MyKids app" %}</h3>
+        <div style="float: none; text-align: center; margin: auto">
+            <img src="{% static 'foulassi/img/foulassi_logo.png' %}">
+            <div><i class="fas fa-download animated infinite slideUpReturn"></i></div>
+        </div>
+        <p class="failure chrome-only" style="display: none; margin: 15px; padding: 9px">
+            {% trans "Downloading the App is not possible with your current browser. Please switch to Google Chrome." %}
+            <a class="btn btn-primary btn-sm" href="googlechrome://navigate?url=https://www.ikwen.com/foulassi/downloadApp/">{% trans 'Open with chrome' %}</a>
+        </p>
+        <p class="failure android-only" style="display: none; margin: 50px 0; padding: 9px">
+            {% trans "Downloading the App is possible only on Android devices." %}
+        </p>
+        <div class="clear"></div>
+    </div>
+    <div id="install-overlay" class="hidden"></div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'foulassi/install.js' %}?v=13.04.20"></script>
+    <script type="text/javascript">
+        (function() {
+            if (/Android/.test(navigator.userAgent)) {
+                let isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) && !(/SamsungBrowser/.test(navigator.userAgent));
+                if (!isChrome) $('.chrome-only').show();
+                else ikwen.showFloatingNotice("{% trans "Wait a few seconds and click the prompt that appear at the bottom of the screen" %}");
+            } else $('.android-only').show();
+        })()
+    </script>
+    {{ config.scripts|safe }}
+{% endblock %}

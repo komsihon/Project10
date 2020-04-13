@@ -1,33 +1,39 @@
 {% load i18n static humanize %}
 {% include 'core/snippets/spinner.html' %}
-<ul class="object-list list-group">
-    {% for obj in assignment_list %}
-     {% if settings.IS_IKWEN %}
-         {% if obj.homework %}
-            {% url 'foulassi:change_homework' student.school.ikwen_name student.id obj.id obj.homework.id as obj_url %}
-         {% else %}
-             {% url 'foulassi:change_homework' student.school.ikwen_name student.id obj.id as obj_url %}
-         {% endif %}
-    {% else %}
-         {% if obj.homework %}
-            {% url 'school:view_homework' obj.homework.id as obj_url %}
-         {% else %}
-             {% url 'school:change_assignment' classroom.id obj.id as obj_url %}
-         {% endif %}
-    {% endif %}
-    <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}">
-        <div>
-            <a href="{{ obj_url }}">{{ obj }}</a>
-        </div>
-        <date class="date text-muted">
-            {% if not obj.homework %}<i class="fa fa-circle text-warning" style="margin-right: 5px"></i>{% endif %}
-            {{ obj.created_on }}
-        </date>
-        {% with obj_details=obj.get_obj_details %}
-            {% if obj_details %}
-                <div class="text-muted">{{ obj_details|safe }}</div>
+{% if assignment_list %}
+    <ul class="object-list list-group">
+        {% for obj in assignment_list %}
+            {% if settings.IS_IKWEN %}
+                 {% if obj.homework %}
+                    {% url 'foulassi:change_homework' student.school.ikwen_name student.id obj.id obj.homework.id as obj_url %}
+                 {% else %}
+                     {% url 'foulassi:change_homework' student.school.ikwen_name student.id obj.id as obj_url %}
+                 {% endif %}
+            {% else %}
+                 {% if obj.homework %}
+                    {% url 'school:view_homework' obj.homework.id as obj_url %}
+                 {% else %}
+                     {% url 'school:change_assignment' classroom.id obj.id as obj_url %}
+                 {% endif %}
             {% endif %}
-        {% endwith %}
-    </li>
-    {% endfor %}
-</ul>
+            <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}">
+                <div>
+                    <a href="{{ obj_url }}">{{ obj }}</a>
+                </div>
+                <date class="date text-muted">
+                    {% if not obj.homework %}<i class="fa fa-circle text-warning" style="margin-right: 5px"></i>{% endif %}
+                    {{ obj.created_on }}
+                </date>
+                {% with obj_details=obj.get_obj_details %}
+                    {% if obj_details %}
+                        <div class="text-muted">{{ obj_details|safe }}</div>
+                    {% endif %}
+                {% endwith %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="text-center no-assignment">
+        <em class="text-muted">{% trans "No assignment yet" %}</em>
+    </div>
+{% endif %}

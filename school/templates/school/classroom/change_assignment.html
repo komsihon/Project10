@@ -67,7 +67,6 @@
                         </div>
                     </div>
                 </section>
-{#                {% include 'core/snippets/model_admin_form.html' %}#}
                 {% for img_obj in img_field_list %}
                 <div class="col-sm-4 col-lg-3" style="padding-left: 0">
                     {% with model_name=model image=img_obj.image image_field_name=img_obj.field label_field_name=label_field img_help_text=img_obj.help_text img_counter=img_obj.counter %}
@@ -105,20 +104,14 @@
                 ]
             };
             var detailProperties = JSON.parse(JSON.stringify(properties));
-            {##}
-            {#summaryProperties['selector'] = '#id_summary';#}
-            {#summaryProperties['height'] = 150;#}
-            {#summaryProperties['toolbar'] = 'undo redo | bold italic underline | bullist numlist outdent indent';#}
 
             detailProperties['selector'] = '#id_detail';
             detailProperties['height'] = 300;
             detailProperties['toolbar'] = 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link image media code';
             detailProperties['insert_button_items'] = 'charmap anchor insertdatetime';
             if ($(window).width() >= 768) {
-                {#summaryProperties['width'] = 450;#}
                 detailProperties['width'] = 740
             }
-            {#tinymce.init(summaryProperties);#}
             tinymce.init(detailProperties);
         })()
     </script>

@@ -3,13 +3,14 @@ from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required, permission_required
 
 from ikwen_foulassi.foulassi.views import KidList, KidDetail, ShowJustificatory, AccessDenied, confirm_invoice_payment, \
-    Home, HomeSaaS, SearchSchool, EventList, DeployCloud, SuccessfulDeployment, AdminHome, ChangeHomework
+    Home, HomeSaaS, SearchSchool, EventList, DeployCloud, SuccessfulDeployment, AdminHome, ChangeHomework, DownloadApp
 
 urlpatterns = patterns(
     '',
     url(r'^$', Home.as_view(), name='home'),
     url(r'^for-schools$', HomeSaaS.as_view(), name='home_saas'),
     url(r'^search/$', login_required(SearchSchool.as_view()), name='search_school'),
+    url(r'^downloadApp/$', DownloadApp.as_view(), name='download_app'),
     url(r'^kids/$', login_required(KidList.as_view()), name='kid_list'),
     url(r'^(?P<ikwen_name>[-\w]+)/kid/(?P<student_id>[-\w]+)$', login_required(KidDetail.as_view()), name='kid_detail'),
     url(r'^(?P<ikwen_name>[-\w]+)/kid/(?P<student_id>[-\w]+)/(?P<assignment_id>[-\w]+)$', login_required(ChangeHomework.as_view()), name='change_homework'),

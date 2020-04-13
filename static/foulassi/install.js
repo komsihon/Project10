@@ -34,6 +34,7 @@ function saveBeforeInstallPromptEvent(evt) {
   // CODELAB: Add code to save event & show the install button.
     deferredInstallPrompt = evt;
     installButton.removeAttribute('hidden');
+    document.getElementById('install-overlay').remove("hidden");
 }
 
 

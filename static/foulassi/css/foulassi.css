@@ -170,6 +170,8 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
 .msg-bundle .cost .currency {font-size: 18px; font-weight: 400; left: -0.5em; top: -1.5em}
 .msg-bundle .description {color:  #0f9e15; margin-top: 24px; font-size: 1.3em}
 
+.no-assignment {margin-top: 28vh;}
+
 @media (max-width: 767px) {
     .action.glyphicon-option-vertical {font-size: 24px}
     .tiles .ik-li.classroom {float: none; height: auto; padding: 18px 10px; width: auto}

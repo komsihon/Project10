@@ -7,15 +7,9 @@
 
 {% block head_style %}
     {{ block.super }}
-    <link rel='stylesheet' href="{% static 'ikwen/swiper/css/swiper.min.css' %}" />
     <style>
         .tab.show-add-subject a {text-align: left}
     </style>
-{% endblock %}
-
-{% block head_js %}
-    {{ block.super }}
-    <script src="{% static 'ikwen/swiper/js/swiper.jquery.min.js' %}"></script>
 {% endblock %}
 
 {% block breadcrumb_location %}
@@ -186,16 +180,6 @@
                         _$btn.removeClass('processing');
                     }
                 });
-                $.getJSON('', params, function(data) {
-                    if (data.success) {
-                        $('.no-subject').remove();
-                        $('.tab-pane').removeClass('active');
-                        $('.tab-pane.tpl').clone().removeClass('.tpl').addClass('active')
-                            .attr('id', subjectId).insertBefore('.tab-pane.tpl');
-                        $('.tab').removeClass('active');
-                        $('#add-subject').modal('hide');
-                    }
-                })
             }).on('click', '.save-responsibilities', function() {
                 var responsibilities = [];
                 $('.tab:not(.show-add-subject)').each(function() {

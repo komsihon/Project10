@@ -761,6 +761,5 @@ class ChangeAssignment(ChangeObjectBase):
             subject_list = get_subject_list(classroom)
         context['subject_list'] = subject_list
         context['classroom_list'] = Classroom.objects.all()
-        context['classroom'] = assignment.classroom
         return context
 

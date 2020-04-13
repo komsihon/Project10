@@ -55,6 +55,13 @@ class Home(TemplateView):
     template_name = 'foulassi/home.html'
 
 
+class DownloadApp(TemplateView):
+    """
+    The page where parents will download on their Android smartphones the app.
+    """
+    template_name = 'foulassi/download_app.html'
+
+
 class HomeSaaS(TemplateView):
     """
     Homepage of Foulassi addressed to schools presenting the Software as a Service
