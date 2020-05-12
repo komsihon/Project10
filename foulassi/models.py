@@ -293,7 +293,7 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
     my_kids_payment_period = models.IntegerField(_("Payment period"), default=30,
                                                  help_text=_("Number of days left for parent to pay for the service."))
     ikwen_share_rate = models.IntegerField(default=0)
-    expected_student_count = models.IntegerField(default=0,
+    expected_student_count = models.IntegerField(_("Expected students count"), default=0,
                                                  help_text='Total number of students (registered or not) of the school')
 
     def __unicode__(self):

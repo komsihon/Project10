@@ -81,7 +81,7 @@ else:
 
 
 class SchoolConfigAdmin(admin.ModelAdmin):
-    list_display = ('service', 'company_name')
+    list_display = ('service', 'company_name', 'expected_student_count')
     fieldsets = _fieldsets
     list_filter = ('company_name', 'contact_email', )
     if not getattr(settings, 'IS_IKWEN', False):
