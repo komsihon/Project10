@@ -495,13 +495,15 @@ def confirm_invoice_payment(request, *args, **kwargs):
     invoice.status = Invoice.PAID
     invoice.save()
     invoice.save(using=school.database)
+    student = invoice.student
     if not school_config.is_public or (school_config.is_public and not invoice.is_tuition):
         if invoice.is_my_kids:
             amount = tx.amount * (100 - school_config.ikwen_share_rate) / 100
+            student.kid_fees_paid = True
+            student.save(using=school.database)
         else:
             amount = tx.amount
         school.raise_balance(amount, provider=mean)
-    student = invoice.student
     student.set_has_new(using=school.database)
     student.save(using='default')
 

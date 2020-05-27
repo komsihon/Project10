@@ -15,8 +15,7 @@
     <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
     <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
 
-{#    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">#}
-    <link rel="manifest" href="/foulassi/manifest.json">
+    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}?v=20.5.14">
 {% endblock %}
 
 {% block head_style %}
@@ -37,7 +36,6 @@
         section.site:nth-child(2n) {background-color: #fff}
         section.site img {width: 60%}
         section.install-pwa {background: url({% static 'foulassi/img/foulassi-install-pwa.png' %}) center; background-size: cover}
-        #install-pwa {text-align: left}
         .white-text-has-shade {text-shadow: 1px 2px 2px rgba(255, 255, 255, 0.7)}
         #navbar .glyphicon {color: #fff !important;}
         #navbar .btn {background: #FFF !important; color: #233682 !important;}
@@ -113,7 +111,6 @@
             footer div {padding: 0}
             .section.address .cta a {font-size: 20px}
             section.install-pwa {background-position: right}
-            #install-pwa {text-align: center}
             footer section .address .action a {margin-top: 20px!important;}
         }
 
@@ -226,16 +223,6 @@
 {% endblock %}
 
 {% block head_js %}
-    <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then((reg) => {
-              console.log('Service worker registered.', reg);
-            });
-      });
-    }
-    </script>
     {{ block.super }}
 {% endblock %}
 
@@ -339,14 +326,11 @@
                     <h3>{% blocktrans %}Download the app{% endblocktrans %}</h3>
                     <p>
                         {% blocktrans %}
-                            Install app on your Android device for faster accesss.
+                            Install app on your Device for faster access.
                         {% endblocktrans %}
                     </p>
                     <div class="action">
-                        <a id="download" class="btn btn-sm" href="{% url 'foulassi:download_app' %}" style="font-weight: 600;  background-color: #fff">{% trans "Download" %}</a>
-                    </div>
-                    <div id="android-only-container">
-                        <span id="android-only">( Android only <i class="fab fa-android"></i> )</span>
+                        <a class="install-pwa btn btn-sm disabled" href="javascript:;" style="font-weight: 600;  background-color: #fff">{% trans "Download" %}</a>
                     </div>
                 </div>
                 <div class="col-sm-5 col-sm-offset-1 connection-section">
@@ -410,8 +394,8 @@
 {% endblock %}
 
 {% block js %}
+    <script src="{% static 'ikwen/js/pwa-main.js' %}"></script>
     {{ block.super }}
-    <script src="{% static 'foulassi/install.js' %}"></script>
     <script>
         (() => {
             var scrollBreakPoint = 90;

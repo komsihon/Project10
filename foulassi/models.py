@@ -293,8 +293,11 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
     my_kids_payment_period = models.IntegerField(_("Payment period"), default=30,
                                                  help_text=_("Number of days left for parent to pay for the service."))
     ikwen_share_rate = models.IntegerField(default=0)
-    expected_student_count = models.IntegerField(_("Expected students count"), default=0,
+    expected_student_count = models.IntegerField(_("Number of students"), default=0,
                                                  help_text='Total number of students (registered or not) of the school')
+    # This must not be editable in the Admin
+    website_is_active = models.BooleanField(default=False,
+                                            help_text=_("Whether school subscribed to website service or no"))
 
     def __unicode__(self):
         return self.company_name

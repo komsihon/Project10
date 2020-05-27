@@ -14,14 +14,12 @@
     <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
     <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
 
-{#    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">#}
-    <link rel="manifest" href="/foulassi/manifest.json">
+    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">
 {% endblock %}
 
 {% block head_style %}
     {{ block.super }}
     <style  type="text/css">
-
         #navbar.navbar-static-top, #navbar-search, #navbar .navbar-right {display: none}
         label span {font-weight: normal}
         #lg-username {text-transform: lowercase}
@@ -46,6 +44,11 @@
     </style>
 {% endblock %}
 
+{% block head_js %}
+    <script src="{% static 'ikwen/js/pwa-main.js' %}"></script>
+    {{ block.super }}
+{% endblock %}
+
 {% block header_brand %}
     <a class="navbar-brand hidden-xs" href="https://www.ikwen.com/foulassi/">
         <strong>Foulassi</strong>
@@ -53,19 +56,6 @@
     <strong class="navbar-brand visible-xs">Foulassi</strong>
 {% endblock %}
 
-{% block head_js %}
-    <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then((reg) => {
-              console.log('Service worker registered.', reg);
-            });
-      });
-    }
-    </script>
-    {{ block.super }}
-{% endblock %}
 
 {% block content %}
     <div id="content" class="form container">
