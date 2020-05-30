@@ -14,11 +14,25 @@
         @media (max-width: 767px) {
             #navbar .menu-button {display: none}
             #navbar .navbar-brand {margin-left: 20px}
+            .push-subscribe {margin-top: 65px}
+            .push-subscribe-btn {min-width: 100px; padding: 5px 15px}
+            .push-subscribe + #content {padding-top: 0}
+        }
+        @media (min-width: 992px) {
+            .push-subscribe {display: none !important}
         }
     </style>
 {% endblock %}
 
 {% block content %}
+    <div class="container-fluid push-subscribe" style="display: none; padding: 0 10px">
+        <div>
+            <span class="text-muted pull-left" style="width: 60%; font-size: .9em">
+                {% trans "Receive alerts for your kids by activating notifications." %}
+            </span>
+            <button type="button" class="btn push-subscribe-btn btn-deep-blue pull-right">{% trans "Activate" %}</button>
+        </div>
+    </div>
     {% cache 300 kid_list user.username %}
     <div id="content" class="container">
         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
@@ -204,6 +218,7 @@
 
 {% block js %}
     {{ block.super }}
+    <script src="{% static 'ikwen/js/pwa-main.js' %}?v=20.5.31"></script>
     <script>
         (function() {
             var studentId, name, imageUrl, url;

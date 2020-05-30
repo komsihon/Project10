@@ -14,8 +14,6 @@
     <meta property="og:title" content="Foulassi - {% trans "Follow your kids at school in real-time" %}" />
     <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
     <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
-
-    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}?v=20.5.14">
 {% endblock %}
 
 {% block head_style %}
@@ -223,6 +221,14 @@
 {% endblock %}
 
 {% block head_js %}
+    <script>
+        navigator.serviceWorker.getRegistrations().then(
+            function(registrations) {
+                for(let registration of registrations) {
+                    if (registration.active.scriptURL.indexOf('service-worker.js') > 0) registration.unregister();
+                }
+        });
+    </script>
     {{ block.super }}
 {% endblock %}
 
@@ -330,7 +336,7 @@
                         {% endblocktrans %}
                     </p>
                     <div class="action">
-                        <a class="install-pwa btn btn-sm disabled" href="javascript:;" style="font-weight: 600;  background-color: #fff">{% trans "Download" %}</a>
+                        <a class="btn btn-sm" href="javascript:;" style="font-weight: 600;  background-color: #fff">{% trans "Download" %}</a>
                     </div>
                 </div>
                 <div class="col-sm-5 col-sm-offset-1 connection-section">
@@ -381,7 +387,7 @@
             </div>
             <div id="bottom-menu" class="hidden-xs">
                 <ul>
-                    {% include 'tsunami/snippets/language_switcher.html' %}
+                    {% include 'core/snippets/language_switcher.html' %}
                     <li><a href="http://blog.ikwen.com">{% trans 'Blog' %}</a> </li>
                     <li><a href="http://support.ikwen.com">{% trans 'Support' %}</a> </li>
                     <li><a href="http://blog.ikwen.com">{% trans 'Terms & conditions' %}</a> </li>
@@ -394,7 +400,6 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'ikwen/js/pwa-main.js' %}"></script>
     {{ block.super }}
     <script>
         (() => {
