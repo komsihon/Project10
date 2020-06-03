@@ -4,7 +4,8 @@
     {% for obj in objects_page.object_list %}
     {% url 'school:change_assignment' classroom_id obj.id as obj_url %}
     <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}">
-        <a href="{{ obj_url }}">{{ obj }}</a>
+        <a class="hidden-xs" href="{{ obj_url }}">{{ obj }}</a>
+        <a class="visible-xs" href="{{ obj_url }}">{{ obj|truncatechars:30 }}</a>
         <date class="date text-muted">{{ obj.created_on }}</date>
         {% with obj_details=obj.get_obj_details %}
             {% if obj_details %}
@@ -22,43 +23,6 @@
             <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
         </div>
     </li>
-{#        <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}" style="border: none;">#}
-{#            <div class="event">#}
-{#                <div class="subtle-shade event-detail" style="height: 140px;">#}
-{#                    <div class="event-content" style="height: inherit;">#}
-{#                        <div style="margin-bottom: 5px">#}
-{#                            <div class="col-md-8 row"><a href="{{ obj_url }}"><strong>{{ obj }}</strong></a></div>#}
-{#                            <div class="col-sm-4 event-date text-muted pull-right text-right" style="padding: 0;"><time>{{ obj.created_on }}</time></div>#}
-{#                            <div class="clearfix"></div>#}
-{#                        </div>#}
-{#                        <div style="margin-top: 15px; margin-bottom: 15px">#}
-{#                            <div class="col-md-8 row" style="">#}
-{#                                <strong>{% trans 'Instructions:' %}</strong>#}
-{#                                {{ obj.detail|safe|truncatewords:50 }}#}
-{#                            </div>#}
-{#                            <div class="clearfix"></div>#}
-{#                        </div>#}
-{#                        <div style="padding-bottom: 30px">#}
-{#                                <div class="col-md-8 row" style="">{{ obj. }}{% trans 'destination server(s)' %}</div>#}
-{#                            <div class="col-sm-4 event-date pull-right text-right">{% trans 'Deadline:' %}<span class="text-muted" style="margin-left: 20px; padding-right: 0; color: #cd8f17; font-weight: bolder">{{ obj.deadline}}</span></div>#}
-{#                            <div class="clearfix"></div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="clearfix"></div>#}
-{#                </div>#}
-{#                <div class="clearfix"></div>#}
-{#            </div>#}
-{#            <div class="actions">#}
-{#                {% if has_is_active_field %}#}
-{#                    {% if obj.is_active %}#}
-{#                        <i class="action glyphicon glyphicon-ok toggle active off" title="{% trans "Deactivate" %}"></i>#}
-{#                    {% else %}#}
-{#                        <i class="action glyphicon glyphicon-ok toggle active on" title="{% trans "Activate" %}"></i>#}
-{#                    {% endif %}#}
-{#                {% endif %}#}
-{#                <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>#}
-{#            </div>#}
-        </li>
     {% endfor %}
 </ul>
 {% if objects_page.paginator.num_pages > 1 %}

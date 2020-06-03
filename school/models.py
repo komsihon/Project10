@@ -272,7 +272,7 @@ class Assignment(Model):
         return self.deadline
 
     def __unicode__(self):
-        return "%s: %s" % (self.subject, self.title)
+        return "%s: %s" % (self.subject.name, self.title)
 
 
 class Homework(Model):
@@ -285,7 +285,7 @@ class Homework(Model):
     attachment = models.ImageField(_("Attachment"), blank=True, null=True, upload_to=UPLOAD_TO)
 
     def __unicode__(self):
-        return "%s: %s" % (self.assignment.subject, self.assignment.title)
+        return "%s: %s" % (self.assignment.subject.name, self.assignment.title)
 
 
 class AbstractScore(Model):

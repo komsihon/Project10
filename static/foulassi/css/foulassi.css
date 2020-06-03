@@ -68,7 +68,10 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
 .discipline-items li label, .pending-invoices li label {color: #444}
 .pending-invoice .amount {font-size: 36px; height: 37px; line-height: 40px}
 .pending-invoice .amount .currency {font-size: 15px}
-.tab.billing .attention {font-size: 10px;}
+.tab .attention {font-size: 10px;}
+
+.tab.assignments .title-sm {display: inline-block}
+.tab.assignments .title-xs {display: none}
 
 .di-title .name {color: #444}
 .di-title .justified {color: #33CC00; margin-left: 10px}
@@ -205,6 +208,9 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
     .event-list .btn {margin-top: 10px;}
     .report-card-download-list {margin: 0 -15px}
     .report-card-download-list li > * {padding: 0 5px}
+
+    .tab.assignments .title-sm {display: none}
+    .tab.assignments .title-xs {display: inline-block}
 }
 
 @media (max-width: 991px) {
@@ -227,7 +233,7 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
     #student-list-stage.tabs-hidden {margin-top: 40px}
     .count-report-detail .section-title {padding-right: 30px}
     .people-in-charge .form-group:last-child {padding-left: 15px}
-    .tab.billing .attention {font-size: 8px;}
+    .tab .attention {font-size: 8px;}
 }
 @media (min-width: 768px) {
     #student-details .student-photo {padding-left: 0}

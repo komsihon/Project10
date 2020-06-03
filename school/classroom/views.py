@@ -1,5 +1,6 @@
 import csv
 import json
+import logging
 import re
 import traceback
 from datetime import datetime
@@ -11,23 +12,25 @@ from ajaxuploader.views import AjaxFileUploader
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, activate
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from ikwen.billing.models import InvoiceItem, InvoiceEntry
 from ikwen.billing.utils import get_next_invoice_number
 from ikwen.core.constants import MALE, FEMALE
-from ikwen.core.utils import get_model_admin_instance, increment_history_field, DefaultUploadBackend
+from ikwen.core.utils import get_model_admin_instance, increment_history_field, DefaultUploadBackend, \
+    get_service_instance, add_database, get_mail_content
 from ikwen.core.views import HybridListView, ChangeObjectBase
 from ikwen.accesscontrol.backends import UMBRELLA
 
-from ikwen_foulassi.foulassi.models import Student, Teacher, Invoice, get_school_year, Parent
+from ikwen_foulassi.foulassi.models import Student, Teacher, Invoice, get_school_year, Parent, SchoolConfig
 from ikwen_foulassi.foulassi.utils import remove_student_from_parent_profile, set_student_counts, check_all_scores_set
 from ikwen_foulassi.reporting.utils import set_counters, calculate_session_report, \
     calculate_session_group_report, set_stats, set_daily_counters_many
@@ -38,6 +41,8 @@ from ikwen_foulassi.school.models import Level, Classroom, Session, get_subject_
     ScoreUpdateRequest, SubjectCoefficient, Lesson, Assignment, TeacherResponsibility
 from ikwen_foulassi.school.student.views import set_student_invoices, set_my_kids_invoice
 from import_export.formats.base_formats import XLS
+
+logger = logging.getLogger('ikwen')
 
 
 def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
@@ -762,4 +767,55 @@ class ChangeAssignment(ChangeObjectBase):
         context['subject_list'] = subject_list
         context['classroom_list'] = Classroom.objects.all()
         return context
+
+    def after_save(self, request, obj, *args, **kwargs):
+        """
+        Run after the form is successfully saved
+        in the post() function
+        """
+        service = get_service_instance()
+        school_config = service.config
+        classroom = Classroom.objects.get(pk=kwargs['classroom_id'])
+        # for student in Student.objects.filter(classroom=classroom, kid_fees_paid=True):
+        for student in Student.objects.filter(classroom=classroom):
+            for parent in student.parent_set.all():
+                try:
+                    parent_email = parent.get_email()
+                    parent_name = parent.get_name()
+                except:
+                    continue
+
+                company_name = school_config.company_name
+                sender = '%s via ikwen Foulassi <no-reply@ikwen.com>' % company_name
+
+                cta_url = 'https://foulassi.ikwen.com' + reverse('foulassi:change_homework',
+                                                                 args=(service.ikwen_name,
+                                                                       student.pk, obj.pk))
+                if parent.member:
+                    activate(parent.member.language)
+                subject = _("New assignment in %s" % obj.subject.name)
+                extra_context = {'parent_name': parent_name, 'cta_url': cta_url,
+                                 'school_name': company_name,
+                                 'student_name': student.first_name,
+                                 'assignment': obj,
+                                 }
+                try:
+                    html_content = get_mail_content(subject,
+                                                    template_name='foulassi/mails/new_assignment.html',
+                                                    extra_context=extra_context)
+                except:
+                    logger.error("Could not generate HTML content from template", exc_info=True)
+                    continue
+
+                msg = EmailMessage(subject, html_content, sender,
+                                   [parent_email, 'rsihon@gmail.com', 'wilfriedwillend@gmail.com',
+                                    'rmbogning@gmail.com', 'silatchomsiaka@gmail.com'])
+                msg.content_subtype = "html"
+                try:
+                    msg.send()
+                except Exception as e:
+                    logger.debug(e.message)
+
+
+
 

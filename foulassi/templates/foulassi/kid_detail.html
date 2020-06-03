@@ -7,7 +7,7 @@
 
 {% block head_style %}
     {{ block.super }}
-    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}?v=20.04.08" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}?v=20.06.03" />
 {% endblock %}
 
 {% block admin_nav %}
@@ -25,8 +25,9 @@
                         </div>
                         <div role="presentation" class="tab assignments" data-tab="assignments">
                             <a href="#student-assignments" aria-controls="student-assignments" role="tab" data-toggle="tab">
-                                {% if has_pending_assignment %}<sup><i class="fa fa-circle justified" style="{% if not obj.done %}color: #ff0000;{% endif %}"></i></sup>{% endif %}
-                                <span>{% trans "Assignments" %}</span>
+                                {% if has_pending_assignment %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
+                                <span class="title-sm">{% trans "Assignments" %}</span>
+                                <span class="title-xs">{% trans "Assign." %}</span>
                             </a>
                         </div>
                         <div role="presentation" class="tab scores" data-tab="scores">
@@ -159,4 +160,18 @@
         </div>
     </div>
     {% include 'billing/snippets/modal_payment_options.html' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (() => {
+           $('body').on('click', 'li.assignment a', (e) => {
+               $('#student-assignments .spinner').fadeIn();
+               let href = $(e.target).prop('href');
+               $('#student-assignments').load(href);
+               return false;
+           })
+        })()
+    </script>
 {% endblock %}

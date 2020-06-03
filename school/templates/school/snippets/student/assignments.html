@@ -16,9 +16,10 @@
                      {% url 'school:change_assignment' classroom.id obj.id as obj_url %}
                  {% endif %}
             {% endif %}
-            <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}">
+            <li class="assignment ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}">
                 <div>
-                    <a href="{{ obj_url }}">{{ obj }}</a>
+                    <a class="hidden-xs" href="{{ obj_url }}">{{ obj }}</a>
+                    <a class="visible-xs" href="{{ obj_url }}">{{ obj|truncatechars:30 }}</a>
                 </div>
                 <date class="date text-muted">
                     {% if not obj.homework %}<i class="fa fa-circle text-warning" style="margin-right: 5px"></i>{% endif %}

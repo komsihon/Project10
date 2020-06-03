@@ -262,7 +262,7 @@ class KidDetail(StudentDetail):
 class ChangeHomework(ChangeObjectBase):
     model = Homework
     model_admin = HomeworkAdmin
-    template_name = 'foulassi/change_homework.html'
+    template_name = 'foulassi/snippets/change_homework.html'
 
     def get_object_list_url(self, request, obj, *args, **kwargs):
         ikwen_name = kwargs['ikwen_name']
@@ -288,6 +288,7 @@ class ChangeHomework(ChangeObjectBase):
         student = Student.objects.using(self.db).get(pk=kwargs['student_id'])
         context['student'] = student
         context['assignment'] = Assignment.objects.using(self.db).get(pk=kwargs['assignment_id'])
+        context['ikwen_name'] = kwargs['ikwen_name']
         return context
 
 

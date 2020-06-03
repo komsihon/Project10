@@ -113,11 +113,13 @@ class Student(Model):
         Student.has_new to True, else sets it to False.
         """
         from ikwen_foulassi.foulassi.models import Invoice
-        from ikwen_foulassi.school.models import Score, DisciplineLogEntry
+        from ikwen_foulassi.school.models import Score, DisciplineLogEntry, Assignment
+        now = datetime.now()
+        has_pending_assignment = Assignment.objects.using(using).filter(classroom=self.classroom, deadline__lt=now)
         has_pending_invoice = Invoice.objects.using(using).filter(student=self, status=Invoice.PENDING).count() > 0
         has_new_discipline_info = DisciplineLogEntry.objects.using(using).filter(student=self, was_viewed=False).count() > 0
         has_new_score = Score.objects.using(using).filter(student=self, was_viewed=False).count() > 0
-        self.has_new = has_pending_invoice or has_new_discipline_info or has_new_score
+        self.has_new = has_pending_assignment or has_pending_invoice or has_new_discipline_info or has_new_score
 
 
 class Parent(Model):
@@ -293,7 +295,7 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
     my_kids_payment_period = models.IntegerField(_("Payment period"), default=30,
                                                  help_text=_("Number of days left for parent to pay for the service."))
     ikwen_share_rate = models.IntegerField(default=0)
-    expected_student_count = models.IntegerField(_("Number of students"), default=0,
+    expected_student_count = models.IntegerField(_("Expected students count"), default=0,
                                                  help_text='Total number of students (registered or not) of the school')
     # This must not be editable in the Admin
     website_is_active = models.BooleanField(default=False,
