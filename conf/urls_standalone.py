@@ -8,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    url(r'^$', SignIn.as_view(), name='home'),
+    url(r'^$', SignIn.as_view(), {'template_name': 'foulassi/sign_in.html'}, name='home'),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^offline.html$', Offline.as_view(), name='offline'),
 

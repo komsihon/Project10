@@ -1,0 +1,141 @@
+{% extends "core/base_bs.html" %}
+{% load i18n static auth_tokens %}
+
+{% block page_title %}<title>{{ service.project_name }} - {% trans "Sign in" %} </title>{% endblock %}
+
+{% block meta %}
+    {% include 'foulassi/snippets/color_and_icons.html' %}
+    <meta name="apple-mobile-web-app-title" content="Foulassi" />
+
+    <meta name="abstract" content="{% trans "Follow your kids at school in real-time" %}"/>
+    <meta name="description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
+
+    <meta property="og:title" content="Foulassi - {% trans "Follow your kids at school in real-time" %}" />
+    <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
+    <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
+
+    {% if request.META.HTTP_HOST == 'localhost' %}
+        <link rel="manifest" href="{% static 'foulassi/manifest.json' %}?v=20.5.28">
+    {% else %}
+        <link rel="manifest" href="/manifest.json">
+    {% endif %}
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'ikwen/css/pwa.css' %}">
+    <style  type="text/css">
+        #navbar {background: #fff}
+        #navbar-search, #navbar .navbar-right {display: none}
+        label span {font-weight: normal}
+        #lg-username {text-transform: lowercase}
+        #terms-warning {color: #999; font-size: 11px}
+        .login-with-ikwen strong {color: #7ea6ca}
+        #navbar {display: none}
+        .install-promotion.simple-button {margin-top: 10px}
+        #content {padding-top: 5vh}
+        @media (max-width: 767px) {
+            #login-form {border: none!important;}
+        }
+    </style>
+{% endblock %}
+
+{% block head_js %}
+    <script>
+        navigator.serviceWorker.getRegistrations().then(
+            function(registrations) {
+                for(let registration of registrations) {
+                    if (registration.active.scriptURL.indexOf('service-worker.js') > 0) registration.unregister();
+                }
+        });
+    </script>
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    {% include 'core/snippets/pwa_promotion/simple_button.html' %}
+    <div id="content" class="form container">
+        <p class="failure chrome-only" style="display: none; margin: 15px; padding: 9px">
+            {% trans "Downloading the App is not possible with your current browser. Please switch to Google Chrome." %}
+        </p>
+        {% if login_form.errors %}
+            <p class="failure" style="font-size: 1em; padding: 9px">{{ error_message }}</p>
+        {% elif request.GET.msg %}
+            <p class="failure" style="font-size: 1em; padding: 9px">{{ request.GET.msg }}</p>
+        {% elif request.GET.successfulPasswordReset %}
+            <p class="success" style="font-size: 1em; padding: 9px">{% trans "Your password was successfully reset, login now." %}</p>
+        {% endif %}
+        {% if messages %}
+            {% for msg in messages %}<p class="msg-tag {{ msg.tags }}" style="font-size: 1em; padding: 9px">{{ msg }}</p>{% endfor %}
+        {% endif %}
+        <div id="login" class="form-wrapper">
+            <div style="text-align: center">
+                <div style="margin-bottom: .3em; text-align: center">
+                    {% if config.logo.name %}
+                        <img src="{{ settings.IKWEN_MEDIA_URL }}{{ config.logo.name }}" alt="Logo {{ service.project_name }}"
+                             style="max-height: 80px"/>
+                    {% endif %}
+                </div>
+                <h3>Foulassi</h3>
+            </div>
+            <form id="login-form" action="{% url 'ikwen:sign_in' %}?{{ request.META.QUERY_STRING }}" method="post">{% csrf_token %}
+                <div class="form-group" style="margin-top: .4em">
+                    <label for="lg-username">{% trans "Email or phone" %}</label>
+                    <input id="lg-username" class="form-control input-md username" type="text" name="username" autofocus
+                           value="{{ request.GET.username }}{{ request.GET.phone }}" /> {#Only username or phone will be output depending on what is available#}
+                </div>
+                <div class="form-group">
+                    <label for="lg-password">{% trans "Password" %}</label>
+                    <input id="lg-password" class="form-control input-md password" type="password" name="password" />
+                </div>
+                <div class="form-group">
+                    {% if settings.IS_UMBRELLA %}
+                        <button class="btn btn-primary btn-block">
+                            {% include 'core/snippets/button_spinner.html' %}
+                            {% trans "Submit" %}
+                        </button>
+                    {% else %}
+                        <button class="btn btn-primary btn-block login-with-ikwen">
+                            {% include 'core/snippets/button_spinner.html' %}
+                            {% blocktrans %}Login with <strong>ikwen</strong>{% endblocktrans %}
+                        </button>
+                    {% endif %}
+                    {% url 'ikwen:forgotten_password' as forgotten_password_url %}
+                    <a style="float: left; margin-top: 7px" href="{{ forgotten_password_url|ikwenize }}">{% trans "Forgotten password ?" %}</a>
+                </div>
+            </form>
+            <div style="clear: both; padding-top: 15px; text-align: center">
+                {% trans "No account yet ?" %}
+                <a id="show-register"
+                   href="{% url 'ikwen:register' %}?{{ request.META.QUERY_STRING }}">{% trans "Register" %}</a>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/js/pwa-main.js' %}?v=20.5.31"></script>
+    <script type="text/javascript">
+        (function() {
+            {% if request.GET.dl %}
+                let isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+                if (!isChrome) $('.chrome-only').show();
+            {% endif %}
+            $('#lg-username').keyup(function(e) {
+                if (e.key === ' ') {
+                    var username = $(this).val().trim().toLowerCase();
+                    $(this).val(username);
+                }
+            }).blur(function() {
+                let username = $(this).val().replace(/ /g, '').toLowerCase();
+                $(this).val(username);
+            });
+            $('#login-form').submit(() => {
+                if ($('#login-form button').hasClass('processing')) return false;
+                $('#login-form button').addClass('processing')
+            });
+        })()
+    </script>
+    {{ config.scripts|safe }}
+{% endblock %}
