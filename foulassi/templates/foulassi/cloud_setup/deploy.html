@@ -28,8 +28,19 @@
                     <label for="project-name" class="control-label">{% trans 'School name' context 'Deployment: school name' %}</label>
                     <input type="text" class="form-control input-md" id="project-name" name="project_name" autofocus />
                 </div>
+                <div class="form-group" style="margin-bottom: 35px">
+                    <div class="checkbox">
+                        <label for="accept-terms" class="control-label">
+                            <input type="checkbox" id="accept-terms">
+                            {% url 'foulassi:terms_and_conditions' as terms_url %}
+                            {% blocktrans %}
+                                Accept <a href="{{ terms_url }}">terms and conditions</a>
+                            {% endblocktrans %}
+                        </label>
+                    </div>
+                </div>
                 <div class="form-group"> <!-- Submit Button -->
-                    <button class="btn btn-block btn-deep-blue deploy">
+                    <button class="btn btn-block btn-deep-blue deploy disabled" disabled>
                         {% include 'core/snippets/button_spinner.html' %}
                         <strong>{% trans "Let's go !" %}</strong>
                     </button>
@@ -53,7 +64,12 @@
             $('.btn.deploy').click(() => {
                 if ($(this).hasClass('processing')) return false;
                 $(this).addClass('processing')
-            })
+            });
+            $('body').on('change', '#accept-terms', () => {
+                $('.deploy').toggleClass('disabled');
+                if(!$('.deploy').hasClass('disabled')) $('.deploy:disabled').removeAttr('disabled');
+                else  $('.deploy').prop('disabled', true);
+            });
         })()
     </script>
 {% endblock %}

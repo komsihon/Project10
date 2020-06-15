@@ -626,3 +626,11 @@ class SuccessfulDeployment(VerifiedEmailTemplateView):
             return HttpResponseForbidden("You're not allowed here")
         return render(request, self.template_name, context)
 
+
+class TermsAndConditions(TemplateView):
+    template_name = 'foulassi/terms_and_conditions.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TermsAndConditions, self).get_context_data(**kwargs)
+
+        return context
