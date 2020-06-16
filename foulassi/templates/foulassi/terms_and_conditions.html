@@ -17,7 +17,7 @@
     <meta property="description" content="{% trans "Foulassi terms and conditions" %}" />
     <meta name="abstract" content="IKWEN provides you with very simple Cloud Apps to take your business to digital world hassle free."/>
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="{% url 'foulassi:terms_and_conditions' %}" />
+    <meta property="og:url" content="https://foulassi.ikwen.com{% url 'foulassi:terms_and_conditions' %}" />
     <meta property="og:image" content="{% static 'website/img/ikwen logo_without-slogan.png' %}" />
     <meta property="og:title" content="{% trans "IKWEN" %}"/>
     <meta property="og:description" content="{% trans "Foulassi terms and conditions" %}">
@@ -200,6 +200,30 @@
     {{ block.super }}
     <script>
         (() => {
+            $('.js-scrollTo').on('click', function() {
+                let page = $(this).attr('href');
+                let speed = 750;
+                $('html, body').animate( { scrollTop: $(page).offset().top }, speed );
+                return false;
+            });
+            $(window).scroll(function(e){
+                let scrollTop = $(window).scrollTop();
+                let docHeight = $(document).height();
+                let winHeight = $(window).height();
+                let scrollPercent = (scrollTop) / (docHeight - winHeight);
+                let scrollPercentRounded = Math.round(scrollPercent*100);
+                if (scrollPercentRounded >= 5) {
+                    $(".navbar").addClass("active");
+                    $("#navbar-search").addClass("active");
+                    $('.back-to-top').removeClass('hiding').addClass('showing');
+                    $('ul.dropdown-menu').addClass('page-scrolled')
+                } else {
+                    $(".navbar").removeClass("active");
+                    $("#navbar-search").removeClass("active");
+                    $('.back-to-top').removeClass('showing').addClass('hiding');
+                    $('ul.dropdown-menu').removeClass('page-scrolled')
+                }
+            });
             var scrollBreakPoint = 200;
             $(window).scroll((event) => {
                 var scrollTop = $(this).scrollTop();
