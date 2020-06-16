@@ -14,7 +14,6 @@ urlpatterns = patterns(
     url(r'^theming/', include('ikwen.theming.urls', namespace='theming')),
     url(r'^revival/', include('ikwen.revival.urls', namespace='revival')),
     url(r'^ikwen/', include('ikwen.core.urls', namespace='ikwen')),
-    url(r'^daraja/', include('daraja.urls', namespace='daraja')),
 
     url(r'^page/(?P<url>[-\w]+)/$', FlatPageView.as_view(), name='flatpage'),
     url(r'^blog/', include('ikwen_webnode.blog.urls', namespace='blog')),

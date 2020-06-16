@@ -1,4 +1,4 @@
-{% extends "website/base.html" %}
+{% extends "core/base_bs.html" %}
 
 {% load i18n static humanize %}
 
@@ -29,7 +29,7 @@
         body {background-color: #fff}
         #navbar.navbar-default.navbar-static-top.active {background-color: #233682;}
         #navbar.navbar-default.navbar-static-top.active a {color: #fff }
-        #header-top {margin-top: 200px; height: 200px;}
+        #header-top { background-color: aliceblue; padding-top: 180px; height: 400px;}
         #header-top h1 {font-family: Poppins,Arial,sans-serif; font-weight: 900; color: #3a416f; font-size: 55px}
         .section {min-height: 600px; line-height: 30px; text-align: justify}
         .section h2 {font-weight: 600}
@@ -64,7 +64,7 @@
 
 {% endblock %}
 
-{% block page_content %}
+{% block content %}
     <div class="text-center" id="header-top">
         <h1 id="terms">{% trans 'Terms and conditions' %}</h1>
         <div class="clearfix"></div>
