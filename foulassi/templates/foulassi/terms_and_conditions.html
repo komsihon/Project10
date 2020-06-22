@@ -1,0 +1,240 @@
+{% extends "core/base_bs.html" %}
+
+{% load i18n static humanize %}
+
+
+{% block page_title %}<title>{% trans 'Terms and conditions' %} | Foulassi for schools</title>{% endblock %}
+
+{% block meta %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="copyright" content="ikwen." >
+    <link rel="shortcut icon" type="image/png" href="{% static "website/img/favicon_ikwen.ico" %}">
+    <meta name="theme-color" content="#28a745">
+    <meta name="msapplication-navbutton-color" content="#233682">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#233682">
+    <meta property="description" content="{% trans "Foulassi terms and conditions" %}" />
+    <meta name="abstract" content="IKWEN provides you with very simple Cloud Apps to take your business to digital world hassle free."/>
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://foulassi.ikwen.com{% url 'foulassi:terms_and_conditions' %}" />
+    <meta property="og:image" content="{% static 'website/img/ikwen logo_without-slogan.png' %}" />
+    <meta property="og:title" content="{% trans "IKWEN" %}"/>
+    <meta property="og:description" content="{% trans "Foulassi terms and conditions" %}">
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <style>
+        body {background-color: #fff}
+        #navbar.navbar-default.navbar-static-top.active {background-color: #233682;}
+        #navbar.navbar-default.navbar-static-top.active a {color: #fff }
+        #header-top { background-color: aliceblue; padding-top: 180px; height: 400px;}
+        #header-top h1 {font-family: Poppins,Arial,sans-serif; font-weight: 900; color: #3a416f; font-size: 55px}
+        .section {min-height: 600px; line-height: 30px; text-align: justify}
+        .section h2 {font-weight: 600}
+        #contents.active {position: fixed; right: 5%; top: 14%}
+        #contents {background-color: #c7c7ca26}
+
+        .fa-chevron-circle-up { color: #319dd5; }
+        /* Back to top button BEGIN */
+        .back-to-top { font-size: 3.5vw; position: fixed; bottom: 1%; text-align: right; z-index: 1; transition: all 1s; }
+        .hiding { opacity: 0; right: -100%; }
+
+
+        @media only screen and (max-width: 600px) and (orientation: portrait) {
+            .back-to-top { font-size: 10vw }
+        }
+        /* iPad pro optimisation */
+        /* Portrait */
+        @media only screen and (min-width: 1024px) and (max-height: 1366px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 1.5) {
+            .back-to-top { font-size: 8vw }
+        }
+        /* Landscape */
+        @media only screen and (min-width: 1024px) and (max-height: 1366px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1.5) {
+            .back-to-top { font-size: 5vw }
+        }
+
+        /* iPad optimisation */
+        /* Portrait */
+        @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+            .back-to-top { font-size: 8vw }
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="text-center" id="header-top">
+        <h1 id="terms">{% trans 'Terms and conditions' %}</h1>
+        <div class="clearfix"></div>
+    </div>
+    <div class="container">
+        <section class="col-sm-9">
+            <div id="publication" class="section">
+                {% blocktrans %}
+                    <h2>Publication</h2>
+                    The site: <strong style="color: #233682 ">ikwen</strong> is published by the company <strong style="color: #233682 ">ikwen</strong>, located in Yaoundé / Cameroun whose information is available at the tax center: CDI 09 D'Efoulan.
+
+                    E-mail address: <strong>contact@ikwen</strong>.com
+
+                    Intellectual property rights.
+
+                    <strong style="color: #233682 ">ikwen</strong> notifies users of its platform that many elements of it:
+
+                    Are protected by copyright legislation: this may include photographs, articles, drawings, animated sequences, audio or digital video recordings.
+                    And / or are protected by design legislation;
+                    Are protected by the legislation on the marks: it is in particular the marks, the logo, appearing on the site.
+                    The elements thus protected are the property of <strong style="color: #233682 ">ikwen</strong>.
+
+                    As such, any reproduction, representation, use, adaptation, modification, incorporation, translation, marketing, partial or complete by any process and on any medium whatsoever (paper, digital, ...) is prohibited, without prior written permission. <strong style="color: #233682 ">ikwen</strong>, except the exceptions legally allowed by articles 29 (2) and 36 of the law 2000/011 of 19 December 2000 on copyright and neighboring rights under pain of constituting an infringement of copyright infringement and designs, punishable by two (2) to five (5) years imprisonment and one (1) to twenty-five (25) million CFA francs in fine or penalty infringement of copyrights and in the case of trademark infringement.
+
+                    The trademarks and logos of the software displayed on this Site and the associated mobile application are the property of the respective company, and may not be exploited without the prior written consent of <strong style="color: #233682 ">ikwen</strong>. These trademarks include but are not necessarily limited to any software not specifically identified in these Legal Notices.
+                {% endblocktrans %}
+            </div>
+            <div id="cookies" class="section">
+                {% blocktrans %}
+                    <h2>Cookies</h2>
+                    The Site and the associated mobile application includes a system of cookies. Thus the user is informed that during his visits to the site, cookies may be installed automatically on his Internet browser.
+
+                    Cookies are files sent to users' hard drives in order to facilitate their browsing on the site and the associated mobile application and to establish attendance statistics.
+
+                    These cookies do not contain any personal information.
+
+                    The User can disable the sending of cookies by modifying the parameters of his Internet browser.
+                {% endblocktrans %}
+            </div>
+            <div id="protection-data" class="section">
+                {% blocktrans %}
+                    <h2>Protection of personal data</h2>
+                    You can visit the site and the associated mobile application without revealing your identity or any other personal information about you.
+
+                    Regarding the personal information that you would have to communicate to us, you have the right to access and rectify according to Cameroonian law.
+
+                    The information collected is subject to computer processing to provide you with personalized content. This computerized processing is done by the applications of <strong style="color: #233682 ">ikwen</strong> in its infrastructure You have a right to access, modify, rectify, and limit the data concerning you.
+
+                    To exercise these rights, <strong style="color: #233682 ">ikwen</strong> provides you with a personal interface to modify your personal data. For reasons of data integrity of the platform, only your <strong style="color: #233682 ">ikwen</strong> ID is not editable.
+
+                    <strong style="color: #233682 ">ikwen</strong> has a centralized authentication module. You can use your access information to connect to one of the third-party Internet sites of which it is the provider. In such a case, you are part of the third-party community and may have access to information such as your last name, first name, phone number, e-mail and sex. The third party platform undertakes to respect the same rules of protection and non-disclosure of your personal data as defined by <strong style="color: #233682 ">ikwen</strong>.
+
+                    <strong style="color: #233682 ">ikwen</strong> takes all measures to avoid any prejudice to the User.
+
+                    <strong style="color: #233682 ">ikwen</strong> undertakes to implement appropriate technical and organizational measures to protect personal data against accidental or unlawful destruction, accidental loss, alteration, dissemination or unauthorized access.
+
+                    <strong style="color: #233682 ">ikwen</strong> undertakes to keep the personal data for a period not exceeding that necessary for the fulfillment of the purposes for which they were collected or processed.
+
+                    <strong style="color: #233682 ">ikwen</strong> may be required to disclose any information about the User in order to comply with any applicable law or regulation or to respond to any legal or administrative request. These data are collected automatically by the site; the applications allow the publisher to establish statistics regarding the consultation of his web pages and offers him adapted and more personalized content.
+                {% endblocktrans %}
+            </div>
+            <div id="registration-details" class="section">
+                {% blocktrans %}
+                    <h2>Registration details</h2>
+                    Registration is reserved for individuals aged 15 or over
+
+                    In the event that the user provides false, inaccurate, outdated, incomplete, misleading or misleading information, <strong style="color: #233682 ">ikwen</strong> may, immediately, without notice or compensation, suspend or terminate the profile of the User / his services and deny him access, temporarily or permanently, to all or part of the <strong style="color: #233682 ">ikwen</strong> Services.
+                {% endblocktrans %}
+            </div>
+            <div id="password-management" class="section">
+                {% blocktrans %}
+                    <h2>Password management</h2>
+                    To access your private interface on <strong style="color: #233682 ">ikwen</strong>, you must enter your <strong style="color: #233682 ">ikwen</strong> ID; as well as your password.
+
+                    This password is strictly personal and you must keep it confidential. As such, you are responsible for any use of this password and <strong style="color: #233682 ">ikwen</strong> can in no way be held responsible for any loss or damage caused by the use of these spaces and / or password.
+
+                    The User must disconnect after each consultation of the site, in order to avoid any fraudulent use of his spaces and / or his password.
+                {% endblocktrans %}
+            </div>
+            <div id="user-responsibility" class="section">
+                {% blocktrans %}
+                    <h2>Responsibility of the user</h2>
+                    The site: <strong style="color: #233682 ">ikwen</strong> is published by the company <strong style="color: #233682 ">ikwen</strong>, located in Yaoundé / Cameroun whose information is available at the tax center: CDI 09 D'Efoulan.
+
+                    E-mail address: <strong>contact@ikwen</strong>.com
+
+                    Intellectual property rights.
+
+                    <strong style="color: #233682 ">ikwen</strong> notifies users of its platform that many elements of it:
+
+                    Are protected by copyright legislation: this may include photographs, articles, drawings, animated sequences, audio or digital video recordings.
+                    And / or are protected by design legislation;
+                    Are protected by the legislation on the marks: it is in particular the marks, the logo, appearing on the site.
+                    The elements thus protected are the property of <strong style="color: #233682 ">ikwen</strong>.
+
+                    As such, any reproduction, representation, use, adaptation, modification, incorporation, translation, marketing, partial or complete by any process and on any medium whatsoever (paper, digital, ...) is prohibited, without prior written permission. <strong style="color: #233682 ">ikwen</strong>, except the exceptions legally allowed by articles 29 (2) and 36 of the law 2000/011 of 19 December 2000 on copyright and neighboring rights under pain of constituting an infringement of copyright infringement and designs, punishable by two (2) to five (5) years imprisonment and one (1) to twenty-five (25) million CFA francs in fine or penalty infringement of copyrights and in the case of trademark infringement.
+
+                    The trademarks and logos of the software displayed on this Site and the associated mobile application are the property of the respective company, and may not be exploited without the prior written consent of <strong style="color: #233682 ">ikwen</strong>. These trademarks include but are not necessarily limited to any software not specifically identified in these Legal Notices.
+                {% endblocktrans %}
+            </div>
+            <div id="limitation-liability" class="section">
+                {% blocktrans %}
+                    <h2>Limitation of liability</h2>
+                    You use the <strong style="color: #233682 ">ikwen</strong> platform under your sole and entire responsibility.
+
+                    <strong style="color: #233682 ">ikwen</strong> can not be held responsible for direct or indirect damages, such as, in particular material damage, loss of data or program, financial loss, resulting from the use of this site and the associated mobile application or sites that are linked.
+
+                    We draw your attention to the fact that certain products or services presented on the site and the associated mobile application may be the subject of specific regulations or even restrictions and / or prohibitions in certain countries.
+                {% endblocktrans %}
+            </div>
+        </section>
+
+        <aside id="contents" class="col-sm-3">
+            <h4>{% trans 'Contents' %}</h4>
+            <ol>
+                <li><a href="#publication">{% trans 'Publication' %}</a></li>
+                <li><a href="#cookies">{% trans 'Cookies' %}</a></li>
+                <li><a href="#protection-data">{% trans 'Protection of personal data' %}</a></li>
+                <li><a href="#registration-details">{% trans 'Registration details' %}</a></li>
+                <li><a href="#password-management">{% trans 'Password management' %}</a></li>
+                <li><a href="#user-responsibility">{% trans 'Responsibility of the user' %}</a></li>
+                <li><a href="#limitation-liability">{% trans 'Limitation of liability' %}</a></li>
+            </ol>
+        </aside>
+    </div>
+    <a class="js-scrollTo back-to-top hiding" href="#header-top" style="text-decoration: none; color: #3F3F3F">
+        <i class="fa fa-chevron-circle-up"></i>
+    </a>
+    <div class="clearfix"></div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (() => {
+            $('.js-scrollTo').on('click', function() {
+                let page = $(this).attr('href');
+                let speed = 750;
+                $('html, body').animate( { scrollTop: $(page).offset().top }, speed );
+                return false;
+            });
+            $(window).scroll(function(e){
+                let scrollTop = $(window).scrollTop();
+                let docHeight = $(document).height();
+                let winHeight = $(window).height();
+                let scrollPercent = (scrollTop) / (docHeight - winHeight);
+                let scrollPercentRounded = Math.round(scrollPercent*100);
+                if (scrollPercentRounded >= 5) {
+                    $(".navbar").addClass("active");
+                    $("#navbar-search").addClass("active");
+                    $('.back-to-top').removeClass('hiding').addClass('showing');
+                    $('ul.dropdown-menu').addClass('page-scrolled')
+                } else {
+                    $(".navbar").removeClass("active");
+                    $("#navbar-search").removeClass("active");
+                    $('.back-to-top').removeClass('showing').addClass('hiding');
+                    $('ul.dropdown-menu').removeClass('page-scrolled')
+                }
+            });
+            var scrollBreakPoint = 200;
+            $(window).scroll((event) => {
+                var scrollTop = $(this).scrollTop();
+                if (scrollTop > scrollBreakPoint){
+                    $('#contents').addClass('active');
+                }else {
+                    $('#contents').removeClass('active');
+                }
+            });
+        })()
+    </script>
+{% endblock %}
+
+
