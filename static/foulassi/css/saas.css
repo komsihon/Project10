@@ -28,7 +28,7 @@ section.why-foulassi img {width: 60px}
 .features.site {margin-top: 0}
 .features.site h1 {color: #2d2d2d}
 section.site.main-feat.banner {height: 100vh;padding-top: 20vh;}
-section.site .btn.cta {background: #4aa1e9;border: #4aa1e9;color: #ffffff;font-family: Lato;font-size: 16px;line-height: 28px;letter-spacing: 3px;max-width: 100%;}
+section.site .btn.cta {background: #4aa1e9;border: #4aa1e9;color: #ffffff;font-family: Lato;font-size: 16px;line-height: 28px;letter-spacing: 3px;max-width: 100%;margin: auto;}
 section.site.banner {margin-top: 0}
 section.good-company h3 {font-size: 18px; font-weight: 700}
 section.deploy {/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#23538a+0,a7cfdf+100 */
@@ -144,7 +144,7 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     .content-box .desc { padding: 8vh 10px 0 0 !important; }
     section.deploy {font-size: 30px}
     section.price .desc { max-width: 80% !important; }
-    .background-clickable { height: 100%; text-indent: -99999px}
+    section.price .btn-md.cta { float: left }
 }
 /*671273*/
 @media only screen and (max-width : 991px) {
