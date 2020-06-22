@@ -21,7 +21,7 @@ from ikwen_foulassi.school.models import Classroom, get_subject_list, Score, Lev
 from ikwen_foulassi.foulassi.models import get_school_year, ParentProfile, EventType, Event, \
     ALL_SCORES_SET, SchoolConfig, Student, Reminder
 
-from daraja.models import DARAJA, DarajaConfig
+
 
 logger = logging.getLogger('ikwen')
 
@@ -236,6 +236,7 @@ def check_setup_status(school):
 
 
 def share_payment_and_set_stats(invoice, payment_mean_slug):
+    from daraja.models import DARAJA, DarajaConfig
     school = invoice.school
     service_umbrella = Service.objects.get(pk=school.id)
     partner = service_umbrella.retailer

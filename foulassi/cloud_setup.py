@@ -31,7 +31,7 @@ from ikwen.partnership.models import PartnerProfile
 from ikwen.theming.models import Template, Theme
 from ikwen_foulassi.foulassi.models import SchoolConfig
 
-from daraja.models import DARAJA
+
 
 logger = logging.getLogger('ikwen')
 
@@ -264,6 +264,7 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
     invoice.save(using=UMBRELLA)
     vendor = get_service_instance()
 
+    from daraja.models import DARAJA
     if member != vendor.member:
         add_event(vendor, SERVICE_DEPLOYED, member=member, object_id=invoice.id)
     if partner_retailer and partner_retailer.app.slug != DARAJA:

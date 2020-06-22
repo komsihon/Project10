@@ -20,10 +20,6 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_protect
 
-from echo.models import Balance
-from echo.utils import notify_for_low_messaging_credit, notify_for_empty_messaging_credit, count_pages, LOW_SMS_LIMIT, \
-    LOW_MAIL_LIMIT
-
 from ikwen.accesscontrol.models import SUDO
 from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen.billing.models import PAYMENT_CONFIRMATION, InvoiceItem, InvoiceEntry, NEW_INVOICE_EVENT
@@ -373,6 +369,8 @@ class StudentDetail(ChangeObjectBase):
         return render(self.request, 'school/snippets/student/billing.html', context)
 
     def cash_in(self, context):
+        from echo.models import Balance
+        from echo.utils import notify_for_low_messaging_credit, notify_for_empty_messaging_credit, count_pages,LOW_SMS_LIMIT, LOW_MAIL_LIMIT
         if getattr(settings, 'IS_IKWEN', False):
             return HttpResponse(json.dumps({'error': "You're not allowed here"}))
         student = context[self.context_object_name]
@@ -442,6 +440,8 @@ class StudentDetail(ChangeObjectBase):
         return HttpResponse(json.dumps({'success': True}))
 
     def add_discipline_log_entry(self, context, action):
+        from echo.models import Balance
+        from echo.utils import notify_for_low_messaging_credit, notify_for_empty_messaging_credit, count_pages,LOW_SMS_LIMIT, LOW_MAIL_LIMIT
         if getattr(settings, 'IS_IKWEN', False):
             return HttpResponse(json.dumps({'error': "You're not allowed here"}))
         service = get_service_instance()

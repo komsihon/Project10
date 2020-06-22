@@ -1,0 +1,13 @@
+.navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {color: #c41e2b!important;}
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {color: #d45963!important;}
+.dropdown-menu>li>a {color: #fff !important;}
+#user-menu { cursor: pointer; }
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {color: #FFF !important;background-color: #d45963 !important;}
+.dropdown-menu.page-scrolled .username { color: #c41e2b; }
+.dropdown-menu.page-scrolled>li>a { color: #d45963 !important; }
+.dropdown-menu.page-scrolled>li>a:hover, .dropdown-menu>li>a:focus { color: #FFF !important; background-color: #d45963 !important; }
+
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-brand { margin-left: 0; max-width: 150px; overflow: hidden; }
+}

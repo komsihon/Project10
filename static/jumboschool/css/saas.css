@@ -1,11 +1,7 @@
 
 @import url('https://fonts.googleapis.com/css?family=Hind+Madurai:700&display=swap');
 .edge-panel-left .wrapper {padding: 0 0 120px;}#navbar-search input {background: #f6f6f6;}
-.navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a { color: #217DBB!important; }
-.navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover { color: #1f356a!important; }
-.dropdown-menu>li>a { color: #217DBB !important; }
-.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {color: #FFF !important;background-color: #217DBB !important;}
-.dropdown-menu .username { color: #233682 }
+
 body {background: none; color: #616675}
 h1, h2 {font-family: "Hind Madurai", Lato, sans-serif; font-weight: 700}
 footer {clear: both; display: block; float: none; height: 75vh; margin: 0;}
@@ -21,29 +17,27 @@ section.site h2 {color: #201a3a}
 .effective-solution h3 {color: #7d87a0; font-size: 14px; font-weight: 700}
 section.why-foulassi h3 {font-size: 21px;color: #29163e}
 section.why-foulassi img {width: 60px}
+section.site .cover {background: #000000a3;height: 100vh;margin-top: 0;top:0;FONT-VARIANT: JIS04;}
 
 #bottom-menu .lang-switcher {margin: 0 0 0 50px;}
 #bottom-menu .lang-switcher select {color: #666;font-size: 12px;width: 45px;}
 #bottom-menu .lang-switcher select:active {/* background: #111 */}
 .features.site {margin-top: 0}
 .features.site h1 {color: #2d2d2d}
-section.site.main-feat.banner {height: 100vh;padding-top: 20vh;}
-section.site .btn.cta {background: #4aa1e9;border: #4aa1e9;color: #ffffff;font-family: Lato;font-size: 16px;line-height: 28px;letter-spacing: 3px;max-width: 100%;}
+section.site.main-feat.banner {height: 100vh;}
+section.site .btn.cta {background: #c41e2b;border: #c41e2b;color: #ffffff;font-family: Lato;font-size: 16px;line-height: 28px;letter-spacing: 3px;}
 section.site.banner {margin-top: 0}
 section.good-company h3 {font-size: 18px; font-weight: 700}
 section.deploy {/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#23538a+0,a7cfdf+100 */
-    background: #23538a; /* Old browsers */
-    background: -moz-linear-gradient(45deg,  #23538a 0%, #a7cfdf 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(45deg,  #23538a 0%,#a7cfdf 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(45deg,  #23538a 0%,#a7cfdf 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: #d45963; /* Old browsers */
+    background: -moz-linear-gradient(45deg,  #d45963 0%, #e8a8ad 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(45deg,  #d45963 0%,#e8a8ad 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(45deg,  #d45963 0%,#e8a8ad 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#23538a', endColorstr='#a7cfdf',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-    color: #fff; font-size: 24px
+    color: #fff;
+    font-size: 24px;
 }
-/*section.price .ribbon-price { font-size: 33px; font-weight: 700; }*/
-section.price .ribbon-price {display: block;font-size: 36px;margin: 1vh 0 3vh 0;font-weight: 700;color: #201a46;}
-section .highlight {color: #201a3a;font-weight: 700;font-size: 21px;}
-
-section.site.deploy a.cta {background: #fff;color: #4aa1e9;margin-top: 30px;}
+section.site.deploy a.cta {background: #fff;color: #c41e2b;margin-top: 30px;}
 .screenshots section.site {background-position-y: center; background-repeat: no-repeat}
 .screenshots section.right {background-position-x: right}
 .screenshots .img {background: no-repeat center; background-origin: content-box; background-size: cover}
@@ -105,9 +99,6 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     section.good-company .features > div {margin-bottom: 15px}
     section.deploy {padding-bottom: 45px}
     .screenshots section.site img {width: 100%}
-    .content-box .desc { padding: 0 10px !important; }
-    section.price .ribbon-price { font-size: 33px; font-weight: 700; }
-    section.price .mobile-center { text-align: center !important; }
 }
 
 @media only screen and (min-width : 768px) and (orientation: landscape) {
@@ -133,18 +124,14 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     section.site.banner h1 {font-size: 42px;font-weight: 700;line-height: 50px;text-align: left;}
     section.site h2 {font-size: 30px;font-weight: 700;line-height: 42px;text-align:left}
     section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
-    .img.easy-setup {background-image: url('../img/foulassi-easy-setup-xs.png')}
+    .img.easy-setup {background-image: url('../img/jumboschool-easy-setup-xs.png'); max-width: 500px}
     .img.student-follow-up {background-image: url('../img/foulassi-student-follow-up-xs.png');}
     .img.scores-input {background-image: url('../img/foulassi-scores-input-xs.png')}
-    .img.report-cards-generation {background-image: url('../img/foulassi-report-cards-generation.png')}
+    .img.report-cards-generation {background-image: url('../img/foulassi-report-cards-generation.png');}
     .img.dashboard {background-image: url('../img/foulassi-dashboard.png')}
     .img.connect-and-share {background-image: url('../img/foulassi-connect-and-share.png')}
     .img.online-payment {background-image: url('../img/foulassi-online-payment.png')}
-    .img.foulassi-pricing {background-image: url('../img/foulassi-pricing.png');background-repeat: no-repeat;background-origin: content-box;background-size: 65%;background-position-x: center;background-position-y: 60%;height: 450px;}
-    .content-box .desc { padding: 8vh 10px 0 0 !important; }
     section.deploy {font-size: 30px}
-    section.price .desc { max-width: 80% !important; }
-    .background-clickable { height: 100%; text-indent: -99999px}
 }
 /*671273*/
 @media only screen and (max-width : 991px) {
@@ -162,7 +149,7 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     section.site img {width: 55%;}
     section.site img.history {width: 60%}
     section.why-foulassi img {width: 60px}
-    section.site.banner {text-align: left; padding-top: 0; height: 900px}
+    section.site.banner {text-align: left;padding-top: 0;height: 900px;}
     section.site.banner p {margin-top: 25px; text-align: justify;font-size: 21px;line-height: 40px;}
     section.site.banner h1 {font-weight: 700;line-height: 65px;margin-top: 18px;}
     section.site.banner .video {margin-top: 58px}
@@ -188,7 +175,7 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     section.why-foulassi h3 {margin: 5px 0 30px;text-align: left;font-size: 21px;color: #29163e;}
     section.why-foulassi p {font-size: 16px; line-height: 24px}
     section.site.deploy a.cta {margin-top: 60px;}
-    section.site.banner h1 {font-size: 65px; margin-top: 110px}
+    section.site.banner h1 {font-size: 55px;margin-top: 20vh;}
     section.site h2 {font-size: 43px;}
     section.header h3 {color: #000; font-size: 33px;font-weight: 400;  line-height: 94px;}
     section.header {height: 1015px}
@@ -201,34 +188,4 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
 
 @media (orientation: portrait) {
     section.site.main-feat.banner {padding-top: 8vh;}
-}
-
-
-.content-box { width: 100%; margin: auto; position: relative; background: #e3eeff; border: 5px solid white; box-shadow: 0 0 10px rgba(0, 0, 0, .3); -moz-box-shadow: 0 0 10px rgba(0, 0, 0, .3); -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .3); }
-
-.ribbon-wrapper { position: relative; z-index:998; }
-.ribbon-front { background-color: #cc3333;	height: 50px; width: 310px; position: relative; left: 16px; z-index: 2; font:20px/50px "Lato Semibold"; color:#f8f8f8; text-align:center;text-shadow: 0 1px 2px #cc6666; -moz-box-shadow: 0 0 4px rgba(0,0,0,0.55); -webkit-box-shadow: 0 0 4px rgba(0,0,0,0.55); -o-box-shadow: 0 0 4px rgba(0,0,0,0.55); }
-.ribbon-edge-bottomright { border-color: transparent transparent transparent #9B1724; border-style:solid; border-width: 0 0 5px 10px; height:0; left: 315px; position: absolute; top: 50px; width:0; z-index: 1; }
-
-
-@-webkit-keyframes flow {
-	0% { left: -10px;opacity: 0;}
-	50% {left:157px;opacity: 0.4;}
-    100%{ left:280px;opacity: 0;}
-}
-@keyframes flow {
-	0% { left:-10px;opacity: 0;}
-	50% {left:157px;opacity: 0.4;}
-    100%{ left:280px;opacity: 0;}
-}
-
-.glow{ background: rgb(255,255,255); width:40px; height:100%; z-index:999; position:absolute;-webkit-animation: flow 2s linear infinite;-moz-animation: flow 1.5s linear infinite;-webkit-transform: skew(20deg);
-	   -moz-transform: skew(20deg);
-	     -o-transform: skew(20deg);background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 1%, rgba(255,255,255,1) 100%); /* FF3.6+ */
-        background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(1%,rgba(255,255,255,0)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
-        background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
-        background: -o-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
-        background: -ms-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 100%); /* IE10+ */
-        background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 100%); /* W3C */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */ border-left:1px solid #fff;
 }

@@ -22,7 +22,7 @@
 {% block head_style %}
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />
-    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=19.11.1.12.35" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=22.05.20.18.49" />
 {% endblock %}
 
 {% block header_brand %}
@@ -360,8 +360,50 @@
             </div>
         </div>
     </section>
+    <section class="features site price" style="padding: 0">
+        <div class="container">
+            <div class="content-box">
+                <div class="ribbon-wrapper pull-right"><div class="glow">&nbsp;</div>
+                    <a href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}" title="{% trans "Deploy now" %}">
+                        <div class="ribbon-front">
+                            {% trans "START YOUR FREE TRIAL" %}
+                        </div>
+                    </a>
+                    <div class="ribbon-edge-bottomright"></div>
+                </div>
+                <div class="row features">
+                    <div class="col-sm-6 img foulassi-pricing img-responsive">
+                        <img class="img-responsive visible-xs" src="{% static 'foulassi/img/foulassi-pricing.png' %}">
+                        {# Force DIV height by putting the same text and set visibility to hidden #}
+                        <div class="desc hidden-xs" style="visibility: hidden">
+                            {% blocktrans %}
+                                 <p class="mobile-center"> Take this offer from <span class="ribbon-price"> XAF 90,000 / year.</span></p>
+                                <p><span class="highlight">Connect</span> staff and parents with the <span class="highlight">student</span>
+                                 and benefit all the features FOULASSI has to offer.</p>
+                                <p class="mobile-center" style="margin-bottom: 3vh">Start your two-months free trial <span class="highlight">right now !</span> </p>
+                             {% endblocktrans %}
+                            <a class="btn btn-md cta" href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}" style="margin-bottom: 5vh">{% trans "START" %}</a>
+                        </div>
+                        {# End Force DIV height #}
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="desc" style="text-align: justify">
+                             {% blocktrans %}
+                                 <p  class="mobile-center"> Take this offer from <span class="ribbon-price"> XAF 90,000 / year.</span></p>
+                                <p><span class="highlight">Connect</span> staff and parents with the <span class="highlight">student</span>
+                                 and benefit all the features FOULASSI has to offer.</p>
+                                <p class="mobile-center" style="margin-bottom: 3vh">Start your two-months free trial <span class="highlight">right now !</span> </p>
+                             {% endblocktrans %}
+                            <a class="btn btn-md cta" href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}" style="margin-bottom: 5vh">{% trans "START" %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="features site good-company listing">
         <div class="container">
+
             <h2 style="text-align: center">{% trans "You're in good company" %}</h2>
             <p class="col-sm-8 col-sm-offset-2" style="font-size: 21px; font-weight: 300; margin-bottom: 60px; text-align: center">{% blocktrans %}
                 We have been on the field for many years, building and maintaining great cloud apps that  address
