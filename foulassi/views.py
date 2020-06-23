@@ -23,13 +23,13 @@ from django.utils.http import urlquote, urlunquote
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, activate
 
 from ikwen.core.generic import ChangeObjectBase
 from ikwen.conf.settings import WALLETS_DB_ALIAS, MEDIA_URL, MEMBER_AVATAR
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.models import Application, Service
-from ikwen.core.utils import add_database, get_service_instance, get_mail_content, send_sms
+from ikwen.core.utils import add_database, get_service_instance, get_mail_content, send_sms, send_push
 from ikwen.core.views import HybridListView
 from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen.accesscontrol.models import Member
@@ -102,7 +102,8 @@ class AdminHome(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdminHome, self).get_context_data(**kwargs)
-        reminder_list = list(Reminder.objects.all())
+        service = get_service_instance()
+        reminder_list = list(Reminder.objects.using(service.database).all())
         total_missing = 0
         for reminder in reminder_list:
             total_missing += reminder.missing
@@ -294,6 +295,62 @@ class ChangeHomework(ChangeObjectBase):
         context['assignment'] = Assignment.objects.using(self.db).get(pk=kwargs['assignment_id'])
         context['ikwen_name'] = kwargs['ikwen_name']
         return context
+
+    def after_save(self, request, obj, *args, **kwargs):
+        """"
+        Notify the teacher when a student send his homework
+        """
+        student = obj.student
+        classroom = student.classroom
+        assignment = obj.assignment
+        assignment_subject = assignment.subject
+
+        teacher = assignment_subject.get_teacher(classroom)  # Retrieve the teacher who gives assignment
+        service = get_service_instance()
+        school_config = service.config
+        company_name = school_config.company_name
+        classroom_name = classroom.name
+        sender = '%s via ikwen Foulassi <no-reply@ikwen.com>' % student
+        # try:
+        #     # cta_url = 'https://go.ikwen.com' + reverse('foulassi:change_homework', args=(
+        #     #     school_config.company_name_slug, student.pk, assignment.pk))
+        # except:
+        #     cta_url = ''
+
+        if teacher.member:
+            activate(teacher.member.language)
+        student_name = student.first_name
+        subject = _(" New homework sent")
+        extra_context = {'subject': subject,
+                         # 'cta_url': cta_url,
+                         'teacher': teacher,
+                         'school_name': company_name,
+                         'student_name': student_name,
+                         'assignment': assignment,
+                         'classroom': classroom_name
+                         }
+
+        try:
+            html_content = get_mail_content(subject,
+                                            template_name='foulassi/mails/submitted_homework.html',
+                                            extra_context=extra_context)
+            teacher_email = teacher.member.email
+            msg = EmailMessage(subject, html_content, sender,
+                               [teacher_email, 'rsihon@gmail.com', 'silatchomsiaka@gmail.com'])
+            msg.content_subtype = "html"
+            print("Sending email to %s ..." % teacher_email)
+            try:
+                msg.send()
+                print("Email sent")
+            except Exception as e:
+                print e.message
+
+            body = _("%(student_name)s from %(classroom)s sent his assignment of %(subject)s about %(assignment_name)s"
+                     % {'student_name': student_name, 'classroom': classroom_name,
+                        'subject': assignment_subject, 'assignment_name': assignment.title})
+            send_push(teacher.member, subject, body)
+        except:
+            logger.error("Could not generate HTML content from template", exc_info=True)
 
 
 class ShowJustificatory(ChangeJustificatory):
