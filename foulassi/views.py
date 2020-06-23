@@ -103,7 +103,9 @@ class AdminHome(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AdminHome, self).get_context_data(**kwargs)
         service = get_service_instance()
-        reminder_list = list(Reminder.objects.using(service.database).all())
+        db = service.database
+        add_database(db)
+        reminder_list = list(Reminder.objects.using(db).all())
         total_missing = 0
         for reminder in reminder_list:
             total_missing += reminder.missing
