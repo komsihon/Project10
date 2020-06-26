@@ -12,7 +12,7 @@ from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _, activate
 
 from ikwen.core.models import Application, Service
-from ikwen.core.utils import add_database
+from ikwen.core.utils import add_database, send_push
 from ikwen.core.log import CRONS_LOGGING
 from ikwen.accesscontrol.models import Member
 from ikwen.core.utils import get_mail_content
@@ -68,10 +68,11 @@ def remind_parents():
                                 cta_url = ''
                             if parent.member:
                                 activate(parent.member.language)
+                            student_name = student.first_name
                             subject = _("Less than 24 hours remain to turn back your kid's homework")
                             extra_context = {'parent_name': parent_name, 'cta_url': cta_url,
                                              'school_name': company_name,
-                                             'student_name': student.first_name,
+                                             'student_name': student_name,
                                              'assignment': assignment,
                                              }
                             if DEBUG:
@@ -95,6 +96,10 @@ def remind_parents():
                                 print("Email sent")
                             except Exception as e:
                                 print e.message
+
+                            body = _("%(student_name)s has not yet submit his homework of %(subject)s "
+                                     % {'student_name': student_name, 'subject': subject})
+                            send_push(parent.member, subject, body, cta_url)
 
 
 if __name__ == '__main__':

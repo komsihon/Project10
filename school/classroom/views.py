@@ -26,7 +26,7 @@ from ikwen.billing.models import InvoiceItem, InvoiceEntry
 from ikwen.billing.utils import get_next_invoice_number
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.utils import get_model_admin_instance, increment_history_field, DefaultUploadBackend, \
-    get_service_instance, add_database, get_mail_content
+    get_service_instance, add_database, get_mail_content, send_push
 from ikwen.core.views import HybridListView, ChangeObjectBase
 from ikwen.accesscontrol.backends import UMBRELLA
 
@@ -815,6 +815,12 @@ class ChangeAssignment(ChangeObjectBase):
                     msg.send()
                 except Exception as e:
                     logger.debug(e.message)
+
+                body = _('Your child has a new assignment in '
+                         '%(subject)s about %(title)s' % {'subject': subject, 'title': obj.title})
+
+                if parent.member:
+                    send_push(parent.member, subject, body, cta_url)
 
 
 
