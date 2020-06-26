@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 17:37+0000\n"
-"PO-Revision-Date: 2020-05-25 19:02+0100\n"
+"POT-Creation-Date: 2020-06-26 15:14+0000\n"
+"PO-Revision-Date: 2020-06-26 16:22+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -91,7 +91,7 @@ msgstr "Social"
 msgid "External scripts"
 msgstr "Scripts externes"
 
-#: foulassi/cloud_setup.py:290
+#: foulassi/cloud_setup.py:291
 #, python-format
 msgid "Your platform %s was created"
 msgstr "Votre plateforme %s a été créé"
@@ -108,71 +108,71 @@ msgstr "Reprend la classe ?"
 msgid "Year when student joined this school"
 msgstr "Année d'entrée à l'école"
 
-#: foulassi/models.py:132
+#: foulassi/models.py:134
 msgid "Full name of the person"
 msgstr "Nom complet"
 
-#: foulassi/models.py:136
+#: foulassi/models.py:138
 msgid "Relationship that links the person to the student"
 msgstr "Relation entre la personne à l'élève"
 
-#: foulassi/models.py:268
+#: foulassi/models.py:270
 msgid "Average of sessions'scores"
 msgstr "Moyenne de toutes les séquences"
 
-#: foulassi/models.py:269
+#: foulassi/models.py:271
 msgid "Best score of all sessions"
 msgstr "Meilleur note de toutes les séquences"
 
-#: foulassi/models.py:273
+#: foulassi/models.py:275
 msgid "Registration fees title"
 msgstr "Intitulé frais d'inscription"
 
-#: foulassi/models.py:274 school/models.py:25 school/models.py:50
+#: foulassi/models.py:276 school/models.py:25 school/models.py:50
 msgid "Registration fees"
 msgstr "Frais d'inscription"
 
-#: foulassi/models.py:275
+#: foulassi/models.py:277
 msgid "Registration fees deadline"
 msgstr "Date limite frais d'inscription"
 
-#: foulassi/models.py:276
+#: foulassi/models.py:278
 msgid "First instalment title"
 msgstr "Intitulé première tranche"
 
-#: foulassi/models.py:277 school/models.py:26 school/models.py:51
+#: foulassi/models.py:279 school/models.py:26 school/models.py:51
 msgid "First instalment"
 msgstr "Première tranche"
 
-#: foulassi/models.py:278
+#: foulassi/models.py:280
 msgid "First instalment deadline"
 msgstr "Date limite première tranche"
 
-#: foulassi/models.py:279
+#: foulassi/models.py:281
 msgid "Second instalment title"
 msgstr "Intitulé deuxième tranche"
 
-#: foulassi/models.py:280 school/models.py:27 school/models.py:52
+#: foulassi/models.py:282 school/models.py:27 school/models.py:52
 msgid "Second instalment"
 msgstr "Deuxième tranche"
 
-#: foulassi/models.py:281
+#: foulassi/models.py:283
 msgid "Second instalment deadline"
 msgstr "Date limite deuxième tranche"
 
-#: foulassi/models.py:282
+#: foulassi/models.py:284
 msgid "Third instalment title"
 msgstr "Intitulé troisième tranche"
 
-#: foulassi/models.py:283 school/models.py:28 school/models.py:53
+#: foulassi/models.py:285 school/models.py:28 school/models.py:53
 msgid "Third instalment"
 msgstr "Troisième tranche"
 
-#: foulassi/models.py:284
+#: foulassi/models.py:286
 msgid "Third instalment deadline"
 msgstr "Date limite troisième tranche"
 
-#: foulassi/models.py:286
+#: foulassi/models.py:288
 msgid ""
 "Method of calculation of Term score. Average of sessions scores or best "
 "score of all sessions."
@@ -180,27 +180,31 @@ msgstr ""
 "Méthode de calcul de notes du Trimestre. Moyenne de notes de séquences ou "
 "meilleure de toutes les séquences."
 
-#: foulassi/models.py:290
+#: foulassi/models.py:292
 msgid "Show discipline report"
 msgstr "Montrer le rapport de discipline"
 
-#: foulassi/models.py:291
+#: foulassi/models.py:293
 msgid "Show lectures report"
 msgstr "Montrer le rapport de cours"
 
-#: foulassi/models.py:292
+#: foulassi/models.py:294
 msgid "Annual fees"
 msgstr "Frais annuels"
 
-#: foulassi/models.py:293
+#: foulassi/models.py:295
 msgid "Payment period"
 msgstr "Délai de paiement"
 
-#: foulassi/models.py:294
+#: foulassi/models.py:296
 msgid "Number of days left for parent to pay for the service."
 msgstr "Nombre de jours accordé aux parents pour payer ces frais."
 
-#: foulassi/models.py:300
+#: foulassi/models.py:298
+msgid "Expected students count"
+msgstr "Nombre d'élèves attendus"
+
+#: foulassi/models.py:302
 msgid "Whether school subscribed to website service or no"
 msgstr ""
 
@@ -217,12 +221,10 @@ msgid "Parent Convocation"
 msgstr "Convocation de parent"
 
 #: foulassi/scripts.py:13 reporting/utils.py:427 reporting/utils.py:696
-#: reporting/utils1.py:427 reporting/utils1.py:689
 msgid "Exclusion"
 msgstr "Exclusion"
 
 #: foulassi/scripts.py:14 reporting/utils.py:415 reporting/utils.py:684
-#: reporting/utils1.py:415 reporting/utils1.py:677
 msgid "Lateness"
 msgstr "Retard"
 
@@ -232,12 +234,10 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #: foulassi/scripts.py:16 reporting/utils.py:423 reporting/utils.py:692
-#: reporting/utils1.py:423 reporting/utils1.py:685
 msgid "Censure"
 msgstr "Blâme conduite"
 
 #: foulassi/scripts.py:17 reporting/utils.py:411 reporting/utils.py:680
-#: reporting/utils1.py:411 reporting/utils1.py:673
 msgid "Absence"
 msgstr "Absence"
 
@@ -318,27 +318,27 @@ msgstr ""
 "Confirmation de paiement de %(amount).2f %(currency)s pour les frais "
 "scolaires de l'élève %(student_name)s. Merci."
 
-#: foulassi/views.py:349
+#: foulassi/views.py:354
 #, python-format
 msgid "Mrs %s"
 msgstr "Mme %s"
 
-#: foulassi/views.py:351
+#: foulassi/views.py:356
 #, python-format
 msgid "Mr %s"
 msgstr "M. %s"
 
-#: foulassi/views.py:353
+#: foulassi/views.py:358
 #, python-format
 msgid "The parent %s"
 msgstr "Le parent %s"
 
-#: foulassi/views.py:354
+#: foulassi/views.py:359
 msgid "I would like to follow my kids in your school on Foulassi."
 msgstr ""
 "J'aimerais pouvoir suivre mes enfants dans votre établissement sur Foulassi."
 
-#: foulassi/views.py:367
+#: foulassi/views.py:372
 #, python-format
 msgid ""
 "%(parent_name)s would like to follow his kid(s) below on ikwen Foulassi:\n"
@@ -348,11 +348,11 @@ msgstr ""
 "Foulassi:\n"
 "%(kids_details)s"
 
-#: foulassi/views.py:580
+#: foulassi/views.py:585
 msgid "Foulassi deployment"
 msgstr "Déploiement Foulassi"
 
-#: foulassi/views.py:584
+#: foulassi/views.py:589
 msgid "Website theme"
 msgstr "Thème du site web"
 
@@ -424,8 +424,7 @@ msgstr ""
 
 #: foulassi/templates/foulassi/admin_home.html:5
 #: foulassi/templates/foulassi/admin_home.html:15
-#: templates/core/app_base_admin.html:8 templates/webnode/dreamer/base.html:230
-#: templates/webnode/dreamer/home.html:8
+#: templates/core/app_base_admin.html:8
 msgid "Home"
 msgstr "Accueil"
 
@@ -658,18 +657,24 @@ msgid "See documentation"
 msgstr "Voir la documentation"
 
 #: foulassi/templates/foulassi/change_homework.html:11
+#: foulassi/templates/foulassi/snippets/change_homework.html:8
 msgid "Instructions"
 msgstr "Consigne"
 
-#: foulassi/templates/foulassi/change_homework.html:18 school/models.py:283
+#: foulassi/templates/foulassi/change_homework.html:18
+#: foulassi/templates/foulassi/snippets/change_homework.html:15
+#: school/models.py:283
 msgid "Assignment"
 msgstr "Devoir"
 
-#: foulassi/templates/foulassi/change_homework.html:24 school/models.py:284
+#: foulassi/templates/foulassi/change_homework.html:24
+#: foulassi/templates/foulassi/snippets/change_homework.html:21
+#: school/models.py:284
 msgid "Student"
 msgstr "Nom de l'élève"
 
 #: foulassi/templates/foulassi/change_homework.html:37
+#: foulassi/templates/foulassi/snippets/change_homework.html:34
 #: school/templates/school/change_justificatory.html:38
 #: school/templates/school/change_level.html:52
 #: school/templates/school/change_session.html:38
@@ -681,6 +686,7 @@ msgid "Save"
 msgstr "Enregistrer"
 
 #: foulassi/templates/foulassi/download_app.html:4
+#: foulassi/templates/foulassi/sign_in.html:4
 msgid "Sign in"
 msgstr "Connexion"
 
@@ -689,7 +695,9 @@ msgstr "Connexion"
 #: foulassi/templates/foulassi/home.html:4
 #: foulassi/templates/foulassi/home.html:11
 #: foulassi/templates/foulassi/home.html:14
-#: foulassi/templates/foulassi/home.html:236
+#: foulassi/templates/foulassi/home.html:241
+#: foulassi/templates/foulassi/sign_in.html:10
+#: foulassi/templates/foulassi/sign_in.html:13
 msgid "Follow your kids at school in real-time"
 msgstr "Suivez vos enfants à l'école en temps réel"
 
@@ -697,6 +705,8 @@ msgstr "Suivez vos enfants à l'école en temps réel"
 #: foulassi/templates/foulassi/download_app.html:15
 #: foulassi/templates/foulassi/home.html:12
 #: foulassi/templates/foulassi/home.html:16
+#: foulassi/templates/foulassi/sign_in.html:11
+#: foulassi/templates/foulassi/sign_in.html:15
 msgid ""
 "Foulassi is a social platform that connects with schools of your kids to "
 "give you information on their results, discipline and financial status."
@@ -709,6 +719,7 @@ msgid "Download Foulassi MyKids app"
 msgstr "Téléchargez l'application Foulassi MyKids app"
 
 #: foulassi/templates/foulassi/download_app.html:68
+#: foulassi/templates/foulassi/sign_in.html:59
 msgid ""
 "Downloading the App is not possible with your current browser. Please switch "
 "to Google Chrome."
@@ -754,7 +765,7 @@ msgstr ""
 "Ooops! Une erreur s'est produite. Veuillez vérifier votre connexion internet "
 "SVP."
 
-#: foulassi/templates/foulassi/home.html:238
+#: foulassi/templates/foulassi/home.html:243
 msgid ""
 "\n"
 "                                Foulassi is a social platform that connects "
@@ -769,16 +780,16 @@ msgstr ""
 "financiers.\n"
 "                            "
 
-#: foulassi/templates/foulassi/home.html:246
-#: foulassi/templates/foulassi/home.html:345
+#: foulassi/templates/foulassi/home.html:251
+#: foulassi/templates/foulassi/home.html:350
 msgid "Get connected"
 msgstr "Connectez-vous"
 
-#: foulassi/templates/foulassi/home.html:259
+#: foulassi/templates/foulassi/home.html:264
 msgid "Follow them all in one single place"
 msgstr "Suivez-les tous en un seul endroit"
 
-#: foulassi/templates/foulassi/home.html:261
+#: foulassi/templates/foulassi/home.html:266
 msgid ""
 "\n"
 "                                Foulassi collects data from all schools of "
@@ -799,11 +810,11 @@ msgstr ""
 "                               est parfait pour ajouter l'oncle ou encore le "
 "grand-père."
 
-#: foulassi/templates/foulassi/home.html:278
+#: foulassi/templates/foulassi/home.html:283
 msgid "Know their results before they do"
 msgstr "Soyez informés de leurs résultats avant eux-mêmes"
 
-#: foulassi/templates/foulassi/home.html:280
+#: foulassi/templates/foulassi/home.html:285
 msgid ""
 "\n"
 "                                You have immediate access to your children's "
@@ -826,11 +837,11 @@ msgstr ""
 "                               sont bons, pensez à leur offrir le cadeau "
 "dont ils rêvent."
 
-#: foulassi/templates/foulassi/home.html:303
+#: foulassi/templates/foulassi/home.html:308
 msgid "Pay their invoices online"
 msgstr "Payez tout vous-même, et en ligne"
 
-#: foulassi/templates/foulassi/home.html:305
+#: foulassi/templates/foulassi/home.html:310
 msgid ""
 "\n"
 "                                Pay whatever is due directly online using "
@@ -850,15 +861,15 @@ msgstr ""
 "                               vous ne prendrez plus le risque de leur "
 "donner de l'argent qui finit parfois ailleurs."
 
-#: foulassi/templates/foulassi/home.html:324
+#: foulassi/templates/foulassi/home.html:329
 msgid "Connect with your children now"
 msgstr "Connectez-vous à vos enfants maintenant"
 
-#: foulassi/templates/foulassi/home.html:327
+#: foulassi/templates/foulassi/home.html:332
 msgid "Download the app"
 msgstr "Téléchargez l'appli"
 
-#: foulassi/templates/foulassi/home.html:329
+#: foulassi/templates/foulassi/home.html:334
 msgid ""
 "\n"
 "                            Install app on your Device for faster access.\n"
@@ -869,18 +880,18 @@ msgstr ""
 "rapide.\n"
 "                        "
 
-#: foulassi/templates/foulassi/home.html:334
+#: foulassi/templates/foulassi/home.html:339
 #: foulassi/templates/foulassi/events/classroom_report_cards_generated.html:12
 #: foulassi/templates/foulassi/events/report_cards_generated.html:13
 #: reporting/templates/reporting/report_card_download_list.html:45
 msgid "Download"
 msgstr "Télécharger"
 
-#: foulassi/templates/foulassi/home.html:338
+#: foulassi/templates/foulassi/home.html:343
 msgid "Web access"
 msgstr "Accès web"
 
-#: foulassi/templates/foulassi/home.html:340
+#: foulassi/templates/foulassi/home.html:345
 msgid ""
 "\n"
 "                            Access from your web browser on PC, Tablet, or "
@@ -892,55 +903,54 @@ msgstr ""
 "Tablette, ou Phone.\n"
 "                        "
 
-#: foulassi/templates/foulassi/home.html:356
+#: foulassi/templates/foulassi/home.html:361
 msgid "Are you a school manager ?"
 msgstr "Vous êtes responsable d'établissement ?"
 
-#: foulassi/templates/foulassi/home.html:358
+#: foulassi/templates/foulassi/home.html:363
 msgid "Take your school on this awesome platform in no time."
 msgstr ""
 "Amenez votre école sur cette incroyable plateforme en un rien de temps."
 
-#: foulassi/templates/foulassi/home.html:361
+#: foulassi/templates/foulassi/home.html:366
 msgid "Discover Foulassi for schools"
 msgstr "Découvrez Foulassi pour les établissements"
 
-#: foulassi/templates/foulassi/home.html:365
+#: foulassi/templates/foulassi/home.html:370
 msgctxt "Discover foulassi for schools"
 msgid "Discover"
 msgstr "Découvrez"
 
-#: foulassi/templates/foulassi/home.html:378
-#: foulassi/templates/foulassi/home_saas.html:412
+#: foulassi/templates/foulassi/home.html:383
+#: foulassi/templates/foulassi/home_saas.html:454
 #: templates/core/base_admin.html:196
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
-#: foulassi/templates/foulassi/home.html:380
-#: foulassi/templates/foulassi/home_saas.html:414
-#: templates/core/base_admin.html:197 templates/webnode/dreamer/base.html:275
+#: foulassi/templates/foulassi/home.html:385
+#: foulassi/templates/foulassi/home_saas.html:456
+#: templates/core/base_admin.html:197
 msgid "Legal mentions"
 msgstr "Mentions légales"
 
-#: foulassi/templates/foulassi/home.html:386
-#: foulassi/templates/foulassi/home_saas.html:420
+#: foulassi/templates/foulassi/home.html:391
+#: foulassi/templates/foulassi/home_saas.html:462
 #: templates/core/app_base_admin.html:119
-#: templates/webnode/dreamer/base.html:256
 msgid "Blog"
 msgstr "Blog"
 
-#: foulassi/templates/foulassi/home.html:387
-#: foulassi/templates/foulassi/home_saas.html:421
+#: foulassi/templates/foulassi/home.html:392
+#: foulassi/templates/foulassi/home_saas.html:463
 msgid "Support"
 msgstr "Support"
 
-#: foulassi/templates/foulassi/home.html:388
-#: foulassi/templates/foulassi/home_saas.html:422
+#: foulassi/templates/foulassi/home.html:393
+#: foulassi/templates/foulassi/home_saas.html:464
 msgid "Terms & conditions"
 msgstr "Termes et Conditions"
 
-#: foulassi/templates/foulassi/home.html:389
-#: foulassi/templates/foulassi/home_saas.html:423
+#: foulassi/templates/foulassi/home.html:394
+#: foulassi/templates/foulassi/home_saas.html:465
 msgid "About ikwen"
 msgstr "À propos de ikwen"
 
@@ -979,7 +989,7 @@ msgstr ""
 "                            "
 
 #: foulassi/templates/foulassi/home_saas.html:50
-#: foulassi/templates/foulassi/home_saas.html:403
+#: foulassi/templates/foulassi/home_saas.html:445
 msgid "DEPLOY"
 msgstr "DÉPLOYER"
 
@@ -1276,11 +1286,57 @@ msgstr ""
 "\">monetablissement.org</em>, achetez simplement ce nom de domaine là et "
 "remplacez celui par défaut."
 
-#: foulassi/templates/foulassi/home_saas.html:365
+#: foulassi/templates/foulassi/home_saas.html:367
+#: foulassi/templates/foulassi/cloud_setup/deploy.html:18
+msgid "Deploy now"
+msgstr "Déployer maintenant"
+
+#: foulassi/templates/foulassi/home_saas.html:369
+msgid "START YOUR FREE TRIAL"
+msgstr ""
+
+#: foulassi/templates/foulassi/home_saas.html:379
+msgid ""
+"\n"
+"                                <p class=\"mobile-center\"> Take this offer "
+"from <span class=\"ribbon-price\"> <span style=\"font-size: 2rem\">XAF</"
+"span> 99,000/year.</span></p>\n"
+"                                <p><span class=\"highlight\">Connect</span> "
+"staff and parents with the <span class=\"highlight\">student</span>\n"
+"                                 and benefit all the features FOULASSI has "
+"to offer.</p>\n"
+"                                <p class=\"mobile-center\" style=\"margin-"
+"bottom: 3vh\">Start your two-months free trial <span class=\"highlight"
+"\">right now!</span> </p>\n"
+"                             "
+msgstr ""
+
+#: foulassi/templates/foulassi/home_saas.html:385
+#: foulassi/templates/foulassi/home_saas.html:397
+msgid "START"
+msgstr ""
+
+#: foulassi/templates/foulassi/home_saas.html:391
+msgid ""
+"\n"
+"                                 <p  class=\"mobile-center\"> Take this "
+"offer from <span class=\"ribbon-price\"> <span style=\"font-size: 2rem\" "
+">XAF</span>  99,000/year.</span></p>\n"
+"                                <p><span class=\"highlight\">Connect</span> "
+"staff and parents with the <span class=\"highlight\">student</span>\n"
+"                                 and benefit all the features FOULASSI has "
+"to offer.</p>\n"
+"                                <p class=\"mobile-center\" style=\"margin-"
+"bottom: 3vh\">Start your two-months free trial <span class=\"highlight"
+"\">right now!</span> </p>\n"
+"                             "
+msgstr ""
+
+#: foulassi/templates/foulassi/home_saas.html:407
 msgid "You're in good company"
 msgstr "Vous êtes entre de bonnes mains"
 
-#: foulassi/templates/foulassi/home_saas.html:366
+#: foulassi/templates/foulassi/home_saas.html:408
 msgid ""
 "\n"
 "                We have been on the field for many years, building and "
@@ -1296,7 +1352,7 @@ msgstr ""
 "problèmes critiques de certaines grandes entreprises des TIC au Cameroun. "
 "Rejoignez ces organisations en toute quiétude."
 
-#: foulassi/templates/foulassi/home_saas.html:400
+#: foulassi/templates/foulassi/home_saas.html:442
 msgid ""
 "\n"
 "            Deploy your <strong>Foulassi Weblet</strong> now and start "
@@ -1320,73 +1376,78 @@ msgstr "Détails"
 msgid "Assignments"
 msgstr "Devoirs"
 
-#: foulassi/templates/foulassi/kid_detail.html:35
+#: foulassi/templates/foulassi/kid_detail.html:30
+#: school/templates/school/classroom/classroom_detail.html:70
+msgid "Assign."
+msgstr "Devoir"
+
+#: foulassi/templates/foulassi/kid_detail.html:36
 #: reporting/templates/reporting/dashboard.html:187
 #: school/templates/school/student/student_detail.html:28
 msgid "Scores"
 msgstr "Notes"
 
-#: foulassi/templates/foulassi/kid_detail.html:41
+#: foulassi/templates/foulassi/kid_detail.html:42
 #: reporting/templates/reporting/dashboard.html:25
 #: reporting/templates/reporting/discipline_detail.html:24
 #: school/templates/school/student/student_detail.html:31
 msgid "Discipline"
 msgstr "Discipline"
 
-#: foulassi/templates/foulassi/kid_detail.html:47
+#: foulassi/templates/foulassi/kid_detail.html:48
 #: school/templates/school/student/student_detail.html:36
 msgctxt "Financial status"
 msgid "Billing"
 msgstr "Finances"
 
-#: foulassi/templates/foulassi/kid_detail.html:77
+#: foulassi/templates/foulassi/kid_detail.html:78
 #: school/templates/school/student/student_detail.html:59
 msgid "Parents"
 msgstr "Parent"
 
-#: foulassi/templates/foulassi/kid_detail.html:90
-#: foulassi/templates/foulassi/kid_detail.html:104
+#: foulassi/templates/foulassi/kid_detail.html:91
+#: foulassi/templates/foulassi/kid_detail.html:105
 #: school/templates/school/student/student_detail.html:71
 #: school/templates/school/student/student_detail.html:84
 msgid "Change item"
 msgstr "Éditer l'élément"
 
-#: foulassi/templates/foulassi/kid_detail.html:91
-#: foulassi/templates/foulassi/kid_detail.html:105
-#: school/templates/school/snippets/classroom/assignment_list_results.html:22
+#: foulassi/templates/foulassi/kid_detail.html:92
+#: foulassi/templates/foulassi/kid_detail.html:106
+#: school/templates/school/snippets/classroom/assignment_list_results.html:23
 #: school/templates/school/student/student_detail.html:72
 #: school/templates/school/student/student_detail.html:85
 msgid "Delete item"
 msgstr "Supprimer l'élément"
 
-#: foulassi/templates/foulassi/kid_detail.html:112 school/models.py:22
+#: foulassi/templates/foulassi/kid_detail.html:113 school/models.py:22
 #: school/models.py:46 school/models.py:85 school/models.py:179
 #: school/models.py:204 school/templates/school/student/student_detail.html:92
 msgid "Name"
 msgstr "Nom"
 
-#: foulassi/templates/foulassi/kid_detail.html:115
+#: foulassi/templates/foulassi/kid_detail.html:116
 #: school/templates/school/student/student_detail.html:95
 msgid "Relationship, Ex: Father"
 msgstr "Relation, Ex: Père"
 
-#: foulassi/templates/foulassi/kid_detail.html:118
+#: foulassi/templates/foulassi/kid_detail.html:119
 #: school/templates/school/student/student_detail.html:98
 msgid "Phone"
 msgstr "Téléphone"
 
-#: foulassi/templates/foulassi/kid_detail.html:121
+#: foulassi/templates/foulassi/kid_detail.html:122
 #: school/templates/school/student/student_detail.html:101
 msgid "Email"
 msgstr "Email"
 
-#: foulassi/templates/foulassi/kid_detail.html:133
+#: foulassi/templates/foulassi/kid_detail.html:134
 #: school/templates/school/student/student_detail.html:112
 msgid "Add a person in charge"
 msgstr "Ajouter une personne en charge"
 
-#: foulassi/templates/foulassi/kid_detail.html:134
-#: foulassi/templates/foulassi/kid_list.html:221
+#: foulassi/templates/foulassi/kid_detail.html:135
+#: foulassi/templates/foulassi/kid_list.html:236
 #: school/templates/school/classroom/assignment_list.html:61
 #: school/templates/school/classroom/classroom_detail.html:40
 #: school/templates/school/classroom/classroom_list.html:57
@@ -1394,13 +1455,22 @@ msgstr "Ajouter une personne en charge"
 msgid "Add"
 msgstr "Ajouter"
 
-#: foulassi/templates/foulassi/kid_list.html:28
+#: foulassi/templates/foulassi/kid_list.html:31
+msgid "Receive alerts for your kids by activating notifications."
+msgstr ""
+
+#: foulassi/templates/foulassi/kid_list.html:33
+#: school/templates/school/snippets/classroom/assignment_list_results.html:20
+msgid "Activate"
+msgstr "Activer"
+
+#: foulassi/templates/foulassi/kid_list.html:42
 msgid "Suggestions"
 msgstr "Suggestions"
 
-#: foulassi/templates/foulassi/kid_list.html:47
-#: foulassi/templates/foulassi/kid_list.html:166
-#: foulassi/templates/foulassi/kid_list.html:190
+#: foulassi/templates/foulassi/kid_list.html:61
+#: foulassi/templates/foulassi/kid_list.html:180
+#: foulassi/templates/foulassi/kid_list.html:204
 #: foulassi/templates/foulassi/events/report_cards_generated.html:42
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:42
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:87
@@ -1417,35 +1487,35 @@ msgstr "Suggestions"
 msgid "Cancel"
 msgstr "Annuler"
 
-#: foulassi/templates/foulassi/kid_list.html:48
+#: foulassi/templates/foulassi/kid_list.html:62
 msgid "Accept"
 msgstr "Accepter"
 
-#: foulassi/templates/foulassi/kid_list.html:57
+#: foulassi/templates/foulassi/kid_list.html:71
 msgid "Your kids"
 msgstr "Vos enfants"
 
-#: foulassi/templates/foulassi/kid_list.html:91
+#: foulassi/templates/foulassi/kid_list.html:105
 msgid "Looking for another school ?"
 msgstr "Cherchez-vous une autre école ?"
 
-#: foulassi/templates/foulassi/kid_list.html:94
-#: foulassi/templates/foulassi/kid_list.html:112
+#: foulassi/templates/foulassi/kid_list.html:108
+#: foulassi/templates/foulassi/kid_list.html:126
 #: foulassi/templates/foulassi/search_school.html:35
 msgid "Invite a school"
 msgstr "Inviter une école"
 
-#: foulassi/templates/foulassi/kid_list.html:97
-#: foulassi/templates/foulassi/kid_list.html:115
+#: foulassi/templates/foulassi/kid_list.html:111
+#: foulassi/templates/foulassi/kid_list.html:129
 #: foulassi/templates/foulassi/search_school.html:38
 msgid "Search school"
 msgstr "Rechercher un établissement"
 
-#: foulassi/templates/foulassi/kid_list.html:109
+#: foulassi/templates/foulassi/kid_list.html:123
 msgid "Sorry! We could not find any of your children"
 msgstr "Désolé! Nous n'avons pu trouver aucun de vos enfants"
 
-#: foulassi/templates/foulassi/kid_list.html:126
+#: foulassi/templates/foulassi/kid_list.html:140
 #, python-format
 msgid ""
 "\n"
@@ -1513,15 +1583,15 @@ msgstr ""
 "                                </li>\n"
 "                            </ol>"
 
-#: foulassi/templates/foulassi/kid_list.html:170
+#: foulassi/templates/foulassi/kid_list.html:184
 msgid "Yes, add"
 msgstr "Oui, ajouter"
 
-#: foulassi/templates/foulassi/kid_list.html:194
+#: foulassi/templates/foulassi/kid_list.html:208
 msgid "Yes, remove"
 msgstr "Oui, retirer"
 
-#: foulassi/templates/foulassi/kid_list.html:229
+#: foulassi/templates/foulassi/kid_list.html:244
 msgid "Don't add"
 msgstr "Ne pas ajouter"
 
@@ -1556,6 +1626,7 @@ msgstr "Simo Mballa, 6ème 3&#10;Youego Mballa, 4ème Esp"
 #: foulassi/templates/foulassi/search_school.html:106
 #: foulassi/templates/foulassi/search_school.html:107
 #: foulassi/templates/foulassi/search_school.html:108
+#: foulassi/templates/foulassi/sign_in.html:95
 #: school/templates/school/classroom/classroom_detail.html:158
 msgid "Submit"
 msgstr "Soumettre"
@@ -1569,20 +1640,324 @@ msgstr "Inviter"
 msgid "Your request was submitted"
 msgstr "Votre requête a été soumise"
 
+#: foulassi/templates/foulassi/sign_in.html:66
+msgid "Your password was successfully reset, login now."
+msgstr ""
+
+#: foulassi/templates/foulassi/sign_in.html:83
+msgid "Email or phone"
+msgstr ""
+
+#: foulassi/templates/foulassi/sign_in.html:88
+msgid "Password"
+msgstr ""
+
+#: foulassi/templates/foulassi/sign_in.html:100
+msgid "Login with <strong>ikwen</strong>"
+msgstr ""
+
+#: foulassi/templates/foulassi/sign_in.html:104
+msgid "Forgotten password ?"
+msgstr ""
+
+#: foulassi/templates/foulassi/sign_in.html:108
+msgid "No account yet ?"
+msgstr "Pas encore de compte ?"
+
+#: foulassi/templates/foulassi/sign_in.html:110
+msgid "Register"
+msgstr "Se connecter"
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:6
+#: foulassi/templates/foulassi/terms_and_conditions.html:69
+msgid "Terms and conditions"
+msgstr "Termes & Conditions"
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:17
+#: foulassi/templates/foulassi/terms_and_conditions.html:23
+msgid "Foulassi terms and conditions"
+msgstr "Termes et Conditions Foulassi"
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:22
+msgid "IKWEN"
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:75
+msgid ""
+"\n"
+"                    <h2>Publication</h2>\n"
+"                    The site: <strong style=\"color: #233682 \">ikwen</"
+"strong> is published by the company <strong style=\"color: #233682 \">ikwen</"
+"strong>, located in Yaoundé / Cameroun whose information is available at the "
+"tax center: CDI 09 D'Efoulan.\n"
+"\n"
+"                    E-mail address: <strong>contact@ikwen</strong>.com\n"
+"\n"
+"                    Intellectual property rights.\n"
+"\n"
+"                    <strong style=\"color: #233682 \">ikwen</strong> "
+"notifies users of its platform that many elements of it:\n"
+"\n"
+"                    Are protected by copyright legislation: this may include "
+"photographs, articles, drawings, animated sequences, audio or digital video "
+"recordings.\n"
+"                    And / or are protected by design legislation;\n"
+"                    Are protected by the legislation on the marks: it is in "
+"particular the marks, the logo, appearing on the site.\n"
+"                    The elements thus protected are the property of <strong "
+"style=\"color: #233682 \">ikwen</strong>.\n"
+"\n"
+"                    As such, any reproduction, representation, use, "
+"adaptation, modification, incorporation, translation, marketing, partial or "
+"complete by any process and on any medium whatsoever (paper, digital, ...) "
+"is prohibited, without prior written permission. <strong style=\"color: "
+"#233682 \">ikwen</strong>, except the exceptions legally allowed by articles "
+"29 (2) and 36 of the law 2000/011 of 19 December 2000 on copyright and "
+"neighboring rights under pain of constituting an infringement of copyright "
+"infringement and designs, punishable by two (2) to five (5) years "
+"imprisonment and one (1) to twenty-five (25) million CFA francs in fine or "
+"penalty infringement of copyrights and in the case of trademark "
+"infringement.\n"
+"\n"
+"                    The trademarks and logos of the software displayed on "
+"this Site and the associated mobile application are the property of the "
+"respective company, and may not be exploited without the prior written "
+"consent of <strong style=\"color: #233682 \">ikwen</strong>. These "
+"trademarks include but are not necessarily limited to any software not "
+"specifically identified in these Legal Notices.\n"
+"                "
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:96
+msgid ""
+"\n"
+"                    <h2>Cookies</h2>\n"
+"                    The Site and the associated mobile application includes "
+"a system of cookies. Thus the user is informed that during his visits to the "
+"site, cookies may be installed automatically on his Internet browser.\n"
+"\n"
+"                    Cookies are files sent to users' hard drives in order to "
+"facilitate their browsing on the site and the associated mobile application "
+"and to establish attendance statistics.\n"
+"\n"
+"                    These cookies do not contain any personal information.\n"
+"\n"
+"                    The User can disable the sending of cookies by modifying "
+"the parameters of his Internet browser.\n"
+"                "
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:108
+msgid ""
+"\n"
+"                    <h2>Protection of personal data</h2>\n"
+"                    You can visit the site and the associated mobile "
+"application without revealing your identity or any other personal "
+"information about you.\n"
+"\n"
+"                    Regarding the personal information that you would have "
+"to communicate to us, you have the right to access and rectify according to "
+"Cameroonian law.\n"
+"\n"
+"                    The information collected is subject to computer "
+"processing to provide you with personalized content. This computerized "
+"processing is done by the applications of <strong style=\"color: #233682 "
+"\">ikwen</strong> in its infrastructure You have a right to access, modify, "
+"rectify, and limit the data concerning you.\n"
+"\n"
+"                    To exercise these rights, <strong style=\"color: #233682 "
+"\">ikwen</strong> provides you with a personal interface to modify your "
+"personal data. For reasons of data integrity of the platform, only your "
+"<strong style=\"color: #233682 \">ikwen</strong> ID is not editable.\n"
+"\n"
+"                    <strong style=\"color: #233682 \">ikwen</strong> has a "
+"centralized authentication module. You can use your access information to "
+"connect to one of the third-party Internet sites of which it is the "
+"provider. In such a case, you are part of the third-party community and may "
+"have access to information such as your last name, first name, phone number, "
+"e-mail and sex. The third party platform undertakes to respect the same "
+"rules of protection and non-disclosure of your personal data as defined by "
+"<strong style=\"color: #233682 \">ikwen</strong>.\n"
+"\n"
+"                    <strong style=\"color: #233682 \">ikwen</strong> takes "
+"all measures to avoid any prejudice to the User.\n"
+"\n"
+"                    <strong style=\"color: #233682 \">ikwen</strong> "
+"undertakes to implement appropriate technical and organizational measures to "
+"protect personal data against accidental or unlawful destruction, accidental "
+"loss, alteration, dissemination or unauthorized access.\n"
+"\n"
+"                    <strong style=\"color: #233682 \">ikwen</strong> "
+"undertakes to keep the personal data for a period not exceeding that "
+"necessary for the fulfillment of the purposes for which they were collected "
+"or processed.\n"
+"\n"
+"                    <strong style=\"color: #233682 \">ikwen</strong> may be "
+"required to disclose any information about the User in order to comply with "
+"any applicable law or regulation or to respond to any legal or "
+"administrative request. These data are collected automatically by the site; "
+"the applications allow the publisher to establish statistics regarding the "
+"consultation of his web pages and offers him adapted and more personalized "
+"content.\n"
+"                "
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:130
+msgid ""
+"\n"
+"                    <h2>Registration details</h2>\n"
+"                    Registration is reserved for individuals aged 15 or "
+"over\n"
+"\n"
+"                    In the event that the user provides false, inaccurate, "
+"outdated, incomplete, misleading or misleading information, <strong style="
+"\"color: #233682 \">ikwen</strong> may, immediately, without notice or "
+"compensation, suspend or terminate the profile of the User / his services "
+"and deny him access, temporarily or permanently, to all or part of the "
+"<strong style=\"color: #233682 \">ikwen</strong> Services.\n"
+"                "
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:138
+msgid ""
+"\n"
+"                    <h2>Password management</h2>\n"
+"                    To access your private interface on <strong style="
+"\"color: #233682 \">ikwen</strong>, you must enter your <strong style="
+"\"color: #233682 \">ikwen</strong> ID; as well as your password.\n"
+"\n"
+"                    This password is strictly personal and you must keep it "
+"confidential. As such, you are responsible for any use of this password and "
+"<strong style=\"color: #233682 \">ikwen</strong> can in no way be held "
+"responsible for any loss or damage caused by the use of these spaces and / "
+"or password.\n"
+"\n"
+"                    The User must disconnect after each consultation of the "
+"site, in order to avoid any fraudulent use of his spaces and / or his "
+"password.\n"
+"                "
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:148
+msgid ""
+"\n"
+"                    <h2>Responsibility of the user</h2>\n"
+"                    The site: <strong style=\"color: #233682 \">ikwen</"
+"strong> is published by the company <strong style=\"color: #233682 \">ikwen</"
+"strong>, located in Yaoundé / Cameroun whose information is available at the "
+"tax center: CDI 09 D'Efoulan.\n"
+"\n"
+"                    E-mail address: <strong>contact@ikwen</strong>.com\n"
+"\n"
+"                    Intellectual property rights.\n"
+"\n"
+"                    <strong style=\"color: #233682 \">ikwen</strong> "
+"notifies users of its platform that many elements of it:\n"
+"\n"
+"                    Are protected by copyright legislation: this may include "
+"photographs, articles, drawings, animated sequences, audio or digital video "
+"recordings.\n"
+"                    And / or are protected by design legislation;\n"
+"                    Are protected by the legislation on the marks: it is in "
+"particular the marks, the logo, appearing on the site.\n"
+"                    The elements thus protected are the property of <strong "
+"style=\"color: #233682 \">ikwen</strong>.\n"
+"\n"
+"                    As such, any reproduction, representation, use, "
+"adaptation, modification, incorporation, translation, marketing, partial or "
+"complete by any process and on any medium whatsoever (paper, digital, ...) "
+"is prohibited, without prior written permission. <strong style=\"color: "
+"#233682 \">ikwen</strong>, except the exceptions legally allowed by articles "
+"29 (2) and 36 of the law 2000/011 of 19 December 2000 on copyright and "
+"neighboring rights under pain of constituting an infringement of copyright "
+"infringement and designs, punishable by two (2) to five (5) years "
+"imprisonment and one (1) to twenty-five (25) million CFA francs in fine or "
+"penalty infringement of copyrights and in the case of trademark "
+"infringement.\n"
+"\n"
+"                    The trademarks and logos of the software displayed on "
+"this Site and the associated mobile application are the property of the "
+"respective company, and may not be exploited without the prior written "
+"consent of <strong style=\"color: #233682 \">ikwen</strong>. These "
+"trademarks include but are not necessarily limited to any software not "
+"specifically identified in these Legal Notices.\n"
+"                "
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:169
+msgid ""
+"\n"
+"                    <h2>Limitation of liability</h2>\n"
+"                    You use the <strong style=\"color: #233682 \">ikwen</"
+"strong> platform under your sole and entire responsibility.\n"
+"\n"
+"                    <strong style=\"color: #233682 \">ikwen</strong> can not "
+"be held responsible for direct or indirect damages, such as, in particular "
+"material damage, loss of data or program, financial loss, resulting from the "
+"use of this site and the associated mobile application or sites that are "
+"linked.\n"
+"\n"
+"                    We draw your attention to the fact that certain products "
+"or services presented on the site and the associated mobile application may "
+"be the subject of specific regulations or even restrictions and / or "
+"prohibitions in certain countries.\n"
+"                "
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:181
+msgid "Contents"
+msgstr "Contenus"
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:183
+msgid "Publication"
+msgstr "Publications"
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:184
+msgid "Cookies"
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:185
+msgid "Protection of personal data"
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:186
+msgid "Registration details"
+msgstr "Détails du service"
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:187
+msgid "Password management"
+msgstr ""
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:188
+msgid "Responsibility of the user"
+msgstr "Responsabilités de l'utilisateur"
+
+#: foulassi/templates/foulassi/terms_and_conditions.html:189
+msgid "Limitation of liability"
+msgstr ""
+
 #: foulassi/templates/foulassi/cloud_setup/deploy.html:5
 msgid "Deploy Foulassi"
 msgstr "Déployez Foulassi"
-
-#: foulassi/templates/foulassi/cloud_setup/deploy.html:18
-msgid "Deploy now"
-msgstr "Déployer maintenant"
 
 #: foulassi/templates/foulassi/cloud_setup/deploy.html:28
 msgctxt "Deployment: school name"
 msgid "School name"
 msgstr "Nom de l'établissement"
 
-#: foulassi/templates/foulassi/cloud_setup/deploy.html:34
+#: foulassi/templates/foulassi/cloud_setup/deploy.html:35
+msgid ""
+"\n"
+"                                Accept <a href=\"https://foulassi.ikwen.com/"
+"terms-and-conditions/\" target=\"blank\">terms and conditions</a>\n"
+"                            "
+msgstr ""
+"\n"
+"                                Accepter les <a href=\"https://foulassi."
+"ikwen.com/terms-and-conditions/\" target=\"blank\">termes & conditions</a>\n"
+"                            "
+
+#: foulassi/templates/foulassi/cloud_setup/deploy.html:44
 msgid "Let's go !"
 msgstr "C'est parti !"
 
@@ -1713,8 +2088,7 @@ msgid "Close session"
 msgstr "Boucler cette séquence"
 
 #: foulassi/templates/foulassi/events/report_cards_generated.html:34
-#: reporting/utils.py:419 reporting/utils.py:688 reporting/utils1.py:419
-#: reporting/utils1.py:681
+#: reporting/utils.py:419 reporting/utils.py:688
 msgid "Warning"
 msgstr "Attention"
 
@@ -1897,7 +2271,7 @@ msgstr "Langue"
 msgid "Student name"
 msgstr "Nom de l'élève"
 
-#: reporting/utils.py:606 reporting/utils.py:883 school/classroom/views.py:709
+#: reporting/utils.py:606 reporting/utils.py:883 school/classroom/views.py:714
 #: school/templates/school/change_level.html:11
 #: school/templates/school/classroom/change_classroom.html:12
 #: templates/core/app_base_admin.html:37
@@ -1912,24 +2286,12 @@ msgstr "Résultats"
 msgid "Council decision"
 msgstr "Décisions du conseil de classe"
 
-#: reporting/utils1.py:608 reporting/utils1.py:878
-msgid "REPUBLIC OF CAMEROON"
-msgstr "RÉPUBLIQUE DU CAMEROUN"
-
-#: reporting/utils1.py:609 reporting/utils1.py:879
-msgid "Peace - Work - Fatherland"
-msgstr "Paix - Travail - Patrie"
-
-#: reporting/utils1.py:610 reporting/utils1.py:880
-msgid "MINISTRY OF SECONDARY EDUCATION"
-msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
-
 #: reporting/views.py:239
 #, python-format
 msgid "Report card header not configured for %s."
 msgstr "En-tête de bulletins non configurée pour la langue: %s."
 
-#: reporting/views.py:240 school/classroom/views.py:598
+#: reporting/views.py:240 school/classroom/views.py:603
 #, python-format
 msgid "Please configure report card header for %s "
 msgstr "Veuillez configurer l'en-tête des bulletins pour la langue: %s"
@@ -2243,6 +2605,10 @@ msgstr "Choisissez la langue"
 msgid "Tuition fees"
 msgstr "Frais de scolarité"
 
+#: school/assignment_reminder.py:71
+msgid "Less than 24 hours remain to turn back your kid's homework"
+msgstr ""
+
 #: school/models.py:23
 msgid "<strong>Eg:</strong> Form1, Form2, ..."
 msgstr "<strong>Ex:</strong> 6ème, 5ème, ..."
@@ -2324,11 +2690,11 @@ msgstr "Unité"
 msgid "With counter ?"
 msgstr "Compteur ?"
 
-#: school/views.py:97 school/classroom/views.py:396 school/student/views.py:707
+#: school/views.py:97 school/classroom/views.py:401 school/student/views.py:707
 msgid "successfully updated"
 msgstr "mis à jour avec succès"
 
-#: school/views.py:99 school/classroom/views.py:398 school/student/views.py:709
+#: school/views.py:99 school/classroom/views.py:403 school/student/views.py:709
 msgid "successfully created"
 msgstr "créé avec succès"
 
@@ -2336,7 +2702,7 @@ msgstr "créé avec succès"
 msgid "Teachers"
 msgstr "Enseignants"
 
-#: school/classroom/views.py:68
+#: school/classroom/views.py:73
 #, python-format
 msgid ""
 "Missing information at line %(line)d. %(found)d tokens found, but "
@@ -2345,22 +2711,22 @@ msgstr ""
 "Information manquante à la ligne %(line)d. %(found)d infos trouvées, mais "
 "%(expected)d étaient attendues ."
 
-#: school/classroom/views.py:73
+#: school/classroom/views.py:78
 #, python-format
 msgid "Missing registration number on line %d"
 msgstr "Matricule manquant à la ligne %d"
 
-#: school/classroom/views.py:77
+#: school/classroom/views.py:82
 #, python-format
 msgid "Missing last name on line %d"
 msgstr "Nom manquant à la ligne %d"
 
-#: school/classroom/views.py:81
+#: school/classroom/views.py:86
 #, python-format
 msgid "Missing first name on line %d"
 msgstr "Prénom manquant à la ligne %d"
 
-#: school/classroom/views.py:87
+#: school/classroom/views.py:92
 #, python-format
 msgid ""
 "Unreadable student name on line %d. Please replace or remove all suspect "
@@ -2369,7 +2735,7 @@ msgstr ""
 "Nom d'élève illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:97
+#: school/classroom/views.py:102
 #, python-format
 msgid ""
 "Unknown gender <strong>%(gender)s</strong> on line %(line)s. Must be either "
@@ -2378,7 +2744,7 @@ msgstr ""
 "Le sexe <strong>%(gender)s</strong> à la ligne %(line)s est inconnu. Ce "
 "devrait être <b>Masculin</b> ou <b>Féminin</b>"
 
-#: school/classroom/views.py:109
+#: school/classroom/views.py:114
 #, python-format
 msgid ""
 "Incorrect date of birth <strong>%(dob)s</strong> on line %(line)d. Must be "
@@ -2387,7 +2753,7 @@ msgstr ""
 "Date de naissance incorrecte <strong>%(dob)s</strong> à la ligne %(line)d. "
 "Cela doit être en format <b>Jour-Mois-Année</b>"
 
-#: school/classroom/views.py:114
+#: school/classroom/views.py:119
 #, python-format
 msgid ""
 "Incorrect Repetition <strong>%(rep)s</strong> on line %(line)d. Must be "
@@ -2396,7 +2762,7 @@ msgstr ""
 "\"Répétition\" incorrecte <strong>%(rep)s</strong> à la ligne %(line)d. Doit "
 "être <b>Oui</b> ou <b>Non</b>"
 
-#: school/classroom/views.py:122
+#: school/classroom/views.py:127
 #, python-format
 msgid ""
 "Year joined <strong>%(year_joined)s</strong> on line %(line)d is incorrect. "
@@ -2405,7 +2771,7 @@ msgstr ""
 "Année d'entrée <strong>%(year_joined)s</strong> à la ligne %(line)d "
 "incorrecte. Veuillez vérifiez."
 
-#: school/classroom/views.py:127
+#: school/classroom/views.py:132
 #, python-format
 msgid ""
 "Year joined <strong>%(year_joined)s</strong> on line %(line)d seems "
@@ -2414,7 +2780,7 @@ msgstr ""
 "Année d'entrée <strong>%(year_joined)s</strong> à la ligne %(line)d semble "
 "incorrect. Veuillez vérifier."
 
-#: school/classroom/views.py:140
+#: school/classroom/views.py:145
 #, python-format
 msgid ""
 "Unreadable Parent 1 name on line %d. Please replace or remove all suspect "
@@ -2423,7 +2789,7 @@ msgstr ""
 "Nom du parent 1 illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:145
+#: school/classroom/views.py:150
 #, python-format
 msgid ""
 "Missing parent 1 relationship on line %d. Use one of <strong>Father</"
@@ -2433,7 +2799,7 @@ msgstr ""
 "propositions suivantes <strong>Papa</strong>, <strong>Maman</strong>, "
 "<strong> Oncle</strong>, etc"
 
-#: school/classroom/views.py:151
+#: school/classroom/views.py:156
 #, python-format
 msgid ""
 "Unreadable parent 1 relationship on line %d. Please replace or remove all "
@@ -2443,13 +2809,13 @@ msgstr ""
 "les espaces et caractères spéciaux suspects pour éviter tout symbole "
 "malicieux."
 
-#: school/classroom/views.py:159
+#: school/classroom/views.py:164
 #, python-format
 msgid "Incorrect parent 1 email <strong>%(email)s</strong> on line %(line)d"
 msgstr ""
 "Email du parent 1 incorrect <strong>%(email)s</strong> à la ligne %(line)d"
 
-#: school/classroom/views.py:164
+#: school/classroom/views.py:169
 #, python-format
 msgid ""
 "Missing or incorrect parent 1 phone <strong>%(phone)s</strong> on line "
@@ -2459,7 +2825,7 @@ msgstr ""
 "%(line)d est absent ou incorrect. Le numéro de téléphone doit être composé "
 "de 9 chiffres."
 
-#: school/classroom/views.py:174
+#: school/classroom/views.py:179
 #, python-format
 msgid ""
 "Unreadable Parent 2 name on line %d. Please replace or remove all suspect "
@@ -2468,7 +2834,7 @@ msgstr ""
 "Nom du parent 2 illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:178
+#: school/classroom/views.py:183
 #, python-format
 msgid ""
 "1st and 2nd parent have the same name <strong>%(name)s</strong> on line "
@@ -2477,7 +2843,7 @@ msgstr ""
 "Les 1er et 2ème parents ont le même nom <strong>%(name)s</strong>à la ligne "
 "%(line)d,. Veuillez rectifier."
 
-#: school/classroom/views.py:183
+#: school/classroom/views.py:188
 #, python-format
 msgid ""
 "2nd parent parent relationship missing on line %d. Use one of "
@@ -2487,7 +2853,7 @@ msgstr ""
 "des propositions suivantes <strong>Père</strong>, <strong>Mère</strong>, "
 "<strong> Oncle</strong>, etc"
 
-#: school/classroom/views.py:187
+#: school/classroom/views.py:192
 #, python-format
 msgid ""
 "1st and 2nd parent have the same relationship <strong>%(relation)s</strong> "
@@ -2496,7 +2862,7 @@ msgstr ""
 "Les 1er et 2nd parent ont la même relation <strong>%(relation)s</strong> à "
 "la ligne %(line)d. Veuillez rectifier."
 
-#: school/classroom/views.py:193
+#: school/classroom/views.py:198
 #, python-format
 msgid ""
 "Unreadable parent 2 relationship on line %d. Please replace or remove all "
@@ -2505,14 +2871,14 @@ msgstr ""
 "Nom d'élève illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:201
+#: school/classroom/views.py:206
 #, python-format
 msgid "2nd parent email <strong>%(email)s</strong> incorrect on line %(line)d"
 msgstr ""
 "L' email du 2nd parent <strong>%(email)s</strong> à la ligne %(line)d est "
 "incorrect"
 
-#: school/classroom/views.py:205
+#: school/classroom/views.py:210
 #, python-format
 msgid ""
 "1st and 2nd parent have the same email <strong>%(email)s</strong> on line "
@@ -2521,7 +2887,7 @@ msgstr ""
 "Les 1er et 2ème parents ont le même email <strong>%(email)s</strong> à la "
 "ligne %(line)d. Veuillez changer."
 
-#: school/classroom/views.py:211
+#: school/classroom/views.py:216
 #, python-format
 msgid ""
 "2nd parent phone <strong>%(phone)s</strong> missing or incorrect on line "
@@ -2531,7 +2897,7 @@ msgstr ""
 "ou incorrect à la ligne %(line)d. Le numéro de téléphone doit être composé "
 "de 9 chiffres."
 
-#: school/classroom/views.py:215
+#: school/classroom/views.py:220
 #, python-format
 msgid ""
 "1st and 2nd parent have the same phone <strong>%(phone)s</strong> on line "
@@ -2540,31 +2906,31 @@ msgstr ""
 "Les 1er et 2ème parents ont le même numéro de téléphone <strong>%(phone)s</"
 "strong> à la ligne %(line)d. Veuillez changer."
 
-#: school/classroom/views.py:288
+#: school/classroom/views.py:293
 msgid "All your classrooms"
 msgstr "Toutes vos classes"
 
-#: school/classroom/views.py:454
+#: school/classroom/views.py:459
 msgid "No session created. Create sessions first."
 msgstr "Aucune séquence créée. Veuillez d'abord créer des séquences."
 
-#: school/classroom/views.py:457
+#: school/classroom/views.py:462
 msgid "Cannot mark on a terminated session."
 msgstr "Vous ne pouvez pas noter sur une séquence bouclée."
 
-#: school/classroom/views.py:590
+#: school/classroom/views.py:595
 msgid ""
 "Report card cannot be generated for classroom where students are not marked."
 msgstr ""
 "Les bulletins ne peuvent être générés pour une classe où les élèves ne sont "
 "pas notés."
 
-#: school/classroom/views.py:597
+#: school/classroom/views.py:602
 #, python-format
 msgid "Report card header not configured for %s"
 msgstr "En-tête de bulletins non configurée pour la langue: %s"
 
-#: school/classroom/views.py:613
+#: school/classroom/views.py:618
 #, python-format
 msgid ""
 "Cannot delete a confirmed student: %s. Exclude instead, only the head of "
@@ -2573,38 +2939,43 @@ msgstr ""
 "Vous ne pouvez pas supprimer l'élève inscrit: %s ; exclure plutôt. Seul, le "
 "chef d'établissement peut le faire."
 
-#: school/classroom/views.py:627
+#: school/classroom/views.py:632
 #, python-format
 msgid "%d item(s) deleted."
 msgstr "%d élément(s) supprimé(s)."
 
-#: school/classroom/views.py:643
+#: school/classroom/views.py:648
 #, python-format
 msgid "Class leader correctly set to %s"
 msgstr "%s a été choisi comme chef de classe"
 
-#: school/classroom/views.py:670
+#: school/classroom/views.py:675
 msgid "Lesson successfully added."
 msgstr "Leçon ajoutée avec succès."
 
-#: school/classroom/views.py:710
+#: school/classroom/views.py:715
 msgid "Deadlines"
 msgstr "Dates limites"
 
-#: school/student/views.py:242
+#: school/classroom/views.py:796
+#, python-format
+msgid "New assignment in %s"
+msgstr "Nouveau devoir en %s"
+
+#: school/student/views.py:238
 #, python-format
 msgid "Student <strong>%s</strong> successfully updated"
 msgstr "L'élève <strong>%s</strong> a été mis à jour"
 
-#: school/student/views.py:266
+#: school/student/views.py:262
 msgid "A parent with this email already exists."
 msgstr "Un parent avec cet email existe déjà."
 
-#: school/student/views.py:269
+#: school/student/views.py:265
 msgid "A parent with this phone already exists."
 msgstr "Un parent avec ce numéro de téléphone existe déjà."
 
-#: school/student/views.py:388
+#: school/student/views.py:386
 msgid "Invalid amount"
 msgstr "Montant invalide"
 
@@ -2918,10 +3289,6 @@ msgstr "Noter les élèves"
 msgid "Mark"
 msgstr "Noter"
 
-#: school/templates/school/classroom/classroom_detail.html:70
-msgid "Assign."
-msgstr "Devoir"
-
 #: school/templates/school/classroom/classroom_detail.html:72
 #: school/templates/school/classroom/classroom_detail.html:238
 msgid "Add lesson done"
@@ -3173,15 +3540,11 @@ msgstr ""
 "Des élèves ou contacts de parents n'ont pas encore été renseignés pour "
 "certaines classes. Veuillez corriger !"
 
-#: school/templates/school/snippets/classroom/assignment_list_results.html:17
+#: school/templates/school/snippets/classroom/assignment_list_results.html:18
 msgid "Deactivate"
 msgstr "Désactiver"
 
-#: school/templates/school/snippets/classroom/assignment_list_results.html:19
-msgid "Activate"
-msgstr "Activer"
-
-#: school/templates/school/snippets/classroom/assignment_list_results.html:83
+#: school/templates/school/snippets/classroom/assignment_list_results.html:47
 #, python-format
 msgid ""
 "\n"
@@ -3190,7 +3553,7 @@ msgstr ""
 "\n"
 "                %(start)s – %(end)s de %(count)s résultats"
 
-#: school/templates/school/snippets/classroom/assignment_list_results.html:86
+#: school/templates/school/snippets/classroom/assignment_list_results.html:50
 #, python-format
 msgid "%(count)s results"
 msgstr "%(count)s résultats"
@@ -3199,7 +3562,7 @@ msgstr "%(count)s résultats"
 msgid "Delete student"
 msgstr "Supprimer l'élève"
 
-#: school/templates/school/snippets/student/assignments.html:37
+#: school/templates/school/snippets/student/assignments.html:38
 msgid "No assignment yet"
 msgstr "Aucun devoir pour le moment"
 
@@ -3627,42 +3990,36 @@ msgstr "Cycle de facturation mis à jour avec succès."
 msgid "You are about to transfer ownership to "
 msgstr "Vous êtes sur le point de transférer votre propriété à "
 
-#: templates/webnode/dreamer/base.html:92
-#: templates/webnode/dreamer/base.html:193
-msgid "Account setup"
-msgstr "Infos compte"
+#~ msgid "REPUBLIC OF CAMEROON"
+#~ msgstr "RÉPUBLIQUE DU CAMEROUN"
 
-#: templates/webnode/dreamer/base.html:94
-#: templates/webnode/dreamer/base.html:195
-#: templates/webnode/dreamer/base.html:241
-msgid "Logout"
-msgstr "Déconnexion"
+#~ msgid "Peace - Work - Fatherland"
+#~ msgstr "Paix - Travail - Patrie"
 
-#: templates/webnode/dreamer/base.html:100
-#: templates/webnode/dreamer/base.html:239
-msgid "Login"
-msgstr "Connexion"
+#~ msgid "MINISTRY OF SECONDARY EDUCATION"
+#~ msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
 
-#: templates/webnode/dreamer/base.html:246
-msgid "Contacts"
-msgstr "Contacts"
+#~ msgid "Logout"
+#~ msgstr "Déconnexion"
 
-#: templates/webnode/dreamer/base.html:274
-msgid "All rights reserved"
-msgstr "Tous droits réservés"
+#~ msgid "Login"
+#~ msgstr "Connexion"
 
-#: templates/webnode/dreamer/detail.html:6
+#~ msgid "Contacts"
+#~ msgstr "Contacts"
+
+#~ msgid "All rights reserved"
+#~ msgstr "Tous droits réservés"
+
 #, fuzzy
-msgid "sur"
-msgstr "Blâme conduite"
+#~ msgid "sur"
+#~ msgstr "Blâme conduite"
 
-#: templates/webnode/dreamer/detail.html:42
-msgid "Related posts"
-msgstr "Articles liés"
+#~ msgid "Related posts"
+#~ msgstr "Articles liés"
 
-#: templates/webnode/dreamer/detail.html:54
-msgid "Share"
-msgstr "Partager"
+#~ msgid "Share"
+#~ msgstr "Partager"
 
 #~ msgid "And be next to them everyday for success."
 #~ msgstr "Et restez proche d'eux chaque jour pour atteindre le succès"
