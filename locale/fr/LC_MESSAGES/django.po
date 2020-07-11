@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-09 17:17+0000\n"
-"PO-Revision-Date: 2020-07-09 18:21+0100\n"
+"POT-Creation-Date: 2020-07-11 04:08+0000\n"
+"PO-Revision-Date: 2020-07-11 05:09+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -290,7 +290,7 @@ msgid "Website admin"
 msgstr "Administration site web"
 
 #: foulassi/scripts.py:40
-msgid "Manage payments"
+msgid "Manage invoices and payments"
 msgstr "Gérer les paiements"
 
 #: foulassi/scripts.py:42
@@ -326,38 +326,38 @@ msgstr ""
 "Confirmation de paiement de %(amount).2f %(currency)s pour les frais "
 "scolaires de l'élève %(student_name)s. Merci."
 
-#: foulassi/views.py:327
+#: foulassi/views.py:332
 msgid " New homework sent"
 msgstr ""
 
-#: foulassi/views.py:352
+#: foulassi/views.py:357
 #, python-format
 msgid ""
 "%(student_name)s from %(classroom)s sent his assignment of %(subject)s about "
 "%(assignment_name)s"
 msgstr ""
 
-#: foulassi/views.py:415
+#: foulassi/views.py:420
 #, python-format
 msgid "Mrs %s"
 msgstr "Mme %s"
 
-#: foulassi/views.py:417
+#: foulassi/views.py:422
 #, python-format
 msgid "Mr %s"
 msgstr "M. %s"
 
-#: foulassi/views.py:419
+#: foulassi/views.py:424
 #, python-format
 msgid "The parent %s"
 msgstr "Le parent %s"
 
-#: foulassi/views.py:420
+#: foulassi/views.py:425
 msgid "I would like to follow my kids in your school on Foulassi."
 msgstr ""
 "J'aimerais pouvoir suivre mes enfants dans votre établissement sur Foulassi."
 
-#: foulassi/views.py:433
+#: foulassi/views.py:438
 #, python-format
 msgid ""
 "%(parent_name)s would like to follow his kid(s) below on ikwen Foulassi:\n"
@@ -367,15 +367,15 @@ msgstr ""
 "Foulassi:\n"
 "%(kids_details)s"
 
-#: foulassi/views.py:587
+#: foulassi/views.py:592
 msgid "View invoice"
 msgstr "Voir la facture"
 
-#: foulassi/views.py:665
+#: foulassi/views.py:671
 msgid "Foulassi deployment"
 msgstr "Déploiement Foulassi"
 
-#: foulassi/views.py:669
+#: foulassi/views.py:675
 msgid "Website theme"
 msgstr "Thème du site web"
 
@@ -959,7 +959,7 @@ msgstr "Mentions légales"
 
 #: foulassi/templates/foulassi/home.html:391
 #: foulassi/templates/foulassi/home_saas.html:462
-#: templates/core/app_base_admin.html:119
+#: templates/core/app_base_admin.html:118
 #: templates/webnode/dreamer/base.html:256
 msgid "Blog"
 msgstr "Blog"
@@ -2409,10 +2409,10 @@ msgstr "Langue"
 msgid "Student name"
 msgstr "Nom de l'élève"
 
-#: reporting/utils.py:606 reporting/utils.py:883 school/classroom/views.py:714
+#: reporting/utils.py:606 reporting/utils.py:883 school/classroom/views.py:745
 #: school/templates/school/change_level.html:11
 #: school/templates/school/classroom/change_classroom.html:12
-#: templates/core/app_base_admin.html:37
+#: templates/core/app_base_admin.html:25
 msgid "Subjects"
 msgstr "Matières"
 
@@ -2441,7 +2441,7 @@ msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
 msgid "Report card header not configured for %s."
 msgstr "En-tête de bulletins non configurée pour la langue: %s."
 
-#: reporting/views.py:240 school/classroom/views.py:603
+#: reporting/views.py:240 school/classroom/views.py:633
 #, python-format
 msgid "Please configure report card header for %s "
 msgstr "Veuillez configurer l'en-tête des bulletins pour la langue: %s"
@@ -2755,11 +2755,11 @@ msgstr "Choisissez la langue"
 msgid "Tuition fees"
 msgstr "Frais de scolarité"
 
-#: school/assignment_reminder.py:77
+#: school/assignment_reminder.py:75
 msgid "Less than 24 hours remain to turn back your kid's homework"
 msgstr ""
 
-#: school/assignment_reminder.py:105
+#: school/assignment_reminder.py:103
 #, python-format
 msgid "%(student_name)s has not yet submit his homework of %(subject)s "
 msgstr ""
@@ -2832,8 +2832,9 @@ msgstr "Détails"
 msgid "Attachment"
 msgstr "Pièces jointes"
 
-#: school/models.py:269 school/templates/school/snippets/student/billing.html:8
-#: school/templates/school/snippets/student/billing.html:32
+#: school/models.py:269
+#: school/templates/school/snippets/student/billing.html:26
+#: school/templates/school/snippets/student/billing.html:55
 msgid "Deadline"
 msgstr "Date limite"
 
@@ -2845,11 +2846,11 @@ msgstr "Unité"
 msgid "With counter ?"
 msgstr "Compteur ?"
 
-#: school/views.py:97 school/classroom/views.py:401 school/student/views.py:766
+#: school/views.py:97 school/classroom/views.py:430 school/student/views.py:770
 msgid "successfully updated"
 msgstr "mis à jour avec succès"
 
-#: school/views.py:99 school/classroom/views.py:403 school/student/views.py:768
+#: school/views.py:99 school/classroom/views.py:432 school/student/views.py:772
 msgid "successfully created"
 msgstr "créé avec succès"
 
@@ -2857,7 +2858,7 @@ msgstr "créé avec succès"
 msgid "Teachers"
 msgstr "Enseignants"
 
-#: school/classroom/views.py:73
+#: school/classroom/views.py:75
 #, python-format
 msgid ""
 "Missing information at line %(line)d. %(found)d tokens found, but "
@@ -2866,22 +2867,22 @@ msgstr ""
 "Information manquante à la ligne %(line)d. %(found)d infos trouvées, mais "
 "%(expected)d étaient attendues ."
 
-#: school/classroom/views.py:78
+#: school/classroom/views.py:80
 #, python-format
 msgid "Missing registration number on line %d"
 msgstr "Matricule manquant à la ligne %d"
 
-#: school/classroom/views.py:82
+#: school/classroom/views.py:84
 #, python-format
 msgid "Missing last name on line %d"
 msgstr "Nom manquant à la ligne %d"
 
-#: school/classroom/views.py:86
+#: school/classroom/views.py:88
 #, python-format
 msgid "Missing first name on line %d"
 msgstr "Prénom manquant à la ligne %d"
 
-#: school/classroom/views.py:92
+#: school/classroom/views.py:94
 #, python-format
 msgid ""
 "Unreadable student name on line %d. Please replace or remove all suspect "
@@ -2890,7 +2891,7 @@ msgstr ""
 "Nom d'élève illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:102
+#: school/classroom/views.py:104
 #, python-format
 msgid ""
 "Unknown gender <strong>%(gender)s</strong> on line %(line)s. Must be either "
@@ -2899,7 +2900,7 @@ msgstr ""
 "Le sexe <strong>%(gender)s</strong> à la ligne %(line)s est inconnu. Ce "
 "devrait être <b>Masculin</b> ou <b>Féminin</b>"
 
-#: school/classroom/views.py:114
+#: school/classroom/views.py:116
 #, python-format
 msgid ""
 "Incorrect date of birth <strong>%(dob)s</strong> on line %(line)d. Must be "
@@ -2908,7 +2909,7 @@ msgstr ""
 "Date de naissance incorrecte <strong>%(dob)s</strong> à la ligne %(line)d. "
 "Cela doit être en format <b>Jour-Mois-Année</b>"
 
-#: school/classroom/views.py:119
+#: school/classroom/views.py:121
 #, python-format
 msgid ""
 "Incorrect Repetition <strong>%(rep)s</strong> on line %(line)d. Must be "
@@ -2917,7 +2918,7 @@ msgstr ""
 "\"Répétition\" incorrecte <strong>%(rep)s</strong> à la ligne %(line)d. Doit "
 "être <b>Oui</b> ou <b>Non</b>"
 
-#: school/classroom/views.py:127
+#: school/classroom/views.py:129
 #, python-format
 msgid ""
 "Year joined <strong>%(year_joined)s</strong> on line %(line)d is incorrect. "
@@ -2926,7 +2927,7 @@ msgstr ""
 "Année d'entrée <strong>%(year_joined)s</strong> à la ligne %(line)d "
 "incorrecte. Veuillez vérifiez."
 
-#: school/classroom/views.py:132
+#: school/classroom/views.py:134
 #, python-format
 msgid ""
 "Year joined <strong>%(year_joined)s</strong> on line %(line)d seems "
@@ -2935,7 +2936,7 @@ msgstr ""
 "Année d'entrée <strong>%(year_joined)s</strong> à la ligne %(line)d semble "
 "incorrect. Veuillez vérifier."
 
-#: school/classroom/views.py:145
+#: school/classroom/views.py:147
 #, python-format
 msgid ""
 "Unreadable Parent 1 name on line %d. Please replace or remove all suspect "
@@ -2944,7 +2945,7 @@ msgstr ""
 "Nom du parent 1 illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:150
+#: school/classroom/views.py:152
 #, python-format
 msgid ""
 "Missing parent 1 relationship on line %d. Use one of <strong>Father</"
@@ -2954,7 +2955,7 @@ msgstr ""
 "propositions suivantes <strong>Papa</strong>, <strong>Maman</strong>, "
 "<strong> Oncle</strong>, etc"
 
-#: school/classroom/views.py:156
+#: school/classroom/views.py:158
 #, python-format
 msgid ""
 "Unreadable parent 1 relationship on line %d. Please replace or remove all "
@@ -2964,13 +2965,13 @@ msgstr ""
 "les espaces et caractères spéciaux suspects pour éviter tout symbole "
 "malicieux."
 
-#: school/classroom/views.py:164
+#: school/classroom/views.py:166
 #, python-format
 msgid "Incorrect parent 1 email <strong>%(email)s</strong> on line %(line)d"
 msgstr ""
 "Email du parent 1 incorrect <strong>%(email)s</strong> à la ligne %(line)d"
 
-#: school/classroom/views.py:169
+#: school/classroom/views.py:171
 #, python-format
 msgid ""
 "Missing or incorrect parent 1 phone <strong>%(phone)s</strong> on line "
@@ -2980,7 +2981,7 @@ msgstr ""
 "%(line)d est absent ou incorrect. Le numéro de téléphone doit être composé "
 "de 9 chiffres."
 
-#: school/classroom/views.py:179
+#: school/classroom/views.py:181
 #, python-format
 msgid ""
 "Unreadable Parent 2 name on line %d. Please replace or remove all suspect "
@@ -2989,7 +2990,7 @@ msgstr ""
 "Nom du parent 2 illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:183
+#: school/classroom/views.py:185
 #, python-format
 msgid ""
 "1st and 2nd parent have the same name <strong>%(name)s</strong> on line "
@@ -2998,7 +2999,7 @@ msgstr ""
 "Les 1er et 2ème parents ont le même nom <strong>%(name)s</strong>à la ligne "
 "%(line)d,. Veuillez rectifier."
 
-#: school/classroom/views.py:188
+#: school/classroom/views.py:190
 #, python-format
 msgid ""
 "2nd parent parent relationship missing on line %d. Use one of "
@@ -3008,7 +3009,7 @@ msgstr ""
 "des propositions suivantes <strong>Père</strong>, <strong>Mère</strong>, "
 "<strong> Oncle</strong>, etc"
 
-#: school/classroom/views.py:192
+#: school/classroom/views.py:194
 #, python-format
 msgid ""
 "1st and 2nd parent have the same relationship <strong>%(relation)s</strong> "
@@ -3017,7 +3018,7 @@ msgstr ""
 "Les 1er et 2nd parent ont la même relation <strong>%(relation)s</strong> à "
 "la ligne %(line)d. Veuillez rectifier."
 
-#: school/classroom/views.py:198
+#: school/classroom/views.py:200
 #, python-format
 msgid ""
 "Unreadable parent 2 relationship on line %d. Please replace or remove all "
@@ -3026,14 +3027,14 @@ msgstr ""
 "Nom d'élève illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:206
+#: school/classroom/views.py:208
 #, python-format
 msgid "2nd parent email <strong>%(email)s</strong> incorrect on line %(line)d"
 msgstr ""
 "L' email du 2nd parent <strong>%(email)s</strong> à la ligne %(line)d est "
 "incorrect"
 
-#: school/classroom/views.py:210
+#: school/classroom/views.py:212
 #, python-format
 msgid ""
 "1st and 2nd parent have the same email <strong>%(email)s</strong> on line "
@@ -3042,7 +3043,7 @@ msgstr ""
 "Les 1er et 2ème parents ont le même email <strong>%(email)s</strong> à la "
 "ligne %(line)d. Veuillez changer."
 
-#: school/classroom/views.py:216
+#: school/classroom/views.py:218
 #, python-format
 msgid ""
 "2nd parent phone <strong>%(phone)s</strong> missing or incorrect on line "
@@ -3052,7 +3053,7 @@ msgstr ""
 "ou incorrect à la ligne %(line)d. Le numéro de téléphone doit être composé "
 "de 9 chiffres."
 
-#: school/classroom/views.py:220
+#: school/classroom/views.py:222
 #, python-format
 msgid ""
 "1st and 2nd parent have the same phone <strong>%(phone)s</strong> on line "
@@ -3061,31 +3062,40 @@ msgstr ""
 "Les 1er et 2ème parents ont le même numéro de téléphone <strong>%(phone)s</"
 "strong> à la ligne %(line)d. Veuillez changer."
 
-#: school/classroom/views.py:293
+#: school/classroom/views.py:274
+#, python-format
+msgid ""
+"We are kindly informing you that a new payment of %(amount)s is expected for "
+"%(invoice_title)s of %(student)s."
+msgstr ""
+"Nous vous informons qu'un nouveau paiement de %(amount)s est attendu pour "
+"%(invoice_title)s de %(student)s."
+
+#: school/classroom/views.py:322
 msgid "All your classrooms"
 msgstr "Toutes vos classes"
 
-#: school/classroom/views.py:459
+#: school/classroom/views.py:488
 msgid "No session created. Create sessions first."
 msgstr "Aucune séquence créée. Veuillez d'abord créer des séquences."
 
-#: school/classroom/views.py:462
+#: school/classroom/views.py:491
 msgid "Cannot mark on a terminated session."
 msgstr "Vous ne pouvez pas noter sur une séquence bouclée."
 
-#: school/classroom/views.py:595
+#: school/classroom/views.py:625
 msgid ""
 "Report card cannot be generated for classroom where students are not marked."
 msgstr ""
 "Les bulletins ne peuvent être générés pour une classe où les élèves ne sont "
 "pas notés."
 
-#: school/classroom/views.py:602
+#: school/classroom/views.py:632
 #, python-format
 msgid "Report card header not configured for %s"
 msgstr "En-tête de bulletins non configurée pour la langue: %s"
 
-#: school/classroom/views.py:618
+#: school/classroom/views.py:648
 #, python-format
 msgid ""
 "Cannot delete a confirmed student: %s. Exclude instead, only the head of "
@@ -3094,30 +3104,30 @@ msgstr ""
 "Vous ne pouvez pas supprimer l'élève inscrit: %s ; exclure plutôt. Seul, le "
 "chef d'établissement peut le faire."
 
-#: school/classroom/views.py:632
+#: school/classroom/views.py:662
 #, python-format
 msgid "%d item(s) deleted."
 msgstr "%d élément(s) supprimé(s)."
 
-#: school/classroom/views.py:648
+#: school/classroom/views.py:678
 #, python-format
 msgid "Class leader correctly set to %s"
 msgstr "%s a été choisi comme chef de classe"
 
-#: school/classroom/views.py:675
+#: school/classroom/views.py:705
 msgid "Lesson successfully added."
 msgstr "Leçon ajoutée avec succès."
 
-#: school/classroom/views.py:715
+#: school/classroom/views.py:746
 msgid "Deadlines"
 msgstr "Dates limites"
 
-#: school/classroom/views.py:796
+#: school/classroom/views.py:827
 #, python-format
 msgid "New assignment in %s"
 msgstr "Nouveau devoir en %s"
 
-#: school/classroom/views.py:819
+#: school/classroom/views.py:850
 #, python-format
 msgid "Your child has a new assignment in %(subject)s about %(title)s"
 msgstr ""
@@ -3135,76 +3145,41 @@ msgstr "Un parent avec cet email existe déjà."
 msgid "A parent with this phone already exists."
 msgstr "Un parent avec ce numéro de téléphone existe déjà."
 
-#: school/student/views.py:385
+#: school/student/views.py:387
 msgid "Invalid amount"
 msgstr "Montant invalide"
 
-#: school/student/views.py:413
+#: school/student/views.py:427
 #, python-format
 msgid "New payment of XAF %(amount)s for %(invoice_title)s of %(student)s. "
 msgstr ""
 "Nouveau paiement de XAF %(amount)s pour %(invoice_title)s de %(student)s."
 
-#: school/student/views.py:419
+#: school/student/views.py:433
 msgid "Those fees are totally set.\n"
 msgstr "Ces frais sont complètement réglés.\n"
 
-#: school/student/views.py:421
+#: school/student/views.py:435
 #, python-format
 msgid "XAF %s remain to get these fees totally set.\n"
 msgstr "Il reste XAF %s à payer pour le règlement complet de ces frais.\n"
 
-#: school/student/views.py:483
-#, python-format
-msgid ""
-"You are summoned to school on %(summon_date)s about your child %(student)s"
+#: school/student/views.py:436
+msgid "Thank you."
 msgstr ""
-"Vous êtes convoqué à l'école le %(summon_date)s pour l'élève %(student)s"
 
-#: school/student/views.py:489
-#, python-format
-msgid ""
-"We regret to inform you that your child %s has been excluded from our school."
-msgstr ""
-"Nous sommes navré de vous informer que votre élève %s a été exclu de notre "
-"établissement."
-
-#: school/student/views.py:504
-#, python-format
-msgid ""
-"Your child %(student)s has been %(count)s hour(s) late on %(happened_on)s."
-msgstr ""
-"Votre enfant %(student)s a été en retard de %(count)s hour(s) le "
-"%(happened_on)s."
-
-#: school/student/views.py:507
-#, python-format
-msgid ""
-"Your child %(student)s has been absent for %(count)s hour(s) on "
-"%(happened_on)s."
-msgstr ""
-"Votre enfant %(student)s a été en absent pendant %(count)s hour(s) le "
-"%(happened_on)s."
-
-#: school/student/views.py:510
-#, python-format
-msgid "New information about discipline of your child %s have been published."
-msgstr ""
-"De nouvelles informations sur la discipline de votre enfant %s ont été "
-"publiées."
-
-#: school/student/views.py:513
+#: school/student/views.py:514
 msgid "Cannot set an event earlier than Back to school date."
 msgstr "Vous ne pouvez créer un événement avant la rentrée scolaire."
 
-#: school/student/views.py:603
+#: school/student/views.py:613
 #, python-format
 msgid ""
-"We are kindly informing you that a new payment of %(amount)s is expected for "
-"%(invoice_title)s of %(student)s."
+"We are kindly informing you that a new payment of XAF %(amount)s is expected "
+"for %(invoice_title)s of %(student)s."
 msgstr ""
-"Nous vous informons qu'un nouveau paiement de %(amount)s est attendu pour "
-"%(invoice_title)s de %(student)s."
+"Nous vous informons qu'un nouveau paiement de XAF %(amount)s est attendu "
+"pour %(invoice_title)s de %(student)s."
 
 #: school/templates/school/change_justificatory.html:5
 #: school/templates/school/change_justificatory.html:18
@@ -3275,7 +3250,7 @@ msgid "New level"
 msgstr "Nouveau niveau"
 
 #: school/templates/school/change_session.html:20
-#: templates/core/app_base_admin.html:25
+#: templates/core/app_base_admin.html:31
 msgid "Levels"
 msgstr "Niveaux"
 
@@ -3415,7 +3390,7 @@ msgstr "Compris !"
 
 #: school/templates/school/classroom/assignment_list.html:5
 #: school/templates/school/classroom/change_assignment.html:5
-#: templates/core/app_base_admin.html:31
+#: templates/core/app_base_admin.html:37
 msgid "Classrooms"
 msgstr "Salles de classe"
 
@@ -3757,20 +3732,34 @@ msgstr "Supprimer l'élève"
 msgid "No assignment yet"
 msgstr "Aucun devoir pour le moment"
 
-#: school/templates/school/snippets/student/billing.html:17
+#: school/templates/school/snippets/student/billing.html:10
+msgid "Add new invoice"
+msgstr "Ajouter une nouvelle facture"
+
+#: school/templates/school/snippets/student/billing.html:13
+msgid "Remind parent"
+msgstr "Rappeler le parent"
+
+#: school/templates/school/snippets/student/billing.html:35
 msgid "Pay now"
 msgstr "Payer maintenant"
 
-#: school/templates/school/snippets/student/billing.html:20
-#: school/templates/school/snippets/student/billing.html:42
+#: school/templates/school/snippets/student/billing.html:38
+#: school/templates/school/snippets/student/billing.html:65
 msgid "Cash in"
 msgstr "Encaisser"
 
-#: school/templates/school/snippets/student/billing.html:26
+#: school/templates/school/snippets/student/billing.html:43
+#: school/templates/school/snippets/student/discipline.html:82
+#: school/templates/school/snippets/student/discipline.html:112
+msgid "Delete"
+msgstr "Supprimer"
+
+#: school/templates/school/snippets/student/billing.html:49
 msgid "No pending payment"
 msgstr "Aucun paiement en attente"
 
-#: school/templates/school/snippets/student/billing.html:35
+#: school/templates/school/snippets/student/billing.html:58
 #, python-format
 msgid ""
 "\n"
@@ -3785,15 +3774,7 @@ msgstr ""
 "                    <span class=\"value\"></span>\n"
 "                "
 
-#: school/templates/school/snippets/student/billing.html:53
-msgid "Add new invoice"
-msgstr "Ajouter une nouvelle facture"
-
-#: school/templates/school/snippets/student/billing.html:56
-msgid "Remind parent"
-msgstr "Rappeler le parent"
-
-#: school/templates/school/snippets/student/billing.html:85
+#: school/templates/school/snippets/student/billing.html:93
 msgid "Cash"
 msgstr "Cash"
 
@@ -3838,11 +3819,6 @@ msgstr "Afficher le justificatif"
 #: school/templates/school/snippets/student/discipline.html:109
 msgid "Justify"
 msgstr "Justifier"
-
-#: school/templates/school/snippets/student/discipline.html:82
-#: school/templates/school/snippets/student/discipline.html:112
-msgid "Delete"
-msgstr "Supprimer"
 
 #: school/templates/school/snippets/student/modals.html:12
 msgid "Type"
@@ -3910,60 +3886,60 @@ msgstr "L'entrée a été ajouté avec succès."
 msgid "Please enter a valid number."
 msgstr "SVP entrez un nombre valide."
 
-#: templates/core/app_base_admin.html:49
+#: templates/core/app_base_admin.html:52
 msgid "Session Groups"
 msgstr "Groupes de séquences"
 
-#: templates/core/app_base_admin.html:55
+#: templates/core/app_base_admin.html:56
 msgid "Sessions"
 msgstr "Séquences"
 
-#: templates/core/app_base_admin.html:61
-msgid "Report Card header"
+#: templates/core/app_base_admin.html:60
+msgid "Report Card headers"
 msgstr "En-tête de bulletins"
 
-#: templates/core/app_base_admin.html:70
+#: templates/core/app_base_admin.html:69
 msgctxt "Financial transactions"
 msgid "Billing"
 msgstr "Transactions financières"
 
-#: templates/core/app_base_admin.html:76
+#: templates/core/app_base_admin.html:75
 msgid "Payments"
 msgstr "Paiements"
 
-#: templates/core/app_base_admin.html:80
+#: templates/core/app_base_admin.html:79
 msgid "Transactions"
 msgstr "Transactions"
 
-#: templates/core/app_base_admin.html:85
+#: templates/core/app_base_admin.html:84
 msgid "Wallet"
 msgstr "Porte-monnaie"
 
-#: templates/core/app_base_admin.html:97
+#: templates/core/app_base_admin.html:96
 msgid "Website Admin"
 msgstr "Administration site web"
 
-#: templates/core/app_base_admin.html:104
+#: templates/core/app_base_admin.html:103
 msgid "Homepage"
 msgstr "Page d'accueil"
 
-#: templates/core/app_base_admin.html:107
+#: templates/core/app_base_admin.html:106
 msgid "Menus"
 msgstr "Menus"
 
-#: templates/core/app_base_admin.html:110
+#: templates/core/app_base_admin.html:109
 msgid "Items"
 msgstr "Articles"
 
-#: templates/core/app_base_admin.html:125
+#: templates/core/app_base_admin.html:124
 msgid "Blog categories"
 msgstr "Catégories du Blog"
 
-#: templates/core/app_base_admin.html:128
+#: templates/core/app_base_admin.html:127
 msgid "Posts"
 msgstr "Posts"
 
-#: templates/core/app_base_admin.html:131
+#: templates/core/app_base_admin.html:130
 msgid "Comments"
 msgstr "Commentaires"
 
@@ -4217,6 +4193,37 @@ msgstr "Articles liés"
 #: templates/webnode/dreamer/detail.html:54
 msgid "Share"
 msgstr "Partager"
+
+#~ msgid ""
+#~ "You are summoned to school on %(summon_date)s about your child %(student)s"
+#~ msgstr ""
+#~ "Vous êtes convoqué à l'école le %(summon_date)s pour l'élève %(student)s"
+
+#~ msgid ""
+#~ "We regret to inform you that your child %s has been excluded from our "
+#~ "school."
+#~ msgstr ""
+#~ "Nous sommes navré de vous informer que votre élève %s a été exclu de "
+#~ "notre établissement."
+
+#~ msgid ""
+#~ "Your child %(student)s has been %(count)s hour(s) late on %(happened_on)s."
+#~ msgstr ""
+#~ "Votre enfant %(student)s a été en retard de %(count)s hour(s) le "
+#~ "%(happened_on)s."
+
+#~ msgid ""
+#~ "Your child %(student)s has been absent for %(count)s hour(s) on "
+#~ "%(happened_on)s."
+#~ msgstr ""
+#~ "Votre enfant %(student)s a été en absent pendant %(count)s hour(s) le "
+#~ "%(happened_on)s."
+
+#~ msgid ""
+#~ "New information about discipline of your child %s have been published."
+#~ msgstr ""
+#~ "De nouvelles informations sur la discipline de votre enfant %s ont été "
+#~ "publiées."
 
 #~ msgid "And be next to them everyday for success."
 #~ msgstr "Et restez proche d'eux chaque jour pour atteindre le succès"
