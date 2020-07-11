@@ -38,7 +38,7 @@
                            data-invoice-id="{{ invoice.id }}" data-amount="{{ invoice.get_to_be_paid }}">{% trans "Cash in" %}</a>
                     {% endif %}
                 </div>
-                {% if not invoice.is_tuition and not invoice.is_my_kids %}
+                {% if not settings.IS_IKWEN and not invoice.is_tuition and not invoice.is_my_kids %}
                 <div class="actions">
                     <i class="glyphicon glyphicon-trash trash" style="color: #e74c3c" title="{% trans "Delete" %}"></i>
                 </div>
