@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-26 15:14+0000\n"
-"PO-Revision-Date: 2020-06-26 16:22+0100\n"
+"POT-Creation-Date: 2020-07-09 17:17+0000\n"
+"PO-Revision-Date: 2020-07-09 18:21+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -63,11 +63,11 @@ msgstr "Oui"
 msgid "No"
 msgstr "Non"
 
-#: foulassi/admin.py:61 foulassi/admin.py:70
+#: foulassi/admin.py:61 foulassi/admin.py:71
 msgid "School"
 msgstr "Établissement"
 
-#: foulassi/admin.py:63 foulassi/admin.py:75
+#: foulassi/admin.py:63 foulassi/admin.py:76
 msgid "My Kids"
 msgstr ""
 
@@ -75,23 +75,27 @@ msgstr ""
 msgid "Messaging"
 msgstr "Messagerie"
 
-#: foulassi/admin.py:71
+#: foulassi/admin.py:70
+msgid "Institution"
+msgstr "Institution"
+
+#: foulassi/admin.py:72
 msgid "Tuition instalments"
 msgstr "Tranches de paiements"
 
-#: foulassi/admin.py:76
+#: foulassi/admin.py:77
 msgid "Address & Contact"
 msgstr "Adresse & Contact"
 
-#: foulassi/admin.py:78
+#: foulassi/admin.py:79
 msgid "Social"
 msgstr "Social"
 
-#: foulassi/admin.py:79
+#: foulassi/admin.py:80
 msgid "External scripts"
 msgstr "Scripts externes"
 
-#: foulassi/cloud_setup.py:291
+#: foulassi/cloud_setup.py:293
 #, python-format
 msgid "Your platform %s was created"
 msgstr "Votre plateforme %s a été créé"
@@ -221,10 +225,12 @@ msgid "Parent Convocation"
 msgstr "Convocation de parent"
 
 #: foulassi/scripts.py:13 reporting/utils.py:427 reporting/utils.py:696
+#: reporting/utils1.py:427 reporting/utils1.py:689
 msgid "Exclusion"
 msgstr "Exclusion"
 
 #: foulassi/scripts.py:14 reporting/utils.py:415 reporting/utils.py:684
+#: reporting/utils1.py:415 reporting/utils1.py:677
 msgid "Lateness"
 msgstr "Retard"
 
@@ -234,10 +240,12 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #: foulassi/scripts.py:16 reporting/utils.py:423 reporting/utils.py:692
+#: reporting/utils1.py:423 reporting/utils1.py:685
 msgid "Censure"
 msgstr "Blâme conduite"
 
 #: foulassi/scripts.py:17 reporting/utils.py:411 reporting/utils.py:680
+#: reporting/utils1.py:411 reporting/utils1.py:673
 msgid "Absence"
 msgstr "Absence"
 
@@ -318,27 +326,38 @@ msgstr ""
 "Confirmation de paiement de %(amount).2f %(currency)s pour les frais "
 "scolaires de l'élève %(student_name)s. Merci."
 
-#: foulassi/views.py:354
+#: foulassi/views.py:327
+msgid " New homework sent"
+msgstr ""
+
+#: foulassi/views.py:352
+#, python-format
+msgid ""
+"%(student_name)s from %(classroom)s sent his assignment of %(subject)s about "
+"%(assignment_name)s"
+msgstr ""
+
+#: foulassi/views.py:415
 #, python-format
 msgid "Mrs %s"
 msgstr "Mme %s"
 
-#: foulassi/views.py:356
+#: foulassi/views.py:417
 #, python-format
 msgid "Mr %s"
 msgstr "M. %s"
 
-#: foulassi/views.py:358
+#: foulassi/views.py:419
 #, python-format
 msgid "The parent %s"
 msgstr "Le parent %s"
 
-#: foulassi/views.py:359
+#: foulassi/views.py:420
 msgid "I would like to follow my kids in your school on Foulassi."
 msgstr ""
 "J'aimerais pouvoir suivre mes enfants dans votre établissement sur Foulassi."
 
-#: foulassi/views.py:372
+#: foulassi/views.py:433
 #, python-format
 msgid ""
 "%(parent_name)s would like to follow his kid(s) below on ikwen Foulassi:\n"
@@ -348,11 +367,15 @@ msgstr ""
 "Foulassi:\n"
 "%(kids_details)s"
 
-#: foulassi/views.py:585
+#: foulassi/views.py:587
+msgid "View invoice"
+msgstr "Voir la facture"
+
+#: foulassi/views.py:665
 msgid "Foulassi deployment"
 msgstr "Déploiement Foulassi"
 
-#: foulassi/views.py:589
+#: foulassi/views.py:669
 msgid "Website theme"
 msgstr "Thème du site web"
 
@@ -424,7 +447,8 @@ msgstr ""
 
 #: foulassi/templates/foulassi/admin_home.html:5
 #: foulassi/templates/foulassi/admin_home.html:15
-#: templates/core/app_base_admin.html:8
+#: templates/core/app_base_admin.html:8 templates/webnode/dreamer/base.html:230
+#: templates/webnode/dreamer/home.html:8
 msgid "Home"
 msgstr "Accueil"
 
@@ -929,13 +953,14 @@ msgstr "Tous droits réservés."
 
 #: foulassi/templates/foulassi/home.html:385
 #: foulassi/templates/foulassi/home_saas.html:456
-#: templates/core/base_admin.html:197
+#: templates/core/base_admin.html:197 templates/webnode/dreamer/base.html:275
 msgid "Legal mentions"
 msgstr "Mentions légales"
 
 #: foulassi/templates/foulassi/home.html:391
 #: foulassi/templates/foulassi/home_saas.html:462
 #: templates/core/app_base_admin.html:119
+#: templates/webnode/dreamer/base.html:256
 msgid "Blog"
 msgstr "Blog"
 
@@ -1480,9 +1505,9 @@ msgstr "Suggestions"
 #: school/templates/school/classroom/classroom_detail.html:149
 #: school/templates/school/classroom/classroom_detail.html:277
 #: school/templates/school/classroom/classroom_list.html:206
-#: school/templates/school/snippets/student/modals.html:76
-#: school/templates/school/snippets/student/modals.html:111
-#: school/templates/school/snippets/student/modals.html:139
+#: school/templates/school/snippets/student/modals.html:79
+#: school/templates/school/snippets/student/modals.html:117
+#: school/templates/school/snippets/student/modals.html:148
 #: templates/core/service_detail.html:97 templates/core/service_detail.html:188
 msgid "Cancel"
 msgstr "Annuler"
@@ -2088,7 +2113,8 @@ msgid "Close session"
 msgstr "Boucler cette séquence"
 
 #: foulassi/templates/foulassi/events/report_cards_generated.html:34
-#: reporting/utils.py:419 reporting/utils.py:688
+#: reporting/utils.py:419 reporting/utils.py:688 reporting/utils1.py:419
+#: reporting/utils1.py:681
 msgid "Warning"
 msgstr "Attention"
 
@@ -2162,6 +2188,69 @@ msgstr ""
 msgid "Add this parent"
 msgstr "Ajouter ce parent"
 
+#: foulassi/templates/foulassi/mails/new_assignment.html:141
+#, python-format
+msgid ""
+"\n"
+"                Your child <strong>%(student_name)s</strong> has an "
+"assignment on <strong>%(assignment_title)s</strong>.\n"
+"            "
+msgstr ""
+
+#: foulassi/templates/foulassi/mails/new_assignment.html:204
+#, python-format
+msgid ""
+"\n"
+"                                    Dear <strong>%(parent_name)s</strong>,"
+"<br style=\"-ms-text-size-adjust:100%%;-webkit-text-size-adjust:100%%;\" "
+">Your child <strong>%(student_name)s</strong> has a new assigment of <strong>"
+"%(assignment_subject)s</strong> on <strong>%(assignment_title)s</strong> to "
+"submit before the %(deadline)s.<br>\n"
+"                                    You will be remind 24 hours before the "
+"deadline, if the homework is not submitted.\n"
+"                                "
+msgstr ""
+
+#: foulassi/templates/foulassi/mails/new_assignment.html:215
+msgid "See homework"
+msgstr ""
+
+#: foulassi/templates/foulassi/mails/new_assignment.html:248
+#: foulassi/templates/foulassi/mails/submitted_homework.html:237
+#: foulassi/templates/foulassi/mails/unsubmitted_homework.html:246
+msgid "CONFIDENTIALITY"
+msgstr ""
+
+#: foulassi/templates/foulassi/mails/new_assignment.html:250
+#: foulassi/templates/foulassi/mails/submitted_homework.html:239
+#: foulassi/templates/foulassi/mails/unsubmitted_homework.html:248
+#, python-format
+msgid ""
+"\n"
+"                    The information contained in this e-mail and any "
+"accompanying documents is confidential or otherwise\n"
+"                    protected from disclosure. If you are not the intended "
+"recipient, please immediately alert the\n"
+"                    sender by reply e-mail and delete this message and any "
+"attachments. Any copy, dissemination or\n"
+"                    unauthorized access of the contents of this message by "
+"anyone other than the intended recipient\n"
+"                    is strictly prohibited. E-mails may be susceptible to "
+"falsification or alteration and cause data\n"
+"                    corruption and/or loss of data. %(company_name)s and/or "
+"any of its subsidiaries decline any liability resulting\n"
+"                    from the consequences thereof. Therefore, this e-mail "
+"and any attachments are used at your own risk.\n"
+"                "
+msgstr ""
+
+#: foulassi/templates/foulassi/mails/new_assignment.html:261
+#: foulassi/templates/foulassi/mails/submitted_homework.html:250
+#: foulassi/templates/foulassi/mails/unsubmitted_homework.html:259
+#, python-format
+msgid "&copy; %(year)s %(company_name)s. All Rights Reserved."
+msgstr ""
+
 #: foulassi/templates/foulassi/mails/school_setup_reminder.html:143
 #, python-format
 msgid "You might lose %(estimated_loss)s XAF if you don't fix this."
@@ -2196,6 +2285,55 @@ msgstr "<strong>%(missing)s</strong> élèves n'ont pas de contacts de parents"
 msgid "Fix now"
 msgstr "Corrigez le problème"
 
+#: foulassi/templates/foulassi/mails/submitted_homework.html:141
+#, python-format
+msgid ""
+"\n"
+"                Your student <strong>%(student_name)s</strong> from class "
+"%(classroom)s submitted his homework of %(assignment_subject)s about <strong>"
+"%(assignment_title)s</strong> .\n"
+"            "
+msgstr ""
+
+#: foulassi/templates/foulassi/mails/submitted_homework.html:204
+#, python-format
+msgid ""
+"\n"
+"                                    Dear <strong>%(teacher_name)s</strong>,"
+"<br style=\"-ms-text-size-adjust:100%%;-webkit-text-size-adjust:100%%;\" "
+">Your student <strong>%(student_name)s</strong> from %(classroom)s submitted "
+"his homework  of <strong>%(assignment_subject)s</strong> about <strong>"
+"%(assignment_title)s</strong>.<br>\n"
+"                                    Find below the attached file.\n"
+"                                "
+msgstr ""
+
+#: foulassi/templates/foulassi/mails/unsubmitted_homework.html:141
+#, python-format
+msgid ""
+"\n"
+"                Your child <strong>%(student_name)s</strong> has not yet "
+"submitted his <strong>%(assignment_subject)s</strong> homework on <strong>"
+"%(assignment_title)s</strong>.\n"
+"            "
+msgstr ""
+
+#: foulassi/templates/foulassi/mails/unsubmitted_homework.html:204
+#, python-format
+msgid ""
+"\n"
+"                                    Dear <strong>%(parent_name)s</strong>,"
+"<br style=\"-ms-text-size-adjust:100%%;-webkit-text-size-adjust:100%%;\" "
+">Your child <strong>%(student_name)s</strong> has not yet submitted his "
+"<strong>%(assignment_subject)s</strong> homework on <strong>"
+"%(assignment_title)s</strong>.<br>\n"
+"                                "
+msgstr ""
+
+#: foulassi/templates/foulassi/mails/unsubmitted_homework.html:213
+msgid "Submit now"
+msgstr "Soumettre"
+
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:16
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:64
 msgid "Text"
@@ -2221,9 +2359,9 @@ msgstr ""
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:38
 #: foulassi/templates/foulassi/snippets/send_message_modals.html:83
 #: school/templates/school/classroom/classroom_list.html:203
-#: school/templates/school/snippets/student/modals.html:72
-#: school/templates/school/snippets/student/modals.html:107
-#: school/templates/school/snippets/student/modals.html:135
+#: school/templates/school/snippets/student/modals.html:74
+#: school/templates/school/snippets/student/modals.html:112
+#: school/templates/school/snippets/student/modals.html:143
 msgid "OK"
 msgstr "OK"
 
@@ -2285,6 +2423,18 @@ msgstr "Résultats"
 #: reporting/utils.py:608 reporting/utils.py:885
 msgid "Council decision"
 msgstr "Décisions du conseil de classe"
+
+#: reporting/utils1.py:608 reporting/utils1.py:878
+msgid "REPUBLIC OF CAMEROON"
+msgstr "RÉPUBLIQUE DU CAMEROUN"
+
+#: reporting/utils1.py:609 reporting/utils1.py:879
+msgid "Peace - Work - Fatherland"
+msgstr "Paix - Travail - Patrie"
+
+#: reporting/utils1.py:610 reporting/utils1.py:880
+msgid "MINISTRY OF SECONDARY EDUCATION"
+msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
 
 #: reporting/views.py:239
 #, python-format
@@ -2605,8 +2755,13 @@ msgstr "Choisissez la langue"
 msgid "Tuition fees"
 msgstr "Frais de scolarité"
 
-#: school/assignment_reminder.py:71
+#: school/assignment_reminder.py:77
 msgid "Less than 24 hours remain to turn back your kid's homework"
+msgstr ""
+
+#: school/assignment_reminder.py:105
+#, python-format
+msgid "%(student_name)s has not yet submit his homework of %(subject)s "
 msgstr ""
 
 #: school/models.py:23
@@ -2690,11 +2845,11 @@ msgstr "Unité"
 msgid "With counter ?"
 msgstr "Compteur ?"
 
-#: school/views.py:97 school/classroom/views.py:401 school/student/views.py:707
+#: school/views.py:97 school/classroom/views.py:401 school/student/views.py:766
 msgid "successfully updated"
 msgstr "mis à jour avec succès"
 
-#: school/views.py:99 school/classroom/views.py:403 school/student/views.py:709
+#: school/views.py:99 school/classroom/views.py:403 school/student/views.py:768
 msgid "successfully created"
 msgstr "créé avec succès"
 
@@ -2962,6 +3117,11 @@ msgstr "Dates limites"
 msgid "New assignment in %s"
 msgstr "Nouveau devoir en %s"
 
+#: school/classroom/views.py:819
+#, python-format
+msgid "Your child has a new assignment in %(subject)s about %(title)s"
+msgstr ""
+
 #: school/student/views.py:238
 #, python-format
 msgid "Student <strong>%s</strong> successfully updated"
@@ -2975,18 +3135,33 @@ msgstr "Un parent avec cet email existe déjà."
 msgid "A parent with this phone already exists."
 msgstr "Un parent avec ce numéro de téléphone existe déjà."
 
-#: school/student/views.py:386
+#: school/student/views.py:385
 msgid "Invalid amount"
 msgstr "Montant invalide"
 
-#: school/student/views.py:456
+#: school/student/views.py:413
+#, python-format
+msgid "New payment of XAF %(amount)s for %(invoice_title)s of %(student)s. "
+msgstr ""
+"Nouveau paiement de XAF %(amount)s pour %(invoice_title)s de %(student)s."
+
+#: school/student/views.py:419
+msgid "Those fees are totally set.\n"
+msgstr "Ces frais sont complètement réglés.\n"
+
+#: school/student/views.py:421
+#, python-format
+msgid "XAF %s remain to get these fees totally set.\n"
+msgstr "Il reste XAF %s à payer pour le règlement complet de ces frais.\n"
+
+#: school/student/views.py:483
 #, python-format
 msgid ""
 "You are summoned to school on %(summon_date)s about your child %(student)s"
 msgstr ""
 "Vous êtes convoqué à l'école le %(summon_date)s pour l'élève %(student)s"
 
-#: school/student/views.py:462
+#: school/student/views.py:489
 #, python-format
 msgid ""
 "We regret to inform you that your child %s has been excluded from our school."
@@ -2994,26 +3169,42 @@ msgstr ""
 "Nous sommes navré de vous informer que votre élève %s a été exclu de notre "
 "établissement."
 
-#: school/student/views.py:477
+#: school/student/views.py:504
 #, python-format
-msgid "Your child %(student)s has been %(count)s hour(s) late."
-msgstr "Votre enfant %(student)s a été en retard pendant %(count)s hour(s)."
+msgid ""
+"Your child %(student)s has been %(count)s hour(s) late on %(happened_on)s."
+msgstr ""
+"Votre enfant %(student)s a été en retard de %(count)s hour(s) le "
+"%(happened_on)s."
 
-#: school/student/views.py:480
+#: school/student/views.py:507
 #, python-format
-msgid "Your child %(student)s has been absent for %(count)s hour(s)."
-msgstr "Votre enfant %(student)s a été en absent pendant %(count)s hour(s)."
+msgid ""
+"Your child %(student)s has been absent for %(count)s hour(s) on "
+"%(happened_on)s."
+msgstr ""
+"Votre enfant %(student)s a été en absent pendant %(count)s hour(s) le "
+"%(happened_on)s."
 
-#: school/student/views.py:483
+#: school/student/views.py:510
 #, python-format
 msgid "New information about discipline of your child %s have been published."
 msgstr ""
 "De nouvelles informations sur la discipline de votre enfant %s ont été "
 "publiées."
 
-#: school/student/views.py:486
+#: school/student/views.py:513
 msgid "Cannot set an event earlier than Back to school date."
 msgstr "Vous ne pouvez créer un événement avant la rentrée scolaire."
+
+#: school/student/views.py:603
+#, python-format
+msgid ""
+"We are kindly informing you that a new payment of %(amount)s is expected for "
+"%(invoice_title)s of %(student)s."
+msgstr ""
+"Nous vous informons qu'un nouveau paiement de %(amount)s est attendu pour "
+"%(invoice_title)s de %(student)s."
 
 #: school/templates/school/change_justificatory.html:5
 #: school/templates/school/change_justificatory.html:18
@@ -3677,24 +3868,24 @@ msgstr "Crédits restants"
 msgid "SMS"
 msgstr "SMS"
 
-#: school/templates/school/snippets/student/modals.html:89
+#: school/templates/school/snippets/student/modals.html:92
 msgid "New invoice"
 msgstr "Nouvelle facture"
 
-#: school/templates/school/snippets/student/modals.html:93
+#: school/templates/school/snippets/student/modals.html:96
 msgid "Label"
 msgstr "Étiquette"
 
-#: school/templates/school/snippets/student/modals.html:97
-#: school/templates/school/snippets/student/modals.html:130
+#: school/templates/school/snippets/student/modals.html:100
+#: school/templates/school/snippets/student/modals.html:136
 msgid "Amount"
 msgstr "Montant"
 
-#: school/templates/school/snippets/student/modals.html:101
+#: school/templates/school/snippets/student/modals.html:104
 msgid "Due date"
 msgstr "Date d'échéance"
 
-#: school/templates/school/snippets/student/modals.html:125
+#: school/templates/school/snippets/student/modals.html:131
 msgid "Cash In"
 msgstr "Encaisser"
 
@@ -3711,11 +3902,11 @@ msgstr "Rang"
 msgid "Exclude %(student)s ?"
 msgstr "Exclure %(student)s ?"
 
-#: school/templates/school/student/student_detail.html:242
+#: school/templates/school/student/student_detail.html:245
 msgid "Discipline log entry successfully added."
 msgstr "L'entrée a été ajouté avec succès."
 
-#: school/templates/school/student/student_detail.html:277
+#: school/templates/school/student/student_detail.html:284
 msgid "Please enter a valid number."
 msgstr "SVP entrez un nombre valide."
 
@@ -3990,36 +4181,42 @@ msgstr "Cycle de facturation mis à jour avec succès."
 msgid "You are about to transfer ownership to "
 msgstr "Vous êtes sur le point de transférer votre propriété à "
 
-#~ msgid "REPUBLIC OF CAMEROON"
-#~ msgstr "RÉPUBLIQUE DU CAMEROUN"
+#: templates/webnode/dreamer/base.html:92
+#: templates/webnode/dreamer/base.html:193
+msgid "Account setup"
+msgstr "Infos compte"
 
-#~ msgid "Peace - Work - Fatherland"
-#~ msgstr "Paix - Travail - Patrie"
+#: templates/webnode/dreamer/base.html:94
+#: templates/webnode/dreamer/base.html:195
+#: templates/webnode/dreamer/base.html:241
+msgid "Logout"
+msgstr "Déconnexion"
 
-#~ msgid "MINISTRY OF SECONDARY EDUCATION"
-#~ msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
+#: templates/webnode/dreamer/base.html:100
+#: templates/webnode/dreamer/base.html:239
+msgid "Login"
+msgstr "Connexion"
 
-#~ msgid "Logout"
-#~ msgstr "Déconnexion"
+#: templates/webnode/dreamer/base.html:246
+msgid "Contacts"
+msgstr "Contacts"
 
-#~ msgid "Login"
-#~ msgstr "Connexion"
+#: templates/webnode/dreamer/base.html:274
+msgid "All rights reserved"
+msgstr "Tous droits réservés"
 
-#~ msgid "Contacts"
-#~ msgstr "Contacts"
-
-#~ msgid "All rights reserved"
-#~ msgstr "Tous droits réservés"
-
+#: templates/webnode/dreamer/detail.html:6
 #, fuzzy
-#~ msgid "sur"
-#~ msgstr "Blâme conduite"
+msgid "sur"
+msgstr "Blâme conduite"
 
-#~ msgid "Related posts"
-#~ msgstr "Articles liés"
+#: templates/webnode/dreamer/detail.html:42
+msgid "Related posts"
+msgstr "Articles liés"
 
-#~ msgid "Share"
-#~ msgstr "Partager"
+#: templates/webnode/dreamer/detail.html:54
+msgid "Share"
+msgstr "Partager"
 
 #~ msgid "And be next to them everyday for success."
 #~ msgstr "Et restez proche d'eux chaque jour pour atteindre le succès"

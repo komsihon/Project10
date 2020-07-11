@@ -14,12 +14,10 @@ from django.utils.translation import ugettext as _, activate
 from ikwen.core.models import Application, Service
 from ikwen.core.utils import add_database, send_push
 from ikwen.core.log import CRONS_LOGGING
-from ikwen.accesscontrol.models import Member
 from ikwen.core.utils import get_mail_content
 
-from ikwen_foulassi.foulassi.models import Reminder, SchoolConfig, Parent, Student
-from ikwen_foulassi.foulassi.utils import check_setup_status
-from ikwen_foulassi.school.models import Assignment, Homework, Classroom
+from ikwen_foulassi.foulassi.models import SchoolConfig, Parent, Student
+from ikwen_foulassi.school.models import Classroom
 
 
 logging.config.dictConfig(CRONS_LOGGING)
@@ -32,6 +30,10 @@ DEBUG = False
 def remind_parents():
 
     app = Application.objects.get(slug='foulassi')
+    try:
+        foulassi = Service.objects.using('umbrella').get(project_name_slug='foulassi')
+    except:
+        foulassi = None
 
     for school in Service.objects.filter(app=app):
         diff = datetime.now() - school.since
@@ -50,10 +52,10 @@ def remind_parents():
                 for student in Student.objects.using(db).filter(classroom=classroom):
                     try:
                         # Test whether the homework was submitted
-                        homework = student.homework_set.get(assignment=assignment)
+                        student.homework_set.get(assignment=assignment)
                         continue
                     except:
-                        for parent in Parent.objects.using(db).filter(student=student):
+                        for parent in Parent.objects.using(db).select_related('member').filter(student=student):
                             try:
                                 parent_email = parent.get_email()
                                 parent_name = parent.get_name()
@@ -66,8 +68,9 @@ def remind_parents():
                                 cta_url = 'https://go.ikwen.com' + reverse('foulassi:change_homework', args=(school_config.company_name_slug, student.pk, assignment.pk))
                             except:
                                 cta_url = ''
-                            if parent.member:
-                                activate(parent.member.language)
+                            member = parent.member
+                            if member:
+                                activate(member.language)
                             student_name = student.first_name
                             subject = _("Less than 24 hours remain to turn back your kid's homework")
                             extra_context = {'parent_name': parent_name, 'cta_url': cta_url,
@@ -99,7 +102,8 @@ def remind_parents():
 
                             body = _("%(student_name)s has not yet submit his homework of %(subject)s "
                                      % {'student_name': student_name, 'subject': subject})
-                            send_push(parent.member, subject, body, cta_url)
+                            if member:
+                                send_push(foulassi, member, subject, body, cta_url)
 
 
 if __name__ == '__main__':

@@ -7,6 +7,7 @@ from datetime import timedelta, datetime
 from threading import Thread
 
 import requests
+from currencies.models import Currency
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -29,12 +30,13 @@ from ikwen.core.generic import ChangeObjectBase
 from ikwen.conf.settings import WALLETS_DB_ALIAS, MEDIA_URL, MEMBER_AVATAR
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.models import Application, Service
-from ikwen.core.utils import add_database, get_service_instance, get_mail_content, send_sms, send_push
+from ikwen.core.utils import add_database, get_service_instance, get_mail_content, send_sms, send_push, XEmailMessage
 from ikwen.core.views import HybridListView
 from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen.accesscontrol.models import Member
 from ikwen.accesscontrol.utils import VerifiedEmailTemplateView
 from ikwen.billing.models import MoMoTransaction, CloudBillingPlan, IkwenInvoiceItem, InvoiceEntry
+from ikwen.billing.utils import get_payment_confirmation_message, generate_pdf_invoice, get_invoicing_config_instance
 from ikwen.billing.mtnmomo.views import MTN_MOMO
 from ikwen.theming.models import Theme, Template
 from ikwen.partnership.models import ApplicationRetailConfig
@@ -572,6 +574,27 @@ def confirm_invoice_payment(request, *args, **kwargs):
     student.save(using='default')
 
     share_payment_and_set_stats(invoice, mean)
+    member = invoice.member
+    if member.email:
+        try:
+            currency = Currency.active.default().symbol
+        except:
+            currency = school_config.currency_code
+        invoice_url = school.url + reverse('billing:invoice_detail', args=(invoice.id,))
+        subject, message, sms_text = get_payment_confirmation_message(payment, member)
+        html_content = get_mail_content(subject, message, template_name='billing/mails/notice.html',
+                                        extra_context={'member_name': member.first_name, 'invoice': invoice,
+                                                       'cta': _("View invoice"), 'invoice_url': invoice_url,
+                                                       'currency': currency})
+        sender = '%s <no-reply@%s>' % (school_config.company_name, school.domain)
+        msg = XEmailMessage(subject, html_content, sender, [member.email])
+        msg.content_subtype = "html"
+        try:
+            invoicing_config = get_invoicing_config_instance()
+            invoice_pdf_file = generate_pdf_invoice(invoicing_config, invoice)
+            msg.attach_file(invoice_pdf_file)
+        except:
+            pass
     return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
 
 
@@ -598,7 +621,6 @@ class DeployCloud(VerifiedEmailTemplateView):
         if billing_plan_list.count() > 0:
             context['billing_plan'] = billing_plan_list[0]
         return context
-
 
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)

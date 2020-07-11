@@ -154,7 +154,9 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
             db_folder = theme_db_folder
 
     host = getattr(settings, 'DATABASES')['default'].get('HOST', '127.0.0.1')
-    subprocess.call(['mongorestore', '--host', host, '-d', database, db_folder])
+    from ikwen.core.log import ikwen_error_log_filename
+    eh = open(ikwen_error_log_filename, 'a')
+    subprocess.call(['mongorestore', '--host', host, '-d', database, db_folder], stderr=eh)
     logger.debug("Database %s successfully created on host %s from %s" % (database, host, db_folder))
 
     add_database_to_settings(database)

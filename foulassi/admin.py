@@ -67,7 +67,8 @@ else:
     service = get_service_instance()
     config = service.config
     _fieldsets = [
-        (_('School'), {'fields': ('company_name', 'slogan', 'back_to_school_date', 'session_group_avg')}),
+        (_('Institution'), {'fields': ('company_name', 'slogan', 'registration_number', 'taxpayer_number')}),
+        (_('School'), {'fields': ('back_to_school_date', 'session_group_avg')}),
         (_('Tuition instalments'), {'fields': ('registration_fees_title', 'registration_fees_deadline',
                                                'first_instalment_title', 'first_instalment_deadline',
                                                'second_instalment_title', 'second_instalment_deadline',

@@ -20,6 +20,12 @@
     {% endif %}
     <ul class="nav nav-pills nav-stacked">
         {% if perms.school.ik_manage_school %}
+        <li role="presentation" class="subjects">
+            {% url 'school:subject_list' as subject_list_url %}
+            <a href="{{ subject_list_url }}">{% trans "Subjects" %}</a>
+        </li>
+        {% endif %}
+        {% if perms.school.ik_manage_school %}
         <li role="presentation" class="levels">
             {% url 'school:level_list' as level_list_url %}
             <a href="{{ level_list_url }}">{% trans "Levels" %}</a>
@@ -31,38 +37,31 @@
             <a href="{{ classroom_list_url }}">{% trans "Classrooms" %}</a>
         </li>
         {% endif %}
-        {% if perms.school.ik_manage_school %}
-        <li role="presentation" class="subjects">
-            {% url 'school:subject_list' as subject_list_url %}
-            <a href="{{ subject_list_url }}">{% trans "Subjects" %}</a>
-        </li>
-        {% endif %}
         {% if perms.foulassi.ik_manage_teacher %}
         <li role="presentation" class="teachers">
             {% url 'school:teacher_list' as teacher_list_url %}
             <a href="{{ teacher_list_url }}">{% trans "Teachers" %}</a>
         </li>
         {% endif %}
-        {% if perms.school.ik_manage_school %}
+    </ul>
+    {% if perms.school.ik_manage_school %}
+    <div class="divider"></div>
+    <ul class="nav nav-pills nav-stacked">
         <li role="presentation" class="session-groups">
             {% url 'school:sessiongroup_list' as sessiongroup_list_url %}
             <a href="{{ sessiongroup_list_url }}">{% trans "Session Groups" %}</a>
         </li>
-        {% endif %}
-        {% if perms.school.ik_manage_school %}
         <li role="presentation" class="sessions">
             {% url 'school:session_list' as session_list_url %}
             <a href="{{ session_list_url }}">{% trans "Sessions" %}</a>
         </li>
-        {% endif %}
-        {% if perms.school.ik_manage_school %}
-        <li role="presentation" class="discipline-items">
+        <li role="presentation" class="report-card-headers">
             {% url 'reporting:reportcardheader_list' as reportcardheader_list_url %}
-            <a href="{{ reportcardheader_list_url }}">{% trans "Report Card header" %}</a>
+            <a href="{{ reportcardheader_list_url }}">{% trans "Report Card headers" %}</a>
         </li>
-        {% endif %}
     </ul>
-    {% if perms.billing.ik_manage_payment or perms.billing.ik_view_transaction_log %}
+    {% endif %}
+    {% if perms.billing.ik_manage_invoice or perms.billing.ik_view_transaction_log %}
     <div class="divider"></div>
     <ul class="nav nav-pills nav-stacked">
         <li role="presentation" class="billing">

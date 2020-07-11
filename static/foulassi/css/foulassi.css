@@ -68,6 +68,8 @@ select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-
 .discipline-items li label, .pending-invoices li label {color: #444}
 .pending-invoice .amount {font-size: 36px; height: 37px; line-height: 40px}
 .pending-invoice .amount .currency {font-size: 15px}
+.pending-invoice .actions {cursor: pointer; display: none; float: right; font-size: 18px; margin-top: -21px}
+.pending-invoice:hover .actions {display: block}
 .tab .attention {font-size: 10px;}
 
 .tab.assignments .title-sm {display: inline-block}

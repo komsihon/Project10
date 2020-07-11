@@ -67,12 +67,15 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="actions">
-                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                            <button class="btn btn-sm btn-success btn-block add-discipline-log-entry"
-                                    data-dismiss="modal" aria-label="Close">{% trans "OK" %}</button>
+                        <div class="col-xs-12 col-sm-4 pull-right">
+                            <button class="btn btn-success btn-block add-discipline-log-entry"
+                                    data-dismiss="modal" aria-label="Close">
+                                {% include 'core/snippets/button_spinner.html' %}
+                                <span>{% trans "OK" %}</span>
+                            </button>
                         </div>
-                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                            <button class="btn btn-sm btn-default btn-block"
+                        <div class="col-xs-12 col-sm-4 pull-right">
+                            <button class="btn btn-default btn-block"
                                     data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
                         </div>
                     </div>
@@ -103,11 +106,14 @@
                         <input type="hidden" id="new-invoice-due-date-alt" class="form-control input-sm" />
                     </div>
                     <div class="actions">
-                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                            <button type="button" class="btn btn-sm btn-success btn-block do-add-invoice">{% trans "OK" %}</button>
+                        <div class="col-xs-12 col-sm-4 pull-right">
+                            <button type="button" class="btn btn-success btn-block do-add-invoice">
+                                {% include 'core/snippets/button_spinner.html' %}
+                                <span>{% trans "OK" %}</span>
+                            </button>
                         </div>
-                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                            <button class="btn btn-sm btn-default btn-block"
+                        <div class="col-xs-12 col-sm-4 pull-right">
+                            <button class="btn btn-default btn-block"
                                     data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
                         </div>
                     </div>
@@ -131,11 +137,14 @@
                         <input type="number" id="cash-in-amount" class="form-control input-sm" value="0" />
                     </div>
                     <div class="actions">
-                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                            <button type="button" class="btn btn-sm btn-success btn-block do-cash-in">{% trans "OK" %}</button>
+                        <div class="col-xs-12 col-sm-4 pull-right">
+                            <button type="button" class="btn btn-success btn-block do-cash-in">
+                                {% include 'core/snippets/button_spinner.html' %}
+                                <span>{% trans "OK" %}</span>
+                            </button>
                         </div>
-                        <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
-                            <button class="btn btn-sm btn-default btn-block"
+                        <div class="col-xs-12 col-sm-4 pull-right">
+                            <button class="btn btn-default btn-block"
                                     data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
                         </div>
                     </div>

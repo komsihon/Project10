@@ -11,6 +11,7 @@ from time import strptime
 from ajaxuploader.views import AjaxFileUploader
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.humanize.templatetags.humanize import intcomma
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
@@ -26,7 +27,8 @@ from ikwen.billing.models import InvoiceItem, InvoiceEntry
 from ikwen.billing.utils import get_next_invoice_number
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.utils import get_model_admin_instance, increment_history_field, DefaultUploadBackend, \
-    get_service_instance, add_database, get_mail_content, send_push
+    get_service_instance, get_mail_content, send_push
+from ikwen.core.models import Service
 from ikwen.core.views import HybridListView, ChangeObjectBase
 from ikwen.accesscontrol.backends import UMBRELLA
 
@@ -258,6 +260,33 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                             error = "Unknow server error. Please try again later"
                         break
     return error
+
+
+def notify_parents_for_new_invoice(classroom, label, amount):
+    try:
+        foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
+    except:
+        foulassi = None
+    weblet = get_service_instance()
+    config = weblet.config
+    queryset = Student.objects.filter(classroom=classroom, is_excluded=False)
+    for student in queryset:
+        body = _("We are kindly informing you that a new payment of %(amount)s is expected for %(invoice_title)s "
+                 "of %(student)s." % {'amount': intcomma(amount), 'invoice_title': label,
+                                      'student': student})
+        target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
+        target = target.replace('/foulassi', '')
+
+        parents = student.parent_set.select_related('member').all()
+        for parent in parents:
+            try:
+                member = parent.member
+                if member:
+                    activate(member.language)
+                    send_push(foulassi, member, config.company_name, body, target)
+            except:
+                logger.error("%s - Error in notifications" % weblet.project_name_slug, exc_info=True)
+                continue
 
 
 class StudentUploadBackend(DefaultUploadBackend):
@@ -587,6 +616,7 @@ class ClassroomDetail(ChangeObjectBase):
         elif action == 'add_lesson':
             return self.add_lesson(classroom)
         elif action == 'add_invoice':
+            Thread
             return self.add_invoice(context)
         elif action == 'generate_report_cards':
             from ikwen_foulassi.reporting.models import ReportCardHeader
@@ -681,14 +711,14 @@ class ClassroomDetail(ChangeObjectBase):
         amount = float(self.request.GET['amount'])
         due_date = self.request.GET['due_date']
         failed = []
-        queryset = Student.objects.filter(classroom=classroom)
+        queryset = Student.objects.filter(classroom=classroom, is_excluded=False)
         for student in queryset:
             try:
                 item = InvoiceItem(label=label, amount=amount)
                 entries = [InvoiceEntry(item, total=amount)]
                 number = get_next_invoice_number()
-                Invoice.objects.create(number=number, student=student,
-                                       entries=entries, amount=amount, due_date=due_date)
+                Invoice.objects.create(number=number, student=student, entries=entries,  amount=amount,
+                                       due_date=due_date, last_reminder=datetime.now())
             except:
                 failed.append(student)
         count = queryset.count()
@@ -698,6 +728,7 @@ class ClassroomDetail(ChangeObjectBase):
             response = {'failed': [student.to_dict() for student in queryset]}
         elif len(failed) == count:
             response = {'failed': "Could not place invoices. Contact administrator"}
+        Thread(target=notify_parents_for_new_invoice, args=(classroom, label, amount)).start()
         return HttpResponse(json.dumps(response))
 
     def post(self, request, *args, **kwargs):

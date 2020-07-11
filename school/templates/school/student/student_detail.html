@@ -206,8 +206,9 @@
                 }
                 $('#modal-add-discipline-entry .modal-title').text(title);
                 $('#modal-add-discipline-entry').modal('show');
-            }).on('click', '.add-discipline-log-entry', function() {
-                let action = 'add_discipline_log_entry',
+            }).on('click', '.add-discipline-log-entry:not(.processing)', function() {
+                let _$btn = $(this),
+                    action = 'add_discipline_log_entry',
                     itemId = $('#discipline-item-id').val(),
                     count = $('#discipline-item-count').val(),
                     happenedOn = $('#happened-on-alt').val(),
@@ -225,7 +226,9 @@
                     action: action, item_id: itemId, count: count, happened_on: happenedOn, details: details,
                     send_sms: sendSMS, recipients: recipients, text: text
                 };
+                _$btn.addClass('processing');
                 $.getJSON('', params, function(data) {
+                    _$btn.removeClass('processing');
                     if (data.success) {
                         let $itemCount = $('.discipline-item .' + data.item_slug),
                             newCount = parseInt($itemCount.text()) + parseInt(count),
@@ -243,12 +246,15 @@
                         ikwen.showFloatingNotice(notice, '', 6);
                     }
                 });
-            }).on('click', '.do-add-invoice', function() {
-                let amount = $('#new-invoice-amount').val(),
+            }).on('click', '.do-add-invoice:not(.processing)', function() {
+                let _$btn = $(this),
+                    amount = $('#new-invoice-amount').val(),
                     label = $('#new-invoice-label').val(),
                     dueDate = $('#new-invoice-due-date-alt').val(),
                     params = {action: 'add_invoice', amount: amount, due_date: dueDate, label: label};
+                _$btn.addClass('processing');
                 $.getJSON('', params, function(data) {
+                    _$btn.removeClass('processing');
                     if (data.success) {
                         let $invoice = $('li.pending-invoice.tpl').clone().removeClass('tpl').attr('id', data.id).data('id', data.id);
                         $invoice.find('.amount .value').text(amount);
@@ -265,9 +271,10 @@
                     amount = $(this).data('amount');
                 $('#cash-in-invoice-id').val(invoiceId);
                 $('#cash-in-amount').val(amount);
-            }).on('click', '.do-cash-in', function() {
+            }).on('click', '.do-cash-in:not(.processing)', function() {
                 $('.errorlist.amount').remove();
-                let invoiceId = $('#cash-in-invoice-id').val(),
+                let _$btn = $(this),
+                    invoiceId = $('#cash-in-invoice-id').val(),
                     amount = $('#cash-in-amount').val(),
                     title = $('#' + invoiceId + ' .title').text(),
                     params = {action: 'cash_in', invoice_id: invoiceId, amount: amount};
@@ -278,7 +285,9 @@
                     '</ul>').insertAfter('#invoice-amount');
                     return;
                 }
+                _$btn.addClass('processing');
                 $.getJSON('', params, function(data) {
+                    _$btn.removeClass('processing');
                     if (data.success) {
                         let $invoice = $(`#${invoiceId}`),
                             toBePaid = $invoice.data('to-be-paid'),
