@@ -133,9 +133,10 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     section.site.banner h1 {font-size: 42px;font-weight: 700;line-height: 50px;text-align: left;}
     section.site h2 {font-size: 30px;font-weight: 700;line-height: 42px;text-align:left}
     section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
-    .img.easy-setup {background-image: url('../img/foulassi-easy-setup-xs.png')}
+    .img.easy-setup {background-image: url('../img/foulassi-easy-setup-xs.png');}
     .img.student-follow-up {background-image: url('../img/foulassi-student-follow-up-xs.png');}
     .img.scores-input {background-image: url('../img/foulassi-scores-input-xs.png')}
+    .img.assigment {background-image: url('../img/foulassi-assigment-xs.png')}
     .img.report-cards-generation {background-image: url('../img/foulassi-report-cards-generation.png')}
     .img.dashboard {background-image: url('../img/foulassi-dashboard.png')}
     .img.connect-and-share {background-image: url('../img/foulassi-connect-and-share.png')}

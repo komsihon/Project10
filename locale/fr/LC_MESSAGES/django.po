@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-11 04:08+0000\n"
-"PO-Revision-Date: 2020-07-11 05:09+0100\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2020-08-12 16:59+0000\n"
+"PO-Revision-Date: 2020-08-12 18:58+0100\n"
+"Last-Translator: Wilfried FUTCHEA <wilfriedwillend@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -225,12 +225,10 @@ msgid "Parent Convocation"
 msgstr "Convocation de parent"
 
 #: foulassi/scripts.py:13 reporting/utils.py:427 reporting/utils.py:696
-#: reporting/utils1.py:427 reporting/utils1.py:689
 msgid "Exclusion"
 msgstr "Exclusion"
 
 #: foulassi/scripts.py:14 reporting/utils.py:415 reporting/utils.py:684
-#: reporting/utils1.py:415 reporting/utils1.py:677
 msgid "Lateness"
 msgstr "Retard"
 
@@ -240,12 +238,10 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #: foulassi/scripts.py:16 reporting/utils.py:423 reporting/utils.py:692
-#: reporting/utils1.py:423 reporting/utils1.py:685
 msgid "Censure"
 msgstr "Blâme conduite"
 
 #: foulassi/scripts.py:17 reporting/utils.py:411 reporting/utils.py:680
-#: reporting/utils1.py:411 reporting/utils1.py:673
 msgid "Absence"
 msgstr "Absence"
 
@@ -290,7 +286,7 @@ msgid "Website admin"
 msgstr "Administration site web"
 
 #: foulassi/scripts.py:40
-msgid "Manage invoices and payments"
+msgid "Manage payments"
 msgstr "Gérer les paiements"
 
 #: foulassi/scripts.py:42
@@ -326,38 +322,38 @@ msgstr ""
 "Confirmation de paiement de %(amount).2f %(currency)s pour les frais "
 "scolaires de l'élève %(student_name)s. Merci."
 
-#: foulassi/views.py:332
+#: foulassi/views.py:327
 msgid " New homework sent"
 msgstr ""
 
-#: foulassi/views.py:357
+#: foulassi/views.py:352
 #, python-format
 msgid ""
 "%(student_name)s from %(classroom)s sent his assignment of %(subject)s about "
 "%(assignment_name)s"
 msgstr ""
 
-#: foulassi/views.py:420
+#: foulassi/views.py:415
 #, python-format
 msgid "Mrs %s"
 msgstr "Mme %s"
 
-#: foulassi/views.py:422
+#: foulassi/views.py:417
 #, python-format
 msgid "Mr %s"
 msgstr "M. %s"
 
-#: foulassi/views.py:424
+#: foulassi/views.py:419
 #, python-format
 msgid "The parent %s"
 msgstr "Le parent %s"
 
-#: foulassi/views.py:425
+#: foulassi/views.py:420
 msgid "I would like to follow my kids in your school on Foulassi."
 msgstr ""
 "J'aimerais pouvoir suivre mes enfants dans votre établissement sur Foulassi."
 
-#: foulassi/views.py:438
+#: foulassi/views.py:433
 #, python-format
 msgid ""
 "%(parent_name)s would like to follow his kid(s) below on ikwen Foulassi:\n"
@@ -367,15 +363,15 @@ msgstr ""
 "Foulassi:\n"
 "%(kids_details)s"
 
-#: foulassi/views.py:592
+#: foulassi/views.py:587
 msgid "View invoice"
 msgstr "Voir la facture"
 
-#: foulassi/views.py:671
+#: foulassi/views.py:666
 msgid "Foulassi deployment"
 msgstr "Déploiement Foulassi"
 
-#: foulassi/views.py:675
+#: foulassi/views.py:670
 msgid "Website theme"
 msgstr "Thème du site web"
 
@@ -447,8 +443,7 @@ msgstr ""
 
 #: foulassi/templates/foulassi/admin_home.html:5
 #: foulassi/templates/foulassi/admin_home.html:15
-#: templates/core/app_base_admin.html:8 templates/webnode/dreamer/base.html:230
-#: templates/webnode/dreamer/home.html:8
+#: templates/core/app_base_admin.html:8
 msgid "Home"
 msgstr "Accueil"
 
@@ -946,36 +941,35 @@ msgid "Discover"
 msgstr "Découvrez"
 
 #: foulassi/templates/foulassi/home.html:383
-#: foulassi/templates/foulassi/home_saas.html:454
+#: foulassi/templates/foulassi/home_saas.html:483
 #: templates/core/base_admin.html:196
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
 #: foulassi/templates/foulassi/home.html:385
-#: foulassi/templates/foulassi/home_saas.html:456
-#: templates/core/base_admin.html:197 templates/webnode/dreamer/base.html:275
+#: foulassi/templates/foulassi/home_saas.html:485
+#: templates/core/base_admin.html:197
 msgid "Legal mentions"
 msgstr "Mentions légales"
 
 #: foulassi/templates/foulassi/home.html:391
-#: foulassi/templates/foulassi/home_saas.html:462
+#: foulassi/templates/foulassi/home_saas.html:491
 #: templates/core/app_base_admin.html:118
-#: templates/webnode/dreamer/base.html:256
 msgid "Blog"
 msgstr "Blog"
 
 #: foulassi/templates/foulassi/home.html:392
-#: foulassi/templates/foulassi/home_saas.html:463
+#: foulassi/templates/foulassi/home_saas.html:492
 msgid "Support"
 msgstr "Support"
 
 #: foulassi/templates/foulassi/home.html:393
-#: foulassi/templates/foulassi/home_saas.html:464
+#: foulassi/templates/foulassi/home_saas.html:493
 msgid "Terms & conditions"
 msgstr "Termes et Conditions"
 
 #: foulassi/templates/foulassi/home.html:394
-#: foulassi/templates/foulassi/home_saas.html:465
+#: foulassi/templates/foulassi/home_saas.html:494
 msgid "About ikwen"
 msgstr "À propos de ikwen"
 
@@ -1014,7 +1008,7 @@ msgstr ""
 "                            "
 
 #: foulassi/templates/foulassi/home_saas.html:50
-#: foulassi/templates/foulassi/home_saas.html:445
+#: foulassi/templates/foulassi/home_saas.html:474
 msgid "DEPLOY"
 msgstr "DÉPLOYER"
 
@@ -1127,14 +1121,39 @@ msgstr ""
 
 #: foulassi/templates/foulassi/home_saas.html:193
 #: foulassi/templates/foulassi/home_saas.html:204
-msgid "Report cards generation"
-msgstr "Génération des bulletins"
+msgid "Online assigment"
+msgstr "Devoir en ligne"
 
 #: foulassi/templates/foulassi/home_saas.html:195
 #: foulassi/templates/foulassi/home_saas.html:206
 msgid ""
 "\n"
-"                            Get notified when all teachers have input their "
+"                            Enjoy the power of NTIC by directly sending "
+"assignments thought Foulassi. Define a\n"
+"                            deadline for filing and prepare a general "
+"correction available on it.\n"
+"                            You can also easily track student's answers "
+"submissions.\n"
+"                        "
+msgstr ""
+"\n"
+"                            Profitez du confort offert par les nouvelles \n"
+"technologies en envoyant directement les \n"
+"devoirs depuis la plateforme. Définissez une \n"
+"date limite de dépôt et préparer une correction générale disponible à "
+"échéance.\n"
+"Suivez également en toute simplicité les soumissions des réponses par les "
+"élèves.                        "
+
+#: foulassi/templates/foulassi/home_saas.html:223
+msgid "Report cards generation"
+msgstr "Génération des bulletins"
+
+#: foulassi/templates/foulassi/home_saas.html:225
+#: foulassi/templates/foulassi/home_saas.html:236
+msgid ""
+"\n"
+"                             Get notified when all teachers have input their "
 "scores for a session. Simply click on\n"
 "                            the button to generate reports cards. Process is "
 "done on our cloud and you can come back\n"
@@ -1149,8 +1168,12 @@ msgstr ""
 "infrastructure et vous revenez plus tard pour juste télécharger les fichiers "
 "regroupés par classes."
 
-#: foulassi/templates/foulassi/home_saas.html:223
-#: foulassi/templates/foulassi/home_saas.html:233
+#: foulassi/templates/foulassi/home_saas.html:234
+msgid "REport cards generation"
+msgstr "Génération des bulletins"
+
+#: foulassi/templates/foulassi/home_saas.html:253
+#: foulassi/templates/foulassi/home_saas.html:263
 #: reporting/templates/reporting/dashboard.html:5
 #: reporting/templates/reporting/dashboard.html:16
 #: reporting/templates/reporting/discipline_detail.html:5
@@ -1159,8 +1182,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: foulassi/templates/foulassi/home_saas.html:225
-#: foulassi/templates/foulassi/home_saas.html:235
+#: foulassi/templates/foulassi/home_saas.html:255
 msgid ""
 "\n"
 "                            See detailed statistics on all what is going on "
@@ -1174,13 +1196,27 @@ msgstr ""
 "sessions.\n"
 "                            "
 
-#: foulassi/templates/foulassi/home_saas.html:252
-#: foulassi/templates/foulassi/home_saas.html:268
-msgid "Connect and share with parents"
+#: foulassi/templates/foulassi/home_saas.html:265
+msgid ""
+"\n"
+"                             See detailed statistics on all what is going on "
+"in your school from a single screen.\n"
+"                            Easily switch between periods and sessions.\n"
+"                        "
+msgstr ""
+"\n"
+"Accédez à des statistiques détaillées sur tout ce qui se passe dans votre "
+"école sur un seul écran. Naviguez aisément entre les périodes et les "
+"sessions.\n"
+"                            "
+
+#: foulassi/templates/foulassi/home_saas.html:281
+#: foulassi/templates/foulassi/home_saas.html:297
+msgid "Connect & Share with parents"
 msgstr "Échangez directement avec les parents"
 
-#: foulassi/templates/foulassi/home_saas.html:254
-#: foulassi/templates/foulassi/home_saas.html:270
+#: foulassi/templates/foulassi/home_saas.html:283
+#: foulassi/templates/foulassi/home_saas.html:299
 msgid ""
 "\n"
 "                            Add parents'contacts in students data and "
@@ -1206,18 +1242,18 @@ msgstr ""
 "paient en ligne par Mobile Money\n"
 "                            et l’argent va sur le compte de l’école."
 
-#: foulassi/templates/foulassi/home_saas.html:261
-#: foulassi/templates/foulassi/home_saas.html:278
+#: foulassi/templates/foulassi/home_saas.html:290
+#: foulassi/templates/foulassi/home_saas.html:306
 msgid "See details"
 msgstr "Voir les détails"
 
-#: foulassi/templates/foulassi/home_saas.html:292
-#: foulassi/templates/foulassi/home_saas.html:305
+#: foulassi/templates/foulassi/home_saas.html:322
+#: foulassi/templates/foulassi/home_saas.html:335
 msgid "Online payment"
 msgstr "Paiements en ligne"
 
-#: foulassi/templates/foulassi/home_saas.html:294
-#: foulassi/templates/foulassi/home_saas.html:307
+#: foulassi/templates/foulassi/home_saas.html:324
+#: foulassi/templates/foulassi/home_saas.html:337
 msgid ""
 "\n"
 "                            Yes, your platform accepts online payment for "
@@ -1239,11 +1275,11 @@ msgstr ""
 "bancaire. Vous avez une vue détaillée sur toutes ces transactions et l’état "
 "de vos encaissements en ligne."
 
-#: foulassi/templates/foulassi/home_saas.html:323
+#: foulassi/templates/foulassi/home_saas.html:352
 msgid "Why use Foulassi ?"
 msgstr "Pourquoi passer à Foulassi ?"
 
-#: foulassi/templates/foulassi/home_saas.html:325
+#: foulassi/templates/foulassi/home_saas.html:354
 msgid ""
 "Foulassi will set you free from some annoying tasks, while providing you "
 "with continuous improvements."
@@ -1251,11 +1287,11 @@ msgstr ""
 "Foulassi va vous décharger de bien de tâches ennuyeuses, en vous apportant "
 "des améliorations en continu."
 
-#: foulassi/templates/foulassi/home_saas.html:331
+#: foulassi/templates/foulassi/home_saas.html:360
 msgid "Back-up and archiving"
 msgstr "Sauvegarde et archivage"
 
-#: foulassi/templates/foulassi/home_saas.html:333
+#: foulassi/templates/foulassi/home_saas.html:362
 msgid ""
 "\n"
 "                        We offer automatic backup and archiving of your data "
@@ -1272,11 +1308,11 @@ msgstr ""
 "toujours revenir sur les années précédentes et voir les données exactement "
 "comme elles étaient."
 
-#: foulassi/templates/foulassi/home_saas.html:342
+#: foulassi/templates/foulassi/home_saas.html:371
 msgid "Free and continuous improvements"
 msgstr "Des améliorations gratuites et en continu"
 
-#: foulassi/templates/foulassi/home_saas.html:344
+#: foulassi/templates/foulassi/home_saas.html:373
 msgid ""
 "\n"
 "                        We have a wonderful team of experienced developers "
@@ -1290,11 +1326,11 @@ msgstr ""
 "travaillent chaque jour sur la base de vos problèmes et attentes, rendant la "
 "plateforme meilleure de jour en jour."
 
-#: foulassi/templates/foulassi/home_saas.html:352
+#: foulassi/templates/foulassi/home_saas.html:381
 msgid "You have a website and blog"
 msgstr "Un site internet et un blog en cadeau"
 
-#: foulassi/templates/foulassi/home_saas.html:354
+#: foulassi/templates/foulassi/home_saas.html:383
 msgid ""
 "\n"
 "                        Foulassi gives you a modern and free website on the "
@@ -1311,57 +1347,79 @@ msgstr ""
 "\">monetablissement.org</em>, achetez simplement ce nom de domaine là et "
 "remplacez celui par défaut."
 
-#: foulassi/templates/foulassi/home_saas.html:367
+#: foulassi/templates/foulassi/home_saas.html:396
 #: foulassi/templates/foulassi/cloud_setup/deploy.html:18
 msgid "Deploy now"
 msgstr "Déployer maintenant"
 
-#: foulassi/templates/foulassi/home_saas.html:369
+#: foulassi/templates/foulassi/home_saas.html:398
 msgid "START YOUR FREE TRIAL"
-msgstr ""
+msgstr "ESSAYER GRATUITEMENT"
 
-#: foulassi/templates/foulassi/home_saas.html:379
+#: foulassi/templates/foulassi/home_saas.html:408
 msgid ""
 "\n"
 "                                <p class=\"mobile-center\"> Take this offer "
 "from <span class=\"ribbon-price\"> <span style=\"font-size: 2rem\">XAF</"
-"span> 99,000/year.</span></p>\n"
+"span> 199,000/year.</span></p>\n"
 "                                <p><span class=\"highlight\">Connect</span> "
 "staff and parents with the <span class=\"highlight\">student</span>\n"
 "                                 and benefit all the features FOULASSI has "
 "to offer.</p>\n"
 "                                <p class=\"mobile-center\" style=\"margin-"
-"bottom: 3vh\">Start your two-months free trial <span class=\"highlight"
-"\">right now!</span> </p>\n"
+"bottom: 3vh\">Start your free trial month <span class=\"highlight\">right "
+"now!</span> </p>\n"
 "                             "
 msgstr ""
+"\n"
+"                                <p class=\"mobile-center\">Bénéficiez de "
+"cette offre à partir de <span class=\"ribbon-price\"> <span style=\"font-"
+"size: 2rem\">XAF</span> 199.000/an.</span></p>\n"
+"                                <p><span class=\"highlight\">Connectez  "
+"enseignants et parents avec les élèves</span>\n"
+"                                 et bénéficiez de toutes les fonctionnalités "
+"offertes par FOULASSI.</p>\n"
+"                                <p class=\"mobile-center\" style=\"margin-"
+"bottom: 3vh\">Commencez votre mois d'essai gratuit !</p>\n"
+"                             "
 
-#: foulassi/templates/foulassi/home_saas.html:385
-#: foulassi/templates/foulassi/home_saas.html:397
+#: foulassi/templates/foulassi/home_saas.html:414
+#: foulassi/templates/foulassi/home_saas.html:426
 msgid "START"
-msgstr ""
+msgstr "COMMENCER"
 
-#: foulassi/templates/foulassi/home_saas.html:391
+#: foulassi/templates/foulassi/home_saas.html:420
 msgid ""
 "\n"
 "                                 <p  class=\"mobile-center\"> Take this "
 "offer from <span class=\"ribbon-price\"> <span style=\"font-size: 2rem\" "
-">XAF</span>  99,000/year.</span></p>\n"
+">XAF</span>  199,000/year.</span></p>\n"
 "                                <p><span class=\"highlight\">Connect</span> "
 "staff and parents with the <span class=\"highlight\">student</span>\n"
 "                                 and benefit all the features FOULASSI has "
 "to offer.</p>\n"
 "                                <p class=\"mobile-center\" style=\"margin-"
-"bottom: 3vh\">Start your two-months free trial <span class=\"highlight"
-"\">right now!</span> </p>\n"
+"bottom: 3vh\">Start your free trial month <span class=\"highlight\">right "
+"now!</span> </p>\n"
 "                             "
 msgstr ""
+"\n"
+"                                <p class=\"mobile-center\">Bénéficiez de "
+"cette offre à partir de <span class=\"ribbon-price\"> <span style=\"font-"
+"size: 2rem\">XAF</span> 199.000/an.</span></p>\n"
+"                                <p><span class=\"highlight\">Connectez  "
+"enseignants et parents avec les élèves</span>\n"
+"                                 et bénéficiez de toutes les fonctionnalités "
+"offertes par FOULASSI.</p>\n"
+"                                <p class=\"mobile-center\" style=\"margin-"
+"bottom: 3vh\">Commencez votre mois d'essai gratuit !</p>\n"
+"                             "
 
-#: foulassi/templates/foulassi/home_saas.html:407
+#: foulassi/templates/foulassi/home_saas.html:436
 msgid "You're in good company"
 msgstr "Vous êtes entre de bonnes mains"
 
-#: foulassi/templates/foulassi/home_saas.html:408
+#: foulassi/templates/foulassi/home_saas.html:437
 msgid ""
 "\n"
 "                We have been on the field for many years, building and "
@@ -1377,7 +1435,7 @@ msgstr ""
 "problèmes critiques de certaines grandes entreprises des TIC au Cameroun. "
 "Rejoignez ces organisations en toute quiétude."
 
-#: foulassi/templates/foulassi/home_saas.html:442
+#: foulassi/templates/foulassi/home_saas.html:471
 msgid ""
 "\n"
 "            Deploy your <strong>Foulassi Weblet</strong> now and start "
@@ -1671,19 +1729,19 @@ msgstr ""
 
 #: foulassi/templates/foulassi/sign_in.html:83
 msgid "Email or phone"
-msgstr ""
+msgstr "Email ou phone"
 
 #: foulassi/templates/foulassi/sign_in.html:88
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 #: foulassi/templates/foulassi/sign_in.html:100
 msgid "Login with <strong>ikwen</strong>"
-msgstr ""
+msgstr "Connectez vous avec <strong>ikwen</strong>"
 
 #: foulassi/templates/foulassi/sign_in.html:104
 msgid "Forgotten password ?"
-msgstr ""
+msgstr "Mot de passe oublié ?"
 
 #: foulassi/templates/foulassi/sign_in.html:108
 msgid "No account yet ?"
@@ -2113,8 +2171,7 @@ msgid "Close session"
 msgstr "Boucler cette séquence"
 
 #: foulassi/templates/foulassi/events/report_cards_generated.html:34
-#: reporting/utils.py:419 reporting/utils.py:688 reporting/utils1.py:419
-#: reporting/utils1.py:681
+#: reporting/utils.py:419 reporting/utils.py:688
 msgid "Warning"
 msgstr "Attention"
 
@@ -2423,18 +2480,6 @@ msgstr "Résultats"
 #: reporting/utils.py:608 reporting/utils.py:885
 msgid "Council decision"
 msgstr "Décisions du conseil de classe"
-
-#: reporting/utils1.py:608 reporting/utils1.py:878
-msgid "REPUBLIC OF CAMEROON"
-msgstr "RÉPUBLIQUE DU CAMEROUN"
-
-#: reporting/utils1.py:609 reporting/utils1.py:879
-msgid "Peace - Work - Fatherland"
-msgstr "Paix - Travail - Patrie"
-
-#: reporting/utils1.py:610 reporting/utils1.py:880
-msgid "MINISTRY OF SECONDARY EDUCATION"
-msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
 
 #: reporting/views.py:239
 #, python-format
@@ -4157,42 +4202,39 @@ msgstr "Cycle de facturation mis à jour avec succès."
 msgid "You are about to transfer ownership to "
 msgstr "Vous êtes sur le point de transférer votre propriété à "
 
-#: templates/webnode/dreamer/base.html:92
-#: templates/webnode/dreamer/base.html:193
-msgid "Account setup"
-msgstr "Infos compte"
+#~ msgid "REPUBLIC OF CAMEROON"
+#~ msgstr "RÉPUBLIQUE DU CAMEROUN"
 
-#: templates/webnode/dreamer/base.html:94
-#: templates/webnode/dreamer/base.html:195
-#: templates/webnode/dreamer/base.html:241
-msgid "Logout"
-msgstr "Déconnexion"
+#~ msgid "Peace - Work - Fatherland"
+#~ msgstr "Paix - Travail - Patrie"
 
-#: templates/webnode/dreamer/base.html:100
-#: templates/webnode/dreamer/base.html:239
-msgid "Login"
-msgstr "Connexion"
+#~ msgid "MINISTRY OF SECONDARY EDUCATION"
+#~ msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
 
-#: templates/webnode/dreamer/base.html:246
-msgid "Contacts"
-msgstr "Contacts"
+#~ msgid "Account setup"
+#~ msgstr "Infos compte"
 
-#: templates/webnode/dreamer/base.html:274
-msgid "All rights reserved"
-msgstr "Tous droits réservés"
+#~ msgid "Logout"
+#~ msgstr "Déconnexion"
 
-#: templates/webnode/dreamer/detail.html:6
+#~ msgid "Login"
+#~ msgstr "Connexion"
+
+#~ msgid "Contacts"
+#~ msgstr "Contacts"
+
+#~ msgid "All rights reserved"
+#~ msgstr "Tous droits réservés"
+
 #, fuzzy
-msgid "sur"
-msgstr "Blâme conduite"
+#~ msgid "sur"
+#~ msgstr "Blâme conduite"
 
-#: templates/webnode/dreamer/detail.html:42
-msgid "Related posts"
-msgstr "Articles liés"
+#~ msgid "Related posts"
+#~ msgstr "Articles liés"
 
-#: templates/webnode/dreamer/detail.html:54
-msgid "Share"
-msgstr "Partager"
+#~ msgid "Share"
+#~ msgstr "Partager"
 
 #~ msgid ""
 #~ "You are summoned to school on %(summon_date)s about your child %(student)s"

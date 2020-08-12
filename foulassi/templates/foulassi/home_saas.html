@@ -22,7 +22,7 @@
 {% block head_style %}
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />
-    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=22.05.20.20.15" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=20.08.12.18.49" />
 {% endblock %}
 
 {% block header_brand %}
@@ -187,26 +187,26 @@
     <section class="features site">
         <div class="container">
             <div class="row features">
-                <div class="col-sm-6 img report-cards-generation">
-                    <img class="img-responsive visible-xs" src="{% static 'foulassi/img/foulassi-report-cards-generation.png' %}">
+                <div class="col-sm-6 img assigment">
+                    <img class="img-responsive visible-xs" src="{% static 'foulassi/img/foulassi-assigment-xs.png' %}">
                     {# Force DIV height by putting the same text and set visibility to hidden #}
-                    <h2 class="hidden-xs" style="visibility: hidden">{% trans "Report cards generation" %}</h2>
+                    <h2 class="hidden-xs" style="visibility: hidden">{% trans "Online assigment" %}</h2>
                     <div class="desc hidden-xs" style="visibility: hidden">
                         <p>{% blocktrans %}
-                            Get notified when all teachers have input their scores for a session. Simply click on
-                            the button to generate reports cards. Process is done on our cloud and you can come back
-                            later just to download the files grouped by classrooms.
+                            Enjoy the power of NTIC by directly sending assignments thought Foulassi. Define a
+                            deadline for filing and prepare a general correction available on it.
+                            You can also easily track student's answers submissions.
                         {% endblocktrans %}</p>
                     </div>
                     {# End Force DIV height #}
                 </div>
-                <div class="col-sm-6">
-                    <h2>{% trans "Report cards generation" %}</h2>
+                <div class="col-sm-6 description">
+                    <h2>{% trans "Online assigment" %}</h2>
                     <div class="desc">
                         <p>{% blocktrans %}
-                            Get notified when all teachers have input their scores for a session. Simply click on
-                            the button to generate reports cards. Process is done on our cloud and you can come back
-                            later just to download the files grouped by classrooms.
+                            Enjoy the power of NTIC by directly sending assignments thought Foulassi. Define a
+                            deadline for filing and prepare a general correction available on it.
+                            You can also easily track student's answers submissions.
                         {% endblocktrans %}</p>
                     </div>
                 </div>
@@ -217,18 +217,38 @@
         <div class="container">
             <div class="row features">
                 <div class="col-sm-6 visible-xs">
-                    <img class="img-responsive" src="{% static 'foulassi/img/foulassi-dashboard.png' %}">
+                    <img class="img-responsive" src="{% static 'foulassi/img/foulassi-report-cards-generation.png' %}">
                 </div>
                 <div class="col-sm-6">
-                    <h2>{% trans "Dashboard" %}</h2>
+                    <h2>{% trans "Report cards generation" %}</h2>
                     <div class="desc">
                         <p>{% blocktrans %}
-                            See detailed statistics on all what is going on in your school from a single screen.
-                            Easily switch between periods and sessions.
+                             Get notified when all teachers have input their scores for a session. Simply click on
+                            the button to generate reports cards. Process is done on our cloud and you can come back
+                            later just to download the files grouped by classrooms.
                         {% endblocktrans %}</p>
                     </div>
                 </div>
-                <div class="col-sm-6 img dashboard hidden-xs">
+                <div class="col-sm-6 img report-cards-generation hidden-xs">
+                    {# Force DIV height by putting the same text and set visibility to hidden #}
+                    <h2 class="hidden-xs" style="visibility: hidden">{% trans "REport cards generation" %}</h2>
+                    <div class="desc hidden-xs" style="visibility: hidden">
+                        <p>{% blocktrans %}
+                             Get notified when all teachers have input their scores for a session. Simply click on
+                            the button to generate reports cards. Process is done on our cloud and you can come back
+                            later just to download the files grouped by classrooms.
+                        {% endblocktrans %}</p>
+                    </div>
+                    {# End Force DIV height #}
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features site">
+        <div class="container">
+            <div class="row features">
+                <div class="col-sm-6 img dashboard">
+                    <img class="img-responsive visible-xs" src="{% static 'foulassi/img/foulassi-dashboard.png' %}">
                     {# Force DIV height by putting the same text and set visibility to hidden #}
                     <h2 class="hidden-xs" style="visibility: hidden">{% trans "Dashboard" %}</h2>
                     <div class="desc hidden-xs" style="visibility: hidden">
@@ -239,17 +259,42 @@
                     </div>
                     {# End Force DIV height #}
                 </div>
+                <div class="col-sm-6">
+                    <h2>{% trans "Dashboard" %}</h2>
+                    <div class="desc">
+                        <p>{% blocktrans %}
+                             See detailed statistics on all what is going on in your school from a single screen.
+                            Easily switch between periods and sessions.
+                        {% endblocktrans %}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-    <section class="features site my-kids">
+    <section class="features site">
         <div class="container">
             <div class="row features">
-                {% url 'foulassi:home' as details_connect_and_share_url %}
-                <div class="col-sm-6 img connect-and-share">
-                    <img class="img-responsive visible-xs" src="{% static 'foulassi/img/foulassi-connect-and-share.png' %}">
+                <div class="col-sm-6 visible-xs">
+                    <img class="img-responsive" src="{% static 'foulassi/img/foulassi-connect-and-share.png' %}">
+                </div>
+                <div class="col-sm-6">
+                    <h2>{% trans "Connect & Share with parents" %}</h2>
+                    <div class="desc">
+                       <p>{% blocktrans %}
+                            Add parents'contacts in students data and parents will be automatically suggested to follow
+                            his child on <strong>MyKids</strong> app. Parents can also request for access to student information.
+                            Once connected, they have real-time view on all student data as you put them online.
+                            This can be offered to parent as a paid service. They pay online and money goes to the
+                            school account.{% endblocktrans %}<br>
+                            <a href="{{ details_connect_and_share_url }}">
+                                {% trans "See details" %} <i class="fa fa-arrow-circle-right"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-6 img connect-and-share hidden-xs">
                     {# Force DIV height by putting the same text and set visibility to hidden #}
-                    <h2 class="hidden-xs" style="visibility: hidden">{% trans "Connect and share with parents" %}</h2>
+                    <h2 class="hidden-xs" style="visibility: hidden">{% trans "Connect & Share with parents" %}</h2>
                     <div class="desc hidden-xs" style="visibility: hidden">
                         <p>{% blocktrans %}
                             Add parents'contacts in students data and parents will be automatically suggested to follow
@@ -264,47 +309,19 @@
                     </div>
                     {# End Force DIV height #}
                 </div>
-                <div class="col-sm-6">
-                    <h2>{% trans "Connect and share with parents" %}</h2>
-                    <div class="desc" style="text-align: justify">
-                        <p>{% blocktrans %}
-                            Add parents'contacts in students data and parents will be automatically suggested to follow
-                            his child on <strong>MyKids</strong> app. Parents can also request for access to student information.
-                            Once connected, they have real-time view on all student data as you put them online.
-                            This can be offered to parent as a paid service. They pay online and money goes to the
-                            school account.{% endblocktrans %}<br>
-                        </p>
-                        <a href="{{ details_connect_and_share_url }}">
-                            {% trans "See details" %} <i class="fa fa-arrow-circle-right"></i>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
-    <section class="features site">
+    <section class="features site my-kids">
         <div class="container">
             <div class="row features">
-                <div class="col-sm-6 visible-xs">
-                    <img class="img-responsive" src="{% static 'foulassi/img/foulassi-online-payment.png' %}">
-                </div>
-                <div class="col-sm-6">
-                    <h2>{% trans "Online payment" %}</h2>
-                    <div class="desc">
-                        <p>{% blocktrans %}
-                            Yes, your platform accepts online payment for school fees or everything else,
-                            and you collect money on your bank account. Once parents can follow their child online,
-                            they can see whatever is due and pay by themselves using whatever Mobile Money wallet or
-                            bank account. You have detailed information about those transactions and status
-                            of your online wallet.
-                        {% endblocktrans %}</p>
-                    </div>
-                </div>
+                {% url 'foulassi:home' as details_connect_and_share_url %}
                 <div class="col-sm-6 img online-payment">
+                    <img class="img-responsive visible-xs" src="{% static 'foulassi/img/foulassi-online-payment.png' %}">
                     {# Force DIV height by putting the same text and set visibility to hidden #}
                     <h2 class="hidden-xs" style="visibility: hidden">{% trans "Online payment" %}</h2>
                     <div class="desc hidden-xs" style="visibility: hidden">
-                        <p>{% blocktrans %}
+                       <p>{% blocktrans %}
                             Yes, your platform accepts online payment for school fees or everything else,
                             and you collect money on your bank account. Once parents can follow their child online,
                             they can see whatever is due and pay by themselves using whatever Mobile Money wallet or
@@ -313,6 +330,18 @@
                         {% endblocktrans %}</p>
                     </div>
                     {# End Force DIV height #}
+                </div>
+                <div class="col-sm-6">
+                    <h2>{% trans "Online payment" %}</h2>
+                    <div class="desc" style="text-align: justify">
+                       <p>{% blocktrans %}
+                            Yes, your platform accepts online payment for school fees or everything else,
+                            and you collect money on your bank account. Once parents can follow their child online,
+                            they can see whatever is due and pay by themselves using whatever Mobile Money wallet or
+                            bank account. You have detailed information about those transactions and status
+                            of your online wallet.
+                        {% endblocktrans %}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -377,10 +406,10 @@
                         {# Force DIV height by putting the same text and set visibility to hidden #}
                         <div class="desc hidden-xs" style="visibility: hidden">
                             {% blocktrans %}
-                                <p class="mobile-center"> Take this offer from <span class="ribbon-price"> <span style="font-size: 2rem">XAF</span> 99,000/year.</span></p>
+                                <p class="mobile-center"> Take this offer from <span class="ribbon-price"> <span style="font-size: 2rem">XAF</span> 199,000/year.</span></p>
                                 <p><span class="highlight">Connect</span> staff and parents with the <span class="highlight">student</span>
                                  and benefit all the features FOULASSI has to offer.</p>
-                                <p class="mobile-center" style="margin-bottom: 3vh">Start your two-months free trial <span class="highlight">right now!</span> </p>
+                                <p class="mobile-center" style="margin-bottom: 3vh">Start your free trial month <span class="highlight">right now!</span> </p>
                              {% endblocktrans %}
                             <a class="btn btn-md cta" href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}" style="margin-bottom: 2vh">{% trans "START" %}</a>
                         </div>
@@ -389,10 +418,10 @@
                     <div class="col-sm-6">
                         <div class="desc">
                              {% blocktrans %}
-                                 <p  class="mobile-center"> Take this offer from <span class="ribbon-price"> <span style="font-size: 2rem" >XAF</span>  99,000/year.</span></p>
+                                 <p  class="mobile-center"> Take this offer from <span class="ribbon-price"> <span style="font-size: 2rem" >XAF</span>  199,000/year.</span></p>
                                 <p><span class="highlight">Connect</span> staff and parents with the <span class="highlight">student</span>
                                  and benefit all the features FOULASSI has to offer.</p>
-                                <p class="mobile-center" style="margin-bottom: 3vh">Start your two-months free trial <span class="highlight">right now!</span> </p>
+                                <p class="mobile-center" style="margin-bottom: 3vh">Start your free trial month <span class="highlight">right now!</span> </p>
                              {% endblocktrans %}
                             <a class="btn btn-md cta" href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}" style="margin-bottom: 2vh">{% trans "START" %}</a>
                         </div>
