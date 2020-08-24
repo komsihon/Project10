@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-12 16:59+0000\n"
-"PO-Revision-Date: 2020-08-12 18:58+0100\n"
+"POT-Creation-Date: 2020-08-24 16:41+0000\n"
+"PO-Revision-Date: 2020-08-24 17:43+0100\n"
 "Last-Translator: Wilfried FUTCHEA <wilfriedwillend@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1121,29 +1121,34 @@ msgstr ""
 
 #: foulassi/templates/foulassi/home_saas.html:193
 #: foulassi/templates/foulassi/home_saas.html:204
-msgid "Online assigment"
-msgstr "Devoir en ligne"
+msgid " NEW "
+msgstr " Nouveau "
+
+#: foulassi/templates/foulassi/home_saas.html:193
+#: foulassi/templates/foulassi/home_saas.html:204
+msgid " Online assignments "
+msgstr " Devoirs en ligne "
 
 #: foulassi/templates/foulassi/home_saas.html:195
 #: foulassi/templates/foulassi/home_saas.html:206
 msgid ""
 "\n"
-"                            Enjoy the power of NTIC by directly sending "
-"assignments thought Foulassi. Define a\n"
-"                            deadline for filing and prepare a general "
-"correction available on it.\n"
-"                            You can also easily track student's answers "
-"submissions.\n"
+"                            Teachers can publish assignments for their "
+"classrooms with deadline defined\n"
+"                            and parents get notified instantaneously on "
+"<strong>MyKids</strong> app.\n"
+"                            When students submit their homework, teachers "
+"can view and leave comments.\n"
 "                        "
 msgstr ""
 "\n"
-"                            Profitez du confort offert par les nouvelles \n"
-"technologies en envoyant directement les \n"
-"devoirs depuis la plateforme. Définissez une \n"
-"date limite de dépôt et préparer une correction générale disponible à "
-"échéance.\n"
-"Suivez également en toute simplicité les soumissions des réponses par les "
-"élèves.                        "
+"                           Les enseignants ont désormais la possibilité de "
+"publier les devoirs via la plateforme en y incluant un délai,\n"
+"                            et les parents reçoivent une notification sur "
+"leur application <strong>MyKids</strong>.\n"
+"                            Lorsque les élèves soumettent leur travail, "
+"l'enseignant concerné le voit et peut commenter en temps réel.\n"
+"                        "
 
 #: foulassi/templates/foulassi/home_saas.html:223
 msgid "Report cards generation"
@@ -4201,6 +4206,9 @@ msgstr "Cycle de facturation mis à jour avec succès."
 #: templates/core/service_detail.html:234
 msgid "You are about to transfer ownership to "
 msgstr "Vous êtes sur le point de transférer votre propriété à "
+
+#~ msgid " Online assignments"
+#~ msgstr " Devoirs en ligne"
 
 #~ msgid "REPUBLIC OF CAMEROON"
 #~ msgstr "RÉPUBLIQUE DU CAMEROUN"

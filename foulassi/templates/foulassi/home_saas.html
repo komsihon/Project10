@@ -22,7 +22,7 @@
 {% block head_style %}
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />
-    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=20.08.12.18.49" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=20.08.24.17.45" />
 {% endblock %}
 
 {% block header_brand %}
@@ -190,23 +190,23 @@
                 <div class="col-sm-6 img assigment">
                     <img class="img-responsive visible-xs" src="{% static 'foulassi/img/foulassi-assigment-xs.png' %}">
                     {# Force DIV height by putting the same text and set visibility to hidden #}
-                    <h2 class="hidden-xs" style="visibility: hidden">{% trans "Online assigment" %}</h2>
+                    <h2 class="hidden-xs" style="visibility: hidden"><span class="badge">{% trans " NEW " %}</span>{% trans " Online assignments " %}</h2>
                     <div class="desc hidden-xs" style="visibility: hidden">
                         <p>{% blocktrans %}
-                            Enjoy the power of NTIC by directly sending assignments thought Foulassi. Define a
-                            deadline for filing and prepare a general correction available on it.
-                            You can also easily track student's answers submissions.
+                            Teachers can publish assignments for their classrooms with deadline defined
+                            and parents get notified instantaneously on <strong>MyKids</strong> app.
+                            When students submit their homework, teachers can view and leave comments.
                         {% endblocktrans %}</p>
                     </div>
                     {# End Force DIV height #}
                 </div>
                 <div class="col-sm-6 description">
-                    <h2>{% trans "Online assigment" %}</h2>
+                    <h2>{% trans " Online assignments " %}<span class="badge custom-badge alert-danger">{% trans " NEW " %}</span></h2>
                     <div class="desc">
                         <p>{% blocktrans %}
-                            Enjoy the power of NTIC by directly sending assignments thought Foulassi. Define a
-                            deadline for filing and prepare a general correction available on it.
-                            You can also easily track student's answers submissions.
+                            Teachers can publish assignments for their classrooms with deadline defined
+                            and parents get notified instantaneously on <strong>MyKids</strong> app.
+                            When students submit their homework, teachers can view and leave comments.
                         {% endblocktrans %}</p>
                     </div>
                 </div>

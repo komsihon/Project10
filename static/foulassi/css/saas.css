@@ -51,6 +51,8 @@ section.site.deploy a.cta {background: #fff;color: #4aa1e9;margin-top: 30px;}
 div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
 .my-kids a {color: #319dd5;font-size: 18px;font-weight: 700;}
 
+.custom-badge { line-height: 1.2; border-radius: 3px }
+
 @media only screen and (max-device-width : 767px) and (orientation: portrait) {
     section.header {height: 410px; margin-top: 0;}
     section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 70px;}
