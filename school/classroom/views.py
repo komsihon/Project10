@@ -28,19 +28,21 @@ from ikwen.billing.utils import get_next_invoice_number
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.utils import get_model_admin_instance, increment_history_field, DefaultUploadBackend, \
     get_service_instance, get_mail_content, send_push
+from ikwen.core.templatetags.url_utils import strip_base_alias
 from ikwen.core.models import Service
 from ikwen.core.views import HybridListView, ChangeObjectBase
 from ikwen.accesscontrol.backends import UMBRELLA
 
-from ikwen_foulassi.foulassi.models import Student, Teacher, Invoice, get_school_year, Parent, SchoolConfig
-from ikwen_foulassi.foulassi.utils import remove_student_from_parent_profile, set_student_counts, check_all_scores_set
+from ikwen_foulassi.foulassi.models import Student, Teacher, Invoice, get_school_year, Parent
+from ikwen_foulassi.foulassi.utils import remove_student_from_parent_profile, set_student_counts, check_all_scores_set, \
+    send_push_to_parents, send_billed_sms
 from ikwen_foulassi.reporting.utils import set_counters, calculate_session_report, \
     calculate_session_group_report, set_stats, set_daily_counters_many
 from ikwen_foulassi.foulassi.admin import StudentResource
 from ikwen_foulassi.reporting.models import SessionReport, LessonReport
 from ikwen_foulassi.school.admin import ClassroomAdmin, AssignmentAdmin
 from ikwen_foulassi.school.models import Level, Classroom, Session, get_subject_list, Subject, Score, \
-    ScoreUpdateRequest, SubjectCoefficient, Lesson, Assignment, TeacherResponsibility
+    ScoreUpdateRequest, SubjectCoefficient, Lesson, Assignment
 from ikwen_foulassi.school.student.views import set_student_invoices, set_my_kids_invoice
 from import_export.formats.base_formats import XLS
 
@@ -272,10 +274,9 @@ def notify_parents_for_new_invoice(classroom, label, amount):
     queryset = Student.objects.filter(classroom=classroom, is_excluded=False)
     for student in queryset:
         body = _("We are kindly informing you that a new payment of %(amount)s is expected for %(invoice_title)s "
-                 "of %(student)s." % {'amount': intcomma(amount), 'invoice_title': label,
-                                      'student': student})
+                 "of %(student)s." % {'amount': intcomma(amount), 'invoice_title': label, 'student': student})
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = target.replace('/foulassi', '')
+        target = strip_base_alias(target).replace('/foulassi', '')
 
         parents = student.parent_set.select_related('member').all()
         for parent in parents:
@@ -427,9 +428,9 @@ class ChangeClassroom(ChangeObjectBase):
             obj.save()
             next_url = self.get_object_list_url(request, obj)
             if object_id:
-                notice = obj._meta.verbose_name.capitalize() + ' <strong>' + str(obj).decode('utf8') + '</strong> ' + _('successfully updated')
+                notice = u'%s <strong>%s</strong> %s' % (obj._meta.verbose_name.capitalize(), unicode(obj), _('successfully updated'))
             else:
-                notice = obj._meta.verbose_name.capitalize() + ' <strong>' + str(obj).decode('utf8') + '</strong> ' + _('successfully created')
+                notice = u'%s <strong>%s</strong> %s' % (obj._meta.verbose_name.capitalize(), unicode(obj), _('successfully changed'))
             messages.success(request, notice)
             return HttpResponseRedirect(next_url)
         else:
@@ -492,6 +493,10 @@ class ClassroomDetail(ChangeObjectBase):
             return HttpResponse(json.dumps(response))
         level = classroom.level
         score_list = data['scores']
+        try:
+            foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
+        except:
+            foulassi = None
         # score_list.sort(cmp=cmp_scores_dict, reverse=True)
         update_list = []
         classroom_stats, change = SessionReport.objects.get_or_create(level=level, classroom=classroom, subject=subject, school_year=school_year)
@@ -532,15 +537,25 @@ class ClassroomDetail(ChangeObjectBase):
                         diff = now - score.updated_on
                         score.value = value
                         score.save()
-                        student.has_new = True
-                        student.save(using=UMBRELLA)
+                        Student.objects.filter(pk=student.id).update(has_new=True)
+                        Student.objects.using(UMBRELLA).filter(pk=student.id).update(has_new=True)
                         if diff.total_seconds() >= 86400:  # Suspicious score update after 24 hours
                             score_update = Score(session=session, subject=subject, student=student, value=value)
                             update_list.append(score_update)
                 except Score.DoesNotExist:
                     Score.objects.create(session=session, subject=subject, student=student, value=value)
-                    student.has_new = True
-                    student.save(using=UMBRELLA)
+                    Student.objects.filter(pk=student.id).update(has_new=True)
+                    Student.objects.using(UMBRELLA).filter(pk=student.id).update(has_new=True)
+                    parents = student.parent_set.select_related('member').all()
+                    text = _("Your kid %(student)s scored %(score)s in %(subject)s for the last "
+                             "evaluation." % {'student': student, 'score': value, 'subject': subject})
+                    weblet = get_service_instance()
+                    config = weblet.config
+                    uri = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student_id, ))
+                    target = 'https://foulassi.ikwen.com' + strip_base_alias(uri).replace('/foulassi', '')
+                    Thread(target=send_push_to_parents, args=(foulassi, config.company_name, parents, text, target)).start()
+                    if request.GET.get('send_sms'):
+                        Thread(target=send_billed_sms, args=(weblet, parents, text)).start()
             except Student.DoesNotExist:
                 pass
 
@@ -616,7 +631,6 @@ class ClassroomDetail(ChangeObjectBase):
         elif action == 'add_lesson':
             return self.add_lesson(classroom)
         elif action == 'add_invoice':
-            Thread
             return self.add_invoice(context)
         elif action == 'generate_report_cards':
             from ikwen_foulassi.reporting.models import ReportCardHeader
@@ -804,6 +818,10 @@ class ChangeAssignment(ChangeObjectBase):
         Run after the form is successfully saved
         in the post() function
         """
+        try:
+            foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
+        except:
+            foulassi = None
         service = get_service_instance()
         school_config = service.config
         classroom = Classroom.objects.get(pk=kwargs['classroom_id'])
@@ -851,8 +869,4 @@ class ChangeAssignment(ChangeObjectBase):
                          '%(subject)s about %(title)s' % {'subject': subject, 'title': obj.title})
 
                 if parent.member:
-                    send_push(parent.member, subject, body, cta_url)
-
-
-
-
+                    send_push(foulassi, parent.member, subject, body, cta_url)

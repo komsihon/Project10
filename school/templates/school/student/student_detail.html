@@ -275,11 +275,14 @@
                 $('.errorlist.amount').remove();
                 let _$btn = $(this),
                     invoiceId = $('#cash-in-invoice-id').val(),
+                    _$invoice = $(`#${invoiceId}`),
+                    toBePaid = _$invoice.data('to-be-paid'),
                     amount = $('#cash-in-amount').val(),
+                    rest = toBePaid - amount,
                     title = $('#' + invoiceId + ' .title').text(),
                     params = {action: 'cash_in', invoice_id: invoiceId, amount: amount};
                 amount = parseFloat(amount);
-                if (isNaN(amount)) {
+                if (isNaN(amount) || amount > parseFloat(toBePaid)) {
                     $('<ul class="errorlist amount">' +
                     '<li>' + "{% trans "Please enter a valid number." %}" + '</li>' +
                     '</ul>').insertAfter('#invoice-amount');
@@ -289,17 +292,15 @@
                 $.getJSON('', params, function(data) {
                     _$btn.removeClass('processing');
                     if (data.success) {
-                        let $invoice = $(`#${invoiceId}`),
-                            toBePaid = $invoice.data('to-be-paid'),
-                            rest = toBePaid - amount;
-                        $invoice.data('to-be-paid', rest);
+                        _$invoice.data('to-be-paid', rest);
+                        _$invoice.find('.show-modal-cash-in').data('amount', rest);
                         $(`#${invoiceId} .amount .value`).text(rest.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
                         let $payment = $('li.payment.tpl').clone().removeClass('tpl');
                         $payment.find('.amount').text(amount.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
                         $payment.find('.details').text(title);
                         $('#modal-cash-in').modal('hide');
                         $payment.prependTo('.payment-log').fadeIn();
-                    }
+                    } else ikwen.showFloatingNotice(data.error)
                 })
             });
             $('#admin-content').on('click', '.add-parent', function() {

@@ -74,18 +74,22 @@ class Dashboard(TemplateView):
             'last_28_days': {'count': 0, 'hours': 0}
         }
         for report in LessonReport.objects.filter(school_year=school_year):
+            set_counters(report)
             classes_report['today']['count'] += calculate_watch_info(report.count_history)['total']
             classes_report['today']['hours'] += calculate_watch_info(report.hours_count_history)['total']
 
         for report in LessonReport.objects.filter(school_year=school_year):
+            set_counters(report)
             classes_report['yesterday']['count'] += calculate_watch_info(report.count_history, 1)['total']
             classes_report['yesterday']['hours'] += calculate_watch_info(report.hours_count_history, 1)['total']
 
         for report in LessonReport.objects.filter(school_year=school_year):
+            set_counters(report)
             classes_report['last_week']['count'] += calculate_watch_info(report.count_history, 7)['total']
             classes_report['last_week']['hours'] += calculate_watch_info(report.hours_count_history, 7)['total']
 
         for report in LessonReport.objects.filter(school_year=school_year):
+            set_counters(report)
             classes_report['last_28_days']['count'] += calculate_watch_info(report.count_history, 28)['total']
             classes_report['last_28_days']['hours'] += calculate_watch_info(report.hours_count_history, 28)['total']
 

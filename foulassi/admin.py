@@ -60,7 +60,7 @@ if getattr(settings, 'IS_IKWEN', False):
         (None, {'fields': ('service', )}),
         (_('School'), {'fields': ('company_name', 'short_description', 'slogan', 'latitude', 'longitude',
                                   'description', 'is_pro_version')}),
-        (_('My Kids'), {'fields': ('my_kids_fees', 'my_kids_payment_period')}),
+        (_('My Kids'), {'fields': ('my_kids_fees', 'my_kids_fees_term', 'my_kids_fees_month', )}),
         (_('Messaging'), {'fields': ('sms_api_script_url', 'welcome_message', 'signature',)})
     ]
 else:
@@ -86,7 +86,7 @@ class SchoolConfigAdmin(admin.ModelAdmin):
     fieldsets = _fieldsets
     list_filter = ('company_name', 'contact_email', )
     if not getattr(settings, 'IS_IKWEN', False):
-        readonly_fields = ('my_kids_fees', 'my_kids_payment_period', )
+        readonly_fields = ('my_kids_fees', 'my_kids_fees_term', 'my_kids_fees_month', )
     save_on_top = True
 
     def delete_model(self, request, obj):

@@ -18,7 +18,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext as _, ugettext_lazy as __, activate
+from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
 from ikwen.accesscontrol.models import SUDO
@@ -28,13 +28,13 @@ from ikwen.billing.utils import get_next_invoice_number, generate_pdf_invoice, g
 from ikwen.core.constants import MALE
 from ikwen.core.templatetags.url_utils import strip_base_alias
 from ikwen.core.models import Service
-from ikwen.core.utils import get_model_admin_instance, get_mail_content, get_service_instance, add_event, send_sms, \
-    increment_history_field, increment_history_field_many, XEmailMessage, add_database, send_push
+from ikwen.core.utils import get_model_admin_instance, get_mail_content, get_service_instance, add_event, \
+    increment_history_field, increment_history_field_many, XEmailMessage, add_database
 from ikwen.core.views import ChangeObjectBase
 from ikwen_foulassi.foulassi.admin import StudentAdmin
 from ikwen_foulassi.foulassi.models import Student, Parent, Invoice, Payment, get_school_year
 from ikwen_foulassi.foulassi.utils import get_payment_confirmation_email_message, get_payment_sms_text, \
-    remove_student_from_parent_profile, set_student_counts, check_setup_status
+    remove_student_from_parent_profile, set_student_counts, check_setup_status, send_billed_sms, send_push_to_parents
 from ikwen_foulassi.reporting.models import DisciplineReport, StudentDisciplineReport
 from ikwen_foulassi.reporting.utils import set_daily_counters_many
 from ikwen_foulassi.school.admin import JustificatoryAdmin, HomeworkAdmin
@@ -171,6 +171,8 @@ class ChangeStudent(ChangeObjectBase):
         return context
 
     def after_save(self, request, obj, *args, **kwargs):
+        if not obj.registration_number:
+            obj.generate_registration_number()
         obj.tags = slugify(obj.last_name + ' ' + obj.first_name).replace('-', ' ')
         obj.save(using=UMBRELLA)
         obj.save()
@@ -365,7 +367,7 @@ class StudentDetail(ChangeObjectBase):
         pending_invoice_list = Invoice.objects.using(db).filter(student=student, amount__gt=0, status=Invoice.PENDING)
         if not getattr(settings, 'IS_IKWEN', False):
             pending_invoice_list = pending_invoice_list.exclude(is_my_kids=True)
-        payment_list = Payment.objects.using(db).select_related('invoice').filter(invoice__in=invoice_list)
+        payment_list = Payment.objects.using(db).select_related('invoice').filter(invoice__in=invoice_list).order_by('-id')
         context['pending_invoice_list'] = pending_invoice_list.order_by('-is_my_kids')  # MyKids Invoice must be on top
         context['payment_list'] = payment_list
         return render(self.request, 'school/snippets/student/billing.html', context)
@@ -387,6 +389,8 @@ class StudentDetail(ChangeObjectBase):
             return HttpResponse(json.dumps({'error': _("Invalid amount")}))
         sms_notification = self.request.GET.get('sms_notification', False)
         invoice = Invoice.objects.get(pk=invoice_id, status=Invoice.PENDING)
+        if amount > invoice.get_to_be_paid():
+            return HttpResponse(json.dumps({'error': "Not allowed"}))
         if invoice.is_my_kids:
             return HttpResponse(json.dumps({'error': "Not allowed"}))
         payment = Payment.objects.create(invoice=invoice, amount=amount, method=Payment.CASH, cashier=self.request.user)
@@ -412,35 +416,23 @@ class StudentDetail(ChangeObjectBase):
             return HttpResponse(json.dumps(response))
         config = weblet.config
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = 'https://foulassi.ikwen.com' + target.replace('/foulassi', '')
+        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '')
 
         try:
             foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
         except:
             foulassi = None
-        for parent in parents:
-            try:
-                member = parent.member
-                if member:
-                    add_event(weblet, PAYMENT_CONFIRMATION, member=member, object_id=invoice.id)
-                    activate(member.language)
-                    body = _("New payment of XAF %(amount)s for %(invoice_title)s of %(student)s. " % {
-                        'amount': intcomma(amount),
-                        'invoice_title': invoice.get_title(),
-                        'student': student
-                    })
-                    if invoice.PAID:
-                        body += _("Those fees are totally set.\n")
-                    else:
-                        body += _("XAF %s remain to get these fees totally set.\n" % intcomma(invoice.get_to_be_paid()))
-                    body += _("Thank you.")
-                    send_push(foulassi, member, config.company_name, body, target)
-                if sms_notification:
-                    sms_text = get_payment_sms_text(payment, str(student))
-                    send_sms(parent.get_phone(), sms_text)
-            except:
-                logger.error("%s - Error in notifications" % weblet.project_name_slug, exc_info=True)
-                continue
+        if invoice.PAID:
+            text = _("New payment of XAF %(amount)s for %(title)s of %(student)s. Those fees are totally set.\n"
+                     "Thank you." % {'amount': intcomma(amount), 'title': invoice.get_title(), 'student': student})
+        else:
+            text = _("New payment of XAF %(amount)s for %(title)s of %(student)s. XAF %(remainder)s remain to get "
+                     "these fees totally set.\nThank you." % {'amount': intcomma(amount), 'title': invoice.get_title(),
+                                                              'student': student, 'remainder': intcomma(invoice.get_to_be_paid())})
+        Thread(target=send_push_to_parents, args=(foulassi, config.company_name, parents, text, target)).start()
+        if sms_notification:
+            sms_text = get_payment_sms_text(payment, student)
+            Thread(target=send_billed_sms, args=(weblet, parents, sms_text)).start()
 
         recipients = [parent.get_email() for parent in parents if parent.get_email()]
         weblet = get_service_instance()
@@ -469,7 +461,6 @@ class StudentDetail(ChangeObjectBase):
         return HttpResponse(json.dumps({'success': True}))
 
     def add_discipline_log_entry(self, context, action):
-        from echo.utils import check_messaging_balance, count_pages
         if getattr(settings, 'IS_IKWEN', False):
             return HttpResponse(json.dumps({'error': "You're not allowed here"}))
         weblet = get_service_instance()
@@ -481,13 +472,13 @@ class StudentDetail(ChangeObjectBase):
             happened_on = self.request.GET['happened_on']
             tk = happened_on.split('-')
             happened_on = datetime(int(tk[0]), int(tk[1]), int(tk[2]))
-            text = __("You are summoned to school on %(summon_date)s about your "
-                      "child %(student)s" % {'summon_date': happened_on.strftime("%d/%b/%y"), 'student': student})
+            text = _("You are summoned to school on %(summon_date)s about your "
+                     "child %(student)s." % {'summon_date': happened_on.strftime("%d/%b/%y"), 'student': student})
         elif action == DisciplineItem.EXCLUSION:
             item = DisciplineItem.objects.get(slug=DisciplineItem.EXCLUSION)
             count = 1
             happened_on = datetime.now()
-            text = __("We regret to inform you that your child %s has been excluded from our school." % student)
+            text = _("We regret to inform you that your child %s has been excluded from our school." % student)
             student.is_excluded = True
             weblet = get_service_instance()
             for parent in student.parent_set.using(UMBRELLA).all():
@@ -502,13 +493,13 @@ class StudentDetail(ChangeObjectBase):
             tk = happened_on.split('-')
             happened_on = datetime(int(tk[0]), int(tk[1]), int(tk[2]))
             if item.slug == DisciplineItem.LATENESS:
-                text = __("Your child %(student)s has been %(count)s hour(s) late "
-                          "on %(happened_on)s." % {'student': student, 'count': count, 'happened_on': happened_on.strftime("%d/%b/%y")})
+                text = _("Your child %(student)s has been %(count)s hour(s) late "
+                         "on %(happened_on)s." % {'student': student, 'count': count, 'happened_on': happened_on.strftime("%d/%b/%y")})
             elif item.slug == DisciplineItem.ABSENCE:
-                text = __("Your child %(student)s has been absent for %(count)s hour(s) "
-                          "on %(happened_on)s." % {'student': student, 'count': count, 'happened_on': happened_on.strftime("%d/%b/%y")})
+                text = _("Your child %(student)s has been absent for %(count)s hour(s) "
+                         "on %(happened_on)s." % {'student': student, 'count': count, 'happened_on': happened_on.strftime("%d/%b/%y")})
             else:
-                text = __("New information about discipline of your child %s have been published." % student)
+                text = _("New information about discipline of your child %s have been published." % student)
 
         if happened_on < config.back_to_school_date:
             response = {'error': _("Cannot set an event earlier than Back to school date.")}
@@ -519,7 +510,7 @@ class StudentDetail(ChangeObjectBase):
                                                   details=details, count=count, happened_on=happened_on)
         student.has_new = True
         student.save()
-        student.save(using=UMBRELLA)
+        Student.objects.using(UMBRELLA).filter(pk=student.id).update(has_new=True)
         classroom = student.classroom
         level = classroom.level
         discipline_report, update = DisciplineReport.objects.get_or_create(discipline_item=item, level=None, classroom=None)
@@ -549,36 +540,12 @@ class StudentDetail(ChangeObjectBase):
         except:
             foulassi = None
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = 'https://foulassi.ikwen.com' + target.replace('/foulassi', '')
+        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '')
         parents = student.parent_set.select_related('member').all()
-        for parent in parents:
-            try:
-                member = parent.member
-                if member:
-                    activate(member.language)
-                    send_push(foulassi, member, config.company_name, text, target)
-            except:
-                logger.error("%s - Error in notifications" % weblet.project_name_slug, exc_info=True)
-                continue
+        Thread(target=send_push_to_parents, args=(foulassi, config.company_name, parents, text, target)).start()
         response = {'success': True, 'entry': entry.to_dict()}
         if self.request.GET['send_sms']:
-            recipients = [parent.phone for parent in parents]
-            page_count = count_pages(text)
-            balance = check_messaging_balance(weblet)
-            if balance.sms_count < len(recipients):
-                return HttpResponse(json.dumps(response))
-            for phone in recipients:
-                phone = slugify(phone).replace('-', '')
-                if len(phone) == 9:
-                    phone = '237' + phone
-                try:
-                    with transaction.atomic(using='wallets'):
-                        balance.sms_count -= page_count
-                        balance.save()
-                        Thread(target=send_sms, args=(phone, text, 'ikwen')).start()
-                except:
-                    pass
-
+            Thread(target=send_billed_sms, args=(weblet, parents, text)).start()
         return HttpResponse(json.dumps(response))
 
     def add_invoice(self, context):
@@ -602,21 +569,13 @@ class StudentDetail(ChangeObjectBase):
         weblet = get_service_instance()
         config = weblet.config
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = 'https://foulassi.ikwen.com' + target.replace('/foulassi', '')
+        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '')
 
         parents = student.parent_set.select_related('member').all()
-        for parent in parents:
-            try:
-                member = parent.member
-                if member:
-                    activate(member.language)
-                    body = _("We are kindly informing you that a new payment of XAF %(amount)s is expected for "
-                             "%(invoice_title)s of %(student)s." % {'amount': intcomma(amount), 'student': student,
-                                                                    'invoice_title': invoice.get_title()})
-                    send_push(foulassi, member, config.company_name, body, target)
-            except:
-                logger.error("%s - Error in notifications" % weblet.project_name_slug, exc_info=True)
-                continue
+        text = _("We are kindly informing you that a new payment of XAF %(amount)s is expected for "
+                 "%(invoice_title)s of %(student)s." % {'amount': intcomma(amount), 'student': student,
+                                                        'invoice_title': invoice.get_title()})
+        Thread(target=send_push_to_parents, args=(foulassi, config.company_name, parents, text, target)).start()
         return HttpResponse(json.dumps(response))
 
     def delete_object(self, student=None):
@@ -748,7 +707,7 @@ class ChangeJustificatory(ChangeObjectBase):
             if image_url:
                 s = get_service_instance()
                 image_field_name = request.POST.get('image_field_name', 'image')
-                image_field = obj.__getattribute__(image_field_name)
+                image_field = obj.__getattribute_(image_field_name)
                 if not image_field.name or image_url != image_field.url:
                     filename = image_url.split('/')[-1]
                     media_root = getattr(settings, 'MEDIA_ROOT')

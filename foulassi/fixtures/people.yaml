@@ -4,13 +4,13 @@
     member: 56eb6d04b37b3379b531e013
 
 - model: foulassi.teacher
-  pk: 584f03a7bbd6b46a85db279b
   fields:
     member: 56eb6d04b37b3379b531e014
 
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c241
   fields:
+    school: 56eb6d04b37b3379b531b102
     first_name: Wes
     last_name: Madiko
     gender: Male
@@ -22,6 +22,7 @@
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c242
   fields:
+    school: 56eb6d04b37b3379b531b102
     first_name: Siyou
     last_name: Kamgnie
     gender: Male
@@ -33,6 +34,7 @@
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c243
   fields:
+    school: 56eb6d04b37b3379b531b101
     first_name: Gaping'Si
     last_name: Makambou
     gender: Female
@@ -44,6 +46,7 @@
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c244
   fields:
+    school: 56eb6d04b37b3379b531b102
     first_name: Kamtchuint
     last_name: Kom
     gender: Female
@@ -55,6 +58,7 @@
 - model: foulassi.student
   pk: 584f03a7bbd6b46a8fc0c245
   fields:
+    school: 56eb6d04b37b3379b531b102
     first_name: Pascal
     last_name: Kom
     gender: Male
@@ -68,8 +72,8 @@
   fields:
     student: 584f03a7bbd6b46a8fc0c241
     name: Simao Toko
-    phone: 680 00 00 00
-    email: simao@ikwen.com
+    phone: 677000006
+    email: member6@ikwen.com
     relation: Grand-Father
 
 - model: foulassi.parent
@@ -89,7 +93,12 @@
 - model: foulassi.parent
   pk: 574fb307c0cbed6b4f246a84
   fields:
-    student: 584f03a7bbd6b46a8fc0c243
-    member: 56eb6d04b37b3379b531e013
+    student: 584f03a7bbd6b46a8fc0c244
+    member: 56eb6d04b37b3379b531e014
     relation: Sister
 
+- model: foulassi.parentprofile
+  pk: 58809e644fc0c245bb9bc3f1
+  fields:
+    member: 56eb6d04b37b3379b531e014
+    student_fk_list: [584f03a7bbd6b46a8fc0c244]

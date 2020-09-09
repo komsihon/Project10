@@ -1,6 +1,16 @@
 - model: core.application
   pk: 56eb6d04b37b3370e4fc0c21
   fields:
+    name: ikwen
+    slug: ikwen
+    version: 1
+    logo: app_logos/ikwen-app-logo.png
+    url: http://www.ikwen-app-1.com
+    base_monthly_cost: 0
+
+- model: core.application
+  pk: 56eb6d04b37b3370e4fc0c22
+  fields:
     name: Foulassi
     slug: foulassi
     version: 1
@@ -11,12 +21,12 @@
 - model: core.service
   pk: 56eb6d04b37b3379b531b101
   fields:
-    member: 56eb6d04b37b3379b531e012
-    app: 56eb6d04b37b3370e4fc0c21
-    project_name: College Mbakop
-    project_name_slug: collegembakop
-    url: http://collegembakop.foulassi.com
-    domain: collegembakop.foulassi.com
+    member: 56eb6d04b37b3379b531e011
+    app: 56eb6d04b37b3370e4fc0c22
+    project_name: Foulassi
+    project_name_slug: foulassi
+    url: http://ikwen.com
+    domain: ikwen.com
     database: test_ikwen_umbrella
     api_signature: api-signature-1
     monthly_cost: 6000
@@ -24,16 +34,53 @@
     status: Active
     expiry: 2035-01-01T00:00:00.120Z
 
-- model: foulassi.School
+- model: core.service
+  pk: 56eb6d04b37b3379b531b102
+  fields:
+    member: 56eb6d04b37b3379b531e012
+    app: 56eb6d04b37b3370e4fc0c22
+    project_name: College Mbakop
+    project_name_slug: collegembakop
+    url: http://collegembakop.foulassi.com
+    domain: collegembakop.foulassi.com
+    database: test_collegembakop
+    api_signature: api-signature-2
+    monthly_cost: 6000
+    version: Full
+    status: Active
+    expiry: 2035-01-01T00:00:00.120Z
+
+- model: core.Config
   fields:
     service: 56eb6d04b37b3379b531b101
+    company_name: ikwen
+    contact_email: foulassi@ikwen.com
+    logo: logos/some_logo.png
+
+- model: core.Config
+  fields:
+    service: 56eb6d04b37b3379b531b102
+    company_name: College Mbakop
+    contact_email: contact@ikwen.com
+    logo: logos/some_logo.png
+
+- model: foulassi.SchoolConfig
+  fields:
+    service: 56eb6d04b37b3379b531b101
+    company_name: ikwen
+    contact_email: foulassi@ikwen.com
+    logo: logos/some_logo.png
+
+- model: foulassi.SchoolConfig
+  fields:
+    service: 56eb6d04b37b3379b531b102
     company_name: College Mbakop
     contact_email: contact@ikwen.com
     logo: logos/some_logo.png
 
 - model: billing.invoicingconfig
   fields:
-    name: Default
+    service: 56eb6d04b37b3379b531b101
 
 - model: billing.paymentmean
   pk: 5880870e4fc0c229da8da3d1
@@ -49,8 +96,8 @@
   pk: 5880870e4fc0c229da8da3d2
   fields:
     name: Mobile Money
-    slug: jumbopay-momo
-    credentials: '{"api_key":"c18c884c0a3fcc756f81e0b28d636208"}'
+    slug: mtn-momo
+    credentials: '{"subscription_key":"c18c884c0a3fcc756f81e0b28d636208", "auth_header":"c18c884c0a3fcc756f81e0b28d636208"}'
     action_url_name: billing:momo_set_checkout
     logo: logo.png
     watermark: watermark.png
