@@ -18,18 +18,21 @@
 
 {% block head_style %}
     {{ block.super }}
-    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?V=31.10.19.19.09" />
+{#    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?V=31.10.19.19.09" />#}
+    <link rel='stylesheet' href="{% static 'website/css/website.css' %}?V=20.8.30.4.37" />
+
     <style type="text/css">
         .edge-panel-left .wrapper {padding: 0 0 120px;}
         section.main-feat {background:url("{% static 'foulassi/img/foulassi-home-bg.jpg' %}") center;background-size: cover;}
         footer {background: url({% static 'foulassi/img/foulassi-back-to-school.jpg' %}) center;background-size: cover;
-            clear: both; color: #fff; display: block; float: none; height: 75vh; margin: 0;}
+            clear: both; display: block; float: none; height: 75vh; margin: 0;}
         section.address {background-image: none; height: 45vh}
         section.address .cover {background-color: rgba(0, 0, 0, 0.5); color: #2f2f2f; font-weight: 400; height: 75vh}
         section.address .cover h2 {color: #fff; font-size: 33px; font-weight: 600; padding-top: 10vh}
         section.address .cover p {color: #fff; font-size: 18px}
         section.address .cta a {background: #fff; color: #2f2f2f;font-size: 18px;font-weight: 300;}
         section.address a {color: #2f2f2f;font-size: 18px;font-weight: 300;}
+        section.site { float: left; font-size: 28px; line-height: 45px; font-weight: 300; text-align: center; width: 100% }
         section.site {min-height: 100px; padding: 137px 0}
         section.site:nth-child(2n) {background-color: #fff}
         section.site img {width: 60%}
@@ -41,11 +44,13 @@
         #bottom-menu .lang-switcher {margin: 0 0 0 50px;}
         #bottom-menu .lang-switcher select {font-size: 12px; width: 45px}
         #bottom-menu .lang-switcher select:active {background: #111}
-        div.footer, div.footer .company-name, #bottom-menu li a, #bottom-menu .lang-switcher select {color: #545454}
+        {#div.footer, div.footer .company-name, #bottom-menu li a, #bottom-menu .lang-switcher select {color: #545454}#}
         .features h3 {font-weight: 400}
         .features.site {margin-top: 0}
         .features.site h1 {color: #2d2d2d}
-        section.site .cover {background: rgba(0, 0, 0, 0.6); height: 100vh; margin-top: 0; top: 0}
+        section.site .cover {background: rgba(0, 0, 0, 0.6); height: 100vh; margin-top: 0; top: 0; color: #ffffff; line-height: 60px; position: absolute; padding: 100px 0; width: 100%}
+        section.site .cover h1 { padding: 30px 0 0; }
+        section.site .cover .btn {margin-top: 105px}
         section.site.main-feat.banner {height: 100vh}
         #navbar {background: transparent}
         .navbar-brand strong {color: #fff}
@@ -80,6 +85,7 @@
         .connection-section .action a:hover, .connect-section .action a:active, .connect-section .action a:focus {color: #2f2f2f!important;}
 
 
+        a.btn { background: #fe7400; border: #fe7400; color: #fff; font-size: 20px; margin: auto; padding: 10px 40px; text-align: center; width: 300px }
 
 
         @media only screen and (max-device-width : 767px) and (orientation: portrait) {
@@ -169,6 +175,12 @@
             section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px; text-align: left;}
             section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
             .for-schools {background-position-x: 50px}
+        }
+
+
+
+        @media (max-width : 425px) {
+            footer div { float: left; width: 100% }
         }
 
         @media only screen and (max-width : 991px) {
@@ -377,24 +389,29 @@
                 </div>
             </div>
         </section>
-        <div class="container" style="clear: both; color: #545454; padding: 15px 0">
-            <div class="footer hidden-xs">
+        <div id="bottom-menu" >
+            <ul class="social-square" style="float: left">
+                <li><a href="https://www.youtube.com/channel/UCzhHrosFOA6RC2H9MqR9jxA" target="_blank" class="ico-youtube" title="YouTube"><i class="fab fa-youtube-square"></i></a></li>
+                <li><a href="{{ config.linkedin_link }}" target="_blank" class="ico-linkedin" title="LinkedIn"><i class="fab fa-linkedin"></i></a></li>
+                <li><a href="{{ config.twitter_link }}" target="_blank" class="ico-twitter" title="Twitter"><i class="fab fa-twitter-square"></i></a></li>
+                <li><a href="{{ config.facebook_link }}" target="_blank" class="ico-facebook" title="Facebook"><i class="fab fa-facebook-square"></i></a></li>
+            </ul>
+            <ul>
+                {% include 'core/snippets/language_switcher.html' %}
+                <li><a href="{% url 'about' %}">{% trans 'About ikwen' %}</a> </li>
+                <li><a href="{% url 'terms_and_conditions' %}">{% trans 'Terms & conditions' %}</a> </li>
+                <li><a href="http://support.ikwen.com">{% trans 'Support' %}</a> </li>
+                <li><a href="http://blog.ikwen.com">{% trans 'Blog' %}</a> </li>
+            </ul>
+            <span class="col-md-3 col-md-offset-3" >
                 &copy; {{ year }} <a class="company-name" href="{{ service.url }}"><strong>{{ config.company_name }}</strong></a>.
                 {% trans "All rights reserved." %}
                 {% if config.legal_mentions_url %}
                 - <a href="{{ config.legal_mentions_url }}" style="color: #666; text-decoration: none">{% trans "Legal mentions" %}</a>
                 {% endif %}
-            </div>
-            <div id="bottom-menu" class="hidden-xs">
-                <ul>
-                    {% include 'core/snippets/language_switcher.html' %}
-                    <li><a href="http://blog.ikwen.com">{% trans 'Blog' %}</a> </li>
-                    <li><a href="http://support.ikwen.com">{% trans 'Support' %}</a> </li>
-                    <li><a href="http://blog.ikwen.com">{% trans 'Terms & conditions' %}</a> </li>
-                    <li><a href="{% url 'about' %}">{% trans 'About ikwen' %}</a> </li>
-                </ul>
-            </div>
+            </span>
         </div>
+        <a style="display: none" href="{% url 'service_indexes' 0 %}">Service Indexes</a>
         <div class="clearfix"></div>
     </footer>
 {% endblock %}

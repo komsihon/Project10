@@ -21,8 +21,9 @@
 
 {% block head_style %}
     {{ block.super }}
-    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />
-    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=20.08.24.17.45" />
+{#    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />#}
+    <link rel='stylesheet' href="{% static 'website/css/website.css' %}?V=20.8.30.4.37" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=20.9.9.2.0" />
 {% endblock %}
 
 {% block header_brand %}
@@ -475,29 +476,7 @@
     </section>
 {% endblock %}
 
-{% block footer %}
-    <footer style="height: 100px; padding-top: 45px">
-        <div class="container">
-            <div class="footer hidden-xs">
-                &copy; {{ year }} <a class="company-name" href="{{ service.url }}"><strong>{{ config.company_name }}</strong></a>.
-                {% trans "All rights reserved." %}
-                {% if config.legal_mentions_url %}
-                - <a href="{{ config.legal_mentions_url }}" style="color: #666; text-decoration: none">{% trans "Legal mentions" %}</a>
-                {% endif %}
-            </div>
-            <div id="bottom-menu" class="hidden-xs">
-                <ul>
-                    {% include 'core/snippets/language_switcher.html' %}
-                    <li><a href="http://blog.ikwen.com">{% trans 'Blog' %}</a> </li>
-                    <li><a href="http://support.ikwen.com">{% trans 'Support' %}</a> </li>
-                    <li><a href="http://blog.ikwen.com">{% trans 'Terms & conditions' %}</a> </li>
-                    <li><a href="{% url 'about' %}">{% trans 'About ikwen' %}</a> </li>
-                </ul>
-            </div>
-        </div>
-        <div class="clearfix"></div>
-    </footer>
-{% endblock %}
+
 
 {% block js %}
     {{ block.super }}

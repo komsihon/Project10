@@ -2,29 +2,29 @@
 @import url('https://fonts.googleapis.com/css?family=Hind+Madurai:700&display=swap');
 .edge-panel-left .wrapper {padding: 0 0 120px;}#navbar-search input {background: #f6f6f6;}
 .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a { color: #217DBB!important; }
-.navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover { color: #1f356a!important; }
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {/* color: #1f356a!important; */}
 .dropdown-menu>li>a { color: #217DBB !important; }
 .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {color: #FFF !important;background-color: #217DBB !important;}
 .dropdown-menu .username { color: #233682 }
 body {background: none; color: #616675}
 h1, h2 {font-family: "Hind Madurai", Lato, sans-serif; font-weight: 700}
-footer {clear: both; display: block; float: none; height: 75vh; margin: 0;}
+footer {clear: both;display: block;float: none;/* height: 75vh; */margin: 0;}
 section.address {background-image: none; height: 45vh}
 section.address .cover {background-color: rgba(0, 0, 0, 0.5); color: #2f2f2f; font-weight: 400; height: 75vh}
 section.address .cover h2 {font-size: 33px; font-weight: 600; padding-top: 10vh}
 section.address .cover p {font-size: 18px}
 section.address a {color: #2f2f2f;font-size: 18px;font-weight: 300;}
-section.site {min-height: 100px; padding: 137px 0}
+section.site {min-height: 100px; padding: 137px 0; float: left; line-height: 45px; font-weight: 300; text-align: center; width: 100%;}
 section.site:nth-child(2n) {background-color: #fff}
-section.site img {width: 60%;}
+section.site img {width: 60%;margin: auto;}
 section.site h2 {color: #201a3a}
 .effective-solution h3 {color: #7d87a0; font-size: 14px; font-weight: 700}
 section.why-foulassi h3 {font-size: 21px;color: #29163e}
 section.why-foulassi img {width: 60px}
 
-#bottom-menu .lang-switcher {margin: 0 0 0 50px;}
-#bottom-menu .lang-switcher select {color: #666;font-size: 12px;width: 45px;}
-#bottom-menu .lang-switcher select:active {/* background: #111 */}
+/*#bottom-menu .lang-switcher {!* margin: 0 0 0 50px; *!}*/
+/*#bottom-menu .lang-switcher select {color: #666;font-size: 12px;width: 45px;}*/
+/*#bottom-menu .lang-switcher select:active {!* background: #111 *!}*/
 .features.site {margin-top: 0}
 .features.site h1 {color: #2d2d2d}
 section.site.main-feat.banner {height: 100vh;padding-top: 20vh;}
@@ -48,10 +48,12 @@ section.site.deploy a.cta {background: #fff;color: #4aa1e9;margin-top: 30px;}
 .screenshots section.right {background-position-x: right}
 .screenshots .img {background: no-repeat center; background-origin: content-box; background-size: cover}
 .icon-bar {background: #201a3a;}
-div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
+/*div.footer, #bottom-menu li a, div.footer .company-name {color: #666}*/
 .my-kids a {color: #319dd5;font-size: 18px;font-weight: 700;}
 
 .custom-badge { line-height: 1.2; border-radius: 3px }
+
+a.btn {padding: 10px 40px; text-align: center; width: 300px}
 
 @media only screen and (max-device-width : 767px) and (orientation: portrait) {
     section.header {height: 410px; margin-top: 0;}
@@ -101,7 +103,7 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     section.site.banner h1 {font-size: 33px;line-height: 38px;font-weight: 600;}
     section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px;}
     section.site p {margin-top: 15px;text-align: justify;font-size: 16px;font-weight: 400;line-height: 24px;}
-    section.why-foulassi img {width: 60px}
+    section.why-foulassi img {width: 60px;margin: auto;}
     section.why-foulassi .features > div {margin-bottom: 24px}
     section.good-company h3 {font-size: 18px; font-weight: 700}
     section.good-company .features > div {margin-bottom: 15px}
@@ -172,7 +174,7 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     .cta {text-align: left; }
     .feat h2 {padding-bottom: 30px; font-size: 32px; font-weight: 600; text-align: left}
     .trail {margin-top: 100px;}
-    footer, section.address .cover {height: 540px}
+    footer, section.address .cover {/* height: 540px */}
     section.address {height: 490px}
     section.address .cover h2 {padding-top: 15vh}
     section.address .cta {margin-top: 150px}
@@ -197,7 +199,7 @@ div.footer, #bottom-menu li a, div.footer .company-name {color: #666}
     section.header {height: 1015px}
     div.cloud-deploy {bottom: 250px}
     section.site.header {height: 1000px}
-    footer, section.address .cover {height: 670px}
+    footer, section.address .cover {/* height: 670px */}
     section.address {height: 600px}
     section.deploy {font-size: 42px}
 }
