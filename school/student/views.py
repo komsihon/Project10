@@ -513,7 +513,8 @@ class StudentDetail(ChangeObjectBase):
         Student.objects.using(UMBRELLA).filter(pk=student.id).update(has_new=True)
         classroom = student.classroom
         level = classroom.level
-        discipline_report, update = DisciplineReport.objects.get_or_create(discipline_item=item, level=None, classroom=None)
+        school_year = get_school_year()
+        discipline_report, update = DisciplineReport.objects.get_or_create(discipline_item=item, level=None, classroom=None, school_year=school_year)
         level_discipline_report, update = DisciplineReport.objects.get_or_create(discipline_item=item, level=level)
         classroom_discipline_report, update = DisciplineReport.objects.get_or_create(discipline_item=item, classroom=classroom)
         student_discipline_report, update = StudentDisciplineReport.objects.get_or_create(discipline_item=item, student=student)
