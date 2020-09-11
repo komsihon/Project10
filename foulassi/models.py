@@ -39,7 +39,7 @@ def get_school_year(request=None):
         return request.session.get('school_year', get_school_year())
     now = datetime.now()
     month = now.month
-    if 8 <= month <= 12:
+    if 10 <= month <= 12:
         return now.year
     return now.year - 1
 
@@ -47,6 +47,9 @@ def get_school_year(request=None):
 class Teacher(Model):
     member = models.ForeignKey(Member)
     school_year = models.IntegerField(default=get_school_year, db_index=True)
+
+    class Meta:
+        unique_together = ('member', 'school_year')
 
     def __unicode__(self):
         return self.member.full_name
@@ -89,8 +92,8 @@ class Student(Model):
     is_confirmed = models.BooleanField(default=False)  # Confirmed student cannot be deleted again
     is_excluded = models.BooleanField(default=False)  # Excluded student does not appear in classroom student list
     tags = models.TextField(blank=True, null=True, db_index=True)
-    kid_fees_paid = models.BooleanField(default=False,
-                                        help_text="Whether a parent has ever paid to follow kid on the Kids platform.")
+    my_kids_expiry = models.DateTimeField(blank=True, null=True)
+    my_kids_expired = models.BooleanField(default=True)
     has_new = models.BooleanField(default=False,
                                   help_text="Whether there's a new information published on this student: "
                                             "score, discipline information or invoice.")
@@ -120,6 +123,24 @@ class Student(Model):
         has_new_discipline_info = DisciplineLogEntry.objects.using(using).filter(student=self, was_viewed=False).count() > 0
         has_new_score = Score.objects.using(using).filter(student=self, was_viewed=False).count() > 0
         self.has_new = has_pending_assignment or has_pending_invoice or has_new_discipline_info or has_new_score
+
+    def generate_registration_number(self):
+        if self.registration_number:
+            return
+        school_year = str(get_school_year())[-2:]
+        classroom = self.classroom
+        level = classroom.level
+        classroom_info = level.name[0] + level.name[-1] + classroom.name[0]
+        inc = Student.objects.filter(classroom).count()
+        registration_number = ''
+        while True:
+            try:
+                registration_number = "%s%s%s" % (school_year, classroom_info, str(inc).zfill(3))
+                Student.objects.get(registration_number=registration_number)
+                inc += 1
+            except:
+                break
+        self.registration_number = registration_number
 
 
 class Parent(Model):
@@ -291,15 +312,23 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                                     help_text="Designates whether this school is a State school.")
     show_discipline_report = models.BooleanField(_("Show discipline report"), default=True)
     show_lectures_report = models.BooleanField(_("Show lectures report"), default=True)
-    my_kids_fees = models.IntegerField(_("Annual fees"), default=1000)
+    my_kids_fees = models.IntegerField(_("MyKids annual fees"), default=2500)
+    my_kids_fees_term = models.IntegerField(_("MyKids term fees"), default=1000)
+    my_kids_fees_month = models.IntegerField(_("MyKids monthly fees"), default=375)
     my_kids_payment_period = models.IntegerField(_("Payment period"), default=30,
                                                  help_text=_("Number of days left for parent to pay for the service."))
-    ikwen_share_rate = models.IntegerField(default=0)
+    my_kids_share_rate = models.IntegerField(default=70,
+                                             help_text="Percentage ikwen collects on MyKids fees payments")
+    ikwen_share_rate = models.FloatField(default=2.4,
+                                         help_text="Percentage ikwen collects for other transactions")
     expected_student_count = models.IntegerField(_("Expected students count"), default=0,
                                                  help_text='Total number of students (registered or not) of the school')
     # This must not be editable in the Admin
     website_is_active = models.BooleanField(default=False,
                                             help_text=_("Whether school subscribed to website service or no"))
+    notification_emails = models.CharField(_("Notification email(s)"), max_length=150, blank=True, null=True, default='',
+                                           help_text="Emails to which payment notifications are sent. "
+                                                     "Separate with coma if many. Eg: boss@email.com, account@email.com")
 
     def __unicode__(self):
         return self.company_name
@@ -312,7 +341,10 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                 obj_mirror = SchoolConfig.objects.using(db).get(pk=self.id)
                 obj_mirror.is_public = self.is_public
                 obj_mirror.my_kids_fees = self.my_kids_fees
+                obj_mirror.my_kids_fees_term = self.my_kids_fees_term
+                obj_mirror.my_kids_fees_month = self.my_kids_fees_month
                 obj_mirror.my_kids_payment_period = self.my_kids_payment_period
+                obj_mirror.my_kids_share_rate = self.my_kids_share_rate
                 obj_mirror.ikwen_share_rate = self.ikwen_share_rate
                 super(SchoolConfig, obj_mirror).save(using=db)
             except SchoolConfig.DoesNotExist:

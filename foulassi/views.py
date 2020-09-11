@@ -1,50 +1,43 @@
 import json
 import logging
-import random
-import string
 from collections import OrderedDict
-from datetime import timedelta, datetime
+from datetime import datetime
 from threading import Thread
 
-import requests
-from currencies.models import Currency
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
-from django.db.models import Sum, Q
+from django.db.models import Q
 from django.http.response import HttpResponseRedirect, Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
-from django.utils.http import urlquote, urlunquote
+from django.utils.http import urlunquote
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView
 from django.utils.translation import gettext as _, activate
 
 from ikwen.core.generic import ChangeObjectBase
-from ikwen.conf.settings import WALLETS_DB_ALIAS, MEDIA_URL, MEMBER_AVATAR
+from ikwen.conf.settings import MEDIA_URL, MEMBER_AVATAR
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.models import Application, Service
-from ikwen.core.utils import add_database, get_service_instance, get_mail_content, send_sms, send_push, XEmailMessage
+from ikwen.core.utils import add_database, get_service_instance, get_mail_content, send_sms, send_push
 from ikwen.core.views import HybridListView
 from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen.accesscontrol.models import Member
 from ikwen.accesscontrol.utils import VerifiedEmailTemplateView
-from ikwen.billing.models import MoMoTransaction, CloudBillingPlan, IkwenInvoiceItem, InvoiceEntry
-from ikwen.billing.utils import get_payment_confirmation_message, generate_pdf_invoice, get_invoicing_config_instance
-from ikwen.billing.mtnmomo.views import MTN_MOMO
+from ikwen.billing.models import CloudBillingPlan, IkwenInvoiceItem, InvoiceEntry
 from ikwen.theming.models import Theme, Template
 from ikwen.partnership.models import ApplicationRetailConfig
 from ikwen_foulassi.foulassi.cloud_setup import DeploymentForm, deploy
-from ikwen_foulassi.foulassi.utils import can_access_kid_detail, share_payment_and_set_stats
+from ikwen_foulassi.foulassi.utils import can_access_kid_detail
 
-from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Payment, Event, Parent, EventType, \
-    PARENT_REQUEST_KID, KidRequest, SchoolConfig, Reminder
+from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Event, Parent, EventType, \
+    PARENT_REQUEST_KID, KidRequest, Reminder
 from ikwen_foulassi.school.models import get_subject_list, Justificatory, DisciplineLogEntry, Score, Assignment, \
     Homework
 from ikwen_foulassi.school.admin import HomeworkAdmin
@@ -162,6 +155,14 @@ class KidList(TemplateView):
             suggestion_list = []
             for obj in Parent.objects.select_related('student').filter(Q(email=user.email) | Q(phone=user.phone)):
                 student = obj.student
+                if student.my_kids_expiry:
+                    diff = student.my_kids_expiry - datetime.now()
+                    if diff.total_seconds() <= 0:
+                        student.my_kids_expired = True
+                        student.save()
+                else:
+                    student.my_kids_expired = True
+                    student.save()
                 if student.id in parent_profile.student_fk_list or student in suggestion_list:
                     continue
                 try:
@@ -192,6 +193,11 @@ class KidList(TemplateView):
     def accept_suggestion(self, request):
         user = request.user
         student_id = request.GET['student_id']
+        student = Student.objects.select_related('school').get(pk=student_id)
+        db = student.school.database
+        add_database(db)
+        user.save(using=db)
+        Parent.objects.using(db).filter(Q(email=user.email) | Q(phone=user.phone), student=student).update(member=user)
         parent_profile, update = ParentProfile.objects.get_or_create(member=user)
         if student_id not in parent_profile.student_fk_list:
             parent_profile.student_fk_list.insert(0, student_id)
@@ -205,7 +211,7 @@ class KidList(TemplateView):
     def refuse_suggestion(self, request):
         user = request.user
         student_id = request.GET['student_id']
-        student = Student.objects.get(pk=student_id)
+        student = Student.objects.select_related('school').get(pk=student_id)
         db = student.school.database
         add_database(db)
         Parent.objects.using(db).filter(Q(email=user.email) | Q(phone=user.phone), student=student).delete()
@@ -226,7 +232,15 @@ class KidDetail(StudentDetail):
             school = Service.objects.get(project_name_slug=ikwen_name)
             add_database(school.database)
             student = Student.objects.using(school.database).select_related('school', 'classroom').get(pk=student_id)
-            # if not student.kid_fees_paid:
+            if student.my_kids_expiry:
+                diff = student.my_kids_expiry - datetime.now()
+                if diff.total_seconds() <= 0:
+                    student.my_kids_expired = True
+                    student.save()
+            else:
+                student.my_kids_expired = True
+                student.save()
+            # if not student.mykids_fees_paid:
             #     return HttpResponseRedirect(reverse('foulassi:kid_list', args=(ikwen_name, )))
         except ObjectDoesNotExist:
             raise Http404("School or student not found")
@@ -304,6 +318,10 @@ class ChangeHomework(ChangeObjectBase):
         """"
         Notify the teacher when a student send his homework
         """
+        try:
+            foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
+        except:
+            foulassi = None
         student = obj.student
         classroom = student.classroom
         assignment = obj.assignment
@@ -325,14 +343,8 @@ class ChangeHomework(ChangeObjectBase):
             activate(teacher.member.language)
         student_name = student.first_name
         subject = _(" New homework sent")
-        extra_context = {'subject': subject,
-                         # 'cta_url': cta_url,
-                         'teacher': teacher,
-                         'school_name': company_name,
-                         'student_name': student_name,
-                         'assignment': assignment,
-                         'classroom': classroom_name
-                         }
+        extra_context = {'subject': subject, 'teacher': teacher, 'school_name': company_name,
+                         'student_name': student_name, 'assignment': assignment, 'classroom': classroom_name}
 
         try:
             html_content = get_mail_content(subject,
@@ -342,19 +354,13 @@ class ChangeHomework(ChangeObjectBase):
             msg = EmailMessage(subject, html_content, sender,
                                [teacher_email, 'rsihon@gmail.com', 'silatchomsiaka@gmail.com'])
             msg.content_subtype = "html"
-            print("Sending email to %s ..." % teacher_email)
-            try:
-                msg.send()
-                print("Email sent")
-            except Exception as e:
-                print e.message
-
-            body = _("%(student_name)s from %(classroom)s sent his assignment of %(subject)s about %(assignment_name)s"
-                     % {'student_name': student_name, 'classroom': classroom_name,
-                        'subject': assignment_subject, 'assignment_name': assignment.title})
-            send_push(teacher.member, subject, body)
         except:
             logger.error("Could not generate HTML content from template", exc_info=True)
+
+        body = _("%(student_name)s from %(classroom)s sent his assignment of %(subject)s about %(assignment_name)s"
+                 % {'student_name': student_name, 'classroom': classroom_name,
+                    'subject': assignment_subject, 'assignment_name': assignment.title})
+        send_push(foulassi, teacher.member, subject, body)
 
 
 class ShowJustificatory(ChangeJustificatory):
@@ -367,7 +373,7 @@ class ShowJustificatory(ChangeJustificatory):
             school = Service.objects.get(project_name_slug=ikwen_name)
             add_database(school.database)
             obj = Justificatory.objects.using(school.database).select_related('entry').get(pk=object_id)
-            # if not student.kid_fees_paid:
+            # if not student.mykids_fees_paid:
             #     return HttpResponseRedirect(reverse('foulassi:kid_list', args=(ikwen_name, )))
         except Justificatory.DoesNotExist:
             raise Http404("No justficicatory found with this ID.")
@@ -440,162 +446,6 @@ class SearchSchool(HybridListView):
                 pass
             return HttpResponse(json.dumps({'success': True}, 'content-type: text/json'))
         return super(SearchSchool, self).get(request, *args, **kwargs)
-
-
-def set_invoice_checkout(request, *args, **kwargs):
-    invoice_id = request.POST['product_id']
-    invoice = Invoice.objects.select_related('school', 'student').get(pk=invoice_id)
-    member = invoice.member
-    if member and not member.is_ghost:
-        if request.user != member:
-            next_url = reverse('ikwen:sign_in')
-            referrer = request.META.get('HTTP_REFERER')
-            if referrer:
-                next_url += '?' + urlquote(referrer)
-            return HttpResponseRedirect(next_url)
-    service = get_service_instance()
-    config = service.config
-    school = invoice.school
-    try:
-        aggr = Payment.objects.filter(invoice=invoice).aggregate(Sum('amount'))
-        amount_paid = aggr['amount__sum']
-    except IndexError:
-        amount_paid = 0
-
-    amount = invoice.amount - amount_paid
-    model_name = 'billing.Invoice'
-    mean = request.GET.get('mean', MTN_MOMO)
-    signature = ''.join([random.SystemRandom().choice(string.ascii_letters + string.digits) for i in range(16)])
-    MoMoTransaction.objects.using(WALLETS_DB_ALIAS).filter(object_id=invoice_id).delete()
-    tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS)\
-        .create(service_id=school.id, type=MoMoTransaction.CASH_OUT, amount=amount, phone='N/A', model=model_name,
-                object_id=invoice_id, task_id=signature, wallet=mean, username=request.user.username, is_running=True)
-    notification_url = service.url + reverse('foulassi:confirm_invoice_payment', args=(tx.id, signature))
-    cancel_url = request.META['HTTP_REFERER']
-    return_url = request.META['HTTP_REFERER']
-    gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'http://payment.ikwen.com/v1')
-    endpoint = gateway_url + '/request_payment'
-    params = {
-        'username': getattr(settings, 'IKWEN_PAYMENT_GATEWAY_USERNAME', service.project_name_slug),
-        'amount': amount,
-        'merchant_name': config.company_name,
-        'notification_url': notification_url,
-        'return_url': return_url,
-        'cancel_url': cancel_url,
-        'user_id': request.user.username
-    }
-    try:
-        r = requests.get(endpoint, params)
-        resp = r.json()
-        token = resp.get('token')
-        if token:
-            next_url = gateway_url + '/checkoutnow/' + resp['token'] + '?mean=' + mean
-        else:
-            logger.error("%s - Init payment flow failed with URL %s and message %s" % (service.project_name, r.url, resp['errors']))
-            messages.error(request, resp['errors'])
-            next_url = cancel_url
-    except:
-        logger.error("%s - Init payment flow failed with URL." % service.project_name, exc_info=True)
-        next_url = cancel_url
-    return HttpResponseRedirect(next_url)
-    # try:
-    #     r = requests.get(endpoint, params)
-    #     resp = r.json()
-    #     token = resp.get('token')
-    #     if token:
-    #         payment_url = gateway_url + '/checkoutnow/' + resp['token'] + '?mean=' + mean
-    #         return render(request, template_name='billing/gateway.html', context={'payment_url': payment_url})
-    #     else:
-    #         messages.error(request, resp['errors'])
-    #         return HttpResponseRedirect(cancel_url)
-    # except:
-    #     logger.error("%s - Init payment flow failed with URL %s." % (service.project_name, r.url), exc_info=True)
-    #     messages.error(request, "Init payment flow failed.")
-    #     return HttpResponseRedirect(cancel_url)
-
-
-def confirm_invoice_payment(request, *args, **kwargs):
-    status = request.GET['status']
-    message = request.GET['message']
-    operator_tx_id = request.GET['operator_tx_id']
-    phone = request.GET['phone']
-    tx_id = kwargs['tx_id']
-    try:
-        tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS).get(pk=tx_id)
-        if not getattr(settings, 'DEBUG', False):
-            tx_timeout = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_TIMEOUT', 15) * 60
-            expiry = tx.created_on + timedelta(seconds=tx_timeout)
-            if datetime.now() > expiry:
-                return HttpResponse("Transaction %s timed out." % tx_id)
-    except:
-        raise Http404("Transaction %s not found" % tx_id)
-
-    callback_signature = kwargs.get('signature')
-    no_check_signature = request.GET.get('ncs')
-    if getattr(settings, 'DEBUG', False):
-        if not no_check_signature:
-            if callback_signature != tx.task_id:
-                return HttpResponse('Invalid transaction signature')
-    else:
-        if callback_signature != tx.task_id:
-            return HttpResponse('Invalid transaction signature')
-
-    if status != MoMoTransaction.SUCCESS:
-        return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
-
-    tx.status = status
-    tx.message = message
-    tx.processor_tx_id = operator_tx_id
-    tx.phone = phone
-    tx.is_running = False
-    tx.save()
-    mean = tx.wallet
-    school = Service.objects.get(pk=tx.service_id)
-    school_config = SchoolConfig.objects.get(service=school)
-    add_database(school.database)
-    invoice = Invoice.objects.get(pk=tx.object_id)
-    payment = Payment.objects.create(invoice=invoice, method=Payment.MOBILE_MONEY,
-                                     amount=tx.amount, processor_tx_id=operator_tx_id)
-    payment.save(using=school.database)
-    invoice.paid = invoice.amount
-    invoice.status = Invoice.PAID
-    invoice.save()
-    invoice.save(using=school.database)
-    student = invoice.student
-    if not school_config.is_public or (school_config.is_public and not invoice.is_tuition):
-        if invoice.is_my_kids:
-            amount = tx.amount * (100 - school_config.ikwen_share_rate) / 100
-            student.kid_fees_paid = True
-            student.save(using=school.database)
-        else:
-            amount = tx.amount
-        school.raise_balance(amount, provider=mean)
-    student.set_has_new(using=school.database)
-    student.save(using='default')
-
-    share_payment_and_set_stats(invoice, mean)
-    member = invoice.member
-    if member.email:
-        try:
-            currency = Currency.active.default().symbol
-        except:
-            currency = school_config.currency_code
-        invoice_url = school.url + reverse('billing:invoice_detail', args=(invoice.id,))
-        subject, message, sms_text = get_payment_confirmation_message(payment, member)
-        html_content = get_mail_content(subject, message, template_name='billing/mails/notice.html',
-                                        extra_context={'member_name': member.first_name, 'invoice': invoice,
-                                                       'cta': _("View invoice"), 'invoice_url': invoice_url,
-                                                       'currency': currency})
-        sender = '%s <no-reply@%s>' % (school_config.company_name, school.domain)
-        msg = XEmailMessage(subject, html_content, sender, [member.email])
-        msg.content_subtype = "html"
-        try:
-            invoicing_config = get_invoicing_config_instance()
-            invoice_pdf_file = generate_pdf_invoice(invoicing_config, invoice)
-            msg.attach_file(invoice_pdf_file)
-        except:
-            pass
-    return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
 
 
 class DeployCloud(VerifiedEmailTemplateView):
@@ -710,5 +560,3 @@ class SuccessfulDeployment(VerifiedEmailTemplateView):
         if school.member != request.user:
             return HttpResponseForbidden("You're not allowed here")
         return render(request, self.template_name, context)
-
-

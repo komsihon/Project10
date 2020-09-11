@@ -27,7 +27,7 @@ class ReportCardHeader(Model):
 
 
 class LessonReport(AbstractWatchModel):
-    subject = models.ForeignKey(Subject)
+    subject = models.ForeignKey(Subject, null=True)
     level = models.ForeignKey(Level, null=True)
     classroom = models.ForeignKey(Classroom, null=True)
     school_year = models.IntegerField(default=get_school_year)
@@ -38,7 +38,7 @@ class LessonReport(AbstractWatchModel):
     total_hours_count = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = ('level', 'classroom', 'subject')
+        unique_together = ('level', 'classroom', 'subject', 'school_year')
 
 
 class DisciplineReport(AbstractWatchModel, DisciplineTracker):

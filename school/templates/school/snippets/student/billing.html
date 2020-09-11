@@ -31,7 +31,7 @@
                 </div>
                 <div style="margin-top: 10px">
                     {% if settings.IS_IKWEN %}
-                        <button class="btn btn-sm btn-success payment-start"
+                        <button class="btn btn-sm btn-success payment-start{% if invoice.is_my_kids %} my-kids{% endif %}"
                            data-product-id="{{ invoice.id }}">{% trans "Pay now" %}</button>
                     {% elif perms.billing.ik_cash_in and not invoice.is_my_kids %}
                         <a href="javascript:;" class="show-modal-cash-in" data-toggle="modal" data-target="#modal-cash-in"

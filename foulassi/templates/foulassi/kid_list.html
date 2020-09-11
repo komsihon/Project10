@@ -80,7 +80,7 @@
                                     {% else %}
                                         <div class="img-circle" style="background-image: url({% static 'ikwen/img/login-avatar.jpg' %})"></div>
                                     {% endif %}
-                                    {% if student.has_new %}
+                                    {% if student.has_new or student.my_kids_expired %}
                                         <span class="status-bullet danger"></span>
                                     {% endif %}
                                 </div>

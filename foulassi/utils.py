@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 import logging
 from datetime import datetime
+from threading import Thread
 
 from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 from django.db.models import Q
-from django.utils.translation import gettext as _
+from django.template.defaultfilters import slugify
+from django.utils.translation import ugettext_lazy as _, activate
 from permission_backend_nonrel.models import UserPermissionList
 from permission_backend_nonrel.utils import add_permission_to_user
 
 from ikwen.core.constants import FEMALE, MALE
-from ikwen.core.utils import get_service_instance, add_database
+from ikwen.core.utils import get_service_instance, add_database, send_sms, get_sms_label, send_push
 from ikwen.core.models import Service
 from ikwen.accesscontrol.models import Member
 from ikwen.accesscontrol.backends import UMBRELLA
@@ -21,7 +24,7 @@ from ikwen_foulassi.school.models import Classroom, get_subject_list, Score, Lev
 from ikwen_foulassi.foulassi.models import get_school_year, ParentProfile, EventType, Event, \
     ALL_SCORES_SET, SchoolConfig, Student, Reminder
 
-
+from echo.utils import check_messaging_balance, count_pages
 
 logger = logging.getLogger('ikwen')
 
@@ -79,8 +82,7 @@ def can_access_kid_detail(request, **kwargs):
         return False
     student_id = kwargs['student_id']
     parent_profile, update = ParentProfile.objects.get_or_create(member=user)
-    student_fk_list = [student.id for student in parent_profile.student_list]
-    if student_id in student_fk_list:
+    if student_id in parent_profile.student_fk_list:
         return True
     return False
 
@@ -236,7 +238,7 @@ def check_setup_status(school):
 
 
 def share_payment_and_set_stats(invoice, payment_mean_slug):
-    from daraja.models import DARAJA, DarajaConfig
+    from daraja.models import DARAJA, Dara
     school = invoice.school
     service_umbrella = Service.objects.get(pk=school.id)
     partner = service_umbrella.retailer
@@ -246,7 +248,7 @@ def share_payment_and_set_stats(invoice, payment_mean_slug):
     if not (invoice.is_my_kids and partner_is_dara):
         return
     try:
-        dara_share = DarajaConfig.objects.get(service=get_service_instance()).referrer_share_rate
+        dara_share = Dara.objects.get(member=partner.member).share_rate
         ikwen_earnings = invoice.amount * (100 - dara_share) / 100
     except:
         logger.error("Error calculating Dara earnings. Invoice #%s - Service %s" % (
@@ -260,3 +262,33 @@ def share_payment_and_set_stats(invoice, payment_mean_slug):
     from ikwen.conf.settings import IKWEN_SERVICE_ID
     service_partner = Service.objects.using(partner.database).get(pk=IKWEN_SERVICE_ID)
     set_dara_stats(partner_original, service_partner, invoice, partner_earnings)
+
+
+def send_billed_sms(weblet, parent_list, text):
+    config = weblet.config
+    balance = check_messaging_balance(weblet)
+    for parent in parent_list:
+        member = parent.member
+        phone = member.phone
+        activate(member.language)
+        page_count = count_pages(text)
+        if balance.sms_count < page_count:
+            break
+        phone = slugify(phone).replace('-', '')
+        if len(phone) == 9:
+            phone = '237' + phone
+        try:
+            with transaction.atomic(using='wallets'):
+                balance.sms_count -= page_count
+                balance.save()
+                send_sms(phone, text, get_sms_label(config))
+        except:
+            pass
+
+
+def send_push_to_parents(foulassi_weblet, school_name, parent_list, body, target=None):
+    for parent in parent_list:
+        member = parent.member
+        if member:
+            activate(member.language)
+            send_push(foulassi_weblet, member, school_name, body, target)

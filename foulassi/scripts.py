@@ -1,9 +1,9 @@
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import gettext as _, pgettext
+from django.utils.translation import gettext as _, ugettext_lazy as __, pgettext
 from ikwen.billing.models import Payment, MoMoTransaction
 from ikwen_foulassi.foulassi.models import Student, Teacher, Event
-from ikwen_foulassi.school.models import Level, Score
+from ikwen_foulassi.school.models import Level, Score, Subject
 from ikwen_foulassi.reporting.models import SessionReport, ReportCardBatch
 from ikwen_webnode.web.models import HomepageSection
 
@@ -37,6 +37,25 @@ def create_permissions():
     hps_ct = ContentType.objects.get_for_model(HomepageSection)
     Permission.objects.create(codename='ik_webmaster', name=_('Website admin'), content_type=hps_ct)
     payment_ct = ContentType.objects.get_for_model(Payment)
-    Permission.objects.create(codename='ik_manage_payment', name=_('Manage payments'), content_type=payment_ct)
+    Permission.objects.create(codename='ik_manage_invoice', name=_('Manage invoices and payments'), content_type=payment_ct)
     transaction_ct = ContentType.objects.get_for_model(MoMoTransaction)
     Permission.objects.create(codename='ik_view_transaction_log', name=_('Manage transactions'), content_type=transaction_ct)
+
+
+def do_test():
+    student = Student.objects.all()[0]
+    value = 15
+    subject = Subject.objects.all()[0]
+    text = __("Your kid %(student)s scored %(score)s in %(subject)s for the last evaluation." % {'student': student,
+                                                                                                 'score': value,
+                                                                                                 'subject': subject})
+    print(unicode(text))
+
+
+def do_test2():
+    student = Student.objects.all()[0]
+    value = 15
+    subject = Subject.objects.all()[0]
+    text = __("Your kid %(student)s scored %(score)s in %(subject)s for the last "
+              "evaluation." % {'student': student, 'score': value, 'subject': subject})
+    print(unicode(text))

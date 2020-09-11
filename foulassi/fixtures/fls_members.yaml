@@ -1,3 +1,23 @@
+- model: auth.group
+  pk: 5d04b37631e379b5016b3691
+  fields:
+    name: Sudo
+
+- model: auth.group
+  pk: 5d04b37631e379b5016b3692
+  fields:
+    name: Collabo
+
+- model: auth.group
+  pk: 5d04b37631e379b5016b3693
+  fields:
+    name: Community
+
+- model: auth.group
+  pk: 5d04b37631e379b5016b3694
+  fields:
+    name: Teachers
+
 - model: accesscontrol.member
   pk: 58d89d0b531e011b37b33471
   fields:
@@ -61,4 +81,31 @@
     email: member6@ikwen.com
     password: pbkdf2_sha256$12000$nNK3SeCKYSvl$CuoviZNeie9YzaWhukVCi9iQtNmpu3QBbK2yHGHEUxc=  # admin
     phone: 677000006
-    first_name: Melounou
+    first_name: Simao
+    last_name: Toko
+
+- model: permission_backend_nonrel.userpermissionlist
+  fields:
+    user: 58d89d0b531e011b37b33471
+    group_fk_list: [5d04b37631e379b5016b3691]
+    permission_fk_list: []
+
+- model: permission_backend_nonrel.userpermissionlist
+  fields:
+    user: 56eb6d04b37b3379b531e012
+    group_fk_list: [5d04b37631e379b5016b3692]
+
+- model: permission_backend_nonrel.userpermissionlist
+  fields:
+    user: 56eb6d04b37b3379b531e014
+    group_fk_list: [5d04b37631e379b5016b3694]
+
+- model: permission_backend_nonrel.userpermissionlist
+  fields:
+    user: 56eb6d04b37b3379b531e015
+    group_fk_list: [5d04b37631e379b5016b3693]
+
+- model: permission_backend_nonrel.userpermissionlist
+  fields:
+    user: 56eb6d04b37b3379b531e016
+    group_fk_list: [5d04b37631e379b5016b3693]

@@ -2,6 +2,7 @@
 import os
 from collections import OrderedDict
 from datetime import datetime
+from xml.sax.saxutils import escape
 
 from django.conf import settings
 from django.db.models import Sum
@@ -526,8 +527,8 @@ def generate_session_report_card(classroom, session, report_card_header, batch):
                     score = score_matrix[subject.slug]['score_list'][i]
                     teacher_name = subject.get_teacher(classroom).member.full_name
                     student_score_matrix[group_name]['subject_list'].append({
-                        'teacher_name': teacher_name.encode('ascii', 'xmlcharrefreplace'),
-                        'subject_name': subject.name.encode('ascii', 'xmlcharrefreplace'),
+                        'teacher_name': escape(teacher_name).encode('ascii', 'xmlcharrefreplace'),
+                        'subject_name': escape(subject.name).encode('ascii', 'xmlcharrefreplace'),
                         'coefficient': obj.coefficient,
                         'total_score': obj.coefficient * score.value,
                         'score': score,
@@ -612,23 +613,23 @@ def generate_session_report_card(classroom, session, report_card_header, batch):
             'school_logo': school_logo,
             'student_photo': student_photo,
 
-            'country_name': report_card_header.country_name.encode('ascii', 'xmlcharrefreplace'),
-            'country_motto': report_card_header.country_moto.encode('ascii', 'xmlcharrefreplace'),
-            'head_organization': report_card_header.head_organization.encode('ascii', 'xmlcharrefreplace'),
-            'sequence_number': session.name.encode('ascii', 'xmlcharrefreplace'),
-            'school_address': config.address.encode('ascii', 'xmlcharrefreplace'),
-            'school_contact': config.contact_phone.encode('ascii', 'xmlcharrefreplace'),
-            'school_name': config.company_name.encode('ascii', 'xmlcharrefreplace'),
-            'school_motto': config.slogan.encode('ascii', 'xmlcharrefreplace'),
+            'country_name': escape(report_card_header.country_name).encode('ascii', 'xmlcharrefreplace'),
+            'country_motto': escape(report_card_header.country_moto).encode('ascii', 'xmlcharrefreplace'),
+            'head_organization': escape(report_card_header.head_organization).encode('ascii', 'xmlcharrefreplace'),
+            'sequence_number': escape(session.name).encode('ascii', 'xmlcharrefreplace'),
+            'school_address': escape(config.address).encode('ascii', 'xmlcharrefreplace'),
+            'school_contact': escape(config.contact_phone).encode('ascii', 'xmlcharrefreplace'),
+            'school_name': escape(config.company_name).encode('ascii', 'xmlcharrefreplace'),
+            'school_motto': escape(config.slogan).encode('ascii', 'xmlcharrefreplace'),
 
             'school_year': "%d - %d" % (school_year, school_year + 1),
-            'city_name': config.city.encode('ascii', 'xmlcharrefreplace'),
+            'city_name': escape(config.city).encode('ascii', 'xmlcharrefreplace'),
             'classroom': classroom,
             'student': student,
-            'first_name': student.first_name.encode('ascii', 'xmlcharrefreplace'),
-            'last_name': student.last_name.encode('ascii', 'xmlcharrefreplace'),
-            'classroom_name': str(classroom).decode('utf8').encode('ascii', 'xmlcharrefreplace'),
-            'classroom_level_name': str(classroom.level).decode('utf8').encode('ascii', 'xmlcharrefreplace'),
+            'first_name': escape(student.first_name).encode('ascii', 'xmlcharrefreplace'),
+            'last_name': escape(student.last_name).encode('ascii', 'xmlcharrefreplace'),
+            'classroom_name': escape(str(classroom).decode('utf8')).encode('ascii', 'xmlcharrefreplace'),
+            'classroom_level_name': escape(str(classroom.level).decode('utf8')).encode('ascii', 'xmlcharrefreplace'),
             'student_score_matrix': student_score_matrix,
             'total_score': total_score,
             'total_coef': total_coefficient,
@@ -803,8 +804,8 @@ def generate_session_group_report_card(classroom, session_group, report_card_hea
                     score = score_matrix[subject.slug]['score_list'][i]
                     teacher_name = subject.get_teacher(classroom).member.full_name
                     student_score_matrix[group_name]['subject_list'].append({
-                        'teacher_name': teacher_name.encode('ascii', 'xmlcharrefreplace'),
-                        'subject_name': subject.name.encode('ascii', 'xmlcharrefreplace'),
+                        'teacher_name': escape(teacher_name).encode('ascii', 'xmlcharrefreplace'),
+                        'subject_name': escape(subject.name).encode('ascii', 'xmlcharrefreplace'),
                         'coefficient': obj.coefficient,
                         'total_score': obj.coefficient * score.value,
                         'score': score,
@@ -889,23 +890,23 @@ def generate_session_group_report_card(classroom, session_group, report_card_hea
             'school_logo': school_logo,
             'student_photo': student_photo,
 
-            'country_name': report_card_header.country_name.encode('ascii', 'xmlcharrefreplace'),
-            'country_motto': report_card_header.country_moto.encode('ascii', 'xmlcharrefreplace'),
-            'head_organization': report_card_header.head_organization.encode('ascii', 'xmlcharrefreplace'),
-            'sequence_number': session_group.name.encode('ascii', 'xmlcharrefreplace'),
-            'school_address': config.address.encode('ascii', 'xmlcharrefreplace'),
-            'school_contact': config.contact_phone.encode('ascii', 'xmlcharrefreplace'),
-            'school_name': config.company_name.encode('ascii', 'xmlcharrefreplace'),
-            'school_motto': config.slogan.encode('ascii', 'xmlcharrefreplace'),
+            'country_name': escape(report_card_header.country_name).encode('ascii', 'xmlcharrefreplace'),
+            'country_motto': escape(report_card_header.country_moto).encode('ascii', 'xmlcharrefreplace'),
+            'head_organization': escape(report_card_header.head_organization).encode('ascii', 'xmlcharrefreplace'),
+            'sequence_number': escape(session_group.name).encode('ascii', 'xmlcharrefreplace'),
+            'school_address': escape(config.address).encode('ascii', 'xmlcharrefreplace'),
+            'school_contact': escape(config.contact_phone).encode('ascii', 'xmlcharrefreplace'),
+            'school_name': escape(config.company_name).encode('ascii', 'xmlcharrefreplace'),
+            'school_motto': escape(config.slogan).encode('ascii', 'xmlcharrefreplace'),
 
             'school_year': "%d - %d" % (school_year, school_year + 1),
-            'city_name': config.city.encode('ascii', 'xmlcharrefreplace'),
+            'city_name': escape(config.city).encode('ascii', 'xmlcharrefreplace'),
             'classroom': classroom,
             'student': student,
-            'first_name': student.first_name.encode('ascii', 'xmlcharrefreplace'),
-            'last_name': student.last_name.encode('ascii', 'xmlcharrefreplace'),
-            'classroom_name': str(classroom).decode('utf8').encode('ascii', 'xmlcharrefreplace'),
-            'classroom_level_name': str(classroom.level).decode('utf8').encode('ascii', 'xmlcharrefreplace'),
+            'first_name': escape(student.first_name).encode('ascii', 'xmlcharrefreplace'),
+            'last_name': escape(student.last_name).encode('ascii', 'xmlcharrefreplace'),
+            'classroom_name': escape(str(classroom).decode('utf8')).encode('ascii', 'xmlcharrefreplace'),
+            'classroom_level_name': escape(str(classroom.level).decode('utf8')).encode('ascii', 'xmlcharrefreplace'),
             'student_score_matrix': student_score_matrix,
             'total_score': total_score,
             'total_coef': total_coefficient,

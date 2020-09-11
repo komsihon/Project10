@@ -159,19 +159,38 @@
             </div>
         </div>
     </div>
-    {% include 'billing/snippets/modal_payment_options.html' %}
+    {% with payment_cancel_default='yes' %}
+        {% include 'billing/snippets/modal_payment_options.html' %}
+    {% endwith %}
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script>
         (() => {
-           $('body').on('click', 'li.assignment a', (e) => {
-               $('#student-assignments .spinner').fadeIn();
-               let href = $(e.target).prop('href');
-               $('#student-assignments').load(href);
-               return false;
-           })
+            $('body').on('click', 'li.assignment a', (e) => {
+                $('#student-assignments .spinner').fadeIn();
+                let href = $(e.target).prop('href');
+                $('#student-assignments').load(href);
+                return false;
+            }).on('click', '.payment-start', function() {
+                let productId = $(this).data('product-id');
+                $('#payment-product-id').val(productId);
+                if ($(this).hasClass('my-kids'))
+                    $('form#payment-start-flow input[name="payment_conf"]').val('my_kids');
+                else
+                    $('form#payment-start-flow input[name="payment_conf"]').val('default');
+                $('#payment-methods').modal('show');
+            }).on('click', '.payment-method:not(.processing)', function() {
+                if ($(this).hasClass('momo')) {
+                    ikwen.showFloatingNotice("{% trans "Unavailable for now" %}");
+                    return;
+                }
+                let actionURL = $(this).data('action-url');
+                $('.payment-method').addClass('processing');
+                $('#payment-methods .spinner').show();
+                $('form#payment-start-flow').prop('action', actionURL).submit()
+            });
         })()
     </script>
 {% endblock %}

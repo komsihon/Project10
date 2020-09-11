@@ -42,6 +42,10 @@ class Level(Model, ResultsTracker):
 
 class Classroom(Model, ResultsTracker):
     STUDENT_THRESHOLD = 3  # Threshold above which we consider student were consistently populated
+    OUT_OF_20 = "OutOf20"
+    ABC = "ABC"
+    NA = "N/A"
+
     level = models.ForeignKey(Level, verbose_name=_("Level"))
     name = models.CharField(_("Name"), max_length=30,
                             help_text=_("Raw name of the class. Don't write the level again. <br>Eg: A, B ... "
@@ -60,6 +64,8 @@ class Classroom(Model, ResultsTracker):
                                         help_text=_("Check if students of this classroom receive scores after "
                                                     "evaluation. Uncheck if not. For example uncheck for nursery "
                                                     "classrooms as they are not really marked."))
+    marking = models.BooleanField(_("Students marking"), default=OUT_OF_20,
+                                  help_text=_("Select how we mark students in this classroom ."))
 
     class Meta:
         unique_together = ('level', 'name', 'school_year')
