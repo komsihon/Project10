@@ -18,14 +18,13 @@
 
 {% block head_style %}
     {{ block.super }}
-{#    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?V=31.10.19.19.09" />#}
-    <link rel='stylesheet' href="{% static 'website/css/website.css' %}?V=20.8.30.4.37" />
+    <link rel='stylesheet' href="{% static 'website/css/website.css' %}?V=20.9.11" />
 
     <style type="text/css">
-        .edge-panel-left .wrapper {padding: 0 0 120px;}
+        body { background: none; color: #616675 }
+        #navbar { background-color: transparent; }
         section.main-feat {background:url("{% static 'foulassi/img/foulassi-home-bg.jpg' %}") center;background-size: cover;}
-        footer {background: url({% static 'foulassi/img/foulassi-back-to-school.jpg' %}) center;background-size: cover;
-            clear: both; display: block; float: none; height: 75vh; margin: 0;}
+        footer {background: url({% static 'foulassi/img/foulassi-happy-studend.jpg' %}) center;background-size: cover; clear: both; display: block; float: none; height: 75vh; margin: 0;}
         section.address {background-image: none; height: 45vh}
         section.address .cover {background-color: rgba(0, 0, 0, 0.5); color: #2f2f2f; font-weight: 400; height: 75vh}
         section.address .cover h2 {color: #fff; font-size: 33px; font-weight: 600; padding-top: 10vh}
@@ -34,79 +33,54 @@
         section.address a {color: #2f2f2f;font-size: 18px;font-weight: 300;}
         section.site { float: left; font-size: 28px; line-height: 45px; font-weight: 300; text-align: center; width: 100% }
         section.site {min-height: 100px; padding: 137px 0}
-        section.site:nth-child(2n) {background-color: #fff}
         section.site img {width: 60%}
-        section.install-pwa {background: url({% static 'foulassi/img/foulassi-install-pwa.png' %}) center; background-size: cover}
-        .white-text-has-shade {text-shadow: 1px 2px 2px rgba(255, 255, 255, 0.7)}
-        #navbar .glyphicon {color: #fff !important;}
         #navbar .btn {background: #FFF !important; color: #233682 !important;}
+        #navbar-search input.form-control.scrolled { background-color: rgb(246, 246, 246); color: #616675 }
 
-        #bottom-menu .lang-switcher {margin: 0 0 0 50px;}
         #bottom-menu .lang-switcher select {font-size: 12px; width: 45px}
         #bottom-menu .lang-switcher select:active {background: #111}
-        {#div.footer, div.footer .company-name, #bottom-menu li a, #bottom-menu .lang-switcher select {color: #545454}#}
         .features h3 {font-weight: 400}
         .features.site {margin-top: 0}
         .features.site h1 {color: #2d2d2d}
+        section.site h2 { color: #201a3a }
         section.site .cover {background: rgba(0, 0, 0, 0.6); height: 100vh; margin-top: 0; top: 0; color: #ffffff; line-height: 60px; position: absolute; padding: 100px 0; width: 100%}
         section.site .cover h1 { padding: 30px 0 0; }
         section.site .cover .btn {margin-top: 105px}
         section.site.main-feat.banner {height: 100vh}
-        #navbar {background: transparent}
         .navbar-brand strong {color: #fff}
-        .navbar-default .navbar-nav>li>a , .navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a{color: #fff}
+        .navbar-default .navbar-nav>li>a , .navbar-default .navbar-nav>li>a{color: #fff}
         #navbar-search input {background: rgba(102, 102, 102, 0.4);}
         section.site.banner a.btn {background: #fff; border: #233682; color: #233682}
         section.site.banner {margin-top: 0}
         .section.address .cta a {font-size: 18px}
         .for-schools {background: url({% static 'foulassi/img/foulassi-school-building.png' %}) no-repeat right; background-size: auto 100%}
-        .icon-bar {background: #fff}
-
-
-        .section-banniere-bottom { background: url(../img/architecture-entreprise.jpg) center center;
-                            -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover;
-                            background-size: cover; color: white; height: 300px; margin-top: 6.5vh !important; }
-        .section-banniere-inner {
-            width: inherit;
-            height: inherit;
-            background: rgb(2,0,36);
-            background: linear-gradient(90deg, rgba(2,0,36,0.7792637074360994) 0%,
-            rgba(9,9,121,0.49635054216999297) 35%, rgba(0,212,255,0.31707883348651966) 100%);
-            }
 
         .address .cover .title {margin-bottom: 80px}
-        .address .cover .connection-section {text-align: left}
         .connection-section {color: #fff}
-        .connection-section #android-only {font-size: .7em;}
-        .connection-section #android-only .fa-android {font-size: 1.5em}
         .connection-section #android-only a {font-size: .5em}
         .connection-section .action {margin-top: 40px;}
         .connection-section .action a {font-weight: 600;  background-color: #fff}
         .connection-section .action a:hover, .connect-section .action a:active, .connect-section .action a:focus {color: #2f2f2f!important;}
 
+        .screenshots .img { background: no-repeat center; background-origin: content-box; background-size: 90%; }
 
         a.btn { background: #fe7400; border: #fe7400; color: #fff; font-size: 20px; margin: auto; padding: 10px 40px; text-align: center; width: 300px }
 
 
         @media only screen and (max-device-width : 767px) and (orientation: portrait) {
-            section.header {height: 410px; margin-top: 0;}
-            section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 70px;}
             section.header h3 {color: #000;font-size: 22px; font-weight: 400; line-height: 44px}
             .company .title {font-size: 35px }
             .pricing-list > li {margin-top: 75px}
-            .lead {font-size: 22px}
             .achievements .title {}
             section.address .cover h2 {color: #fff; font-weight: 600}
             #bottom-menu {margin-top: 70px; position: relative}
             #bottom-menu li a {color: #fff; font-size: 22px}
-            div.cloud-deploy {bottom: inherit;margin-top: 133px; position: relative}
             .features {padding: 25px 0; margin-top: 0}
             .feat {margin-top: 100px}
             .feat:first-child {margin-top: 0}
             section.main-feat {height: 1000px}
 
             section.main-feat {background-position: center}
-            .contact-img {margin-top: 35px}
             section.site .cover h1 {padding: 0}
             section.address {height: 137vh}
             section.address .cover {height: inherit}
@@ -114,7 +88,6 @@
             section.site.banner a.btn {width: 100%}
             footer div {padding: 0}
             .section.address .cta a {font-size: 20px}
-            section.install-pwa {background-position: right}
             footer section .address .action a {margin-top: 20px!important;}
         }
 
@@ -122,10 +95,7 @@
             .features {padding: 25px 0; margin-top: 50px}
             .feat {margin-top: 20px}
 
-            section.header {height: 510px; margin-top: 0;}
-            section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 70px;}
             section.header h3 {color: #000;font-size: 22px; font-weight: 400; line-height: 44px;}
-            div.cloud-deploy {bottom: inherit;margin-top: 225px; position: relative}
             section.site img {width: 60%}
 
             section.site.banner p {margin-top: 25px; font-size: 21px;line-height: 40px;}
@@ -146,15 +116,14 @@
             footer .address {height: inherit}
             footer .address .cover {height: inherit}
             footer .address .action {margin-top: 0}
-            footer .address .cover .title {padding-top: 1vh; margin-bottom: 38px; line-height: 45px}
+            footer .address .cover .title {padding-top: 20vh; margin-bottom: 38px; line-height: 45px}
             footer .address .action a {width: inherit}
-            footer .address #android-only-container {text-align: center}
+            footer .address {text-align: center}
             footer .address .cover .connection-section:last-child {margin-top: 12vh}
+            .screenshots section.site img { width: 100% }{% comment %}{% endcomment %}
         }
 
         @media only screen and (min-width : 768px) and (orientation: landscape) {
-            {#section.site .cover {height: 650px}#}
-            {#section.site.main-feat.banner {height: 650px}#}
             section.site.banner h1 {margin-top: 40px}
             section.site .cover .btn {margin-top: 60px}
             section.address {height: 60vh}
@@ -172,9 +141,14 @@
             section.site {padding: 60px 0}
             section.site .cover p {font-size: 21px; font-weight: 400; line-height: 35px}
             section.site.banner h1 {font-size: 51px; font-weight: 700;line-height: 65px}
-            section.site h2 {font-size: 24px; font-weight: 600; line-height: 30px; text-align: left;}
+            section.site h2 {font-size: 30px; font-weight: 700; line-height: 42px; text-align: left;}
             section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
             .for-schools {background-position-x: 50px}
+            .img.student-follow-up { background-image: url("{% static 'foulassi/img/MyKids-Homepage.png' %}") }
+            .img.homework { background-image: url("{% static 'foulassi/img/MyKids-Homework.png' %}") }
+            .img.reporting { background-image: url("{% static 'foulassi/img/MyKids-Marks.png' %}") }
+            .img.online-payment { background-image: url("{% static 'foulassi/img/foulassi-online-payment.png' %}"); background-size: 90%; }
+            .screenshots section.site .features > div { padding: 60px 15px; }
         }
 
 
@@ -184,24 +158,19 @@
         }
 
         @media only screen and (max-width : 991px) {
-            div.footer, #bottom-menu li a {font-size: 15px}
+            #bottom-menu li a {font-size: 15px}
         }
 
         @media only screen and (min-width : 992px) {
-            .navbar-default .navbar-brand:hover, .navbar-default .navbar-nav>li>a:hover {color: #fff}
-            section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 130px;}
+            .navbar-default .navbar-nav>li>a:hover {color: #fff}
             section.header h3 {color: #000; font-size: 33px;font-weight: 400;  line-height: 94px;}
-            section.header {height: 900px}
             .features p {line-height: 40px}
             section.site img {width: 55%}
-            section.site img.history {width: 60%}
             section.site.banner {text-align: left; padding-top: 0; height: 900px}
             section.site.banner p {margin-top: 25px; text-align: justify;font-size: 21px;line-height: 40px;}
             section.site.banner h1 {font-size: 51px; font-weight: 700;line-height: 65px; margin-top: 110px}
-            section.site.banner .video {margin-top: 58px}
             .cta {text-align: left; }
             .feat h2 {padding-bottom: 30px; font-size: 32px; font-weight: 600; text-align: left}
-            .trail {margin-top: 100px;}
             footer, section.address .cover {height: 540px}
             section.address {height: 490px}
             section.address .cover h2 {padding-top: 15vh}
@@ -210,16 +179,14 @@
         }
 
         @media only screen and (min-width : 1200px) {
-            section.header .banner-title-cntr {background-color: rgba(255, 255, 255, 0.7); margin-top: 170px;}
             section.site {padding: 135px 0}
             section.site.banner h1 {margin-top: 110px}
-            section.site h2 {font-size: 33px}
+            section.site h2 {font-size: 43px}
             section.header h3 {color: #000; font-size: 33px;font-weight: 400;  line-height: 94px;}
-            section.header {height: 1015px}
-            div.cloud-deploy {bottom: 250px}
-            section.site.header {height: 1000px}
             footer, section.address .cover {height: 670px}
             section.address {height: 600px}
+            .screenshots section.site { padding: 0 }
+            .screenshots section.site .features > div { padding: 135px 15px; }
             .for-schools {background-position-x: 360px}
         }
     </style>
@@ -227,7 +194,8 @@
 
 {% block header_brand %}
     <a class="navbar-brand hidden-xs" href="{{ service.url }}">
-        <img style="height: 30px" src="{% static 'website/img/logo-ikwen_for-header_white.png' %}"/>
+        <img class="not-scrolled" style="height: 30px" src="{% static 'website/img/logo-ikwen_for-header_white.png' %}"/>
+        <img class="scrolled" style="height: 30px; display: none" src="{% static 'website/img/logo-ikwen_for-header.png' %}"/>
     </a>
     <strong class="navbar-brand visible-xs">{{ service.project_name }}</strong>
 {% endblock %}
@@ -247,7 +215,7 @@
 {% block page_content %}
     <section class="main-feat banner site">
         <div class="cover">
-            <div class="container">
+            <div class="container" style="margin-top: 10vh">
                 <div class="row desc">
                     <div class="col-xs-12 text-has-shade">
                         <h1>{% trans "Follow your kids at school in real-time" %} </h1>
@@ -265,14 +233,15 @@
             </div>
         </div>
     </section>
-    <section class="features site">
-        <div class="container">
-            <div class="row features">
-                <div class="feat col-sm-12">
-                    <div class="col-sm-6">
-                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-follow-in-single-place.png' %}">
+
+    <div class="screenshots">
+        <section class="features site" style="padding-top: 5vh">
+            <div class="container">
+                <div class="row features">
+                    <div class="col-sm-6 visible-xs">
+                        <img class="img-responsive" src="{% static 'foulassi/img/MyKids-Homepage.png' %}">
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 description">
                         <h2>{% trans "Follow them all in one single place" %}</h2>
                         <div class="desc">
                             <p>{% blocktrans %}
@@ -283,15 +252,58 @@
                             {% endblocktrans %}</p>
                         </div>
                     </div>
+                    <div class="col-sm-6 img student-follow-up hidden-xs">
+                        {# Force DIV height by putting the same text and set visibility to hidden #}
+                        <h2 class="hidden-xs" style="visibility: hidden">{% trans "Follow them all in one single place" %}</h2>
+                        <div class="desc hidden-xs" style="visibility: hidden">
+                            <p>{% blocktrans %}
+                                Foulassi collects data from all schools of your kids and put them in one single place
+                                for you to follow.
+                                You can get someone else to follow them by adding the person to the parent list. This
+                                is perfect to add the child's uncle or grand-father.
+                            {% endblocktrans %}</p>
+                        </div>
+                        {# End Force DIV height #}
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="features site">
-        <div class="container">
-            <div class="row features">
-                <div class="feat col-sm-12">
-                    <div class="col-sm-6">
+        </section>
+        <section class="features site">
+            <div class="container">
+                <div class="row features">
+                    <div class="col-sm-6 img homework">
+                        <img class="img-responsive visible-xs" src="{% static 'foulassi/img/MyKids-Homework.png' %}">
+                        {# Force DIV height by putting the same text and set visibility to hidden #}
+                        <h2 class="hidden-xs" style="visibility: hidden">{% trans "Get in touch with their school's activity" %}</h2>
+                        <div class="desc hidden-xs" style="visibility: hidden">
+                            <p>{% blocktrans %}
+                                Receive assignments from teachers on <strong>MyKids</strong> app and get reminded when the
+                                deadline to do it is close. You will feel like going to school with your children
+                                and rediscover those years again.
+                            {% endblocktrans %}</p>
+                        </div>
+                        {# End Force DIV height #}
+                    </div>
+                    <div class="col-sm-6 description">
+                        <h2>{% trans "Get in touch with their school's activity" %}</h2>
+                        <div class="desc">
+                            <p>{% blocktrans %}
+                                Receive assignments from teachers on <strong>MyKids</strong> app and get reminded when the
+                                deadline to do it is close. You will feel like going to school with your children
+                                and rediscover those years again.
+                            {% endblocktrans %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="features site">
+            <div class="container">
+                <div class="row features">
+                    <div class="col-sm-6 visible-xs">
+                        <img class="img-responsive" src="{% static 'foulassi/img/MyKids-Marks.png' %}">
+                    </div>
+                    <div class="col-sm-6 description">
                         <h2>{% trans "Know their results before they do" %}</h2>
                         <div class="desc">
                             <p>{% blocktrans %}
@@ -302,21 +314,40 @@
                             {% endblocktrans %}</p>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-stay-tuned.png' %}">
+                    <div class="col-sm-6 img reporting hidden-xs">
+                        {# Force DIV height by putting the same text and set visibility to hidden #}
+                        <h2 class="hidden-xs" style="visibility: hidden">{% trans "Know their results before they do" %}</h2>
+                        <div class="desc hidden-xs" style="visibility: hidden">
+                            <p>{% blocktrans %}
+                                You have immediate access to your children's scores and discipline information, as
+                                soon as teachers and staff put them online.<br/>
+                                You can take decisive action if things are going wrong. If results are good,
+                                think of offering them their favorite sneakers.
+                            {% endblocktrans %}</p>
+                        </div>
+                        {# End Force DIV height #}
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="features site">
-        <div class="container">
-            <div class="row features">
-                <div class="feat col-sm-12">
-                    <div class="col-sm-6">
-                        <img class="history img-responsive" src="{% static 'foulassi/img/foulassi-online-payment.png' %}">
+        </section>
+        <section class="features site" style="padding-bottom: 15vh">
+            <div class="container">
+                <div class="row features">
+                    <div class="col-sm-6 img online-payment">
+                        <img class="img-responsive visible-xs" src="{% static 'foulassi/img/foulassi-online-payment.png' %}">
+                        {# Force DIV height by putting the same text and set visibility to hidden #}
+                        <h2 class="hidden-xs" style="visibility: hidden">{% trans "Pay their invoices online" %}</h2>
+                        <div class="desc hidden-xs" style="visibility: hidden">
+                            <p>{% blocktrans %}
+                                Pay whatever is due directly online using whatever Mobile Money wallet.
+                                Money goes straight to the school. You know exactly how much things cost and
+                                you don't take the risk of giving money to your kids for them to go and use it
+                                for something else.
+                            {% endblocktrans %}</p>
+                        </div>
+                        {# End Force DIV height #}
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 description">
                         <h2>{% trans "Pay their invoices online" %}</h2>
                         <div class="desc">
                             <p>{% blocktrans %}
@@ -329,8 +360,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 {% endblock %}
 
 {% block footer %}
@@ -340,19 +371,7 @@
                 <h2 class="title animated wow fadeInLeft">
                     {% trans "Connect with your children now" %}
                 </h2>
-                <div class="col-sm-5 col-sm-offset-1 connection-section">
-                    <h3>{% blocktrans %}Download the app{% endblocktrans %}</h3>
-                    <p>
-                        {% blocktrans %}
-                            Install app on your Device for faster access.
-                        {% endblocktrans %}
-                    </p>
-                    <div class="action">
-                        <a class="btn btn-sm" href="javascript:;" style="font-weight: 600;  background-color: #fff">{% trans "Download" %}</a>
-                    </div>
-                </div>
-                <div class="col-sm-5 col-sm-offset-1 connection-section">
-                    <h3>{% trans "Web access" %}</h3>
+                <div class="connection-section hidden-sm hidden-xs">
                     <p>
                         {% blocktrans %}
                             Access from your web browser on PC, Tablet, or Phone.
@@ -362,15 +381,26 @@
                         <a id="deploy" class="btn btn-sm" href="https://foulassi.ikwen.com">{% trans "Get connected" %}</a>
                     </div>
                 </div>
+                <div class="col-sm-5 col-sm-offset-1 connection-section visible-sm visible-xs">
+                    <h3>{% blocktrans %}Download the app{% endblocktrans %}</h3>
+                    <p>
+                        {% blocktrans %}
+                            Install app on your Device for faster access.
+                        {% endblocktrans %}
+                    </p>
+                    <div class="action">
+                        <a class="btn btn-sm" href="https://foulassi.ikwen.com" style="font-weight: 600;  background-color: #fff">{% trans "Download" %}</a>
+                    </div>
+                </div>
             </div>
             <div class="clearfix"></div>
         </section>
-        <section class="features site for-schools" style="color: #545454">
+        <section class="features site for-schools" style="color: #545454; margin-bottom: 3vh">
             <div class="container">
                 <div class="row features">
                     <div class="feat col-sm-12">
                         <div class="col-sm-5">
-                            <h2>{% trans "Are you a school manager ?" %}</h2>
+                            <h2>{% trans "Are you a school manager?" %}</h2>
                             <div class="desc" style="text-align: left">
                                 <p>{% trans "Take your school on this awesome platform in no time." %}</p>
                                 <a href="{% url 'foulassi:home_saas' %}" style="color: #319dd5; font-size: 16px; font-weight: 700">
@@ -420,16 +450,31 @@
     {{ block.super }}
     <script>
         (() => {
-            var scrollBreakPoint = 90;
+            $('.navbar-brand').css('color', 'rgb(255,255,255)');
+            const scrollBreakPoint = 90;
             $(window).scroll((event) => {
-                var scrollTop = $(this).scrollTop();
+                let scrollTop = $(this).scrollTop();
                 if (scrollTop > scrollBreakPoint){
                     var opacity = Math.abs(scrollBreakPoint - scrollTop) / 100;
-                    $('#navbar').css("background-color", `rgba(35, 54, 130, ${opacity})`);
-                    if ($(window).width() > 767) $('#navbar-search input').css("background-color", `rgba(26, 39, 93, ${opacity})`);
+                    $('#navbar').css("background-color", `rgba(255, 255, 255, ${opacity})`);
+                    $('.navbar-nav>li>a').css("color", `rgb(33, 125, 187)`);
+                    $('.icon-bar').css('background-color', 'rgb(33,125,187)');
+                    $('.navbar-brand').css('color', 'rgb(33,125,187)');
+                    if ($(window).width() > 767) {
+                         $('#navbar-search input.form-control').addClass('scrolled');
+                         $('img.scrolled').show();
+                         $('img.not-scrolled').hide()
+                    }
                 } else {
                     $('#navbar').css("background-color", "transparent");
-                    if ($(window).width() > 767) $('#navbar-search input').css("background-color", "rgba(102, 102, 102, .4)");
+                    $('.navbar-nav>li>a').css('color', `rgb(255, 255, 255)`);
+                    $('.icon-bar').css('background-color', 'rgb(255,255,255)');
+                    $('.navbar-brand').css('color', 'rgb(255,255,255)');
+                    if ($(window).width() > 767) {
+                         $('#navbar-search input.form-control').removeClass('scrolled');
+                         $('img.scrolled').hide();
+                         $('img.not-scrolled').show()
+                    }
                 }
             });
         })()
