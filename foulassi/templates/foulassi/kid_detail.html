@@ -168,6 +168,9 @@
     {{ block.super }}
     <script>
         (() => {
+            $('<input type="hidden" name="school_id" value="{{ service.id }}">').appendTo('#payment-start-flow');
+            $('<input type="hidden" name="student_id" value="{{ student.id }}">').appendTo('#payment-start-flow');
+            $('<input type="hidden" name="my_kids_cycle">').appendTo('#payment-start-flow');
             $('body').on('click', 'li.assignment a', (e) => {
                 $('#student-assignments .spinner').fadeIn();
                 let href = $(e.target).prop('href');
@@ -176,9 +179,11 @@
             }).on('click', '.payment-start', function() {
                 let productId = $(this).data('product-id');
                 $('#payment-product-id').val(productId);
-                if ($(this).hasClass('my-kids'))
+                if ($(this).hasClass('my-kids')) {
+                    let myKidsCycle = $(this).data('cycle');
                     $('form#payment-start-flow input[name="payment_conf"]').val('my_kids');
-                else
+                    $('form#payment-start-flow input[name="my_kids_cycle"]').val(myKidsCycle);
+                } else
                     $('form#payment-start-flow input[name="payment_conf"]').val('default');
                 $('#payment-methods').modal('show');
             }).on('click', '.payment-method:not(.processing)', function() {

@@ -51,6 +51,7 @@
                                 <span class="hidden-xs">{{ subject|truncatechars:"15" }}</span>
                                 <span class="visible-xs">{{ subject|truncatechars:"10" }}</span>
                             </a>
+                            <button type="button" class="close delete" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
                         {% endfor %}
                         <div role="presentation" class="tab show-add-subject">
@@ -197,6 +198,19 @@
                 $.getJSON('', params, function(data) {
                     if (data.success) {
                         ikwen.showFloatingNotice("{% trans "Teacher responsibilities updated" %}", '', 6);
+                    }
+                })
+            }).on('click', '.tab .delete', function() {
+                if (!confirm("{% trans "Confirm deletion ?" %}")) return;
+                let _$tab = $(this).parents('.tab'),
+                    subjectId = _$tab.data('subject-id'),
+                    params = {action: 'remove_subject', subject_id: subjectId};
+                $.getJSON('', params, function(data) {
+                    if (data.success) {
+                        _$tab.remove();
+                        $(`#${subjectId}`).remove();
+                        let tabs = $('.tab:not(.show-add-subject)');
+                        if (tabs.length > 0) tabs[0].click();
                     }
                 })
             })

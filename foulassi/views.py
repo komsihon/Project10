@@ -37,7 +37,7 @@ from ikwen_foulassi.foulassi.cloud_setup import DeploymentForm, deploy
 from ikwen_foulassi.foulassi.utils import can_access_kid_detail
 
 from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Event, Parent, EventType, \
-    PARENT_REQUEST_KID, KidRequest, Reminder
+    PARENT_REQUEST_KID, KidRequest, Reminder, get_school_year
 from ikwen_foulassi.school.models import get_subject_list, Justificatory, DisciplineLogEntry, Score, Assignment, \
     Homework
 from ikwen_foulassi.school.admin import HomeworkAdmin
@@ -155,6 +155,9 @@ class KidList(TemplateView):
             suggestion_list = []
             for obj in Parent.objects.select_related('student').filter(Q(email=user.email) | Q(phone=user.phone)):
                 student = obj.student
+                if student.school_year < get_school_year():
+                    obj.delete()
+                    continue
                 if student.my_kids_expiry:
                     diff = student.my_kids_expiry - datetime.now()
                     if diff.total_seconds() <= 0:

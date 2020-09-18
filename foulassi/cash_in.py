@@ -16,19 +16,23 @@ from currencies.models import Currency
 from ikwen.conf.settings import WALLETS_DB_ALIAS
 from ikwen.core.models import Service
 from ikwen.core.utils import add_database, get_service_instance, get_mail_content, XEmailMessage
-from ikwen.billing.models import MoMoTransaction
+from ikwen.billing.models import MoMoTransaction, InvoiceItem, InvoiceEntry
 from ikwen.billing.utils import get_payment_confirmation_message, generate_pdf_invoice, get_invoicing_config_instance, \
-    get_billing_cycle_days_count
+    get_billing_cycle_days_count, get_next_invoice_number
 from ikwen.billing.mtnmomo.views import MTN_MOMO
 from ikwen_foulassi.foulassi.utils import share_payment_and_set_stats
-from ikwen_foulassi.foulassi.models import Invoice, Payment, SchoolConfig
+from ikwen_foulassi.foulassi.models import Invoice, Payment, SchoolConfig, Student
 
 logger = logging.getLogger('ikwen')
 
 
 def set_invoice_checkout(request, *args, **kwargs):
     invoice_id = request.POST['product_id']
-    invoice = Invoice.objects.select_related('school', 'student').get(pk=invoice_id)
+    school_id = request.POST['school_id']
+    school = Service.objects.get(pk=school_id)
+    db = school.database
+    add_database(db)
+    invoice = Invoice.objects.using(db).select_related('school', 'student').get(pk=invoice_id)
     member = invoice.member
     if member and not member.is_ghost:
         if request.user != member:
@@ -38,7 +42,6 @@ def set_invoice_checkout(request, *args, **kwargs):
                 next_url += '?' + urlquote(referrer)
             return HttpResponseRedirect(next_url)
     service = get_service_instance()
-    school = invoice.school
     try:
         aggr = Payment.objects.filter(invoice=invoice).aggregate(Sum('amount'))
         amount_paid = aggr['amount__sum']
@@ -124,15 +127,14 @@ def confirm_invoice_payment(request, *args, **kwargs):
     tx.fees = ikwen_charges
     tx.save()
     mean = tx.wallet
-    add_database(school.database)
-    invoice = Invoice.objects.get(pk=tx.object_id)
-    payment = Payment.objects.create(invoice=invoice, method=Payment.MOBILE_MONEY,
-                                     amount=tx.amount, processor_tx_id=operator_tx_id)
-    payment.save(using=school.database)
-    invoice.paid = invoice.amount
+    db = school.database
+    add_database(db)
+    invoice = Invoice.objects.using(db).get(pk=tx.object_id)
+    payment = Payment.objects.using(db).create(invoice=invoice, method=Payment.MOBILE_MONEY,
+                                               amount=tx.amount, processor_tx_id=operator_tx_id)
+    invoice.paid = tx.amount
     invoice.status = Invoice.PAID
     invoice.save()
-    invoice.save(using=school.database)
     student = invoice.student
     if not school_config.is_public or (school_config.is_public and not invoice.is_tuition):
         amount = tx.amount - ikwen_charges
@@ -155,7 +157,7 @@ def confirm_invoice_payment(request, *args, **kwargs):
         sender = '%s <no-reply@%s>' % (school_config.company_name, school.domain)
         msg = XEmailMessage(subject, html_content, sender, [member.email])
         msg.content_subtype = "html"
-        bcc = [email.strip() for email in school_config.notification_email.split(',') if email.strip()]
+        bcc = [email.strip() for email in school_config.notification_emails.split(',') if email.strip()]
         bcc += [school_config.contact_email, school.member.email]
         msg.bcc = list(set(bcc))
         try:
@@ -168,39 +170,50 @@ def confirm_invoice_payment(request, *args, **kwargs):
 
 
 def set_my_kids_payment(request, *args, **kwargs):
-    invoice_id = request.POST['product_id']
-    invoice = Invoice.objects.select_related('school', 'student').get(pk=invoice_id)
-    member = invoice.member
-    if member and not member.is_ghost:
-        if request.user != member:
-            next_url = reverse('ikwen:sign_in')
-            referrer = request.META.get('HTTP_REFERER')
-            if referrer:
-                next_url += '?' + urlquote(referrer)
-            return HttpResponseRedirect(next_url)
-    service = get_service_instance()  # This is ikwen service itself
-    school = invoice.school
-    school_config = SchoolConfig.objects.get(service=school)
+    school_id = request.POST['school_id']
+    student_id = request.POST['student_id']
+    cycle = request.POST['my_kids_cycle']
+    school = Service.objects.get(pk=school_id)
+    student = Student.objects.get(pk=student_id)
+    school_config = SchoolConfig.objects.get(school=school)
+    Invoice.objects.filter(student=student, is_my_kids=True, status=Invoice.PENDING).delete()
+    if cycle == Service.YEARLY:
+        amount = school_config.my_kids_fees
+    elif cycle == Service.QUARTERLY:
+        amount = school_config.my_kids_fees_term
+    else:
+        amount = school_config.my_kids_fees_month
+        cycle = Service.MONTHLY
+    item = InvoiceItem(label=_("MyKids fees"), amount=amount)
+    days = get_billing_cycle_days_count(cycle)
+    now = datetime.now()
+    expiry = now + timedelta(days=days)
+    short_description = now.strftime("%Y/%m/%d") + ' - ' + expiry.strftime("%Y/%m/%d")
+    entry = InvoiceEntry(item=item, short_description=short_description, total=amount, quantity_unit='')
+    number = get_next_invoice_number()
+    member = request.user
+    invoice = Invoice.objects.create(number=number, member=member, student=student, school=school, is_one_off=True,
+                                     amount=amount, my_kids_cycle=cycle, due_date=now, entries=[entry], is_my_kids=True)
+    foulassi_weblet = get_service_instance()  # This is Foulassi service itself
 
     # Transaction is hidden from school if ikwen collects 100%.
     # This is achieved by changing the service_id of transaction
-    tx_service_id = school.id if school_config.my_kids_share_rate < 100 else service.id
-    amount = invoice.amount
+    tx_service_id = school.id if school_config.my_kids_share_rate < 100 else foulassi_weblet.id
     model_name = 'billing.Invoice'
     mean = request.GET.get('mean', MTN_MOMO)
     signature = ''.join([random.SystemRandom().choice(string.ascii_letters + string.digits) for i in range(16)])
-    MoMoTransaction.objects.using(WALLETS_DB_ALIAS).filter(object_id=invoice_id).delete()
+    MoMoTransaction.objects.using(WALLETS_DB_ALIAS).filter(object_id=invoice.id).delete()
 
     tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS)\
         .create(service_id=tx_service_id, type=MoMoTransaction.CASH_OUT, amount=amount, phone='N/A', model=model_name,
-                object_id=invoice_id, task_id=signature, wallet=mean, username=request.user.username, is_running=True)
-    notification_url = service.url + reverse('foulassi:confirm_my_kids_payment', args=(tx.id, signature))
+                object_id=invoice.id, task_id=signature, wallet=mean, username=request.user.username, is_running=True)
+    notification_url = foulassi_weblet.url + reverse('foulassi:confirm_my_kids_payment', args=(tx.id, signature))
     cancel_url = request.META['HTTP_REFERER']
     return_url = request.META['HTTP_REFERER']
     gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'http://payment.ikwen.com/v1')
     endpoint = gateway_url + '/request_payment'
     params = {
-        'username': getattr(settings, 'IKWEN_PAYMENT_GATEWAY_USERNAME', service.project_name_slug),
+        'username': getattr(settings, 'IKWEN_PAYMENT_GATEWAY_USERNAME', foulassi_weblet.project_name_slug),
         'amount': amount,
         'merchant_name': 'MyKids',
         'notification_url': notification_url,
@@ -215,11 +228,11 @@ def set_my_kids_payment(request, *args, **kwargs):
         if token:
             next_url = gateway_url + '/checkoutnow/' + resp['token'] + '?mean=' + mean
         else:
-            logger.error("%s - Init payment flow failed with URL %s and message %s" % (service.project_name, r.url, resp['errors']))
+            logger.error("%s - Init payment flow failed with URL %s and message %s" % (foulassi_weblet.project_name, r.url, resp['errors']))
             messages.error(request, resp['errors'])
             next_url = cancel_url
     except:
-        logger.error("%s - Init payment flow failed with URL." % service.project_name, exc_info=True)
+        logger.error("%s - Init payment flow failed with URL." % foulassi_weblet.project_name, exc_info=True)
         next_url = cancel_url
     return HttpResponseRedirect(next_url)
 
@@ -253,7 +266,8 @@ def confirm_my_kids_payment(request, *args, **kwargs):
     if status != MoMoTransaction.SUCCESS:
         return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
 
-    school = Service.objects.get(pk=tx.service_id)
+    invoice = Invoice.objects.get(pk=tx.object_id)
+    school = invoice.school
     school_config = SchoolConfig.objects.get(service=school)
     ikwen_charges = tx.amount * school_config.my_kids_share_rate / 100
 
@@ -265,39 +279,30 @@ def confirm_my_kids_payment(request, *args, **kwargs):
     tx.fees = ikwen_charges
     tx.save()
     mean = tx.wallet
-    add_database(school.database)
-    invoice = Invoice.objects.get(pk=tx.object_id)
-    payment = Payment.objects.create(invoice=invoice, method=Payment.MOBILE_MONEY,
-                                     amount=tx.amount, processor_tx_id=operator_tx_id)
-    payment.save(using=school.database)
-    invoice.paid = invoice.amount
-    invoice.status = Invoice.PAID
-    invoice.save()
-    invoice.save(using=school.database)
-    student = invoice.student
 
     amount = tx.amount - ikwen_charges
     school.raise_balance(amount, provider=mean)
-
-    if tx.amount >= school_config.my_kids_fees:  # Default fees is annual
-        billing_cycle = Service.YEARLY
-    elif tx.amount >= school_config.my_kids_fees_term:
-        billing_cycle = Service.QUARTERLY
-    else:
-        billing_cycle = Service.MONTHLY
-    days = get_billing_cycle_days_count(billing_cycle)
-    if student.my_kids_expiry:
-        expiry = student.my_kids_expiry + timedelta(days=days)
-    else:
-        expiry = datetime.now() + timedelta(days=days)
-    student.my_kids_expiry = expiry
-    student.save(using=school.database)
-    
-    student.set_has_new(using=school.database)
-    student.save(using='default')
-
     share_payment_and_set_stats(invoice, mean)
+
+    invoice.paid = invoice.amount
+    invoice.status = Invoice.PAID
+    invoice.save()
+
     member = invoice.member
+    student = invoice.student
+    days = get_billing_cycle_days_count(invoice.my_kids_cycle)
+    expiry = datetime.now() + timedelta(days=days)
+    student.my_kids_expiry = expiry
+    student.save()
+
+    db = school.database
+    add_database(db)
+    invoice.save(using=db)
+    payment = Payment(invoice=invoice, method=Payment.MOBILE_MONEY, amount=tx.amount, processor_tx_id=operator_tx_id)
+    if school_config.my_kids_share_rate < 100:
+        # Payment appears in school log panel only if the have something to collect out of that
+        payment.save(using=db)
+
     if member.email:
         try:
             currency = Currency.active.default().symbol

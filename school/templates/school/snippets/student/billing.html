@@ -73,10 +73,11 @@
         <li class="list-group-item ik-li payment" id="{{ payment.id }}">
             <div class="row">
                 <div class="col-xs-10">
-                    <div class="di-title">
-                        <span class="amount">{{ payment.amount|intcomma }}</span>
-                        <span class="method text-muted">{{ currency_symbol }} - {{ payment.method }}</span>
-                    </div>
+                    <a class="title" href="{% url 'billing:invoice_detail' payment.invoice.id %}" target="_blank">
+                        <span class="currency text-muted">{{ currency_symbol }}</span>
+                        <strong class="amount">{{ payment.amount|intcomma }}</strong>
+                        <span class="method text-muted">- {{ payment.method }}</span>
+                    </a>
                     <div class="di-details text-muted">{{ payment.invoice.get_title }}</div>
                 </div>
                 <div class="col-xs-2">
@@ -88,10 +89,10 @@
     <li class="list-group-item ik-li payment tpl" style="display: none">
         <div class="row">
             <div class="col-xs-10">
-                <div class="di-title">
+                <a class="title">
                     <span class="amount"></span>:
                     <span class="method text-muted">{% trans "Cash" %}</span>
-                </div>
+                </a>
                 <div class="details text-muted"></div>
             </div>
             <div class="col-xs-2">
@@ -101,3 +102,65 @@
     </li>
 </ul>
 <div class="clearfix"></div>
+<script>
+    (() => {
+        $('body').on('click', '.do-add-invoice:not(.processing)', function() {
+            let _$btn = $(this),
+                amount = $('#new-invoice-amount').val(),
+                label = $('#new-invoice-label').val(),
+                dueDate = $('#new-invoice-due-date-alt').val(),
+                params = {action: 'add_invoice', amount: amount, due_date: dueDate, label: label};
+            _$btn.addClass('processing');
+            $.getJSON('', params, function(data) {
+                _$btn.removeClass('processing');
+                if (data.success) {
+                    let $invoice = $('li.pending-invoice.tpl').clone().removeClass('tpl').attr('id', data.id).data('id', data.id);
+                    $invoice.find('.amount .value').text(amount);
+                    $invoice.find('.due-date').text(dueDate);
+                    $invoice.find('.label').text(label);
+                    $invoice.prependTo('.pending-invoices').fadeIn();
+                    $('#modal-add-invoice').modal('hide');
+                    $('.no-pending-invoice').hide();
+                }
+            })
+        }).on('click', '.show-modal-cash-in', function() {
+            $('.errorlist.amount').remove();
+            let invoiceId = $(this).data('invoice-id'),
+                amount = $(this).data('amount');
+            $('#cash-in-invoice-id').val(invoiceId);
+            $('#cash-in-amount').val(amount);
+        }).on('click', '.do-cash-in:not(.processing)', function() {
+            $('.errorlist.amount').remove();
+            let _$btn = $(this),
+                invoiceId = $('#cash-in-invoice-id').val(),
+                _$invoice = $(`#${invoiceId}`),
+                toBePaid = _$invoice.data('to-be-paid'),
+                amount = $('#cash-in-amount').val(),
+                rest = toBePaid - amount,
+                title = $('#' + invoiceId + ' .title').text(),
+                params = {action: 'cash_in', invoice_id: invoiceId, amount: amount};
+            amount = parseFloat(amount);
+            if (isNaN(amount) || amount > parseFloat(toBePaid)) {
+                $('<ul class="errorlist amount">' +
+                '<li>' + "{% trans "Please enter a valid number." %}" + '</li>' +
+                '</ul>').insertAfter('#invoice-amount');
+                return;
+            }
+            _$btn.addClass('processing');
+            $.getJSON('', params, function(data) {
+                _$btn.removeClass('processing');
+                if (data.success) {
+                    _$invoice.data('to-be-paid', rest);
+                    _$invoice.find('.show-modal-cash-in').data('amount', rest);
+                    $(`#${invoiceId} .amount .value`).text(rest.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                    let $payment = $('li.payment.tpl').clone().removeClass('tpl');
+                    $payment.find('.amount').text(amount.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                    $payment.find('.details').text(title);
+                    $payment.find('.di-title').prop('href', data.invoice_url);
+                    $('#modal-cash-in').modal('hide');
+                    $payment.prependTo('.payment-log').fadeIn();
+                } else ikwen.showFloatingNotice(data.error)
+            })
+        });
+    })()
+</script>

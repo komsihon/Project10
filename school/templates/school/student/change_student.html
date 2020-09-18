@@ -21,6 +21,7 @@
                 var dob = $(this).val();
                 if (dob.length >= 10) $(this).datepicker("setDate", dob);
             }).datepicker("option", {dateFormat: "dd/mm/yy"});
+            $('<p class="help">' + "{% trans "Leave blank to auto-generate one" %}" + '</p>').insertAfter('#id_registration_number');
         })()
     </script>
 {% endblock %}

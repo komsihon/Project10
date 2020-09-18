@@ -43,7 +43,7 @@ from ikwen_foulassi.reporting.models import SessionReport, LessonReport
 from ikwen_foulassi.school.admin import ClassroomAdmin, AssignmentAdmin
 from ikwen_foulassi.school.models import Level, Classroom, Session, get_subject_list, Subject, Score, \
     ScoreUpdateRequest, SubjectCoefficient, Lesson, Assignment
-from ikwen_foulassi.school.student.views import set_student_invoices, set_my_kids_invoice
+from ikwen_foulassi.school.student.views import set_student_invoices
 from import_export.formats.base_formats import XLS
 
 logger = logging.getLogger('ikwen')
@@ -254,7 +254,6 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                                         email=parent2_email, relation=parent2_relationship)
                         if set_invoices:
                             set_student_invoices(student)
-                        set_my_kids_invoice(student)
                     except:
                         if getattr(settings, 'DEBUG', False):
                             error = traceback.format_exc()
@@ -552,7 +551,7 @@ class ClassroomDetail(ChangeObjectBase):
                     weblet = get_service_instance()
                     config = weblet.config
                     uri = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student_id, ))
-                    target = 'https://foulassi.ikwen.com' + strip_base_alias(uri).replace('/foulassi', '')
+                    target = 'https://foulassi.ikwen.com' + strip_base_alias(uri).replace('/foulassi', '') + '?tab=scores'
                     Thread(target=send_push_to_parents, args=(foulassi, config.company_name, parents, text, target)).start()
                     if request.GET.get('send_sms'):
                         Thread(target=send_billed_sms, args=(weblet, parents, text)).start()

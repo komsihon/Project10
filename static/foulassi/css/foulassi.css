@@ -28,6 +28,9 @@
 .classroom-detail {padding: 10px}
 .classroom-detail .summary {margin-top: 30px}
 .classroom-detail .recent {border-top: 1px solid #ddd; margin-top: 20px; padding-top: 15px}
+.tab .close {border: 1px solid #f00; background: #fff; display: none; border-radius: 3px; color: #f00;
+    height: 24px; position: absolute; right: 3px; top: 10px; width: 24px;}
+.tab:hover .close {display: block}
 .acronyms {background: #f8f8f8; border-radius: 4px; margin: -15px 0 30px; padding: 20px 5px}
 .sc-label {float: left; margin: 9px 5px 0 0; width: 30px}
 select.teacher, select.group, input.coefficient, input.lessons-due, input.hours-due {margin-bottom: 5px;width: 100%;}

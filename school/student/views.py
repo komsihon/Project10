@@ -51,110 +51,45 @@ def set_student_invoices(student):
     classroom = student.classroom
     if classroom.registration_fees:
         item = InvoiceItem(label=school.registration_fees_title, amount=classroom.registration_fees)
-        entry = InvoiceEntry(item=item, short_description=school.company_name, total=classroom.registration_fees)
+        entry = InvoiceEntry(item=item, short_description=school.company_name,
+                             total=classroom.registration_fees, quantity_unit='')
         if school.registration_fees_deadline:
             due_date = school.registration_fees_deadline
         else:
             due_date = datetime.now() + timedelta(days=30)
         is_tuition = True if school.is_public else False
-        invoice = Invoice.objects.create(number=number, student=student, amount=classroom.registration_fees,
-                                         due_date=due_date, entries=[entry], is_tuition=is_tuition)
-        invoice.save(using=UMBRELLA)
+        Invoice.objects.create(number=number, student=student, amount=classroom.registration_fees,
+                               due_date=due_date, entries=[entry], is_tuition=is_tuition, is_one_off=True)
     if classroom.first_instalment:
         item = InvoiceItem(label=school.first_instalment_title, amount=classroom.first_instalment)
-        entry = InvoiceEntry(item=item, short_description=school.company_name, total=classroom.first_instalment)
+        entry = InvoiceEntry(item=item, short_description=school.company_name,
+                             total=classroom.first_instalment, quantity_unit='')
         if school.first_instalment_deadline:
             due_date = school.first_instalment_deadline
         else:
             due_date = datetime.now() + timedelta(days=60)
-        invoice = Invoice.objects.create(number=number, student=student, amount=classroom.first_instalment,
-                                         due_date=due_date, entries=[entry])
-        invoice.save(using=UMBRELLA)
+        Invoice.objects.create(number=number, student=student, amount=classroom.first_instalment,
+                               due_date=due_date, entries=[entry], is_one_off=True)
     if classroom.second_instalment:
         item = InvoiceItem(label=school.second_instalment_title, amount=classroom.second_instalment)
-        entry = InvoiceEntry(item=item, short_description=school.company_name, total=classroom.second_instalment)
+        entry = InvoiceEntry(item=item, short_description=school.company_name,
+                             total=classroom.second_instalment, quantity_unit='')
         if school.second_instalment_deadline:
             due_date = school.second_instalment_deadline
         else:
             due_date = datetime.now() + timedelta(days=90)
-        invoice = Invoice.objects.create(number=number, student=student, amount=classroom.second_instalment,
-                                         due_date=due_date, entries=[entry])
-        invoice.save(using=UMBRELLA)
+        Invoice.objects.create(number=number, student=student, amount=classroom.second_instalment,
+                               due_date=due_date, entries=[entry], is_one_off=True)
     if classroom.third_instalment:
         item = InvoiceItem(label=school.third_instalment_title, amount=classroom.third_instalment)
-        entry = InvoiceEntry(item=item, short_description=school.company_name, total=classroom.third_instalment)
+        entry = InvoiceEntry(item=item, short_description=school.company_name,
+                             total=classroom.third_instalment, quantity_unit='')
         if school.third_instalment_deadline:
             due_date = school.third_instalment_deadline
         else:
             due_date = datetime.now() + timedelta(days=120)
-        invoice = Invoice.objects.create(number=number, student=student, amount=classroom.third_instalment,
-                                         due_date=due_date, entries=[entry])
-        invoice.save(using=UMBRELLA)
-
-
-def set_my_kids_invoice(student):
-    """
-    Sets invoice for the MyKids service.
-    """
-    number = get_next_invoice_number()
-    school = get_service_instance()
-    config = school.config
-    count = Invoice.objects.filter(student=student, is_my_kids=True).count()
-    if config.my_kids_fees > 0 and count == 0:
-        item = InvoiceItem(label="My Kids", amount=config.my_kids_fees)
-        entry = InvoiceEntry(item=item, short_description=config.company_name, total=config.my_kids_fees)
-        due_date = datetime.now() + timedelta(days=config.my_kids_payment_period)
-        invoice = Invoice.objects.create(number=number, student=student, amount=config.my_kids_fees,
-                                         due_date=due_date, entries=[entry], is_my_kids=True)
-        invoice.save(using=UMBRELLA)
-        student.has_new = True
-        student.save()
-        student.save(using=UMBRELLA)
-        try:
-            parent = Parent.objects.filter(student=student)[0]
-            member = parent.member
-            if member:
-                add_event(school, NEW_INVOICE_EVENT, member=member, object_id=invoice.id)
-        except:
-            pass
-
-
-def reset_my_kids_invoice():
-    """
-    Sets MyKids invoice after fees change. Only unpaid invoices
-    are affected.
-    """
-    school = get_service_instance()
-    config = school.config
-    if config.my_kids_fees > 0:
-        if Invoice.objects.filter(is_my_kids=True).count() > 0:
-            Invoice.objects.filter(is_my_kids=True, paid=False).update(amount=config.my_kids_fees)
-            Invoice.objects.using(UMBRELLA).filter(school=school, is_my_kids=True, paid=False).update(amount=config.my_kids_fees)
-        else:
-            for student in Student.objects.filter(is_excluded=False):
-                number = get_next_invoice_number()
-                item = InvoiceItem(label="My Kids", amount=config.my_kids_fees)
-                entry = InvoiceEntry(item=item, short_description=config.company_name, total=config.my_kids_fees)
-                due_date = datetime.now() + timedelta(days=config.my_kids_payment_period)
-                invoice = Invoice.objects.create(number=number, student=student, amount=config.my_kids_fees,
-                                                 due_date=due_date, entries=[entry], is_my_kids=True)
-                invoice.save(using=UMBRELLA)
-                student.has_new = True
-                student.save()
-                student.save(using=UMBRELLA)
-                try:
-                    parent = Parent.objects.filter(student=student)[0]
-                    member = parent.member
-                    if member:
-                        add_event(school, NEW_INVOICE_EVENT, member=member, object_id=invoice.id)
-                except:
-                    pass
-    else:
-        Invoice.objects.filter(is_my_kids=True, paid=False).delete()
-        Invoice.objects.using(UMBRELLA).filter(school=school, is_my_kids=True, paid=False).delete()
-        for student in Student.objects.filter(is_excluded=False):
-            student.set_has_new()
-            student.save(using=UMBRELLA)
+        Invoice.objects.create(number=number, student=student, amount=classroom.third_instalment,
+                               due_date=due_date, entries=[entry], is_one_off=True)
 
 
 class ChangeStudent(ChangeObjectBase):
@@ -183,7 +118,6 @@ class ChangeStudent(ChangeObjectBase):
             return
         # It's a student under creation, so set a new Invoice for him
         set_student_invoices(obj)
-        set_my_kids_invoice(obj)
 
     def get_object_list_url(self, request, obj, *args, **kwargs):
         classroom_id = kwargs.get('classroom_id')
@@ -399,7 +333,8 @@ class StudentDetail(ChangeObjectBase):
             invoice.status = Invoice.PAID
         invoice.save()
         invoice.save(using=UMBRELLA)
-        response = {'success': True}
+        invoice_url = reverse('billing:invoice_detail', args=(invoice.id, ))
+        response = {'success': True, 'invoice_url': invoice_url}
         weblet = get_service_instance()
         if getattr(settings, 'DEBUG', False):
             sudo_group = Group.objects.get(name=SUDO)
@@ -416,7 +351,7 @@ class StudentDetail(ChangeObjectBase):
             return HttpResponse(json.dumps(response))
         config = weblet.config
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '')
+        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '') + '?tab=billing'
 
         try:
             foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
@@ -541,7 +476,7 @@ class StudentDetail(ChangeObjectBase):
         except:
             foulassi = None
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '')
+        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '') + '?tab=discipline'
         parents = student.parent_set.select_related('member').all()
         Thread(target=send_push_to_parents, args=(foulassi, config.company_name, parents, text, target)).start()
         response = {'success': True, 'entry': entry.to_dict()}
@@ -570,7 +505,7 @@ class StudentDetail(ChangeObjectBase):
         weblet = get_service_instance()
         config = weblet.config
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '')
+        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '') + '?tab=billing'
 
         parents = student.parent_set.select_related('member').all()
         text = _("We are kindly informing you that a new payment of XAF %(amount)s is expected for "

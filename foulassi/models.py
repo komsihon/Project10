@@ -75,7 +75,7 @@ class Student(Model):
     UPLOAD_TO = 'foulassi/students'
     school = models.ForeignKey(Service, blank=True, null=True,
                                related_name='+', default=get_service_instance)
-    registration_number = models.CharField(_("Registration number"), max_length=30, unique=True)
+    registration_number = models.CharField(_("Registration number"), blank=True, max_length=30, unique=True)
     first_name = models.CharField(_("First name"), max_length=100, db_index=True)
     last_name = models.CharField(_("Last name"), max_length=100, db_index=True)
     gender = models.CharField(_("Gender"), max_length=15, choices=GENDER_CHOICES, db_index=True)
@@ -102,7 +102,9 @@ class Student(Model):
         return self.last_name + ' ' + self.first_name
 
     def save(self, **kwargs):
-        if self.dob:
+        if not self.id:  # Generate registration number for newly created students
+            self.generate_registration_number()
+        if not self.birthday and self.dob:
             self.birthday = int(self.dob.strftime('%m%d'))
         super(Student, self).save(**kwargs)
 
@@ -131,16 +133,16 @@ class Student(Model):
         classroom = self.classroom
         level = classroom.level
         classroom_info = level.name[0] + level.name[-1] + classroom.name[0]
-        inc = Student.objects.filter(classroom).count()
+        inc = Student.objects.filter(classroom=self).count() + 1
         registration_number = ''
         while True:
             try:
                 registration_number = "%s%s%s" % (school_year, classroom_info, str(inc).zfill(3))
-                Student.objects.get(registration_number=registration_number)
+                Student.objects.get(registration_number=registration_number.upper())
                 inc += 1
             except:
                 break
-        self.registration_number = registration_number
+        self.registration_number = registration_number.upper()
 
 
 class Parent(Model):
@@ -186,7 +188,7 @@ class ParentProfile(Model):
         student_list = []
         for student_id in student_fk_list:
             try:
-                student_list.append(Student.objects.get(pk=student_id))
+                student_list.append(Student.objects.get(pk=student_id, school_year=get_school_year()))
             except Student.DoesNotExist:
                 self.student_fk_list.remove(student_id)
                 self.save()
@@ -381,6 +383,7 @@ class Invoice(AbstractInvoice):
     school_year = models.IntegerField(default=get_school_year, db_index=True)
     is_tuition = models.BooleanField(default=False)
     is_my_kids = models.BooleanField(default=False)
+    my_kids_cycle = models.CharField(max_length=15, db_index=True, blank=True, null=True)
 
     def get_title(self):
         return ', '.join([entry.item.label for entry in self.entries])

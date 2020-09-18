@@ -236,6 +236,8 @@ class TeacherDetail(TemplateView):
             return self.add_subject(self.request, teacher)
         elif action == 'save_responsibilities':
             return self.save_responsibilities(self.request, teacher)
+        elif action == 'remove_subject':
+            return self.remove_subject(self.request, teacher)
         return super(TeacherDetail, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -266,6 +268,17 @@ class TeacherDetail(TemplateView):
                 level_classroom_list.append(obj)
             context = {'subject': subject, 'level_classroom_list': level_classroom_list}
             return render(request, 'school/snippets/teacher_responsibility_list.html', context)
+        except:
+            response = {'error': "Server error occured."}
+            return HttpResponse(json.dumps(response))
+
+    def remove_subject(self, request, teacher):
+        try:
+            subject_id = request.GET['subject_id']
+            subject = Subject.objects.get(pk=subject_id)
+            TeacherResponsibility.objects.filter(teacher=teacher, subject=subject).delete()
+            response = {'success': True}
+            return HttpResponse(json.dumps(response))
         except:
             response = {'error': "Server error occured."}
             return HttpResponse(json.dumps(response))

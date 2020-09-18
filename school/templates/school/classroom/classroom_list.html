@@ -70,7 +70,7 @@
                             {% url 'school:classroom_detail' classroom.id as classroom_detail_url %}
                             {% url 'school:change_classroom' classroom.id as change_classroom_url %}
                             <div class="col-sm-4 col-lg-3">
-                                <div class="classroom ik-li subtle-shade">
+                                <div class="classroom ik-li subtle-shade" id="{{ classroom.id }}" data-id="{{ classroom.id }}">
                                     <div>
                                         {% if request.session.is_teacher %}
                                             <a href="{{ classroom_detail_url }}">{{ classroom }}</a>
@@ -125,6 +125,11 @@
                                                        data-size="{{ classroom.size }}">{% trans "Send Mail" %}</a>
                                                 {% endif %}
                                             </li>
+                                            {% if classroom.size == 0 %}
+                                            <li class="trash">
+                                                <a href="javascript:;" style="color: #e74c3c">{% trans "Delete" %}</a>
+                                            </li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                     {% endif %}
