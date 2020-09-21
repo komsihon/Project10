@@ -39,7 +39,7 @@ def get_school_year(request=None):
         return request.session.get('school_year', get_school_year())
     now = datetime.now()
     month = now.month
-    if 10 <= month <= 12:
+    if 8 <= month <= 12:
         return now.year
     return now.year - 1
 
@@ -387,6 +387,10 @@ class Invoice(AbstractInvoice):
 
     def get_title(self):
         return ', '.join([entry.item.label for entry in self.entries])
+
+    def get_invoiced_to(self):
+        student = self.student
+        return student.last_name + ' ' + student.first_name
 
 
 class Payment(AbstractPayment):

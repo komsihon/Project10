@@ -90,8 +90,9 @@
         <div class="row">
             <div class="col-xs-10">
                 <a class="title">
-                    <span class="amount"></span>:
-                    <span class="method text-muted">{% trans "Cash" %}</span>
+                    <span class="currency text-muted">{{ currency_symbol }}</span>
+                    <span class="amount"></span>
+                    <span class="method text-muted">- {% trans "Cash" %}</span>
                 </a>
                 <div class="details text-muted"></div>
             </div>
@@ -156,7 +157,7 @@
                     let $payment = $('li.payment.tpl').clone().removeClass('tpl');
                     $payment.find('.amount').text(amount.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
                     $payment.find('.details').text(title);
-                    $payment.find('.di-title').prop('href', data.invoice_url);
+                    $payment.find('.title').prop('href', data.invoice_url);
                     $('#modal-cash-in').modal('hide');
                     $payment.prependTo('.payment-log').fadeIn();
                 } else ikwen.showFloatingNotice(data.error)

@@ -357,7 +357,7 @@ class StudentDetail(ChangeObjectBase):
             foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
         except:
             foulassi = None
-        if invoice.PAID:
+        if invoice.status == Invoice.PAID:
             text = _("New payment of XAF %(amount)s for %(title)s of %(student)s. Those fees are totally set.\n"
                      "Thank you." % {'amount': intcomma(amount), 'title': invoice.get_title(), 'student': student})
         else:
