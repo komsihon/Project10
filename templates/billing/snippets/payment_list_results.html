@@ -1,0 +1,86 @@
+{% load i18n static humanize %}
+{% include 'core/snippets/spinner.html' %}
+<div class="row">
+    <div class="col-xs-6 col-sm-3">
+        <div class="category successful" data-status="Success">
+            <h4>Mobile :
+                <span class="count">{{ total_momo.count|intcomma }}</span>
+            </h4>
+            <div class="amount">{{ total_momo.amount|floatformat:"0"|intcomma }}</div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-3">
+        <div class="category running" data-status="Running">
+            <h4>{% trans "Cash" %} :
+                <span class="count">{{ total_cash.count|intcomma }}</span>
+            </h4>
+            <div class="amount">{{ total_cash.amount|floatformat:"0"|intcomma }}</div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-3">
+        <div class="category failed" data-status="Failure">
+            <h4>{% trans "Bank card" %} :
+                <span class="count">{{ total_bank_card.count|intcomma }}</span>
+            </h4>
+            <div class="amount">{{ total_bank_card.amount|floatformat:"0"|intcomma }}</div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-3">
+        <div class="category dropped" data-status="Dropped">
+            <h4>{% trans "Other" %} :
+                <span class="count">{{ total_other.count|intcomma }}</span>
+            </h4>
+            <div class="amount">{{ total_other.amount|floatformat:"0"|intcomma }}</div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<ul class="object-list list-group">
+    {% for payment in objects_page.object_list %}
+        {% with invoice=payment.invoice %}
+            {% url 'billing:invoice_detail' invoice.id as obj_url %}
+            <li class="ik-li list-group-item" id="{{ payment.id }}" data-id="{{ payment.id }}">
+                <a href="{{ obj_url }}">{{ invoice.student }}</a>
+                <div>
+                    <span class="pull-left text-muted hidden-xs">{{ payment.invoice }} - {{ payment.created_on|date:"Y-m-d H:i" }}</span>
+                    <span class="pull-left text-muted visible-xs">{{ payment.invoice.number }}</span>
+                    <span class="pull-right">
+                        <span class="text-muted" style="font-size: .8em">{{ currency_symbol }}</span>
+                        <strong>{{ payment.amount|intcomma }}</strong>
+                    </span>
+                </div>
+                <div class="pull-left visible-xs text-muted" style="clear: both; font-size: .8em; margin-bottom: -10px">
+                    {{ payment.created_on|date:"Y-m-d H:i" }}
+                </div>
+            </li>
+        {% endwith %}
+    {% endfor %}
+</ul>
+{% if objects_page.paginator.num_pages > 1 %}
+<ul class="pagination" style="float: left">
+    {% if objects_page.paginator.num_pages > max_visible_page_count and page_range.0 >= max_visible_page_count  %}
+        <li class="page" data-val="first"><a href="javascript:;" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+    {% endif %}
+    {% for page in page_range %}
+        <li class="page{% if page == objects_page.number %} active{% endif %}" data-val="{{ page }}">
+            <a href="javascript:;">
+                {{ page }} {% if page == objects_page.number %}<span class="sr-only">(current)</span>{% endif %}
+            </a>
+        </li>
+    {% endfor %}
+    {% if objects_page.paginator.num_pages > max_visible_page_count and max_page < objects_page.paginator.num_pages %}
+        <li class="page{% if max_page == objects_page.paginator.num_pages %} disabled{% endif %}" data-val="-1"><a href="javascript:;" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+    {% endif %}
+</ul>
+{% endif %}
+<div id="page-navigation" class="text-muted">
+    {% if objects_page.paginator.num_pages > 1  %}
+        <p>{% blocktrans with count=objects_page.paginator.count start=objects_page.start_index end=objects_page.end_index %}
+            {{ start }} – {{ end }} of {{ count }} results{% endblocktrans %}</p>
+    {% else %}
+        <p>{% blocktrans with count=objects_page.paginator.count %}{{ count }} results{% endblocktrans %}</p>
+    {% endif %}
+</div>

@@ -13,6 +13,7 @@ class StudentResource(resources.ModelResource):
     first_name = fields.Field(column_name=_('First name'))
     gender = fields.Field(column_name=_('Gender'))
     dob = fields.Field(column_name=_('Date of birth'))
+    pob = fields.Field(column_name=_('Place of birth'))
     classroom = fields.Field(column_name=_('Classroom'))
     is_repeating = fields.Field(column_name=_('Repeats'))
     year_joined = fields.Field(column_name=_('Year joined'))
@@ -20,8 +21,8 @@ class StudentResource(resources.ModelResource):
 
     class Meta:
         model = Student
-        fields = ('last_name', 'first_name', 'gender', 'dob', 'classroom', 'is_repeating', 'year_joined', 'school_year')
-        export_order = ('last_name', 'first_name', 'gender', 'dob',
+        fields = ('last_name', 'first_name', 'gender', 'dob', 'pob', 'classroom', 'is_repeating', 'year_joined', 'school_year')
+        export_order = ('last_name', 'first_name', 'gender', 'dob', 'pob',
                         'classroom', 'is_repeating', 'year_joined', 'school_year')
 
     def dehydrate_last_name(self, obj):
@@ -38,6 +39,9 @@ class StudentResource(resources.ModelResource):
             return obj.dob.strftime('%Y-%m-%d')
         return 'N/A'
 
+    def dehydrate_pob(self, obj):
+        return obj.pob
+
     def dehydrate_classroom(self, obj):
         return str(obj.classroom)
 
@@ -52,7 +56,8 @@ class StudentResource(resources.ModelResource):
 
 
 class StudentAdmin(admin.ModelAdmin):
-    fields = ('classroom', 'registration_number', 'last_name', 'first_name', 'gender', 'dob', 'is_repeating', 'year_joined', )
+    fields = ('classroom', 'registration_number', 'last_name', 'first_name',
+              'gender', 'dob', 'pob', 'is_repeating', 'year_joined', )
 
 
 if getattr(settings, 'IS_IKWEN', False):

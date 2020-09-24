@@ -408,3 +408,14 @@ class SchoolViewsTestCase(unittest.TestCase):
     #     self.assertEqual(response.status_code, 200)
     #     response = self.client.get(reverse('school:change_student'), {'tab': 'accounting'})
     #     self.assertEqual(response.status_code, 200)
+
+    @override_settings(IKWEN_SERVICE_ID='56eb6d04b37b3379b531b102',
+                       CACHES={'default': {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}})
+    def test_StudentDetail_delete_parent(self):
+        for fixture in self.fixtures:
+            call_command('loaddata', fixture)
+        self.client.login(username='member2', password='admin')
+        student_url = reverse('school:student_detail', args=('584f03a7bbd6b46a8fc0c244', ))
+        self.client.get(student_url, {'action': 'delete', 'model_name': 'foulassi.Parent',
+                                      'selection': '574fb307c0cbed6b4f246a84'})
+

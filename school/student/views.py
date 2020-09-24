@@ -23,13 +23,13 @@ from django.views.decorators.csrf import csrf_protect
 
 from ikwen.accesscontrol.models import SUDO
 from ikwen.accesscontrol.backends import UMBRELLA
-from ikwen.billing.models import PAYMENT_CONFIRMATION, InvoiceItem, InvoiceEntry, NEW_INVOICE_EVENT
+from ikwen.billing.models import PAYMENT_CONFIRMATION, InvoiceItem, InvoiceEntry
 from ikwen.billing.utils import get_next_invoice_number, generate_pdf_invoice, get_invoicing_config_instance
 from ikwen.core.constants import MALE
 from ikwen.core.templatetags.url_utils import strip_base_alias
 from ikwen.core.models import Service
 from ikwen.core.utils import get_model_admin_instance, get_mail_content, get_service_instance, add_event, \
-    increment_history_field, increment_history_field_many, XEmailMessage, add_database
+    increment_history_field, increment_history_field_many, XEmailMessage, add_database, set_counters
 from ikwen.core.views import ChangeObjectBase
 from ikwen_foulassi.foulassi.admin import StudentAdmin
 from ikwen_foulassi.foulassi.models import Student, Parent, Invoice, Payment, get_school_year
@@ -131,7 +131,10 @@ class StudentDetail(ChangeObjectBase):
     context_object_name = 'student'
 
     def get_object(self, **kwargs):
-        return get_object_or_404(Student, pk=kwargs['object_id'], is_excluded=False)
+        try:
+            return Student.objects.select_related('school', 'classroom').get(pk=kwargs['object_id'], is_excluded=False)
+        except:
+            raise Http404("No student found with ID %s" % kwargs['object_id'])
 
     def get_context_data(self, **kwargs):
         context = super(StudentDetail, self).get_context_data(**kwargs)
@@ -281,7 +284,7 @@ class StudentDetail(ChangeObjectBase):
             for obj in queryset.filter(item=item, student=student):
                 item.count += obj.count
             summary.append(item)
-        discipline_log = DisciplineLogEntry.objects.using(db).select_related('item, student').filter(student=student).order_by('-id')
+        discipline_log = DisciplineLogEntry.objects.using(db).select_related('item', 'student').filter(student=student).order_by('-id')
         context['summary'] = summary
         context['discipline_log'] = discipline_log
         context['parent_convocation'] = DisciplineItem.objects.using(db).get(slug=DisciplineItem.PARENT_CONVOCATION)
@@ -301,7 +304,13 @@ class StudentDetail(ChangeObjectBase):
         pending_invoice_list = Invoice.objects.using(db).filter(student=student, amount__gt=0, status=Invoice.PENDING)
         if not getattr(settings, 'IS_IKWEN', False):
             pending_invoice_list = pending_invoice_list.exclude(is_my_kids=True)
-        payment_list = Payment.objects.using(db).select_related('invoice').filter(invoice__in=invoice_list).order_by('-id')
+        payment_list = []
+        for p in Payment.objects.using(db).select_related('invoice').filter(invoice__in=invoice_list).order_by('-id'):
+            if getattr(settings, 'IS_IKWEN', False):
+                p.invoice_url = student.school.url + reverse('billing:invoice_detail', args=(p.invoice.id, ))
+            else:
+                p.invoice_url = reverse('billing:invoice_detail', args=(p.invoice.id, ))
+            payment_list.append(p)
         context['pending_invoice_list'] = pending_invoice_list.order_by('-is_my_kids')  # MyKids Invoice must be on top
         context['payment_list'] = payment_list
         return render(self.request, 'school/snippets/student/billing.html', context)
@@ -336,6 +345,12 @@ class StudentDetail(ChangeObjectBase):
         invoice_url = reverse('billing:invoice_detail', args=(invoice.id, ))
         response = {'success': True, 'invoice_url': invoice_url}
         weblet = get_service_instance()
+        set_counters(weblet)
+        increment_history_field(weblet, 'turnover_history', amount)
+        increment_history_field(weblet, 'earnings_history', amount)
+        increment_history_field(weblet, 'transaction_count_history')
+        increment_history_field(weblet, 'transaction_earnings_history', amount)
+
         if getattr(settings, 'DEBUG', False):
             sudo_group = Group.objects.get(name=SUDO)
             add_event(weblet, PAYMENT_CONFIRMATION, group_id=sudo_group.id, object_id=invoice.id)
@@ -495,7 +510,7 @@ class StudentDetail(ChangeObjectBase):
         entries = [InvoiceEntry(item=item, total=amount)]
         number = get_next_invoice_number()
         invoice = Invoice.objects.create(number=number, student=student, entries=entries,  amount=amount,
-                                         due_date=due_date, last_reminder=datetime.now())
+                                         due_date=due_date, last_reminder=datetime.now(), is_one_off=True)
         response = {'success': True, 'id': invoice.id}
 
         try:

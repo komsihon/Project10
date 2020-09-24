@@ -73,7 +73,7 @@
         <li class="list-group-item ik-li payment" id="{{ payment.id }}">
             <div class="row">
                 <div class="col-xs-10">
-                    <a class="title" href="{% url 'billing:invoice_detail' payment.invoice.id %}" target="_blank">
+                    <a class="title" href="{{ payment.invoice_url }}" target="_blank">
                         <span class="currency text-muted">{{ currency_symbol }}</span>
                         <strong class="amount">{{ payment.amount|intcomma }}</strong>
                         <span class="method text-muted">- {{ payment.method }}</span>

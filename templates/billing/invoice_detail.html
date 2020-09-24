@@ -1,0 +1,380 @@
+{% extends "core/base_bs.html" %}
+{% load i18n humanize static %}
+{% block page_title %}
+    <title>{{ config.company_name }} - {% trans "Invoice" %} #{{ invoice.number }}</title>
+{% endblock %}
+{% block head_style %}
+    {{ block.super }}
+    <link href="{% static 'ikwen/css/console.css' %}" media="screen" rel="stylesheet" type="text/css" />
+    <style>
+        body {background: #f6f6f6}
+        #navbar {display: none}
+        header#main {background: #f9f9f9; border-bottom: 1px solid #ddd; min-height: 90px; padding: 6px 15px 15px}
+        header#main img {float: left; margin: 12px 15px 0 0}
+        header#main .badge {background: #039B03; border-radius: 4px; color: #fff; float: right;
+            font: bold 11px Arial; margin-right: 15px; padding: 3px 10px}
+        header#main form div {line-height: 24px}
+        .stage {background: #fff; padding: 0 15px 30px}
+        #summary > .detail {margin: .8em 0 1.5em}
+        #summary p {margin-bottom: 3px}
+        table {width: 100%}
+        table.grid tr td:first-child {font-weight: 400}
+        .details-header {background: #f6f6f6; border-top: 1px solid #eee; padding: 8px 10px}
+        .entry {border-top: 1px solid #eee; padding: 10px 0}
+        .invoice-total {background: #EFF8FF; border: none; font-size: 1.45em; margin-top: 25px; padding: 10px 0}
+        .processing-fees {font-size: 1em}
+        #actions {float: right; margin-top: 15px}
+        .ik-li .action {color: #0056c7}
+        @media (max-width: 767px) {
+            .stage {padding: 0 10px 15px}
+            .payment .val {color: #888; float: right; text-align: right}
+            .payment > div {padding-bottom: 9px}
+        }
+        @media print {
+            .stage .col-sm-4 {float: left; width: 33.33%}
+            .stage .col-sm-3 {float: left; width: 25%}
+            .stage .col-sm-8 {float: left; width: 66.67%}
+            .payment.entry > div > div {width: 100%}
+            .payment.entry .val {text-align: left}
+            .payment.entry .text-right {text-align: right}
+            .payment.entry .clearfix {height: 20px}
+            .details-header, #actions, footer, .footer, .payment.entry .visible-xs, .show-modal-cash-in, .payment-start {display: none !important}
+        }
+        {# TODO: Complete CSS for ticket printer #}
+        {#@media print {#}
+        {#    html, body {width: 7cm}#}
+        {#    .payment.entry .clearfix {height: 20px}#}
+        {#    .details-header, #actions, footer, .footer, .payment.entry .visible-xs, .show-modal-cash-in, .payment-start {display: none !important}#}
+        {#}#}
+    </style>
+{% endblock %}
+
+{% block content  %}
+    <div id="content" class="container">
+        <div class="subtle-shade" style="background: #fff; border-radius: 6px; overflow: hidden">
+            <header id="main" class="row" data-amount="{{ invoice.amount }}" data-monthly-cost="{{ monthly_cost }}">
+                <div class="col-sm-4">
+                    {% if vendor.logo.name %}
+                        <img src="{{ settings.IKWEN_MEDIA_URL }}{{ vendor.logo.name }}" height="100"/>
+                    {% endif %}
+                    <h2 class="pull-left">{{ vendor.company_name }}</h2>
+                </div>
+                <div class="col-sm-8">
+                    {% if invoice.status == 'Paid' %}
+                        <div class="badge">{% trans "Paid" %}</div>
+                    {% elif perms.billing.ik_cash_in %}
+                        <a href="javascript:;" class="pull-right show-modal-cash-in" style="text-decoration: none"
+                           data-amount="{{ invoice.amount }}">
+                            <i class="fas fa-cash-register" title="{% trans "Cash in" %}"></i>
+                            <span style="padding-left: 5px">{% trans "Cash in" %}</span>
+                        </a>
+                    {% else %}
+                        <button class="btn btn-success btn-sm pull-right payment-start" style="min-width: 200px"
+                                data-product-id="{{ invoice.id }}">{% trans "Pay now" %}</button>
+                    {% endif %}
+                </div>
+                <div class="clearfix"></div>
+            </header>
+            <div class="stage">
+                <div id="summary">
+                    <div class="detail col-sm-4">
+                        <h4>{% trans "Receipt" %} #<strong>{{ invoice.number }}</strong></h4>
+                        <div>
+                            <p>{% trans "Date issued" %}: {{ invoice.date_issued|date:"Y, M d" }}</p>
+                            <p>{% trans "Due date" %}: {{ invoice.due_date|date:"Y, M d" }}</p>
+                        </div>
+                    </div>
+                    <div class="detail col-sm-4">
+                        <h4>{% trans "Issued for" %}</h4>
+                        <div>
+                            {% if customer_config %}
+                                <p>{{ customer_config.company_name }}</p>
+                                {% if customer_config.address %}<p>{{ customer_config.address }}</p>{% endif %}
+                                <p>{% if customer_config.city %}{{ customer_config.city }},{% endif %}
+                                    {% if customer_config.country %}{{ customer_config.country.name }}{% endif %}</p>
+                            {% elif invoice.member %}
+                                {% with customer=invoice.member %}
+                                    {% if customer.get_full_name %}<p>{{ customer.get_full_name }}</p>{% endif %}
+                                    {% if customer.email %}<p>{{ customer.email }}</p>{% endif %}
+                                    {% if customer.phone %}<p>{{ customer.phone }}</p>{% endif %}
+                                {% endwith %}
+                            {% else %}
+                                {% with student=invoice.student %}
+                                    <p>{{ student }}</p>
+                                    <p>{{ student.classroom }}</p>
+                                    <p><strong>#{{ student.registration_number }}</strong></p>
+                                {% endwith %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="detail col-sm-4">
+                        {% if invoice.status == 'Paid' %}
+                            <h4>{% trans "Paid to" %}</h4>
+                        {% else %}
+                            <h4>{% trans "Pay to" %}</h4>
+                        {% endif %}
+                        <div>
+                            {% if vendor.company_name %}<strong>{{ vendor.company_name }}</strong>{% endif %}
+                            {% if vendor.registration_number %}
+                                <p>
+                                    <strong>{% trans "Registration" context "Company registration No" %} N&deg; :</strong>
+                                    {{ vendor.registration_number }}
+                                </p>
+                            {% endif %}
+                            {% if vendor.taxpayer_number %}
+                                <p>
+                                    <strong>{% trans "Taxpayer" %} N&deg; :</strong>
+                                    {{ vendor.taxpayer_number }}
+                                </p>
+                            {% endif %}
+                            {% if vendor.address %}<p>{{ vendor.address }}</p>{% endif %}
+                            {% if vendor.city %}<p>{{ vendor.city }}</p>{% endif %}
+                            {% if vendor.country %}<p>{{ vendor.country }}</p>{% endif %}
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div>
+                    <div class="hidden-xs details-header" style="font-size: 1.35em">
+                        <span class="text-left">{% trans "Description" %}</span>
+                        <span class="pull-right text-right">{% trans "Amount" %}</span>
+                    </div>
+                    <div class="visible-xs details-header" style="font-size: 1.35em">{% trans "Details" %}</div>
+                    <div class="entries">
+                    {% for entry in invoice.entries %}
+                        <div class="entry">
+                            <div class="col-sm-8">
+                                {{ entry.item.label }}
+                                {% if entry.short_description %}: <em class="text-muted">{{ entry.short_description }}</em>{% endif %}
+                            </div>
+                            <div class="col-sm-4 text-right">
+                                <span class="pull-left">
+                                    <em class="text-muted">
+                                        {% if entry.quantity %}
+                                            x {{ entry.quantity|floatformat:"0" }} {% if entry.quantity_unit %}{{ entry.quantity_unit }}{% endif %}
+                                        {% else %}
+                                            ---
+                                        {% endif %}
+                                    </em>
+                                </span>
+                                <span class="pull-right"> {{ currency_symbol }} {{ entry.total|intcomma }} </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    {% empty %}
+                        <div class="entry">
+                            <div style="padding: 0 15px 5px">
+                                {{ details|safe }}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    {% endfor %}
+                    <div class="entry">
+                        <div class="clearfix"></div>
+                    </div>
+                    {% if not invoice.is_one_off and monthly_cost and invoice.status != 'Paid' and extensions %}
+                    <div>
+                        <div class="col-xs-7 col-sm-3">
+                            <label for="extensions">{% trans "Extend till" %}</label>
+                            <select id="extensions" class="form-control input-sm">
+                                <option value="0">N/A</option>
+                                {% for extension in extensions %}
+                                <option value="{{ extension.months }}">
+                                    {{ extension.expiry }}: {{ extension.months }} {% trans 'Month(s)' %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div id="subtotal" class="col-xs-5 col-sm-4 pull-right text-right" style="padding-top: 30px"></div>
+                        <div class="clearfix"></div>
+                    </div>
+                    {% endif %}
+                    </div>
+                    <div class="invoice-total">
+                        <span class="col-xs-5">{% trans "Total" %}</span>
+                        <span id="total" class="col-xs-7 text-right">
+                            {{ currency_symbol }} {{ invoice.amount|intcomma }}
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                    {% if invoice.status != 'Paid' and invoicing_config.processing_fees_on_customer %}
+                        <div class="entry processing-fees">
+                            <div class="col-xs-12 text-right">
+                                <span>{% trans "Processing fees" %}</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="text-muted processing-fees">
+                                    {{ currency_symbol }}<strong> {{ config.ikwen_share_fixed }}</strong>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    {% elif invoice.status == 'Paid' and invoice.processing_fees %}
+                        <div class="entry processing-fees">
+                            <div class="col-xs-12 text-right">
+                                <span>{% trans "Processing fees" %}</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="text-muted processing-fees">
+                                    {{ currency_symbol }}<strong> {{ invoice.processing_fees }}</strong>
+                                </span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    {% endif %}
+                    <div class="details-header{% if invoice.payment_set.all|length == 0 %} tpl{% endif %}"
+                         style="background: none; border-top: 1px dashed #666; font-size: 1.35em; margin-top: 15px">
+                        {% trans "Payments" %}
+                    </div>
+                    <div class="details-header hidden-xs{% if invoice.payment_set.all|length == 0 %} tpl{% endif %}" style="padding-left: 0; padding-right: 0">
+                        <div class="col-sm-3">{% trans "Transaction date" %}</div>
+                        <div class="col-sm-3">{% trans "Method" %}</div>
+                        <div class="col-sm-3">{% trans "Transaction ID" %}</div>
+                        <div class="col-sm-3 text-right">{% trans "Amount" %}</div>
+                        <div class="clearfix"></div>
+                    </div>
+                    {% if invoice.payment_set.all|length > 0 %}
+                        {% for payment in invoice.payment_set.all %}
+                            <div class="payment entry">
+                                <div class="col-sm-3">
+                                    <div class="pull-left visible-xs">{% trans "Date" %}</div>
+                                    <div class="val">{{ payment.created_on|date }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="pull-left visible-xs">{% trans "Method" %}</div>
+                                    <div class="val">{{ payment.method }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="pull-left visible-xs">{% trans "ID" %}</div>
+                                    <div class="val">
+                                        {% if payment.processor_tx_id %}
+                                            {{ payment.processor_tx_id }}
+                                        {% else %}
+                                            {{ payment.id }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="pull-left visible-xs">{% trans "Amount" %}</div>
+                                    <div class="val text-right">{{ currency_symbol }} {{ payment.amount|intcomma }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="payment entry tpl">
+                        <div class="col-sm-3">
+                            <div class="pull-left visible-xs">{% trans "Date" %}</div>
+                            <div class="val date"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="pull-left visible-xs">{% trans "Method" %}</div>
+                            <div class="val method"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="pull-left visible-xs">{% trans "ID" %}</div>
+                            <div class="val tx-id"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="pull-left visible-xs">{% trans "Amount" %}</div>
+                            <div class="val text-right">{{ currency_symbol }} <span class="amount"></span></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div id="actions" class="col-xs-12">
+            <a href="{% url 'billing:invoice_list' %}" class="pull-right text-right">{% trans "Back to Client Area" %}</a>
+            {% if pdf_filename %}
+                <a href="{% get_media_prefix %}{{ pdf_filename }}" class="pull-left" target="_blank"
+                   download="{{ pdf_filename }}">{% trans "Download" %}</a>
+            {% endif %}
+        </div>
+    </div>
+    {% with payment_conf='invoice_payment' %}
+        {% include 'billing/snippets/modal_payment_options_2_steps_om.html' %}
+    {% endwith %}
+    {% if perms.billing.ik_cash_in %}
+        <div class="modal fade" id="modal-cash-in" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-info">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">{% trans "Cash In" %}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="invoice-id" />
+                        <div class="form-group cash-in-amount">
+                            <label for="cash-in-amount">{% trans "Amount" %}</label>
+                            <input type="number" id="cash-in-amount" class="form-control input-sm" value="0" />
+                        </div>
+                        <div class="actions">
+                            <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
+                                <button class="btn btn-sm btn-success btn-block do-cash-in">{% trans "OK" %}</button>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-3 pull-right">
+                                <button class="btn btn-sm btn-default btn-block"
+                                        data-dismiss="modal" aria-label="Close">{% trans "Cancel" %}</button>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        (function() {
+            $('#extensions').change(function() {
+                var extraMonths = $(this).val(),
+                    invoiceAmount = $('#main').data('amount'),
+                    monthlyCost = $('#main').data('monthly-cost'),
+                    subTotal = extraMonths * monthlyCost,
+                    total = subTotal + invoiceAmount;
+                $('#extra-months').val(extraMonths);
+                $('#subtotal').text('{{ currency_symbol }} ' + subTotal.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                $('#total').text('{{ currency_symbol }} ' + total.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+            });
+            {% if perms.billing.ik_cash_in %}
+                $('.show-modal-cash-in').click(function() {
+                    $('#modal-cash-in input').val('');
+                    $('#modal-cash-in').modal('show');
+                    $('.do-cash-in').removeClass('working');
+                });
+                $('body').on('click', '.do-cash-in:not(.working)', function() {
+                    $('.do-cash-in').addClass('working');
+                    var amount = $('#cash-in-amount').val();
+                    $('body').css('cursor', 'wait');
+                    $.getJSON('', {action: 'cash_in', amount: amount}, function(data) {
+                        $('body').css('cursor', 'default');
+                        if (data.success) {
+                            ikwen.showFloatingNotice("{% trans "Successful cash in" %}");
+                            var $payment = $('.payment.entry.tpl').clone().removeClass('tpl'),
+                                payment = data.payment;
+                            $payment.find('.date').text(payment.created_on);
+                            $payment.find('.method').text(payment.method);
+                            $payment.find('.amount').text(payment.amount.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                            $payment.find('.tx-id').text(payment.id);
+                            $payment.insertBefore('.payment.entry.tpl');
+                            $payment.show();
+                            $('.details-header').show();
+                            $('#modal-cash-in').modal('hide')
+                        }
+                        else ikwen.showFloatingNotice("Ooops! " + data.error)
+                    })
+                });
+            {% endif %}
+        })()
+    </script>
+{% endblock %}

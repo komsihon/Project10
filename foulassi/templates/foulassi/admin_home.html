@@ -132,7 +132,7 @@
 
                 {% if perms.accesscontrol.sudo %}
                 <div class="card-section subtle-shade">
-                    <h4 class="card-section-title">{% trans "Foulassi MyKids" %}</h4>
+                    <h4 class="card-section-title">Foulassi MyKids</h4>
                     <div class="row-card-section" style="display: flex; align-items: center">
                         <div class="col-md-4 col-md-offset-1 card-img">
                             <img  style="max-width: 250px;" src="{% static 'kakocase/img/Smart-categorie.png' %}">
@@ -144,7 +144,8 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <a href="{% url 'ikwen:configuration' %}?focus=mykids" class="btn btn-outline-primary" role="button" style="margin-bottom: 1vh;">{% trans "Configure fees" %}</a>
+                        <a href="https://support.ikwen.com/foulassi/my-kids/getting-parent-to-follow-his-kid" target="_blank" class="btn btn-outline-primary"
+                           role="button" style="margin-bottom: 1vh;">{% trans "Discover" %}</a>
                     </div>
                 </div>
                 {% endif %}

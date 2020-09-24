@@ -57,9 +57,9 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
     data = line.split(',')
     delimiter = ',' if len(data) > 2 else ';'
     error = None
-    row_length = 7
-    row_length2 = 11  # Student info plus information of one parent. Parent info take 4 columns
-    row_length3 = 15  # Student info plus information of two parent
+    row_length = 8
+    row_length2 = 12  # Student info plus information of one parent. Parent info take 4 columns
+    row_length3 = 16  # Student info plus information of two parent
     with open(abs_path) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=delimiter)
         i = -1
@@ -118,13 +118,17 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                     error = _("Incorrect date of birth <strong>%(dob)s</strong> on line %(line)d. "
                               "Must be in the format <b>Year-Month-Day</b>" % {'dob': dob, 'line': i + 1})
                     break
-            is_repeating = row[5].strip()
+            place_of_birth = row[5].strip()
+            if not place_of_birth:
+                error = _("Missing place of birth on line %d" % (i + 1))
+                break
+            is_repeating = row[6].strip()
             if is_repeating.capitalize() not in ("Yes", "Y", "No", "N", "Oui", "O", "Non"):
                 error = _("Incorrect Repetition <strong>%(rep)s</strong> on line %(line)d. "
                           "Must be either <b>Yes</b> or <b>No</b>" % {'rep': is_repeating, 'line': i + 1})
                 break
             is_repeating = True if is_repeating in ("Yes", "Y", "Oui", "O") else False
-            year_joined = row[6].strip()
+            year_joined = row[7].strip()
             try:
                 year_joined = int(year_joined)
             except ValueError:
@@ -140,16 +144,16 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
             parent1_name, parent1_relationship, parent1_email, parent1_phone = None, None, None, None
             parent2_name, parent2_relationship, parent2_email, parent2_phone = None, None, None, None
 
-            parent1_is_set = row[7] or row[8] or row[9] or row[10]
+            parent1_is_set = row[8] or row[9] or row[10] or row[11]
             if parent1_is_set:  # Information for one parent were set
-                parent1_name = row[7].strip()
+                parent1_name = row[8].strip()
                 try:
                     parent1_name.decode('utf8')
                 except:
                     error = _("Unreadable Parent 1 name on line %d. Please replace or remove all suspect "
                               "whitespaces and special characters to avoid malicious symbols." % (i + 1))
                     break
-                parent1_relationship = row[8].strip()
+                parent1_relationship = row[9].strip()
                 if not parent1_relationship:
                     error = _("Missing parent 1 relationship on line %d. Use one of "
                               "<strong>Father</strong>, <strong>Mother</strong>, <strong>Uncle</strong>, etc" % (i + 1))
@@ -160,7 +164,7 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                     error = _("Unreadable parent 1 relationship on line %d. Please replace or remove all suspect "
                               "whitespaces and special characters to avoid malicious symbols." % (i + 1))
                     break
-                parent1_email = row[9].strip()
+                parent1_email = row[10].strip()
                 if parent1_email:
                     try:
                         validate_email(parent1_email)
@@ -168,15 +172,15 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                         error = _("Incorrect parent 1 email <strong>%(email)s</strong> on "
                                   "line %(line)d" % {'email': parent1_email, 'line': (i + 1)})
                         break
-                parent1_phone = row[10]
+                parent1_phone = row[11]
                 if not re.match('\d{9}', slugify(parent1_phone).replace('-', '')):
                     error = _("Missing or incorrect parent 1 phone <strong>%(phone)s</strong> on line %(line)d. "
                               "Phone must be composed of 9 digits." % {'phone': parent1_phone, 'line': (i + 1)})
                     break
 
-            parent2_is_set = row[11] or row[12] or row[13] or row[14]  # Information for second parent were set
+            parent2_is_set = row[12] or row[13] or row[14] or row[15]  # Information for second parent were set
             if parent2_is_set:
-                parent2_name = row[11].strip()
+                parent2_name = row[12].strip()
                 try:
                     parent2_name.decode('utf8')
                 except:
@@ -187,7 +191,7 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                     error = _("1st and 2nd parent have the same name <strong>%(name)s</strong> "
                               "on line %(line)d. Please change." % {'name': parent2_name, 'line': (i + 1)})
                     break
-                parent2_relationship = row[12].strip()
+                parent2_relationship = row[13].strip()
                 if not parent2_relationship:
                     error = _("2nd parent parent relationship missing on line %d. Use one of "
                               "<strong>Father</strong>, <strong>Mother</strong>, <strong>Uncle</strong>, etc" % (i + 1))
@@ -202,7 +206,7 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                     error = _("Unreadable parent 2 relationship on line %d. Please replace or remove all suspect"
                               "whitespaces and special characters to avoid malicious symbols." % (i + 1))
                     break
-                parent2_email = row[13].strip()
+                parent2_email = row[14].strip()
                 if parent2_email:
                     try:
                         validate_email(parent2_email)
@@ -214,7 +218,7 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                         error = _("1st and 2nd parent have the same email <strong>%(email)s</strong> on line %(line)d. "
                                   "Please change." % {'email': parent2_email, 'line': (i + 1)})
                         break
-                parent2_phone = row[14]
+                parent2_phone = row[15]
                 if parent2_phone:
                     if not re.match('\d{9}', slugify(parent2_phone).replace('-', '')):
                         error = _("2nd parent phone <strong>%(phone)s</strong> missing or incorrect on line %(line)d. "
@@ -232,12 +236,12 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                         tags = slugify(last_name + ' ' + first_name).replace('-', ' ')
                         student = Student.objects\
                             .create(classroom=classroom, registration_number=reg_num, first_name=first_name,
-                                    last_name=last_name, gender=gender, dob=dob, is_repeating=is_repeating,
-                                    year_joined=year_joined, tags=tags)
+                                    last_name=last_name, gender=gender, dob=dob, pob=place_of_birth,
+                                    is_repeating=is_repeating, year_joined=year_joined, tags=tags)
                         student_u = Student.objects.using(UMBRELLA)\
                             .create(id=student.id, classroom=classroom, registration_number=reg_num,
                                     first_name=first_name, last_name=last_name, gender=gender, dob=dob,
-                                    is_repeating=is_repeating, year_joined=year_joined, tags=tags)
+                                    pob=place_of_birth, is_repeating=is_repeating, year_joined=year_joined, tags=tags)
                         if parent1_is_set:
                             parent1_phone = slugify(parent1_phone).replace('-', '')
                             parent1 = Parent.objects.create(student=student, name=parent1_name, phone=parent1_phone,

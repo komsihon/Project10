@@ -12,8 +12,11 @@
     {% endif %}
     {% if perms.school.ik_view_dashboard %}
     <ul class="nav nav-pills nav-stacked">
-        <li role="presentation" class="dashboard">
+        <li role="presentation" class="full-dashboard">
             <a href="{% url 'reporting:dashboard' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li role="presentation" class="dashboard">
+            <a href="{% url 'ikwen:dashboard' %}">{% trans "Finance Dashboard" %}</a>
         </li>
     </ul>
     <div class="divider"></div>

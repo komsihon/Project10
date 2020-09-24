@@ -80,6 +80,7 @@ class Student(Model):
     last_name = models.CharField(_("Last name"), max_length=100, db_index=True)
     gender = models.CharField(_("Gender"), max_length=15, choices=GENDER_CHOICES, db_index=True)
     dob = models.DateField(_("Date of birth"), db_index=True)
+    pob = models.CharField(_("Place of birth"), max_length=150, blank=True, null=True, db_index=True)
     birthday = models.IntegerField(blank=True, null=True, db_index=True)
     photo = MultiImageField(upload_to=UPLOAD_TO, blank=True, null=True,
                             max_size=600, small_size=200, thumb_size=100, editable=False)
