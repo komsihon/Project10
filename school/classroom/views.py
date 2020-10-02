@@ -278,7 +278,7 @@ def notify_parents_for_new_invoice(classroom, label, amount):
     for student in queryset:
         body = _("We are kindly informing you that a new payment of %(amount)s is expected for %(invoice_title)s "
                  "of %(student)s." % {'amount': intcomma(amount), 'invoice_title': label, 'student': student})
-        target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
+        target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id)) + '?showTab=billing'
         target = strip_base_alias(target).replace('/foulassi', '')
 
         parents = student.parent_set.select_related('member').all()
@@ -555,7 +555,7 @@ class ClassroomDetail(ChangeObjectBase):
                     weblet = get_service_instance()
                     config = weblet.config
                     uri = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student_id, ))
-                    target = 'https://foulassi.ikwen.com' + strip_base_alias(uri).replace('/foulassi', '') + '?tab=scores'
+                    target = 'https://foulassi.ikwen.com' + strip_base_alias(uri).replace('/foulassi', '') + '?showTab=scores'
                     Thread(target=send_push_to_parents, args=(foulassi, config.company_name, parents, text, target)).start()
                     if request.GET.get('send_sms'):
                         Thread(target=send_billed_sms, args=(weblet, parents, text)).start()
@@ -825,8 +825,9 @@ class ChangeAssignment(ChangeObjectBase):
             foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
         except:
             foulassi = None
-        service = get_service_instance()
-        school_config = service.config
+        weblet = get_service_instance()
+        school_config = weblet.config
+        company_name = school_config.company_name
         classroom = Classroom.objects.get(pk=kwargs['classroom_id'])
         # for student in Student.objects.filter(classroom=classroom, kid_fees_paid=True):
         for student in Student.objects.filter(classroom=classroom):
@@ -837,11 +838,10 @@ class ChangeAssignment(ChangeObjectBase):
                 except:
                     continue
 
-                company_name = school_config.company_name
                 sender = '%s via ikwen Foulassi <no-reply@ikwen.com>' % company_name
 
                 cta_url = 'https://foulassi.ikwen.com' + reverse('foulassi:change_homework',
-                                                                 args=(service.ikwen_name,
+                                                                 args=(weblet.ikwen_name,
                                                                        student.pk, obj.pk))
                 if parent.member:
                     activate(parent.member.language)
@@ -868,8 +868,8 @@ class ChangeAssignment(ChangeObjectBase):
                 except Exception as e:
                     logger.debug(e.message)
 
-                body = _('Your child has a new assignment in '
-                         '%(subject)s about %(title)s' % {'subject': subject, 'title': obj.title})
+                body = _('New assignment for your child %(student)s in %(subject)s: '
+                         '%(title)s' % {'student': student, 'subject': subject, 'title': obj.title})
 
                 if parent.member:
-                    send_push(foulassi, parent.member, subject, body, cta_url)
+                    send_push(foulassi, parent.member, company_name, body, cta_url)

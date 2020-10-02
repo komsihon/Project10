@@ -43,7 +43,7 @@ def set_invoice_checkout(request, *args, **kwargs):
             return HttpResponseRedirect(next_url)
     service = get_service_instance()
     try:
-        aggr = Payment.objects.filter(invoice=invoice).aggregate(Sum('amount'))
+        aggr = Payment.objects.using(db).filter(invoice=invoice).aggregate(Sum('amount'))
         amount_paid = aggr['amount__sum']
     except IndexError:
         amount_paid = 0
