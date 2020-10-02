@@ -11,23 +11,33 @@
     {{ block.super }}
     <link rel='stylesheet' href="{% static 'foulassi/css/foulassi-kids.css' %}?v=19.9.30" />
     <style>
+        .push-subscribe {margin-top: 75px}
+        .push-subscribe > .container {background: #e4f5fd; padding: 10px 15px}
+        .push-subscribe .icon {background: #fff; border-radius: 50%; float: left;
+            margin-right: 10px; height: 46px; text-align: center; width: 46px}
+        .push-subscribe .icon i {color: #9badb5; font-size: 24px; line-height: 46px}
         @media (max-width: 767px) {
             #navbar .menu-button {display: none}
             #navbar .navbar-brand {margin-left: 20px}
-            .push-subscribe {margin-top: 65px}
-            .push-subscribe-btn {min-width: 100px; padding: 5px 15px}
+            .push-subscribe .notice {font-size: .9em}
+            .push-subscribe button {min-width: 100px; padding: 5px 15px}
             .push-subscribe + #content {padding-top: 0}
         }
-        @media (min-width: 992px) {
-            .push-subscribe {display: none !important}
+        @media (min-width: 768px) {
+            .push-subscribe > .container {border-radius: 5px}
+            .push-subscribe .notice {margin-top: 10px}
+            .push-subscribe button {min-width: 180px}
         }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid push-subscribe" style="display: none; padding: 0 10px">
-        <div>
-            <span class="text-muted pull-left" style="width: 60%; font-size: .9em">
+    <div class="push-subscribe" style="display: none">
+        <div class="container">
+            <span class="icon hidden-xs">
+                <i class="fa fa-bell"></i>
+            </span>
+            <span class="pull-left notice" style="width: 60%">
                 {% trans "Receive alerts for your kids by activating notifications." %}
             </span>
             <button type="button" class="btn push-subscribe-btn btn-deep-blue pull-right">{% trans "Activate" %}</button>
