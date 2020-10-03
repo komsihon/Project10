@@ -1,5 +1,5 @@
 {% extends "core/app_base_admin.html" %}
-{% load i18n humanize staticfiles auth_tokens %}
+{% load i18n humanize staticfiles auth_tokens media_from_provider %}
 
 {% block page_title %}
 <title>{% trans "Service info" %} - ikwen </title>
@@ -12,6 +12,9 @@
         section label+span {color: #888}
         section em {font-size: 12px}
         section button {width: 120px}
+        section#upload-agreement {padding-bottom: 20px;}
+        section.photos {border: none}
+        section.photos p.help.clear>span {padding-left: 0!important;}
     </style>
 {% endblock %}
 
@@ -153,7 +156,7 @@
                         You can transfer the ownership of the platform to another person. Simply enter
                         the person's email down here and he will receive an invitation for that. Once you
                         transfer ownership to another, he has full control over the platform and you cannot
-                        access admin functionnalities anymore. So BE VERY CAREFUL.
+                        access admin functionalities anymore. So BE VERY CAREFUL.
                     {% endblocktrans %}</p>
                     <div class="row col-sm-10 col-sm-offset-1" style="height: auto; margin-top: 5vh">
                         <div class="form-group col-sm-8">
@@ -169,6 +172,19 @@
                     </div>
                 </section>
                 {% endif %}
+                <section id="upload-agreement" class="subtle-shade">
+                    <header>
+                        <h3 class="hidden-xs pull-left"> {% trans "Agreement" %} </h3>
+                        <h3 class="visible-xs"> {% trans "Agreement" %} </h3>
+                        <div class="clear"></div>
+                    </header>
+                    <p><a href="https://static.ikwen.com/foulassi/Contrat_Prestation_Foulassi.docx" download="agreement.pdf" target="_blank">{% trans "Download" %}</a> {% trans "and read carefully this school contract. Then, <strong>sign, scan and submit</strong> the document." %}</p>
+                    <div class="col-sm-8 col-lg-6">
+                        {% with model_name='foulassi.SchoolConfig' obj=config media=config.contract label_field_name='company_name' %}
+                            {% include 'core/snippets/media_uploader_single.html' %}
+                        {% endwith %}
+                    </div>
+                </section>
             </div>
         </div>
         <div class="clearfix"></div>

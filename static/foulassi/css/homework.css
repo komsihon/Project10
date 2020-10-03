@@ -1,0 +1,21 @@
+#selection-control.back {padding-top: 115px; padding-bottom: 5px;}
+#selection-control.back .clear-selection {margin-top: -40px; background: none}
+#selection-control.back .clear-selection i {font-size: 32px}
+#selection-control.back .select-count {margin-left: 28px;margin-top: -33px;}
+
+.download-correction {margin-top: 40px}
+.download-correction .date {float: none}
+.download-correction .title {line-height: 30px}
+.download-correction h5 {}
+.download-correction .cost {margin-bottom: 30px}
+.download-correction .cost .crncy {margin-left: 30px; top: -1.5em}
+.download-correction .cost .h1 {font-weight: 900; margin-left: -12px}
+.download-correction .no-correction {margin-top: 200px;}
+.download-correction .purchase {margin-right: 20px;}
+
+
+@media (min-width: 767px) {
+    #selection-control.back {padding-top: 115px;}
+    #selection-control.back .clear-selection {margin-top: -36px;}
+    #selection-control.back .select-count {margin-left: 31px;margin-top: -31px;}
+}

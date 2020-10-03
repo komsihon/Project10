@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 from ikwen_foulassi.foulassi.views import KidList, KidDetail, ShowJustificatory, AccessDenied, \
     Home, HomeSaaS, SearchSchool, EventList, DeployCloud, SuccessfulDeployment, AdminHome, ChangeHomework, \
-    DownloadApp, TermsAndConditions
-from ikwen_foulassi.foulassi.cash_in import confirm_invoice_payment, confirm_my_kids_payment
+    DownloadApp, TermsAndConditions, DownloadCorrection, BuyWebsite
+from ikwen_foulassi.foulassi.cash_in import confirm_invoice_payment, confirm_my_kids_payment, confirm_correction_payment
 
 urlpatterns = patterns(
     '',
@@ -16,6 +16,7 @@ urlpatterns = patterns(
     url(r'^terms-and-conditions/$', login_required(TermsAndConditions.as_view()), name='terms_and_conditions'),
     url(r'^successfulDeployment/(?P<ikwen_name>[-\w]+)$', login_required(SuccessfulDeployment.as_view()), name='successful_deployment'),
     url(r'^home/$', AdminHome.as_view(), name='admin_home'),
+    url(r'^buyWebsite/(?P<school_name>[-\w]+)$', login_required(BuyWebsite.as_view()), name='buy_website'),
 
     url(r'^search/$', login_required(SearchSchool.as_view()), name='search_school'),
     url(r'^downloadApp/$', DownloadApp.as_view(), name='download_app'),
@@ -23,7 +24,10 @@ urlpatterns = patterns(
     url(r'^accessDenied/$', AccessDenied.as_view(), name='access_denied'),
     url(r'^confirm_invoice_payment/(?P<tx_id>[-\w]+)/(?P<signature>[-\w]+)$', confirm_invoice_payment, name='confirm_invoice_payment'),
     url(r'^confirm_my_kids_payment/(?P<tx_id>[-\w]+)/(?P<signature>[-\w]+)$', confirm_my_kids_payment, name='confirm_my_kids_payment'),
+    url(r'^confirm_correction_payment/(?P<tx_id>[-\w]+)/(?P<signature>[-\w]+)$', confirm_correction_payment, name='confirm_correction_payment'),
 
+    url(r'^(?P<ikwen_name>[-\w]+)/kid/(?P<student_id>[-\w]+)/(?P<assignment_id>[-\w]+)/download-correction$',
+        login_required(DownloadCorrection.as_view()), name='download_correction'),
     url(r'^(?P<ikwen_name>[-\w]+)/kid/(?P<student_id>[-\w]+)$', login_required(KidDetail.as_view()), name='kid_detail'),
     url(r'^(?P<ikwen_name>[-\w]+)/kid/(?P<student_id>[-\w]+)/(?P<assignment_id>[-\w]+)$', login_required(ChangeHomework.as_view()), name='change_homework'),
     url(r'^(?P<ikwen_name>[-\w]+)/kid/(?P<student_id>[-\w]+)/(?P<assignment_id>[-\w]+)/(?P<homework_id>[-\w]+)$', login_required(ChangeHomework.as_view()), name='change_homework'),

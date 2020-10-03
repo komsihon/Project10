@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from threading import Thread
 
 from django.conf import settings
@@ -197,6 +197,9 @@ def check_setup_status(school):
     db = school.database
     add_database(db)
     school_config = SchoolConfig.objects.using(db).get(service=school)
+    now = datetime.now()
+    if now - timedelta(days=7) != school_config.last_setup_status_check:
+        return
     expected_student_count = school_config.expected_student_count
     student_count = Student.objects.using(db).filter(school=school).count()
 

@@ -20,16 +20,17 @@ from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
+from django.views.generic import TemplateView
 
 from ikwen.accesscontrol.models import SUDO
 from ikwen.accesscontrol.backends import UMBRELLA
-from ikwen.billing.models import PAYMENT_CONFIRMATION, InvoiceItem, InvoiceEntry
+from ikwen.billing.models import PAYMENT_CONFIRMATION, InvoiceItem, InvoiceEntry, NEW_INVOICE_EVENT
 from ikwen.billing.utils import get_next_invoice_number, generate_pdf_invoice, get_invoicing_config_instance
 from ikwen.core.constants import MALE
 from ikwen.core.templatetags.url_utils import strip_base_alias
 from ikwen.core.models import Service
 from ikwen.core.utils import get_model_admin_instance, get_mail_content, get_service_instance, add_event, \
-    increment_history_field, increment_history_field_many, XEmailMessage, add_database, set_counters
+    increment_history_field, increment_history_field_many, XEmailMessage, add_database
 from ikwen.core.views import ChangeObjectBase
 from ikwen_foulassi.foulassi.admin import StudentAdmin
 from ikwen_foulassi.foulassi.models import Student, Parent, Invoice, Payment, get_school_year
@@ -39,7 +40,7 @@ from ikwen_foulassi.reporting.models import DisciplineReport, StudentDisciplineR
 from ikwen_foulassi.reporting.utils import set_daily_counters_many
 from ikwen_foulassi.school.admin import JustificatoryAdmin, HomeworkAdmin
 from ikwen_foulassi.school.models import Classroom, Session, Score, DisciplineItem, DisciplineLogEntry, Justificatory, \
-    SessionGroupScore, STUDENT_EXCLUDED, Assignment, Homework
+    SessionGroupScore, STUDENT_EXCLUDED, Assignment, Homework, TeacherResponsibility, AssignmentCorrection
 
 logger = logging.getLogger('ikwen')
 
@@ -262,13 +263,22 @@ class StudentDetail(ChangeObjectBase):
         db = context.pop('using', 'default')
         student = context[self.context_object_name]
         classroom = student.classroom
-        queryset = Assignment.objects.using(db).filter(classroom=classroom)
+        queryset = Assignment.objects.using(db).select_related('classroom', 'subject').filter(classroom=classroom)
         assignment_list = []
         for asm in queryset:
             try:
-                asm.homework = Homework.objects.using(db).get(assignment=asm, student=student)
+                asm.homework = Homework.objects.using(db).select_related('assignment', 'student').get(assignment=asm, student=student)
             except Homework.DoesNotExist:
                 pass
+            for rsp in TeacherResponsibility.objects.using(db).select_related('teacher', 'subject').filter(
+                    subject=asm.subject):
+                if classroom.id in rsp.classroom_fk_list:
+                    asm.classroom_fk_list = rsp.classroom_fk_list
+                    asm.teacher = rsp.teacher
+                    full_name = rsp.teacher.member.full_name
+                    tokens = full_name.split(' ')
+                    asm.teacher.initials = tokens[0][0] + tokens[1][0]
+                    break
             assignment_list.append(asm)
         context['assignment_list'] = assignment_list
         context['classroom'] = classroom
@@ -658,7 +668,7 @@ class ChangeJustificatory(ChangeObjectBase):
             if image_url:
                 s = get_service_instance()
                 image_field_name = request.POST.get('image_field_name', 'image')
-                image_field = obj.__getattribute_(image_field_name)
+                image_field = obj.__getattribute__(image_field_name)
                 if not image_field.name or image_url != image_field.url:
                     filename = image_url.split('/')[-1]
                     media_root = getattr(settings, 'MEDIA_ROOT')
@@ -687,7 +697,31 @@ class ChangeJustificatory(ChangeObjectBase):
             return render(request, self.template_name, context)
 
 
-class ViewHomework(ChangeObjectBase):
-    model = Homework
-    model_admin = HomeworkAdmin
+class ViewHomework(TemplateView):
     template_name = 'school/student/view_homework.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ViewHomework, self).get_context_data(**kwargs)
+        context['assignment'] = Homework.objects.get(pk=kwargs['object_id']).assignment
+        return context
+
+
+class ViewCorrection(TemplateView):
+    template_name = 'school/student/view_correction.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ViewCorrection, self).get_context_data(**kwargs)
+        school = get_service_instance()
+        db = school.database
+        add_database(db)
+        homework = Homework.objects.using(db).select_related('assignment', 'student').get(pk=kwargs['homework_id'])
+        assignment = homework.assignment
+        context['assignment'] = assignment
+        try:
+            correction = AssignmentCorrection.objects.using(db).get(assignment=assignment)
+            context['correction'] = correction
+            context['extension'] = '.' + correction.attachment.name.split('.')[1]
+        except:
+            pass
+        return context
+

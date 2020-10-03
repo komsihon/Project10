@@ -155,6 +155,7 @@
                 <div id="student-billing" class="tab-pane student-info-tab" role="tabpanel">
                     {% include 'core/snippets/spinner.html' %}
                 </div>
+                {% include 'core/snippets/spinner.html' %}
                 <div class="clearfix"></div>
             </div>
         </div>
@@ -183,8 +184,12 @@
                     let myKidsCycle = $(this).data('cycle');
                     $('form#payment-start-flow input[name="payment_conf"]').val('my_kids');
                     $('form#payment-start-flow input[name="my_kids_cycle"]').val(myKidsCycle);
-                } else
-                    $('form#payment-start-flow input[name="payment_conf"]').val('default');
+                } else {
+                    if ($(this).hasClass('purchase-correction'))
+                        $('form#payment-start-flow input[name="payment_conf"]').val('correction_payment');
+                    else
+                        $('form#payment-start-flow input[name="payment_conf"]').val('default');
+                }
                 $('#payment-methods').modal('show');
             }).on('click', '.payment-method:not(.processing)', function() {
                 if ($(this).hasClass('momo')) {

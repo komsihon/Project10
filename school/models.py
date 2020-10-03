@@ -5,8 +5,10 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
 from django_mongodb_engine.contrib import MongoDBManager
 from djangotoolbox.fields import ListField, EmbeddedModelField
+
 from ikwen.accesscontrol.models import Member
 from ikwen.core.models import Model
+from ikwen.core.fields import FileField
 from django.utils.translation import gettext_lazy as _
 from ikwen_foulassi.foulassi.models import Student, Teacher, ResultsTracker, get_school_year
 
@@ -266,16 +268,18 @@ class Assignment(Model):
     """
     Assignment given by a teacher
     """
-    UPLOAD_TO = "foulassi/assignment"
+    UPLOAD_TO = "Assignments"
     subject = models.ForeignKey(Subject, verbose_name=_("Subject"))
     classroom = models.ForeignKey(Classroom, verbose_name=_("Classroom"))
-    title = models.CharField(_('Title'), max_length=255)
+    title = models.CharField(_('Title'), max_length=255, unique=True, null=True, blank=True)
     detail = models.TextField(_('Detail'), blank=True)
-    attachment = models.ImageField(_("Attachment"), blank=True, null=True, upload_to=UPLOAD_TO)
-    deadline = models.DateField(_("Deadline"))
+    attachment = FileField(_("Attachment"), blank=True, null=True,
+                           upload_to=UPLOAD_TO, allowed_extensions=['jpg', 'jpeg', 'png', 'docx', 'doc', 'odt', 'ppt', 'heic', 'pdf', 'xls', 'xlsx'],
+                           help_text=_("Upload a single image file here"))
+    deadline = models.DateField(_("Deadline"), null=True, blank=True)
 
     def get_obj_details(self):
-        return self.deadline
+        return self.deadline.strftime("%Y/%m/%d")
 
     def __unicode__(self):
         return "%s: %s" % (self.subject.name, self.title)
@@ -285,13 +289,37 @@ class Homework(Model):
     """
     Homework sent by the student
     """
-    UPLOAD_TO = "foulassi/homework"
+    UPLOAD_TO = "Homeworks"
     assignment = models.ForeignKey(Assignment, verbose_name=_("Assignment"))
     student = models.ForeignKey(Student, verbose_name=_("Student"))
-    attachment = models.ImageField(_("Attachment"), blank=True, null=True, upload_to=UPLOAD_TO)
+    attachment = FileField(_("Attachment"), blank=True, null=True,
+                           allowed_extensions=['jpg', 'jpeg', 'png', 'docx', 'doc', 'odt', 'ppt', 'heic', 'pdf', 'xls', 'xlsx'],
+                           upload_to=UPLOAD_TO)
 
     def __unicode__(self):
         return "%s: %s" % (self.assignment.subject.name, self.assignment.title)
+
+
+class AssignmentCorrection(Model):
+    """
+    Correction of an assignment
+    """
+    UPLOAD_TO = "Corrections"
+    assignment = models.OneToOneField(Assignment, verbose_name=_("Assignment"))
+    attachment = FileField(_('Attachment'), blank=True, null=True,
+                           allowed_extensions=['jpg', 'jpeg', 'png', 'docx', 'doc', 'odt', 'ppt', 'heic', 'pdf', 'xls', 'xlsx'],
+                           upload_to=UPLOAD_TO, help_text=_("Upload a single image file here"))
+    guideline = models.TextField(_('Guideline'), blank=True, null=True)
+    cost = models.PositiveIntegerField(_('Cost of the correction'), blank=True, null=True, default=0)
+
+    def __unicode__(self):
+        return "%s" % self.assignment.title
+
+    def get_obj_details(self):
+        if self.cost == 0:
+            return "<strong>Free</strong>"
+        else:
+            return "<strong>%(cost)s</strong>" % {'cost': '{:,}'.format(self.cost)}
 
 
 class AbstractScore(Model):

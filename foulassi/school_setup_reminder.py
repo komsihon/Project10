@@ -9,7 +9,7 @@ from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _, activate
 
 from ikwen.core.models import Application, Service
-from ikwen.core.utils import add_database
+from ikwen.core.utils import add_database, send_push
 from ikwen.core.log import CRONS_LOGGING
 from ikwen.accesscontrol.models import Member
 from ikwen.core.utils import get_mail_content
@@ -75,9 +75,25 @@ def remind_staff():
 
             msg = EmailMessage(subject, html_content, sender, [member.email])
             msg.content_subtype = "html"
-            print("Sending email to %s ..." % member.email)
+
+            if not DEBUG:
+                print("Sending email to %s ..." % member.email)
+
             msg.send()
-            print("Email sent")
+
+            if not DEBUG:
+                print("Email sent")
+
+            body = "%s" % school.project_name
+            if students_reminder:
+                body += _("has %(missing)s unregistered student(s)"
+                          % {'missing': students_reminder.missing})
+                send_push(member, subject, body, cta_url)
+                continue
+            if parents_reminder:
+                body += _("has %(missing)s student(s) who have(has) not yet parent(s) contacts"
+                          % {'missing': parents_reminder.missing})
+            send_push(school, member, subject, body, cta_url)
 
 
 if __name__ == '__main__':

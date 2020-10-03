@@ -1,0 +1,43 @@
+{% load i18n static humanize %}
+
+
+<link rel='stylesheet' href="{% static 'foulassi/css/homework.css' %}?v=20.10.16" />
+
+<div class="container download-correction">
+    <div class="col-sm-offset-1 col-sm-9">
+        {% if correction %}
+                <h3 class="title">{{ assignment.title }}</h3>
+                <h5 class="text-muted">{{ assignment.subject }}&nbsp;&nbsp;&compfn;&nbsp;&nbsp;
+                    <time class="date" style="float: none">{{ correction.created_on|date:"Y/m/d" }}</time>
+                </h5>
+                {% if correction.cost > 0 %}
+                    <div class="cost">
+                        <span class="h4 header">{% trans 'Cost:' %}</span>
+                        <sup class="crncy">XAF</sup>
+                        <span class="header h1">&nbsp;&nbsp;{{ correction.cost|intcomma }}</span>
+                    </div>
+                    <button type="button" class="btn btn-md btn-deep-blue col-sm-3 col-xs-12 payment-start purchase"
+                            data-product-id="{{ correction.id }}">
+                        <i class="fas fa-money" aria-hidden="true"></i>
+                        {% trans 'Purchase' %}
+                    </button>
+                {% endif %}
+                <a href="{% get_media_prefix %}{{ correction.attachment }}" class="btn  btn-deep-blue btn-md col-sm-3 col-xs-12"
+                   style="{% if correction.cost > 0 %}display: none{% endif %}" download="{{ correction }}{{ extension }}" target="_blank">
+                    <i class="fas fa-download" style="margin-right: 12px"></i>
+                    {% trans "Download" %}
+                </a>
+        {% else %}
+            <div class="text-center text-muted no-correction">
+                <em>{% blocktrans %}Correction of {{ assignment }} is not yet available{% endblocktrans %}</em>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+    (() => {
+        $('#selection-control').addClass('back');
+        $('#selection-control .clear-selection').attr('title', "{% trans 'Back' %}");
+        $('#selection-control .select-count').html("{% trans 'Back' %}");
+    })()
+</script>

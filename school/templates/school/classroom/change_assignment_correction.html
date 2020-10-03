@@ -1,5 +1,5 @@
 {% extends 'core/change_object_base.html' %}
-{% load i18n static %}
+{% load i18n static staticfiles %}
 {% block breadcrumb_location %}
     <li>
         <a href="{% url 'school:classroom_list' %}">{% trans "Classrooms" %}</a>
@@ -8,7 +8,13 @@
         <a href="{% url 'school:classroom_detail' classroom.id %}">{{ classroom }}</a>
     </li>
     <li>
-        <a href="{{ object_list_url }}">{{ verbose_name_plural|capfirst }}</a>
+        <a href="{% url 'school:assignment_list' %}?classroom_id={{ classroom.id }}">{% trans 'Assignments' %}</a>
+    </li>
+    <li>
+        <span>{{ subject }}</span>
+    </li>
+    <li>
+        <a href="{% url 'school:assignment_correction_list' classroom.id subject.id %}">{% trans 'Corrections' %}</a>
     </li>
     {% if obj %}
         <li>{{ obj }}</li>
@@ -23,46 +29,24 @@
             {% if errors %}<p class="alert alert-danger">{{ errors }}</p>{% endif %}
             <form class="admin-form" method="post">{% csrf_token %}
                 {% if authorized_teacher %}
-                <div class="field-box field-classroom form-group{% if not field.is_readonly and field.errors %} errors{% endif %}">
+                <div class="field-row field-assignment form-group{% if not field.is_readonly and field.errors %} errors{% endif %}">
                     {% if not line.fields|length_is:'1' and not field.is_readonly %}{{ field.errors }}{% endif %}
-                    <label class="required" for="id_classroom">{% trans 'Classroom:' %}</label>
-                    <input type="hidden" name="classroom" value="{{ classroom.id }}">
-                    <input type="text" id="id_classroom" value="{{ classroom }}" class="form-control input-sm" disabled>
+                    <label class="required" for="id_assignment">{% trans 'Assignment' %}:</label>
+                    <input type="hidden" name="assignment" value="{{ assignment.id }}">
+                    <input type="text" id="id_assignment" value="{{ assignment }}" class="form-control input-sm" disabled>
                 </div>
                 {% endif %}
-                <div class="field-box field-subject form-group{% if not field.is_readonly and field.errors %} errors{% endif %}">
-                    {% if not line.fields|length_is:'1' and not field.is_readonly %}{{ field.errors }}{% endif %}
-                    <label class="required" for="id_subject">{% trans 'Subject:' %}</label>
-                    <select id="id_subject" name="subject" class="form-control input-sm"{% if not authorized_teacher %} disabled{% endif %}>
-                        {% if not authorized_teacher %}
-                            <option value="{{ obj.subject }}">{{ obj.subject }}</option>
-                        {% else %}
-                            <option value="">---------</option>
-                            {% for subject in subject_list %}
-                                <option value="{{ subject.id }}" {% if subject == obj.subject %}selected{% endif %}>{{ subject.name }}</option>
-                            {% endfor %}
-                        {% endif %}
-                    </select>
-                </div>
                 <section class="none">
-                    <div class="form-row field-title form-group">
+                    <div class="form-row field-guideline form-group">
                         <div>
-                            <label class="required" for="id_title">{% trans 'Title:' %}</label>
-                            <input id="id_title" value="{{ obj.title }}" maxlength="255" name="title" type="text"{% if not authorized_teacher %} disabled{% endif %}>
+                            <label class="required" for="id_title">{% trans 'Guideline' %}:</label>
+                            <textarea cols="40" data-value="{{ obj.guideline|safe }}" data-val="{{ obj.detail|safe }}" id="id_guideline" name="guideline" rows="10"{% if not authorized_teacher %} disabled{% endif %}>{% if authorized_teacher %}{{ obj.guideline|safe }}{% endif %}</textarea>
                         </div>
                     </div>
-
-                    <div class="form-row field-detail form-group">
+                    <div class="form-row field-cost form-group">
                         <div>
-                            <label for="id_detail">{% trans 'Detail:' %}</label>
-                            <textarea cols="40" data-value="{{ obj.detail|safe }}" data-val="{{ obj.detail|safe }}" id="id_detail" name="detail" rows="10"{% if not authorized_teacher %} disabled{% endif %}>{% if authorized_teacher %}{{ obj.detail|safe }}{% endif %}</textarea>
-                        </div>
-                    </div>
-                    <div class="form-row field-deadline form-group">
-                        <div>
-                            <label class="required" for="id_deadline">{% trans 'Deadline:' %}</label>
-                            <input type="hidden" id="deadline-alt" name="deadline" value="{{ obj.deadline|date:"Y-m-d" }}" class="form-control input-sm">
-                            <input type="text" id="id_deadline" value="{{ obj.deadline|date:"Y-m-d" }}" class="date-field" data-alt="#deadline-alt" {% if not authorized_teacher %} disabled{% endif %}>
+                            <label for="id_cost">{% trans 'Cost of the correction' %}:</label>
+                            <input id="id_cost" min="0" name="cost" type="number" value="{% if not obj %}0{% else %}{{ obj.cost }}{% endif %}" class="form-control input-sm" {% if authorized_teacher %}{{ obj.cost }}{% endif %}>
                         </div>
                     </div>
                 </section>
@@ -77,7 +61,7 @@
                 {% endfor %}
                 {% if authorized_teacher %}
                 <div class="form-group col-xs-12 col-sm-4 col-md-3" style="clear: both; padding-top: 15px">
-                    <button class="btn btn-sm btn-primary btn-block">{% trans "Save" %}</button>
+                    <button class="btn btn-sm btn-primary btn-block save {% if is_dara %}is-dara{% endif %}">{% trans "Save" %}</button>
                 </div>
                 {% endif %}
             </form>
@@ -106,7 +90,7 @@
             };
             var detailProperties = JSON.parse(JSON.stringify(properties));
 
-            detailProperties['selector'] = '#id_detail';
+            detailProperties['selector'] = '#id_guideline';
             detailProperties['height'] = 300;
             detailProperties['toolbar'] = 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link image media code';
             detailProperties['insert_button_items'] = 'charmap anchor insertdatetime';
@@ -114,6 +98,24 @@
                 detailProperties['width'] = 740
             }
             tinymce.init(detailProperties);
+            let _$btn = $('.save');
+            _$btn.on('submit', (e) => {
+               if (!$(e.target).hasClass('is-dara')) {
+                   let image = "{% static 'daraja/img/subscribe-daraja.jpg' %}",
+                   title = "{% trans "Create your Dara account" %}",
+                   message = "{% trans "Please, create your marketer account on Daraja in order to collect money from downloads of the correction." %}",
+                   url = "https://ikwen.com/daraja/?next=" + {% url 'school:assignment_list' %};
+                   ikwen.showNoticeDialog(image, title, message, url)
+               }
+            });
+            $('#modal-generic-notice .btn-cancel').click(() => {
+                _$btn.addClass('disable');
+            });
+            $('#id-cost').on('change', () => {
+               if (_$btn.hasClass('disable')){
+                   _$btn.removeClass('disable');
+               }
+            });
         })()
     </script>
 {% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'website/base.html' %}
+{% load i18n static humanize currency webdesign media_from_provider %}
+
+{% block page_title %}<title>{% trans 'Buy school website'%}</title>{% endblock %}
+
+{% block meta %}
+    {% include 'foulassi/snippets/color_and_icons.html' %}
+    <meta name="apple-mobile-web-app-title" content="Foulassi" />
+    <meta name="copyright" content="ikwen." >
+
+    <meta name="abstract" content="{% trans "Effective school management solution" %}"/>
+    <meta name="description" content="{% trans "Foulassi lets staffs, teachers and parents connect and work together to manage the school and students." %}"/>
+
+    <meta property="og:title" content="Foulassi - {% trans "Effective school management solution" %}" />
+    <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
+    <meta property="og:description" content="{% trans "Foulassi lets staffs, teachers and parents connect and work together to manage the school and students." %}" />
+
+    <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">
+{% endblock %}
+
+{% block header_brand %}
+    <a class="navbar-brand hidden-xs" href="{{ service.url }}">
+        <img src="{% static 'website/img/logo-ikwen_for-header.png' %}">
+    </a>
+    <strong class="navbar-brand visible-xs">{{ service.project_name }}</strong>
+{% endblock %}
+
+{% block head_style %}
+    {{ block.super }}
+    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=22.05.20.20.15" />
+    <style>
+        .header-top {padding-top: 9vh}
+        footer {height: auto}
+    </style>
+{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <div style="height: 600px; padding-top: 100px">
+            <div class="col-sm-5">
+                    <h1 class="header-top" style="font-weight: 800;">{% trans 'Get a visibility of your school' %}</h1>
+                    <p style="font-size: 18px; margin-top: 30px">
+                        {% blocktrans %}
+                            Increase the notoriety of your structure.
+                            Present the story, the vision and the admission conditions. Let parents know about your latest activities in school,
+                            and present some alumni students who become famous people in Cameroon and abroad.
+                            <br><br>Get website now at &nbsp;&nbsp;<strong><sup>{{ config.currency_symbol }}</sup>{{ cost|floatformat:config.decimal_precision|intcomma }}</strong>.
+                        {% endblocktrans %}
+                    </p>
+                    <div>
+                        <div class="failed-msg tpl" style="margin-top: 20px; color: #ff3030">{% trans 'Subscription failed' %}</div>
+                        <button class="btn btn-deep-blue col-sm-7 subscribe" style="margin-top: 30px">{% trans 'Subscribe' %}</button>
+                        {% include 'core/snippets/spinner.html' %}
+                    </div>
+            </div>
+            <div class="col-sm-7" style="background-image: url({% static 'foulassi/img/e-learning1.jpg' %}); background-size: cover; background-position: center; height: inherit;"></div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        (() => {
+            $('button.subscribe').click(() => {
+                let _$btn = $('.subscribe');
+                _$btn.addClass('processing');
+                $.getJSON('', {'action': 'place_invoice'} , (data) => {
+                    setTimeout(() => {
+                        _$btn.removeClass('processing');
+                        if (data.success) {
+                            _$btn.hide();
+                            let img = "{% static 'foulassi/img/e-learning6.jpg' %}",
+                                title = "{% blocktrans %}Congratulations !{% endblocktrans %}",
+                                message = "{% blocktrans %}You successfully subscribe to the website service<br>Click below to pay your invoice and start use it{% endblocktrans %}",
+                                url = "{% url 'billing:invoice_list' %}",
+                                okText = "{% trans 'Pay invoice' %}",
+                                cancelText = "{% trans 'Later' %}";
+                            ikwen.showNoticeDialog(img, title, message, url, okText, cancelText);
+                        }
+                        if (data.error) {
+                            $('.failed-msg').show();
+                            _$btn.prop('disabled', 'disabled');
+                        }
+                    }, 3000);
+                });
+            });
+            $('button.btn-cancel').click(() => {
+               window.location = "{% url 'foulassi:admin_home' %}";
+            });
+
+        })()
+    </script>
+{% endblock %}
+
+

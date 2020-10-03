@@ -332,6 +332,12 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
     notification_emails = models.CharField(_("Notification email(s)"), max_length=150, blank=True, null=True, default='',
                                            help_text="Emails to which payment notifications are sent. "
                                                      "Separate with coma if many. Eg: boss@email.com, account@email.com")
+    has_subscribed_website_service = models.BooleanField(default=False,
+                                                         help_text=_("Check whether school subscribed "
+                                                                     "to website service or not"))
+
+    contract = models.FileField(_("School contract"), help_text=_("Upload your signed contract in a single PDF file"))
+    last_setup_status_check = models.DateTimeField(default=datetime.now)
 
     def __unicode__(self):
         return self.company_name

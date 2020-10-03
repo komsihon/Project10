@@ -135,6 +135,7 @@
                 <div id="student-billing" class="tab-pane student-info-tab" role="tabpanel">
                     {% include 'core/snippets/spinner.html' %}
                 </div>
+                {% include 'core/snippets/spinner.html' %}
                 <div class="clearfix"></div>
             </div>
         </div>
@@ -146,6 +147,83 @@
     {{ block.super }}
     <script type="text/javascript">
         (function() {
+            let href = '', previous_hash = '', current_hash = '';
+            $('body').on('click', '.bottom-menu-xs:visible a, li.assignment a', function() {
+                let action = $(this).data('action'), $spinner = $('.tab-content > .spinner').clone().show();
+                previous_hash = current_hash;
+
+                if ($(this).parents($('.bottom-menu-xs:visible')).length > 0) {
+                    $('.edge-swipe-overlay, .bottom-menu-xs').hide();
+                    previous_hash = '#show-bottom-menu';
+                }
+                if (action === 'change-homework'){
+                    current_hash = '#change-homework';
+                    href = localStorage.getItem('homeworkURL');
+                }
+                if (action === 'download-correction'){
+                    current_hash = '#download-correction';
+                    href = localStorage.getItem('correctionURL');
+                }
+                location.hash = current_hash;
+                $('#student-assignments').html($spinner[0].outerHTML).load(href);
+                return false;
+            });
+            $('#selection-control .clear-selection').click(() => {
+                previous_hash = current_hash;
+                window.history.back();
+                return false;
+            });
+            $(window).on('hashchange', function () {
+               let $spinner = $('.tab-content > .spinner').clone().show();
+               current_hash = location.hash;
+               switch (current_hash) {
+                   case '#':
+                   case '':
+                       if (previous_hash === '#change-homework' || previous_hash === '#download-correction') {
+                           $('#student-assignments').html($spinner[0].outerHTML).load('?tab=assignments', () => {
+                               $('#admin-content').animate({'scrollTop': 0}, '50');
+                           });
+                           $('.edge-swipe-overlay, .bottom-menu-xs').hide();
+                           previous_hash = current_hash;
+                           current_hash = '#';
+                           location.hash  = current_hash;
+                       }
+                       if (previous_hash === '#show-bottom-menu')
+                           $('.edge-swipe-overlay, .bottom-menu-xs').hide();
+                       break;
+                   case '#show-bottom-menu':
+                       if (previous_hash === '#change-homework' || previous_hash === '#download-correction') {
+                           $('#student-assignments').html($spinner[0].outerHTML).load('?tab=assignments', () => {
+                               $('#admin-content').animate({'scrollTop': 0}, '50');
+                           });
+                           $('.edge-swipe-overlay, .bottom-menu-xs').hide();
+                           previous_hash = current_hash;
+                           current_hash = '#';
+                           location.hash = current_hash;
+                           console.log('Third case');
+                       }
+                       break;
+                   default:
+                       if (previous_hash === '#change-homework' || previous_hash === '#download-correction') {
+                           $('#student-assignments').html($spinner[0].outerHTML).load('?tab=assignments', () => {
+                               $('#admin-content').animate({'scrollTop': 0}, '50');
+                           });
+                           $('.edge-swipe-overlay, .bottom-menu-xs').hide();
+                           previous_hash = current_hash;
+                           current_hash = '';
+                       }
+               }
+               return false;
+            });
+
+            $('body').on('click', function () {
+                if (($(this).parents('.bottom-menu-xs').length === 0) && (current_hash === '#show-bottom-menu') &&
+                    (previous_hash === '' || previous_hash === '#')){
+                    $('.edge-swipe-overlay, .bottom-menu-xs').hide();
+                    return false;
+                }
+            });
+
             $('div#admin-nav .classrooms').addClass('active');
             {% if settings.IS_IKWEN %}
                 $('#student-details .basic input, #student-details .basic select').prop('disabled', true);
@@ -246,6 +324,62 @@
                         ikwen.showFloatingNotice(notice, '', 6);
                     }
                 });
+            }).on('click', '.do-add-invoice:not(.processing)', function() {
+                let _$btn = $(this),
+                    amount = $('#new-invoice-amount').val(),
+                    label = $('#new-invoice-label').val(),
+                    dueDate = $('#new-invoice-due-date-alt').val(),
+                    params = {action: 'add_invoice', amount: amount, due_date: dueDate, label: label};
+                _$btn.addClass('processing');
+                $.getJSON('', params, function(data) {
+                    _$btn.removeClass('processing');
+                    if (data.success) {
+                        let $invoice = $('li.pending-invoice.tpl').clone().removeClass('tpl').attr('id', data.id).data('id', data.id);
+                        $invoice.find('.amount .value').text(amount);
+                        $invoice.find('.due-date').text(dueDate);
+                        $invoice.find('.label').text(label);
+                        $invoice.prependTo('.pending-invoices').fadeIn();
+                        $('#modal-add-invoice').modal('hide');
+                        $('.no-pending-invoice').hide();
+                    }
+                })
+            }).on('click', '.show-modal-cash-in', function() {
+                $('.errorlist.amount').remove();
+                let invoiceId = $(this).data('invoice-id'),
+                    amount = $(this).data('amount');
+                $('#cash-in-invoice-id').val(invoiceId);
+                $('#cash-in-amount').val(amount);
+            }).on('click', '.do-cash-in:not(.processing)', function() {
+                $('.errorlist.amount').remove();
+                let _$btn = $(this),
+                    invoiceId = $('#cash-in-invoice-id').val(),
+                    _$invoice = $(`#${invoiceId}`),
+                    toBePaid = _$invoice.data('to-be-paid'),
+                    amount = $('#cash-in-amount').val(),
+                    rest = toBePaid - amount,
+                    title = $('#' + invoiceId + ' .title').text(),
+                    params = {action: 'cash_in', invoice_id: invoiceId, amount: amount};
+                amount = parseFloat(amount);
+                if (isNaN(amount) || amount > parseFloat(toBePaid)) {
+                    $('<ul class="errorlist amount">' +
+                    '<li>' + "{% trans "Please enter a valid number." %}" + '</li>' +
+                    '</ul>').insertAfter('#invoice-amount');
+                    return;
+                }
+                _$btn.addClass('processing');
+                $.getJSON('', params, function(data) {
+                    _$btn.removeClass('processing');
+                    if (data.success) {
+                        _$invoice.data('to-be-paid', rest);
+                        _$invoice.find('.show-modal-cash-in').data('amount', rest);
+                        $(`#${invoiceId} .amount .value`).text(rest.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                        let $payment = $('li.payment.tpl').clone().removeClass('tpl');
+                        $payment.find('.amount').text(amount.formatMoney(0, '{{ settings.THOUSAND_SEPARATOR }}', '{{ settings.DECIMAL_SEPARATOR }}'));
+                        $payment.find('.details').text(title);
+                        $('#modal-cash-in').modal('hide');
+                        $payment.prependTo('.payment-log').fadeIn();
+                    } else ikwen.showFloatingNotice(data.error)
+                })
             });
             $('#admin-content').on('click', '.add-parent', function() {
                 $('.parent:not(.tpl)').show();

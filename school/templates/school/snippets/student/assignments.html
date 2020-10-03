@@ -1,40 +1,154 @@
-{% load i18n static humanize %}
-{% include 'core/snippets/spinner.html' %}
+{% load i18n static humanize modulo %}
+{% block head_style %}
+    <link rel="stylesheet" href="{% static 'foulassi/css/assignment.css' %}?v=20.09.16">
+    <style>
+        .teacher-info {background-color: #6495a8; color: #fff; border: #6495a8; margin-top: 100px}
+    </style>
+{% endblock %}
 {% if assignment_list %}
-    <ul class="object-list list-group">
+    <ul class="object-list list-group col-sm-8 col-sm-offset-2">
         {% for obj in assignment_list %}
-            {% if settings.IS_IKWEN %}
-                 {% if obj.homework %}
-                    {% url 'foulassi:change_homework' student.school.ikwen_name student.id obj.id obj.homework.id as obj_url %}
-                 {% else %}
-                     {% url 'foulassi:change_homework' student.school.ikwen_name student.id obj.id as obj_url %}
-                 {% endif %}
-            {% else %}
-                 {% if obj.homework %}
-                    {% url 'school:view_homework' obj.homework.id as obj_url %}
-                 {% else %}
-                     {% url 'school:change_assignment' classroom.id obj.id as obj_url %}
-                 {% endif %}
-            {% endif %}
-            <li class="assignment ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}">
-                <div>
-                    <a class="hidden-xs" href="{{ obj_url }}">{{ obj }}</a>
-                    <a class="visible-xs" href="{{ obj_url }}">{{ obj|truncatechars:30 }}</a>
-                </div>
-                <date class="date text-muted">
-                    {% if not obj.homework %}<i class="fa fa-circle text-warning" style="margin-right: 5px"></i>{% endif %}
-                    {{ obj.created_on }}
-                </date>
-                {% with obj_details=obj.get_obj_details %}
-                    {% if obj_details %}
-                        <div class="text-muted">{{ obj_details|safe }}</div>
-                    {% endif %}
-                {% endwith %}
-            </li>
+            {% with homework=obj.homework teacher=obj.teacher ikwen_name=student.school.ikwen_name classroom=student.classroom title=obj.title deadline=obj.deadline detail=obj.detail correction_cost=obj.assignmentcorrection.cost %}
+                {% if settings.IS_IKWEN %}
+                     {% if homework %}
+                         {% url 'foulassi:change_homework' ikwen_name student.id obj.id homework.id as obj_url %}
+                         {% url 'foulassi:download_correction' ikwen_name student.id obj.id as correction_url %}
+                     {% else %}
+                         {% url 'foulassi:change_homework' ikwen_name student.id obj.id as obj_url %}
+                     {% endif %}
+                {% else %}
+                     {% if homework %}
+                         {% url 'school:view_homework' homework.id as obj_url %}
+                         {% url 'school:view_correction' homework.id as correction_url %}
+                     {% else %}
+                         {% url 'school:change_assignment' classroom.id obj.id as obj_url %}
+                     {% endif %}
+                {% endif %}
+                <li class="assignment ik-li list-group-item subtle-shade" id="{{ obj.id }}" data-id="{{ obj.id }}">
+                    <div class="row">
+                        <div class="col-sm-10 col-xs-8 assignment-detail">
+                            <div>
+                                <a class="hidden-xs h4 pull-left" href="{{ obj_url }}" data-action="change-homework">{{ title }}</a>
+                                <a class="visible-xs h4 col-xs-11 row" href="{{ obj_url }}" data-action="change-homework">{{ title|truncatechars:20 }}</a>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="hidden-xs instructions"><span>{{ detail|safe|truncatewords:30 }}</span></div>
+                            <div class="visible-xs instructions">
+                                <span>{{ detail|safe|truncatewords:20 }}</span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-xs-4 profile-container">
+                            {% with small_name=teacher.member.small_name %}
+                                {% if small_name %}
+                                    <a class="show-teacher-name profile visible-xs" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ small_name }});" data-target="#modal-show-teacher-profile" data-toggle="modal" data-info="{{ teacher }}"></a>
+                                    <div class="profile hidden-xs" style="background-image: url({{ settings.IKWEN_MEDIA_URL }}{{ small_name }});"></div>
+                                {% else %}
+                                    <a class="visible-xs show-teacher-name profile aspect aspect-{{ forloop.counter0|modulo:4 }}" data-target="#modal-show-teacher-profile" data-toggle="modal" data-info="{{ teacher }}">{{ teacher.initials }}</a>
+                                    <div class="hidden-xs profile aspect aspect-{{ forloop.counter0|modulo:4 }}">{{ teacher.initials }}</div>
+                                {% endif %}
+                                <h5 class="text-center hidden-xs">{{ teacher }}</h5>
+                            {% endwith %}
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="deadline">
+                        <div class="col-sm-1 col-xs-2">
+                            {% if not homework %}
+                                <i class="fa fa-circle"></i>
+                            {% else %}
+                                <a href="{{ correction_url }}" class="col-xs-1 fa fa-paperclip" data-action="download-correction"><i title="Download correction"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-4 col-sm-offset-7 col-xs-4 col-xs-offset-4">
+                            <time class="date hidden-xs">{{ deadline }}</time>
+                            <time class="date row visible-xs">{{ deadline }}</time>
+                        </div>
+                    </div>
+                    <button class="show-bottom-menu visible-xs" data-change-homework-url="{{ obj_url }}" data-correction-url="{{ correction_url }}" data-cost="{{ correction_cost|intcomma }}">
+                        <span class="glyphicon glyphicon-option-vertical text-muted pull-right"></span>
+                    </button>
+                </li>
+            {% endwith %}
         {% endfor %}
     </ul>
+    <div class="bottom-menu-xs has-shade" style="display: none">
+        <ul class="ik-li list-unstyled">
+            <li class="reply-to-homework">
+                <a data-action="change-homework">
+                    <i class="far fa-edit"></i>{% trans 'Reply to homework' %}
+                </a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li class="correction">
+                <a data-action="download-correction">
+                    <i class="fa fa-download pull-left"></i>
+                    <span>
+                        <span class="pull-left">{% trans 'Download correction' %}</span>
+                        <span class="pull-right badge">{% trans 'Free' context "Free of charge" %}</span>
+                    </span>
+
+                </a>
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
 {% else %}
     <div class="text-center no-assignment">
         <em class="text-muted">{% trans "No assignment yet" %}</em>
     </div>
 {% endif %}
+
+{% block js %}
+    <script>
+        (() => {
+            $('.assignment-detail').find("[align='CENTER']").attr('align', 'LEFT');
+
+            $('.show-teacher-name').click((e) => {
+               let teacherName = $(e.target).data('info');
+               ikwen.showFloatingNotice(`${teacherName}`, 'teacher-info', 3);
+               return false;
+               e.preventDefault();
+            });
+
+            $('.assignment-detail .instructions img').addClass('img-responsive');
+            if ($('.bottom-menu-xs').length === 1) {
+                $('.bottom-menu-xs').remove().insertAfter('#admin-content');
+            }
+            $('.ik-li.assignment .show-bottom-menu').click(function(){
+               let correctionURL = $(this).data('correction-url'),
+                   correctionCost = $(this).data('cost'),
+                   homeworkURL = $(this).data('change-homework-url');
+               $('.reply-to-homework a').prop('href', homeworkURL);
+               $('.correction a').prop('href', correctionURL);
+               $('.correction a').attr('href', correctionURL);
+               if (parseInt(correctionCost) === 0) {
+                   $('.correction .badge').removeClass('badge-success').addClass('badge-info')
+                       .text('{{ CURRENCY.code }} ' + correctionCost);
+                   $('.correction, .divider').show();
+               } else if(correctionCost === '0') {
+                   $('.correction .badge').removeClass('badge-info').addClass('badge-success')
+                       .text("{% trans 'Free' context "Free of charge" %}");
+                   $('.correction, .divider').show();
+               } else {
+                   $('.correction, .divider').hide();
+               }
+               $('.edge-swipe-overlay').fadeIn();
+               $('.bottom-menu-xs').show();
+               location.hash = 'show-bottom-menu';
+               localStorage.setItem('correctionURL', correctionURL);
+               localStorage.setItem('homeworkURL', homeworkURL);
+               return false;
+            });
+
+            {% if not settings.IS_IKWEN  %}
+                $('body').find('.assignment .deadline .fa-paperclip').click((e) => {
+                    let $spinner = $('.tab-content > .spinner').clone().show(), href = $(e.target).prop('href');
+                    $('#student-assignments').html($spinner[0].outerHTML).load(href);
+                    return false;
+                });
+            {% endif %}
+
+        })();
+    </script>
+{% endblock %}

@@ -1,15 +1,16 @@
 {% load i18n static humanize %}
 {% include 'core/snippets/spinner.html' %}
+<style>
+    @media (min-width: 990px) {
+        .actions i {top: 12px}
+    }
+
+</style>
 <ul class="object-list list-group">
-    {% for obj in assignment_list %}
-        {% url 'school:change_assignment' classroom_id obj.id as obj_url %}
-        {% url 'school:change_assignment_correction' classroom_id obj.id as correction_url %}
-        {% if obj.correction %}
-            {% url 'school:change_assignment_correction' classroom_id obj.id obj.correction.id as correction_url %}
-        {% endif %}
+    {% for obj in objects_page.object_list %}
         <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}">
-            <a class="hidden-xs" href="{{ obj_url }}">{{ obj }}</a>
-            <a class="visible-xs" href="{{ obj_url }}">{{ obj|truncatechars:30 }}</a>
+            <h4 class="hidden-xs pull-left">{{ obj.student }}</h4>
+            <h4 class="visible-xs pull-left">{{ obj.student|truncatechars:30 }}</h4>
             <date class="date text-muted">{{ obj.created_on|date:"Y/m/d" }}</date>
             {% with obj_details=obj.get_obj_details %}
                 {% if obj_details %}
@@ -24,13 +25,9 @@
                         <i class="action glyphicon glyphicon-ok toggle active on" title="{% trans "Activate" %}"></i>
                     {% endif %}
                 {% endif %}
-                <a href="{{ correction_url }}{% if authorized_teacher %}?authorized_teacher={{ authorized_teacher }}{% endif %}" style="text-decoration: none">
-                    <i class="fas fa-book-open" title="{% trans 'Upload correction' %}"></i>
+                <a href="{{ settings.IKWEN_MEDIA_URL }}{{ obj.attachment.name }}" target="_blank" download="{{ obj.attachment.name }}">
+                    <i class="fas fa-file-download" title="{% trans "Download" %}"></i>
                 </a>
-                <a href="{% url 'school:assignment_reply_list' classroom_id obj.id %}" style="text-decoration: none">
-                    <i class="fas fa-edit" title="{% trans 'View responses' %}"></i>
-                </a>
-                <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
             </div>
         </li>
     {% endfor %}

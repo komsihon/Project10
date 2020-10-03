@@ -29,7 +29,7 @@ from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.utils import get_model_admin_instance, increment_history_field, DefaultUploadBackend, \
     get_service_instance, get_mail_content, send_push
 from ikwen.core.templatetags.url_utils import strip_base_alias
-from ikwen.core.models import Service
+from ikwen.core.models import Service, Application
 from ikwen.core.views import HybridListView, ChangeObjectBase
 from ikwen.accesscontrol.backends import UMBRELLA
 
@@ -40,11 +40,13 @@ from ikwen_foulassi.reporting.utils import set_counters, calculate_session_repor
     calculate_session_group_report, set_stats, set_daily_counters_many
 from ikwen_foulassi.foulassi.admin import StudentResource
 from ikwen_foulassi.reporting.models import SessionReport, LessonReport
-from ikwen_foulassi.school.admin import ClassroomAdmin, AssignmentAdmin
+from ikwen_foulassi.school.admin import ClassroomAdmin, AssignmentAdmin, AssignmentCorrectionAdmin
 from ikwen_foulassi.school.models import Level, Classroom, Session, get_subject_list, Subject, Score, \
-    ScoreUpdateRequest, SubjectCoefficient, Lesson, Assignment
+    ScoreUpdateRequest, SubjectCoefficient, Lesson, Assignment, AssignmentCorrection, Homework
 from ikwen_foulassi.school.student.views import set_student_invoices
 from import_export.formats.base_formats import XLS
+
+from daraja.models import DARAJA
 
 logger = logging.getLogger('ikwen')
 
@@ -784,8 +786,22 @@ class AssignmentList(HybridListView):
     def get_context_data(self, **kwargs):
         context = super(AssignmentList, self).get_context_data(**kwargs)
         classroom_id = self.request.GET['classroom_id']
+        classroom = Classroom.objects.get(pk=classroom_id)
+        assignment_list = [assignment for assignment in self.get_queryset().select_related('subject', 'classroom')]
+        # for assignment in assignment_list:
+        #     correction = None
+        #     try:
+        #         correction = assignment.assignmentcorrection
+        #     except:
+        #         try:
+        #             correction = AssignmentCorrection.objects.get(assignment=assignment)
+        #         except:
+        #             pass
+        #     assignment.correction = correction
+        # context['correction'] = correction
+        context['assignment_list'] = assignment_list
         context['classroom_id'] = classroom_id
-        context['classroom'] = Classroom.objects.get(pk=classroom_id)
+        context['classroom'] = classroom
         context['classroom_list'] = Classroom.objects.all()
         return context
 
@@ -825,9 +841,8 @@ class ChangeAssignment(ChangeObjectBase):
             foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
         except:
             foulassi = None
-        weblet = get_service_instance()
-        school_config = weblet.config
-        company_name = school_config.company_name
+        service = get_service_instance()
+        school_config = service.config
         classroom = Classroom.objects.get(pk=kwargs['classroom_id'])
         # for student in Student.objects.filter(classroom=classroom, kid_fees_paid=True):
         for student in Student.objects.filter(classroom=classroom):
@@ -838,10 +853,16 @@ class ChangeAssignment(ChangeObjectBase):
                 except:
                     continue
 
-                sender = '%s via ikwen Foulassi <no-reply@ikwen.com>' % company_name
+                company_name = school_config.company_name
+                try:
+                    school_year = get_school_year(self.request)
+                    teacher = Teacher.objects.get(member=self.request.user, school_year=school_year)
+                    sender = '%s via ikwen Foulassi <no-reply@ikwen.com>' % teacher
+                except:
+                    sender = '%s via ikwen Foulassi <no-reply@ikwen.com>' % company_name
 
                 cta_url = 'https://foulassi.ikwen.com' + reverse('foulassi:change_homework',
-                                                                 args=(weblet.ikwen_name,
+                                                                 args=(service.ikwen_name,
                                                                        student.pk, obj.pk))
                 if parent.member:
                     activate(parent.member.language)
@@ -868,8 +889,149 @@ class ChangeAssignment(ChangeObjectBase):
                 except Exception as e:
                     logger.debug(e.message)
 
-                body = _('New assignment for your child %(student)s in %(subject)s: '
-                         '%(title)s' % {'student': student, 'subject': subject, 'title': obj.title})
+                body = _('Your child has a new assignment in '
+                         '%(subject)s about %(title)s' % {'subject': obj.subject.name, 'title': obj.title})
 
                 if parent.member:
-                    send_push(foulassi, parent.member, company_name, body, cta_url)
+                    send_push(foulassi, parent.member, subject, body, cta_url)
+
+
+class ChangeAssignmentCorrection(ChangeObjectBase):
+    model = AssignmentCorrection
+    model_admin = AssignmentCorrectionAdmin
+    template_name = 'school/classroom/change_assignment_correction.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ChangeAssignmentCorrection, self).get_context_data(**kwargs)
+        classroom_id = kwargs['classroom_id']
+        correction_id = kwargs.get('object_id')
+        assignment = Assignment.objects.select_related('subject', 'classroom').get(pk=kwargs['assignment_id'])
+        context['assignment'] = assignment
+        context['subject'] = assignment.subject
+        classroom = Classroom.objects.select_related('level', 'professor', 'leader').get(pk=classroom_id)
+        context['classroom'] = classroom
+
+        try:
+            teacher = Teacher.objects.select_related('member').get(member=self.request.user, school_year=get_school_year(self.request))
+            subject_list = list(teacher.get_subject_list(classroom))
+            context['authorized_teacher'] = (True if assignment.subject in subject_list else False)
+        except Teacher.DoesNotExist:
+            context['authorized_teacher'] = False
+        try:
+            correction = AssignmentCorrection.objects.select_related('assignment').get(pk=correction_id)
+            context['correction'] = correction
+        except:
+            pass
+        daraja = Application.objects.get(slug=DARAJA)
+        try:
+            dara_weblet = Service.objects.using(UMBRELLA).get(app=daraja, member=self.request.user)
+            dara_db = dara_weblet.database
+            Service.objects.using(dara_db).get(pk=dara_weblet.id)
+            context['is_dara'] = True
+        except:
+            context['is_dara'] = False
+
+        return context
+
+    def after_save(self, request, obj, *args, **kwargs):
+        """
+        Notify the student when the correction is available
+        :param request:
+        :param obj:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+
+        service = get_service_instance()
+        school_config = service.config
+        classroom = Classroom.objects.select_related('level', 'professor', 'leader').get(pk=kwargs['classroom_id'])
+        # for student in Student.objects.filter(classroom=classroom, kid_fees_paid=True):
+        for student in Student.objects.select_related('classroom').filter(classroom=classroom):
+            for parent in student.parent_set.all():
+                try:
+                    parent_email = parent.get_email()
+                    parent_name = parent.get_name()
+                except:
+                    continue
+
+                company_name = school_config.company_name
+                school_year = get_school_year(self.request)
+                teacher = Teacher.objects.select_related('member').get(member=self.request.user, school_year=school_year)
+                sender = '%s via ikwen Foulassi <no-reply@ikwen.com>' % teacher
+
+                cta_url = 'https://foulassi.ikwen.com' + reverse('foulassi:download_correction',
+                                                                 args=(service.ikwen_name, student.pk,
+                                                                       obj.assignment.pk))
+                if parent.member:
+                    activate(parent.member.language)
+                subject = _("A new correction in %(subject)s for %(student)s is available" %
+                            {'subject': obj.assignment.subject, 'student': student})
+                extra_context = {'parent_name': parent_name, 'cta_url': cta_url,
+                                 'school_name': company_name,
+                                 'student_name': student.first_name,
+                                 'assignment': obj.assignment,
+                                 'cost': obj.cost
+                                 }
+                try:
+                    html_content = get_mail_content(subject,
+                                                    template_name='foulassi/mails/new_correction.html',
+                                                    extra_context=extra_context)
+                except:
+                    logger.error("Could not generate HTML content from template", exc_info=True)
+                    continue
+
+                msg = EmailMessage(subject, html_content, sender,
+                                   [parent_email, 'k.sihon@ikwen.com', 'silatchomsiaka@gmail.com'])
+                msg.content_subtype = "html"
+                try:
+                    msg.send()
+                except Exception as e:
+                    logger.debug(e.message)
+
+                if parent.member:
+                    send_push(service, parent.member, teacher.member.full_name, subject, cta_url)
+        return HttpResponseRedirect(reverse('school:assignment_correction_list'), args=(classroom.pk, obj.assignment.pk))
+
+
+class AssignmentCorrectionList(HybridListView):
+    model = AssignmentCorrection
+    queryset = AssignmentCorrection.objects.select_related('assignment').all()
+    search_filter = 'assignment'
+    ordering = ('-id',)
+    list_filter = ('assignment', 'cost',)
+    template_name = 'school/classroom/assignment_correction_list.html'
+    html_results_template_name = 'school/snippets/classroom/assignment_correction_list_results.html'
+
+    def get_queryset(self):
+        subject = Subject.objects.get(pk=self.kwargs['subject_id'])
+        result = lambda a: a.assignment if a.assignment.subject.pk == subject.pk else None
+        qs = []
+        for q in self.queryset:
+            if result(q):
+                qs.append(result(q))
+        return self.queryset.filter(assignment__in=qs)
+
+    def get_context_data(self, **kwargs):
+        context = super(AssignmentCorrectionList, self).get_context_data(**kwargs)
+        subject_id = kwargs['subject_id']
+        context['subject'] = Subject.objects.get(pk=subject_id)
+        classroom = Classroom.objects.select_related('level', 'professor', 'leader').get(pk=kwargs['classroom_id'])
+        context['classroom'] = classroom
+        return context
+
+
+class AssignmentReplyList(HybridListView):
+    model = Homework
+    template_name = 'school/classroom/assignment_reply_list.html'
+    html_results_template_name = 'school/snippets/classroom/assignment_reply_list_results.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AssignmentReplyList, self).get_context_data(**kwargs)
+        assignment = Assignment.objects.select_related('subject', 'classroom').get(pk=kwargs['assignment_id'])
+        self.queryset = self.get_queryset().select_related('assignment').filter(assignment=assignment)
+        context['queryset'] = self.queryset
+        context['classroom'] = assignment.classroom
+        context['subject'] = assignment.subject
+        context['assignment'] = assignment
+        return context

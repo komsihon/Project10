@@ -95,23 +95,30 @@
     <div class="divider"></div>
     <ul class="nav nav-pills nav-stacked">
         <li role="presentation" class="website-admin">
-            <a href="javascript:;" data-toggle="collapse" data-target="#website-admin"
-               aria-expanded="true" style="padding-right: 0;"> {% trans "Website Admin" %}
-                <i class="fa fa-fw fa-caret-down"></i>
-            </a>
-            <ul id="website-admin" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
-                style="padding-left: 15px">
-                <li role="presentation" class="homepage">
-                    {% url 'web:banner_list' as banner_list_url %}
-                    <a href="{{ banner_list_url }}">{% trans "Homepage" %}</a>
-                </li>
-                <li role="presentation" class="menus">{% url 'web:smart_category_list' as smart_category_list_url %}
-                    <a href="{{ smart_category_list_url }}">{% trans "Menus" %}</a>
-                </li>
-                <li role="presentation" class="items">{% url 'items:item_list' as item_url %}
-                    <a href="{{ item_url }} ">{% trans "Items" %}</a>
-                </li>
-            </ul>
+            {% if website_is_activate %}
+                <a href="javascript:;" data-toggle="collapse" data-target="#website-admin"
+                   aria-expanded="true" style="padding-right: 0;"> {% trans "Website Admin" %}
+                    <i class="fa fa-fw fa-caret-down"></i>
+                </a>
+                <ul id="website-admin" class="nav nav-pills nav-stacked collapse" aria-expanded="true"
+                    style="padding-left: 15px">
+                    <li role="presentation" class="homepage">
+                        {% url 'web:banner_list' as banner_list_url %}
+                        <a href="{{ banner_list_url }}">{% trans "Homepage" %}</a>
+                    </li>
+                    <li role="presentation" class="menus">{% url 'web:smart_category_list' as smart_category_list_url %}
+                        <a href="{{ smart_category_list_url }}">{% trans "Menus" %}</a>
+                    </li>
+                    <li role="presentation" class="items">{% url 'items:item_list' as item_url %}
+                        <a href="{{ item_url }} ">{% trans "Items" %}</a>
+                    </li>
+                </ul>
+            {% else %}
+                <a href="{% if has_subscribed_website_service %}{% url 'billing:invoice_list' %}{% else %}{% url 'foulassi:buy_website' service.project_name_slug %}{% endif %}" target="_blank" data-toggle="collapse" data-target="#website-admin"
+                   aria-expanded="true" style="padding-right: 12px;"> {% trans "Website" %}
+                    <i class="badge badge-danger" style="background-color: rgba(7,156,23,0.92)">activate</i>
+                </a>
+            {% endif %}
         </li>
     </ul>
     <div class="divider"></div>

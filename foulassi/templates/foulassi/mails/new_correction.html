@@ -138,9 +138,15 @@ table.center-on-narrow {
 
         <!-- Visually Hidden Preheader Text : BEGIN -->
         <div style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;mso-hide:all;font-family:'Myriad Pro','Lucida Sans Unicode' ,Verdana, Helvetica, Arial, sans-serif;" >
-            {% blocktrans with assignment_subject=assignment.subject assignment_title=assignment.title %}
-                Your student <strong>{{ student_name }}</strong> from class {{ classroom }} submitted his homework of {{ assignment_subject }} about <strong>{{ assignment_title }}</strong> .
+        {% if cost > 0 %}
+            {% blocktrans %}
+                Download the correction of {{ subject }} about {{ title }} <sup>XAF</sup><strong>{{ cost }}</strong>
             {% endblocktrans %}
+        {% else %}
+            {% blocktrans %}
+                Download the correction of {{ subject }} about {{ title }} for <strong>free</strong>
+            {% endblocktrans %}
+        {% endif %}
         </div>
         <!-- Visually Hidden Preheader Text : END -->
 
@@ -175,7 +181,7 @@ table.center-on-narrow {
               <td class="full-width-image" align="center" style="padding:15px">
                   <div>
 {#                  border: 1px solid #eee; #}
-                    <div style="background: url({% if student.photo.name %}{% get_media_prefix %}{{ student.photo.small_name }}{% else %}'https://static.ikwen.com/foulassi/img/submitted-homework.jpg'{% endif %}) no-repeat center; background-size: cover; border-radius: 150px; overflow: hidden; height: 200px; width: 200px">
+                    <div style="background: url('https://static.ikwen.com/foulassi/img/e-learning7.jpg') no-repeat center; background-size: cover; height: 200px; width: 200px">
                     </div>
                   </div>
               </td>
@@ -201,13 +207,23 @@ table.center-on-narrow {
                       <td valign="middle" style="mso-height-rule: exactly; line-height: 25px;"><!-- color: #555555; -->
                          <div style="padding: 15px; font-size:15px; margin-bottom: 20px;">
                               <p style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#555; overflow-wrap: break-word; text-align: justify" >
-                                {% blocktrans with assignment_subject=assignment.subject assignment_title=assignment.title deadline=assignment.deadline teacher_name=teacher.member.first_name %}
-                                    Dear <strong>{{ teacher_name }}</strong>,<br style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >Your student <strong>{{ student_name }}</strong> from {{ classroom }} submitted his homework  of <strong>{{ assignment_subject }}</strong> about <strong>{{ assignment_title }}</strong>.<br>
-                                    Find below the attached file.
-                                {% endblocktrans%}
+                                {% blocktrans with assignment_subject=assignment.subject assignment_title=assignment.title %}
+                                    Dear <strong>{{ parent_name }}</strong>,<br style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >The correction of <strong>{{ assignment_subject }}</strong> about <strong>{{ assignment_title }}</strong> of your child <strong>{{ student_name }}</strong> is now available.<br>
+                                {% endblocktrans %}
                               </p>
                          </div>
-                         <img src="{% get_media_prefix %}{{ homework.attachment }}" style="max-width: 300px">
+                      <!-- Button : Begin -->
+                        <table cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto; max-width: 300px">
+                            <tr>
+                                <td style="border-radius: 3px; text-align: center;" class="button-td">
+                                    <a target="_blank" href="{{ cta_url }}" style="background: #f38e42; border: 15px solid #f38e42	; padding: 0 10px;color: #ffffff;font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px;" class="button-a">
+                                  <!--[if mso]>&nbsp;&nbsp;&nbsp;&nbsp;<![endif]-->{% blocktrans %}Download correction{% endblocktrans %}<!--[if mso]>&nbsp;&nbsp;&nbsp;&nbsp;<![endif]-->
+                                  </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+                    <!-- Button : END -->
                       </td>
                     </tr>
                 </table>
@@ -230,29 +246,7 @@ table.center-on-narrow {
           <!-- Email Body : END -->
 
         <!-- Email Footer : BEGIN -->
-<table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" bgcolor="#fff" style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;max-width:680px;padding-top:15px;mso-table-lspace:0pt !important;mso-table-rspace:0pt !important;border-collapse:separate !important;margin-top:0 !important;margin-bottom:0 !important;margin-right:auto !important;margin-left:auto !important;table-layout:fixed !important;" >
-    <tr style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >
-      <td align="center" style="padding-top:0;padding-bottom:0;padding-right:20px;padding-left:20px;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;mso-table-lspace:0pt !important;mso-table-rspace:0pt !important;" >
-            <div style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;margin-top:20px;padding-top:10px;max-width:600px;border-top-width:2px;border-top-style:solid;border-top-color:rgba(0, 0, 0, 0.14);" >
-                <p style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#999;font-size:12px;text-align:left;" >{% trans "CONFIDENTIALITY" %}</p>
-                <p style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#999;font-size:12px;text-align:justify;" >
-                {% blocktrans %}
-                    The information contained in this e-mail and any accompanying documents is confidential or otherwise
-                    protected from disclosure. If you are not the intended recipient, please immediately alert the
-                    sender by reply e-mail and delete this message and any attachments. Any copy, dissemination or
-                    unauthorized access of the contents of this message by anyone other than the intended recipient
-                    is strictly prohibited. E-mails may be susceptible to falsification or alteration and cause data
-                    corruption and/or loss of data. {{ company_name }} and/or any of its subsidiaries decline any liability resulting
-                    from the consequences thereof. Therefore, this e-mail and any attachments are used at your own risk.
-                {% endblocktrans %}
-                </p>
-                <p style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >
-                    <span style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;font-size:12px;color:#555555;" >{% blocktrans %}&copy; {{ year }} {{ company_name }}. All Rights Reserved.{% endblocktrans %}</span>
-                </p>
-        </div>
-      </td>
-    </tr>
-</table>
+{% include 'core/mails/snippets/confidentiality.html' %}
           <!-- Email Footer : END -->
 
           <!--[if (gte mso 9)|(IE)]>

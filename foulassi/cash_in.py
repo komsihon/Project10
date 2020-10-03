@@ -4,6 +4,7 @@ import string
 from datetime import timedelta, datetime
 
 import requests
+from daraja.models import DARAJA
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -13,15 +14,18 @@ from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 
 from currencies.models import Currency
+from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen.conf.settings import WALLETS_DB_ALIAS
-from ikwen.core.models import Service
-from ikwen.core.utils import add_database, get_service_instance, get_mail_content, XEmailMessage
+from ikwen.core.models import Service, Application
+from ikwen.core.utils import add_database, get_service_instance, get_mail_content, XEmailMessage, set_counters, \
+    increment_history_field, send_push
 from ikwen.billing.models import MoMoTransaction, InvoiceItem, InvoiceEntry
 from ikwen.billing.utils import get_payment_confirmation_message, generate_pdf_invoice, get_invoicing_config_instance, \
     get_billing_cycle_days_count, get_next_invoice_number
 from ikwen.billing.mtnmomo.views import MTN_MOMO
 from ikwen_foulassi.foulassi.utils import share_payment_and_set_stats
 from ikwen_foulassi.foulassi.models import Invoice, Payment, SchoolConfig, Student
+from ikwen_foulassi.school.models import AssignmentCorrection, Assignment
 
 logger = logging.getLogger('ikwen')
 
@@ -323,4 +327,205 @@ def confirm_my_kids_payment(request, *args, **kwargs):
             msg.attach_file(invoice_pdf_file)
         except:
             pass
+    return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
+
+
+def set_correction_payment(request, *args, **kwargs):
+    correction_id = request.POST['product_id']
+    school_id = request.POST['school_id']
+    student_id = request.POST['student_id']
+    ikwen_name = request.POST['ikwen_name']
+    correction = AssignmentCorrection.objects.get(pk=correction_id)
+    assignment = correction.assignment
+    school = Service.objects.get(pk=school_id)
+    student = Student.objects.get(pk=student_id)
+    db = school.database
+    school_config = SchoolConfig.objects.get(service=school)
+    amount = correction.cost
+    item = InvoiceItem(label=_("%s correction" % correction), amount=amount)
+    cycle = Service.QUARTERLY
+    days = get_billing_cycle_days_count(cycle)
+    now = datetime.now()
+    expiry = now + timedelta(days=days)
+    short_description = now.strftime("%Y/%m/%d") + ' - ' + expiry.strftime("%Y/%m/%d")
+    entry = InvoiceEntry(item=item, short_description=short_description, total=amount, quantity_unit='')
+    number = get_next_invoice_number()
+    member = request.user
+    invoice = Invoice.objects.create(number=number, member=member, student=student, school=school, is_one_off=True,
+                                     amount=amount, my_kids_cycle=cycle, due_date=now, entries=[entry], is_my_kids=True)
+    foulassi_weblet = get_service_instance()  # This is Foulassi service itself
+
+    # Transaction is hidden from school if ikwen collects 100%.
+    # This is achieved by changing the service_id of transaction
+    tx_service_id = school.id if school_config.my_kids_share_rate < 100 else foulassi_weblet.id
+    model_name = 'billing.Invoice'
+    mean = request.GET.get('mean', MTN_MOMO)
+    signature = ''.join([random.SystemRandom().choice(string.ascii_letters + string.digits) for i in range(16)])
+    MoMoTransaction.objects.using(WALLETS_DB_ALIAS).filter(object_id=invoice.id).delete()
+
+    tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS) \
+        .create(service_id=tx_service_id, type=MoMoTransaction.CASH_OUT, amount=amount, phone='N/A', model=model_name,
+                object_id=invoice.id, task_id=signature, wallet=mean, username=request.user.username, is_running=True)
+    notification_url = foulassi_weblet.url + reverse('foulassi:confirm_correction_payment', args=(tx.id, signature))
+    cancel_url = request.META['HTTP_REFERER']
+    return_url = foulassi_weblet.url + '?showTab=assignments' + reverse('foulassi:download_correction', args=(ikwen_name, student_id, assignment.id))
+    gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'http://payment.ikwen.com/v1')
+    endpoint = gateway_url + '/request_payment'
+    params = {
+        'username': getattr(settings, 'IKWEN_PAYMENT_GATEWAY_USERNAME', foulassi_weblet.project_name_slug),
+        'amount': amount,
+        'merchant_name': 'MyKids',
+        'notification_url': notification_url,
+        'return_url': return_url,
+        'cancel_url': cancel_url,
+        'user_id': request.user.username
+    }
+    try:
+        r = requests.get(endpoint, params)
+        resp = r.json()
+        token = resp.get('token')
+        if token:
+            next_url = gateway_url + '/checkoutnow/' + resp['token'] + '?mean=' + mean
+        else:
+            logger.error("%s - Init payment flow failed with URL %s and message %s" % (
+            foulassi_weblet.project_name, r.url, resp['errors']))
+            messages.error(request, resp['errors'])
+            next_url = cancel_url
+    except:
+        logger.error("%s - Init payment flow failed with URL." % foulassi_weblet.project_name, exc_info=True)
+        next_url = cancel_url
+    return HttpResponseRedirect(next_url)
+
+
+def confirm_correction_payment(request, *args, **kwargs):
+    status = request.GET['status']
+    message = request.GET['message']
+    operator_tx_id = request.GET['operator_tx_id']
+    phone = request.GET['phone']
+    tx_id = kwargs['tx_id']
+    try:
+        tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS).get(pk=tx_id)
+        if not getattr(settings, 'DEBUG', False):
+            tx_timeout = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_TIMEOUT', 15) * 60
+            expiry = tx.created_on + timedelta(seconds=tx_timeout)
+            if datetime.now() > expiry:
+                return HttpResponse("Transaction %s timed out." % tx_id)
+    except:
+        raise Http404("Transaction %s not found" % tx_id)
+
+    callback_signature = kwargs.get('signature')
+    no_check_signature = request.GET.get('ncs')
+    if getattr(settings, 'DEBUG', False):
+        if not no_check_signature:
+            if callback_signature != tx.task_id:
+                return HttpResponse('Invalid transaction signature')
+    else:
+        if callback_signature != tx.task_id:
+            return HttpResponse('Invalid transaction signature')
+
+    if status != MoMoTransaction.SUCCESS:
+        return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
+
+    invoice = Invoice.objects.get(pk=tx.object_id)
+    school = invoice.school
+    school_config = SchoolConfig.objects.get(service=school)
+    ikwen_charges = tx.amount * school_config.my_kids_share_rate / 100
+    teacher_earnings = tx.amount * (100 - school_config.my_kids_share_rate) / 100
+
+    tx.status = status
+    tx.message = message
+    tx.processor_tx_id = operator_tx_id
+    tx.phone = phone
+    tx.is_running = False
+    tx.fees = ikwen_charges
+    tx.save()
+    mean = tx.wallet
+
+    amount = tx.amount - ikwen_charges
+    entries = invoice.entries
+    assignment_title = entries[0].item.label.rstrip(' correction')
+    assignment = Assignment.objects.get(title=assignment_title)
+    correction = assignment.assignmentcorrection
+    student = invoice.student
+    subject = assignment.subject
+    teacher = subject.get_teacher(classroom=student.classroom)
+    daraja = Application.objects.get(slug=DARAJA)
+    try:
+        dara_weblet = Service.objects.using(UMBRELLA).get(app=daraja, member=teacher.member)
+        dara_db = dara_weblet.database
+        dara_weblet_self = Service.objects.using(dara_db).get(pk=dara_weblet.id)
+        set_counters(dara_weblet_self)
+        increment_history_field(dara_weblet_self, 'turnover_history', teacher_earnings)
+        increment_history_field(dara_weblet_self, 'earnings_history', teacher_earnings)
+        increment_history_field(dara_weblet_self, 'transaction_count_history')
+        share_payment_and_set_stats(invoice, mean)
+    except:
+        logger.info("The teacher %s doesn't yet have a Dara account" % teacher)
+
+    invoice.paid = invoice.amount
+    invoice.status = Invoice.PAID
+    invoice.save()
+
+    member = invoice.member
+    # student = invoice.student
+    # days = get_billing_cycle_days_count(invoice.my_kids_cycle)
+    # expiry = datetime.now() + timedelta(days=days)
+    # student.my_kids_expiry = expiry
+    # student.save()
+    foulassi_weblet = get_service_instance()
+    db = school.database
+    add_database(db)
+    # invoice.save(using=db)
+    payment = Payment(invoice=invoice, method=Payment.MOBILE_MONEY, amount=tx.amount, processor_tx_id=operator_tx_id)
+    # if school_config.my_kids_share_rate < 100:
+        # Payment appears in school log panel only if the have something to collect out of that
+        # payment.save(using=db)
+    payment.save()
+    try:
+        currency = Currency.active.default().symbol
+    except:
+        currency = school_config.currency_code
+    body = _("%(student_name)s just purchase the correction of %(assignment_title)s in %(subject_name)s" %
+             {'student_name': student.first_name,
+              'assignment_title': assignment.title,
+              'subject_name': subject.name})
+    if member.email:
+        invoice_url = school.url + reverse('billing:invoice_detail', args=(invoice.id,))
+        subject, message, sms_text = get_payment_confirmation_message(payment, member)
+        html_content = get_mail_content(subject, message, template_name='billing/mails/notice.html',
+                                        extra_context={'member_name': member.first_name, 'invoice': invoice,
+                                                       'cta': _("View invoice"), 'invoice_url': invoice_url,
+                                                       'currency': currency})
+        sender = '%s <no-reply@%s>' % (school_config.company_name, school.domain)
+        msg = XEmailMessage(subject, html_content, sender, [member.email])
+        msg.content_subtype = "html"
+        try:
+            invoicing_config = get_invoicing_config_instance()
+            invoice_pdf_file = generate_pdf_invoice(invoicing_config, invoice)
+            msg.attach_file(invoice_pdf_file)
+        except:
+            pass
+        try:
+            msg.send()
+        except Exception as e:
+            logger.debug(e.message)
+        send_push(foulassi_weblet, member, subject, body, invoice_url)
+    member_teacher = teacher.member
+    subject = _("New correction of %s paid" % correction)
+    cta_url = 'https://daraja.ikwen.com' + reverse('daraja:dashboard')
+    html_content = get_mail_content(subject, template_name='foulassi/mails/correction_paid.html',
+                                    extra_context={'teacher': member_teacher.first_name,
+                                                   'student': student.first_name,
+                                                   'cta_url': cta_url, 'subject': assignment.subject.name,
+                                                   'assignment': assignment,
+                                                   'currency': currency})
+    sender = '%s <no-reply@%s>' % (school_config.company_name, school.domain)
+    msg = XEmailMessage(subject, html_content, sender, [member_teacher.email])
+    msg.cc = ['silatchomsiaka@gmail.com', 'rsihon@gmail.com']
+    msg.content_subtype = "html"
+    try:
+        msg.send()
+    except Exception as e:
+        logger.debug(e.message)
+    send_push(foulassi_weblet, member_teacher, subject, body, cta_url)
     return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))

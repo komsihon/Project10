@@ -1,19 +1,21 @@
 {% load i18n static humanize %}
 {% include 'core/snippets/spinner.html' %}
+<style>
+    @media (min-width: 990px) {
+        .actions i {top: 12px}
+    }
+
+</style>
 <ul class="object-list list-group">
-    {% for obj in assignment_list %}
-        {% url 'school:change_assignment' classroom_id obj.id as obj_url %}
-        {% url 'school:change_assignment_correction' classroom_id obj.id as correction_url %}
-        {% if obj.correction %}
-            {% url 'school:change_assignment_correction' classroom_id obj.id obj.correction.id as correction_url %}
-        {% endif %}
+    {% for obj in objects_page.object_list %}
+        {% url 'school:change_assignment_correction' classroom.id obj.assignment.id obj.id as obj_url %}
         <li class="ik-li list-group-item {{ obj.status }}" id="{{ obj.id }}" data-id="{{ obj.id }}">
             <a class="hidden-xs" href="{{ obj_url }}">{{ obj }}</a>
             <a class="visible-xs" href="{{ obj_url }}">{{ obj|truncatechars:30 }}</a>
-            <date class="date text-muted">{{ obj.created_on|date:"Y/m/d" }}</date>
+            <date class="date text-muted">{{ obj.created_on }}</date>
             {% with obj_details=obj.get_obj_details %}
                 {% if obj_details %}
-                    <div class="text-muted">{{ obj_details }}</div>
+                    <div class="text-muted">{{ obj_details|safe }}</div>
                 {% endif %}
             {% endwith %}
             <div class="actions">
@@ -24,12 +26,6 @@
                         <i class="action glyphicon glyphicon-ok toggle active on" title="{% trans "Activate" %}"></i>
                     {% endif %}
                 {% endif %}
-                <a href="{{ correction_url }}{% if authorized_teacher %}?authorized_teacher={{ authorized_teacher }}{% endif %}" style="text-decoration: none">
-                    <i class="fas fa-book-open" title="{% trans 'Upload correction' %}"></i>
-                </a>
-                <a href="{% url 'school:assignment_reply_list' classroom_id obj.id %}" style="text-decoration: none">
-                    <i class="fas fa-edit" title="{% trans 'View responses' %}"></i>
-                </a>
                 <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
             </div>
         </li>

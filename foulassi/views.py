@@ -1,7 +1,7 @@
 import json
 import logging
 from collections import OrderedDict
-from datetime import datetime
+from datetime import datetime, timedelta
 from threading import Thread
 
 from django.conf import settings
@@ -31,19 +31,23 @@ from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen.accesscontrol.models import Member
 from ikwen.accesscontrol.utils import VerifiedEmailTemplateView
 from ikwen.billing.models import CloudBillingPlan, IkwenInvoiceItem, InvoiceEntry
+from ikwen.billing.utils import get_next_invoice_number
 from ikwen.theming.models import Theme, Template
 from ikwen.partnership.models import ApplicationRetailConfig
 from ikwen_foulassi.foulassi.cloud_setup import DeploymentForm, deploy
 from ikwen_foulassi.foulassi.utils import can_access_kid_detail
 
 from ikwen_foulassi.foulassi.models import ParentProfile, Student, Invoice, Event, Parent, EventType, \
-    PARENT_REQUEST_KID, KidRequest, Reminder, get_school_year
+    PARENT_REQUEST_KID, KidRequest, Reminder, SchoolConfig, get_school_year
 from ikwen_foulassi.school.models import get_subject_list, Justificatory, DisciplineLogEntry, Score, Assignment, \
     Homework
+from ikwen_foulassi.school.models import AssignmentCorrection
 from ikwen_foulassi.school.admin import HomeworkAdmin
 from ikwen_foulassi.school.student.views import StudentDetail, ChangeJustificatory
 
 logger = logging.getLogger('ikwen')
+
+SCHOOL_WEBSITE_MONTH_COUNT = -1  # We agreed that invoice with month_count=-1 represents invoice for school website service purchase
 
 
 class Home(TemplateView):
@@ -104,8 +108,9 @@ class AdminHome(TemplateView):
         total_missing = 0
         for reminder in reminder_list:
             total_missing += reminder.missing
-        context['reminder_list'] = reminder_list
-        context['total_missing'] = total_missing
+        if total_missing > 0:
+            context['reminder_list'] = reminder_list
+            context['total_missing'] = total_missing
 
         return context
 
@@ -298,7 +303,7 @@ class ChangeHomework(ChangeObjectBase):
 
     def get_object(self, **kwargs):
         ikwen_name = kwargs['ikwen_name']
-        homework_id = kwargs.get('homework_id')
+        homework_id = kwargs.get('object_id')
         try:
             school = Service.objects.get(project_name_slug=ikwen_name)
             self.db = school.database
@@ -311,10 +316,16 @@ class ChangeHomework(ChangeObjectBase):
 
     def get_context_data(self, **kwargs):
         context = super(ChangeHomework, self).get_context_data(**kwargs)
-        student = Student.objects.using(self.db).get(pk=kwargs['student_id'])
+        ikwen_name = kwargs['ikwen_name']
+        student_id = kwargs['student_id']
+        assignment_id = kwargs['assignment_id']
+        student = Student.objects.using(self.db).get(pk=student_id)
+        now = datetime.now()
+        obj = context.get('obj')
+        context['deadline_reached'] = False if not obj else (True if obj.assignment.deadline < now.date() else False)
         context['student'] = student
-        context['assignment'] = Assignment.objects.using(self.db).get(pk=kwargs['assignment_id'])
-        context['ikwen_name'] = kwargs['ikwen_name']
+        context['assignment'] = Assignment.objects.using(self.db).get(pk=assignment_id)
+        context['ikwen_name'] = ikwen_name
         return context
 
     def after_save(self, request, obj, *args, **kwargs):
@@ -357,6 +368,10 @@ class ChangeHomework(ChangeObjectBase):
             msg = EmailMessage(subject, html_content, sender,
                                [teacher_email, 'rsihon@gmail.com', 'silatchomsiaka@gmail.com'])
             msg.content_subtype = "html"
+            try:
+                msg.send()
+            except Exception as e:
+                logger.debug(e.message)
         except:
             logger.error("Could not generate HTML content from template", exc_info=True)
 
@@ -364,6 +379,31 @@ class ChangeHomework(ChangeObjectBase):
                  % {'student_name': student_name, 'classroom': classroom_name,
                     'subject': assignment_subject, 'assignment_name': assignment.title})
         send_push(foulassi, teacher.member, subject, body)
+
+
+class DownloadCorrection(TemplateView):
+    template_name = 'foulassi/snippets/download_correction.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DownloadCorrection, self).get_context_data(**kwargs)
+        ikwen_name = kwargs['ikwen_name']
+        school = Service.objects.get(project_name_slug=ikwen_name)
+        db = school.database
+        add_database(db)
+        assignment = Assignment.objects.using(db).get(pk=kwargs['assignment_id'])
+        context['assignment'] = assignment
+        try:
+            correction = AssignmentCorrection.objects.using(db).get(assignment=assignment)
+            context['correction'] = correction
+            context['extension'] = '.' + correction.attachment.name.split('.')[1]
+            entry = '%s correction' % correction
+            student = Student.objects.using(db).get(pk=kwargs['student_id'])
+            invoice = Invoice.objects.get(member=self.request.member, student=student, school=school, entries=[entry])
+            context['invoice'] = invoice
+        except:
+            pass
+        context['ikwen_name'] = ikwen_name
+        return context
 
 
 class ShowJustificatory(ChangeJustificatory):
@@ -563,3 +603,54 @@ class SuccessfulDeployment(VerifiedEmailTemplateView):
         if school.member != request.user:
             return HttpResponseForbidden("You're not allowed here")
         return render(request, self.template_name, context)
+
+
+class BuyWebsite(TemplateView):
+    template_name = 'foulassi/buy_website.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BuyWebsite, self).get_context_data()
+        service = get_service_instance()
+        context['cost'] = 12000
+        return context
+
+    def get(self, request, *args, **kwargs):
+        action = request.GET.get('action')
+        if action == 'place_invoice':
+            return self.place_invoice(request, *args, **kwargs)
+        return super(BuyWebsite, self).get(request, *args, **kwargs)
+
+    def place_invoice(self, request, *args, **kwargs):
+        school_name = kwargs['school_name']
+        weblet = Service.objects.get(project_name_slug=school_name)
+        try:
+            db = weblet.database
+            add_database(db)
+            school = SchoolConfig.objects.using(db).get(service=weblet)
+            now = datetime.now()
+            due_date = now + timedelta(days=7)
+            number = get_next_invoice_number()
+            from ikwen.billing.utils import Invoice
+            app = Application.objects.using(UMBRELLA).get(slug='foulassi')
+            cost = 12000
+            item = IkwenInvoiceItem(label='School website', price=cost, amount=cost)
+            entry = InvoiceEntry(item=item, total=cost)
+            invoice_entries = [entry]
+            try:
+                Invoice.objects.using(UMBRELLA).get(subscription=weblet, months_count=SCHOOL_WEBSITE_MONTH_COUNT)
+            except:
+                invoice = Invoice(subscription=weblet, member=weblet.member, amount=cost,
+                                  months_count=SCHOOL_WEBSITE_MONTH_COUNT, number=number,
+                                  due_date=due_date, last_reminder=now, entries=invoice_entries, is_one_off=True)
+                invoice.save()
+            school.has_subscribed_website_service = True
+            school.save()
+            return HttpResponse(json.dumps({'success': True}, 'content-type: text/json'))
+        except:
+            return HttpResponse(json.dumps({'error': True}, 'content-type: text/json'))
+
+
+
+
+
+

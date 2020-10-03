@@ -139,7 +139,7 @@ table.center-on-narrow {
         <!-- Visually Hidden Preheader Text : BEGIN -->
         <div style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;mso-hide:all;font-family:'Myriad Pro','Lucida Sans Unicode' ,Verdana, Helvetica, Arial, sans-serif;" >
             {% blocktrans with assignment_subject=assignment.subject assignment_title=assignment.title %}
-                Your student <strong>{{ student_name }}</strong> from class {{ classroom }} submitted his homework of {{ assignment_subject }} about <strong>{{ assignment_title }}</strong> .
+                Your student <strong>{{ student_name }}</strong> just paid his assignment on <strong>{{ assignment_title }}</strong>.
             {% endblocktrans %}
         </div>
         <!-- Visually Hidden Preheader Text : END -->
@@ -175,7 +175,7 @@ table.center-on-narrow {
               <td class="full-width-image" align="center" style="padding:15px">
                   <div>
 {#                  border: 1px solid #eee; #}
-                    <div style="background: url({% if student.photo.name %}{% get_media_prefix %}{{ student.photo.small_name }}{% else %}'https://static.ikwen.com/foulassi/img/submitted-homework.jpg'{% endif %}) no-repeat center; background-size: cover; border-radius: 150px; overflow: hidden; height: 200px; width: 200px">
+                    <div style="background: url('https://static.ikwen.com/foulassi/img/new-assignment.jpg') no-repeat center; background-size: cover; height: 200px; width: 200px">
                     </div>
                   </div>
               </td>
@@ -201,13 +201,24 @@ table.center-on-narrow {
                       <td valign="middle" style="mso-height-rule: exactly; line-height: 25px;"><!-- color: #555555; -->
                          <div style="padding: 15px; font-size:15px; margin-bottom: 20px;">
                               <p style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#555; overflow-wrap: break-word; text-align: justify" >
-                                {% blocktrans with assignment_subject=assignment.subject assignment_title=assignment.title deadline=assignment.deadline teacher_name=teacher.member.first_name %}
-                                    Dear <strong>{{ teacher_name }}</strong>,<br style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >Your student <strong>{{ student_name }}</strong> from {{ classroom }} submitted his homework  of <strong>{{ assignment_subject }}</strong> about <strong>{{ assignment_title }}</strong>.<br>
-                                    Find below the attached file.
+                                {% blocktrans with assignment_subject=assignment.subject assignment_title=assignment.title %}
+                                    Dear <strong>{{ teacher }}</strong>,<br style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >Your student <strong>{{ student }}</strong> just paid his correction of <strong>{{ assignment_subject }}</strong> on <strong>{{ assignment_title }}</strong>.<br>
+                                    Click the buton below to see your new balance
                                 {% endblocktrans%}
                               </p>
                          </div>
-                         <img src="{% get_media_prefix %}{{ homework.attachment }}" style="max-width: 300px">
+                      <!-- Button : Begin -->
+                        <table cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto; max-width: 300px">
+                            <tr>
+                                <td style="border-radius: 3px; text-align: center;" class="button-td">
+                                    <a target="_blank" href="{{ cta_url }}" style="background: #f38e42; border: 15px solid #f38e42	; padding: 0 10px;color: #ffffff;font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px;" class="button-a">
+                                  <!--[if mso]>&nbsp;&nbsp;&nbsp;&nbsp;<![endif]-->{% blocktrans %}See dashboard{% endblocktrans %}<!--[if mso]>&nbsp;&nbsp;&nbsp;&nbsp;<![endif]-->
+                                  </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+                    <!-- Button : END -->
                       </td>
                     </tr>
                 </table>

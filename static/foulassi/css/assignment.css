@@ -1,0 +1,62 @@
+li.object-list.list-group {margin: auto; float: none}
+.ik-li:hover {background: none;}
+.ik-li:not(.tpl):last-of-type {border-bottom: 1px solid #eee}
+
+.profile {
+    display: block;
+    border-radius: 30px;
+    width: 60px;
+    height: 60px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-decoration: none!important;
+    }
+.profile.aspect {margin: auto;color: #fff;font-size: 23px;text-align: center;line-height: 64px;font-family: 'Montserrat', sans-serif;}
+.profile.aspect-0 {background-color: #319dd5;}
+.profile.aspect-1 {background-color: #7CB342;}
+.profile.aspect-2 {background-color: #d57a1f;}
+.profile.aspect-3 {background-color: #d514b3;}
+
+.assignment {border: 1px solid #eee; margin: 20px 0;}
+.assignment .deadline {margin: 30px 0 10px}
+.assignment .deadline .fa-circle {color: #ff7043}
+.assignment .deadline a.fa-paperclip {padding-left: 0; text-decoration: none}
+.assignment .deadline a.fa-paperclip:hover, .assignment .deadline a.fa-paperclip:active {color: #5f170e}
+.assignment .profile-container {margin-top: 10px}
+.assignment-detail .h4 {margin-top: 4px;}
+.assignment-detail a {line-height: 26px}
+.assignment-detail .instructions {height: 115px; overflow: hidden}
+.assignment-detail .instructions * {color: #717171; margin-top: 30px}
+.assignment-detail a.fa-external-link-alt:hover {color: #90caf9}
+.assignment-detail a.fa-external-link-alt {font-size: 14px; padding-left: 0; line-height: 33px; text-decoration: none}
+
+.show-bottom-menu {display: block; margin-top: -5px;margin-right: 10px; float: right}
+.show-bottom-menu, .show-bottom-menu:hover, .show-bottom-menu:focus {background: none;border: none;}
+.show-bottom-menu .glyphicon-option-vertical{margin-left: 23px;top: 2px;font-size: 20px;}
+
+.bottom-menu-xs li>a {text-decoration: none}
+.bottom-menu-xs li>a>i {margin-right: 10px}
+.bottom-menu-xs li>a:hover {color: #5f170e}
+.bottom-menu-xs {
+    background: #fff;
+    top: 55vh;
+    overflow: auto;
+    height: 100vh;
+    padding: 10px 5px;
+    position: fixed;
+    width: 100%;
+    transition: top .3s;
+    z-index: 10000;
+}
+
+
+/*#bottom-menu-xs.disclose {top: 55px!important;transition: top .3s;}*/
+/*#bottom-menu-xs .close-ticket {color: #464646}*/
+/*#bottom-menu-xs.disclose .ticket {margin-top: 3vh}*/
+
+@media  (max-width: 767px) {
+    .assignmnt-detail .h4 {font-size: 17px}
+    .assignment-detail .instructions * {margin-top: 10px}
+    .assignment-detail .instructions {height: 130px; overflow: hidden}
+}

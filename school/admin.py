@@ -27,6 +27,11 @@ class HomeworkAdmin(admin.ModelAdmin):
     fields = ('assignment', 'student', 'attachment', )
 
 
+class AssignmentCorrectionAdmin(admin.ModelAdmin):
+    fields = ('assignment', 'cost',)
+    list_display = ('assignment', 'cost',)
+
+
 class SubjectAdmin(admin.ModelAdmin):
     fields = ('name', )
 
