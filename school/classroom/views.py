@@ -922,7 +922,7 @@ class ChangeAssignmentCorrection(ChangeObjectBase):
             context['correction'] = correction
         except:
             pass
-        daraja = Application.objects.get(slug=DARAJA)
+        daraja = Application.objects.using(UMBRELLA).get(slug=DARAJA)
         try:
             dara_weblet = Service.objects.using(UMBRELLA).get(app=daraja, member=self.request.user)
             dara_db = dara_weblet.database
@@ -991,7 +991,8 @@ class ChangeAssignmentCorrection(ChangeObjectBase):
 
                 if parent.member:
                     send_push(service, parent.member, teacher.member.full_name, subject, cta_url)
-        return HttpResponseRedirect(reverse('school:assignment_correction_list'), args=(classroom.pk, obj.assignment.pk))
+        subject = obj.assignment.subject
+        return HttpResponseRedirect(reverse('school:assignment_list') + "?classroom_id=" + classroom.pk)
 
 
 class AssignmentCorrectionList(HybridListView):

@@ -37,7 +37,7 @@ from ikwen_foulassi.foulassi.models import Student, Parent, Invoice, Payment, ge
 from ikwen_foulassi.foulassi.utils import get_payment_confirmation_email_message, get_payment_sms_text, \
     remove_student_from_parent_profile, set_student_counts, check_setup_status, send_billed_sms, send_push_to_parents
 from ikwen_foulassi.reporting.models import DisciplineReport, StudentDisciplineReport
-from ikwen_foulassi.reporting.utils import set_daily_counters_many
+from ikwen_foulassi.reporting.utils import set_daily_counters_many, set_counters
 from ikwen_foulassi.school.admin import JustificatoryAdmin, HomeworkAdmin
 from ikwen_foulassi.school.models import Classroom, Session, Score, DisciplineItem, DisciplineLogEntry, Justificatory, \
     SessionGroupScore, STUDENT_EXCLUDED, Assignment, Homework, TeacherResponsibility, AssignmentCorrection
@@ -274,8 +274,12 @@ class StudentDetail(ChangeObjectBase):
                     subject=asm.subject):
                 if classroom.id in rsp.classroom_fk_list:
                     asm.classroom_fk_list = rsp.classroom_fk_list
-                    asm.teacher = rsp.teacher
-                    full_name = rsp.teacher.member.full_name
+                    try:
+                        teacher = rsp.teacher
+                    except:
+                        teacher = asm.subject.get_teacher(classroom)
+                    asm.teacher = teacher
+                    full_name = teacher.member.full_name
                     tokens = full_name.split(' ')
                     asm.teacher.initials = tokens[0][0] + tokens[1][0]
                     break

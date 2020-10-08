@@ -1,5 +1,5 @@
-{% extends 'website/base.html' %}
-{% load i18n static humanize currency webdesign media_from_provider %}
+{% extends 'core/base_bs.html' %}
+{% load i18n static humanize auth_tokens currency webdesign media_from_provider %}
 
 {% block page_title %}<title>{% trans 'Buy school website'%}</title>{% endblock %}
 
@@ -20,7 +20,7 @@
 
 {% block header_brand %}
     <a class="navbar-brand hidden-xs" href="{{ service.url }}">
-        <img src="{% static 'website/img/logo-ikwen_for-header.png' %}">
+        <img src="{% static 'foulassi/img/New-logo-ikwen(for-header-niveau-de-blanc).png' %}">
     </a>
     <strong class="navbar-brand visible-xs">{{ service.project_name }}</strong>
 {% endblock %}
@@ -31,10 +31,11 @@
     <style>
         .header-top {padding-top: 9vh}
         footer {height: auto}
+        #navbar .navbar-brand img {height: 30px}
     </style>
 {% endblock %}
 
-{% block page_content %}
+{% block content %}
     <div class="container">
         <div style="height: 600px; padding-top: 100px">
             <div class="col-sm-5">
