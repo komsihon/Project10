@@ -612,6 +612,8 @@ class BuyWebsite(TemplateView):
         context = super(BuyWebsite, self).get_context_data()
         service = get_service_instance()
         context['cost'] = 12000
+        context['config'] = service.config
+        context['service'] = service
         return context
 
     def get(self, request, *args, **kwargs):

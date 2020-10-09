@@ -1,5 +1,5 @@
 {% extends "core/app_base_admin.html" %}
-{% load i18n humanize staticfiles auth_tokens media_from_provider %}
+{% load i18n humanize staticfiles auth_tokens %}
 
 {% block page_title %}
 <title>{% trans "Service info" %} - ikwen </title>
@@ -179,11 +179,28 @@
                         <div class="clear"></div>
                     </header>
                     <p><a href="https://static.ikwen.com/foulassi/Contrat_Prestation_Foulassi.docx" download="agreement.pdf" target="_blank">{% trans "Download" %}</a> {% trans "and read carefully this school contract. Then, <strong>sign, scan and submit</strong> the document." %}</p>
-                    <div class="col-sm-8 col-lg-6">
-                        {% with model_name='foulassi.SchoolConfig' obj=config media=config.contract label_field_name='company_name' %}
-                            {% include 'core/snippets/media_uploader_single.html' %}
-                        {% endwith %}
-                    </div>
+{#                    <div class="col-sm-8 col-lg-6">#}
+{#                        {% with model_name='foulassi.SchoolConfig' obj=config media=config.contract label_field_name='company_name' %}#}
+{#                            {% include 'core/snippets/media_uploader_single.html' %}#}
+{#                        {% endwith %}#}
+{#                    </div>#}
+                    {% for media_obj in media_field_list %}
+                        <div class="form-group" style="padding-left: 0; margin-right: 15px">
+                            <div>
+                            {% with media=media_obj %}
+                                {% include 'core/snippets/media_uploader_single.html' %}
+                            {% endwith %}
+                            </div>
+                        </div>
+                        <p class="help clear">
+                            {% if media.media.name and not media.media.field.read_only %}
+                            <i class="glyphicon glyphicon-trash delete-media delete-media{{ media.counter }}" title="{% trans "Delete media" %}"></i>
+                            <span>{{ media.media.field.help_text|safe }}</span>
+                            {% else %}
+                            <span>{{ media.media.field.help_text|safe }}</span>
+                            {% endif %}
+                        </p>
+                    {% endfor %}
                 </section>
             </div>
         </div>

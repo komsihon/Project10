@@ -99,23 +99,22 @@
             }
             tinymce.init(detailProperties);
             let _$btn = $('.save');
-            _$btn.on('submit', (e) => {
-               if (!$(e.target).hasClass('is-dara')) {
+            $('#id_cost').on('change', (e) => {
+               if (!$('.save').hasClass('is-dara')) {
                    let image = "{% static 'daraja/img/subscribe-daraja.jpg' %}",
                    title = "{% trans "Create your Dara account" %}",
                    message = "{% trans "Please, create your marketer account on Daraja in order to collect money from downloads of the correction." %}",
-                   url = "https://ikwen.com/daraja/?next=" + {% url 'school:assignment_list' %};
-                   ikwen.showNoticeDialog(image, title, message, url)
+                   url = "https://ikwen.com/daraja/?next=" + "{{ service.url }}{% url 'school:assignment_list' %}";
+                   ikwen.showNoticeDialog(image, title, message, url);
                }
             });
             $('#modal-generic-notice .btn-cancel').click(() => {
-                _$btn.addClass('disable');
+                _$btn.prop('disabled', true);
             });
-            $('#id-cost').on('change', () => {
-               if (_$btn.hasClass('disable')){
-                   _$btn.removeClass('disable');
-               }
-            });
+            /*
+            {#$('#id-cost').on('change', () => {#}
+            {#   _$btn.prop('disable', false);#}
+            {#});#}*/
         })()
     </script>
 {% endblock %}
