@@ -557,7 +557,7 @@ class DeployCloud(VerifiedEmailTemplateView):
 
             invoice_entries = []
             website_setup = IkwenInvoiceItem(label=_('Foulassi deployment'), price=billing_plan.setup_cost, amount=setup_cost)
-            website_setup_entry = InvoiceEntry(item=website_setup, short_description=project_name, total=setup_cost)
+            website_setup_entry = InvoiceEntry(item=website_setup, short_description=project_name, quantity=12, total=setup_cost)
             invoice_entries.append(website_setup_entry)
             if theme and theme.cost > 0:
                 theme_item = IkwenInvoiceItem(label=_('Website theme'), price=theme.cost, amount=theme.cost)
