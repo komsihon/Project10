@@ -380,7 +380,7 @@ class StudentDetail(ChangeObjectBase):
             return HttpResponse(json.dumps(response))
         config = weblet.config
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '') + '?showTab=billing'
+        target = 'https://mykids.ikwen.com' + strip_base_alias(target).replace('/foulassi', '') + '?showTab=billing'
 
         try:
             foulassi = Service.objects.using(UMBRELLA).get(project_name_slug='foulassi')
@@ -505,7 +505,7 @@ class StudentDetail(ChangeObjectBase):
         except:
             foulassi = None
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '') + '?showTab=discipline'
+        target = 'https://mykids.ikwen.com' + strip_base_alias(target).replace('/foulassi', '') + '?showTab=discipline'
         parents = student.parent_set.select_related('member').all()
         Thread(target=send_push_to_parents, args=(foulassi, config.company_name, parents, text, target)).start()
         response = {'success': True, 'entry': entry.to_dict()}
@@ -534,7 +534,7 @@ class StudentDetail(ChangeObjectBase):
         weblet = get_service_instance()
         config = weblet.config
         target = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student.id))
-        target = 'https://foulassi.ikwen.com' + strip_base_alias(target).replace('/foulassi', '') + '?showTab=billing'
+        target = 'https://mykids.ikwen.com' + strip_base_alias(target).replace('/foulassi', '') + '?showTab=billing'
 
         parents = student.parent_set.select_related('member').all()
         text = _("We are kindly informing you that a new payment of XAF %(amount)s is expected for "

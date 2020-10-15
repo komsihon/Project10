@@ -557,7 +557,7 @@ class ClassroomDetail(ChangeObjectBase):
                     weblet = get_service_instance()
                     config = weblet.config
                     uri = reverse('foulassi:kid_detail', args=(weblet.ikwen_name, student_id, ))
-                    target = 'https://foulassi.ikwen.com' + strip_base_alias(uri).replace('/foulassi', '') + '?showTab=scores'
+                    target = 'https://mykids.ikwen.com' + strip_base_alias(uri).replace('/foulassi', '') + '?showTab=scores'
                     Thread(target=send_push_to_parents, args=(foulassi, config.company_name, parents, text, target)).start()
                     if request.GET.get('send_sms'):
                         Thread(target=send_billed_sms, args=(weblet, parents, text)).start()
@@ -861,7 +861,7 @@ class ChangeAssignment(ChangeObjectBase):
                 except:
                     sender = '%s via ikwen Foulassi <no-reply@ikwen.com>' % company_name
 
-                cta_url = 'https://foulassi.ikwen.com' + reverse('foulassi:change_homework',
+                cta_url = 'https://mykids.ikwen.com' + reverse('foulassi:change_homework',
                                                                  args=(service.ikwen_name,
                                                                        student.pk, obj.pk))
                 if parent.member:
@@ -960,9 +960,8 @@ class ChangeAssignmentCorrection(ChangeObjectBase):
                 teacher = Teacher.objects.select_related('member').get(member=self.request.user, school_year=school_year)
                 sender = '%s via ikwen Foulassi <no-reply@ikwen.com>' % teacher
 
-                cta_url = 'https://foulassi.ikwen.com' + reverse('foulassi:download_correction',
-                                                                 args=(service.ikwen_name, student.pk,
-                                                                       obj.assignment.pk))
+                cta_url = 'https://mykids.ikwen.com' + reverse('foulassi:download_correction',
+                                                               args=(service.ikwen_name, student.pk, obj.assignment.pk))
                 if parent.member:
                     activate(parent.member.language)
                 subject = _("A new correction in %(subject)s for %(student)s is available" %
