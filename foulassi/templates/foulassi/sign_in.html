@@ -4,15 +4,15 @@
 {% block page_title %}<title>{{ service.project_name }} - {% trans "Sign in" %} </title>{% endblock %}
 
 {% block meta %}
-    {% include 'foulassi/snippets/color_and_icons.html' %}
-    <meta name="apple-mobile-web-app-title" content="Foulassi" />
+    {% include 'foulassi/snippets/mykids_color_and_icons.html' %}
+    <meta name="apple-mobile-web-app-title" content="MyKids" />
 
     <meta name="abstract" content="{% trans "Follow your kids at school in real-time" %}"/>
-    <meta name="description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
+    <meta name="description" content="{% trans "MyKids is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
 
-    <meta property="og:title" content="Foulassi - {% trans "Follow your kids at school in real-time" %}" />
+    <meta property="og:title" content="MyKids - {% trans "Follow your kids at school in real-time" %}" />
     <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
-    <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
+    <meta property="og:description" content="{% trans "MyKids is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
 
     {% if request.META.HTTP_HOST == 'localhost' %}
         <link rel="manifest" href="{% static 'foulassi/manifest.json' %}?v=20.5.28">
@@ -67,13 +67,10 @@
         {% endif %}
         <div id="login" class="form-wrapper">
             <div style="text-align: center">
-                <div style="margin-bottom: .3em; text-align: center">
-                    {% if config.logo.name %}
-                        <img src="{{ settings.IKWEN_MEDIA_URL }}{{ config.logo.name }}" alt="Logo {{ service.project_name }}"
-                             style="max-height: 80px"/>
-                    {% endif %}
+                <div style="margin-bottom: -10px; text-align: center">
+                    <img src="{% static 'foulassi/img/Logo-MyKids-Full.png' %}" alt="Logo {{ service.project_name }}"
+                             style="max-height: 120px"/>
                 </div>
-                <h3>Foulassi</h3>
             </div>
             <form id="login-form" action="{% url 'ikwen:sign_in' %}?{{ request.META.QUERY_STRING }}" method="post">{% csrf_token %}
                 <div class="form-group" style="margin-top: .4em">
