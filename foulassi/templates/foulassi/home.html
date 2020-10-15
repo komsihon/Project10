@@ -1,19 +1,19 @@
 {% extends "website/base.html" %}
 {% load i18n humanize static auth_tokens  %}
 {% block page_title %}
-    <title>Foulassi - {% trans "Follow your kids at school in real-time" %} </title>
+    <title>MyKids - {% trans "Follow your kids at school in real-time" %} </title>
 {% endblock %}
 
 {% block meta %}
-    {% include 'foulassi/snippets/color_and_icons.html' %}
-    <meta name="apple-mobile-web-app-title" content="Foulassi" />
+    {% include 'foulassi/snippets/mykids_color_and_icons.html' %}
+    <meta name="apple-mobile-web-app-title" content="MyKids" />
 
     <meta name="abstract" content="{% trans "Follow your kids at school in real-time" %}"/>
-    <meta name="description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
+    <meta name="description" content="{% trans "MyKids is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}"/>
 
-    <meta property="og:title" content="Foulassi - {% trans "Follow your kids at school in real-time" %}" />
+    <meta property="og:title" content="MyKids - {% trans "Follow your kids at school in real-time" %}" />
     <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
-    <meta property="og:description" content="{% trans "Foulassi is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
+    <meta property="og:description" content="{% trans "MyKids is a social platform that connects with schools of your kids to give you information on their results, discipline and financial status." %}" />
 {% endblock %}
 
 {% block head_style %}
@@ -221,7 +221,7 @@
                         <h1>{% trans "Follow your kids at school in real-time" %} </h1>
                         <p>
                             {% blocktrans %}
-                                Foulassi is a social platform that connects with schools of your kids
+                                MyKids is a social platform that connects with schools of your kids
                                 to give you information on their results, discipline and financial status.
                             {% endblocktrans %}
                         </p>
@@ -245,7 +245,7 @@
                         <h2>{% trans "Follow them all in one single place" %}</h2>
                         <div class="desc">
                             <p>{% blocktrans %}
-                                Foulassi collects data from all schools of your kids and put them in one single place
+                                MyKids collects data from all schools of your kids and put them in one single place
                                 for you to follow.
                                 You can get someone else to follow them by adding the person to the parent list. This
                                 is perfect to add the child's uncle or grand-father.
@@ -257,7 +257,7 @@
                         <h2 class="hidden-xs" style="visibility: hidden">{% trans "Follow them all in one single place" %}</h2>
                         <div class="desc hidden-xs" style="visibility: hidden">
                             <p>{% blocktrans %}
-                                Foulassi collects data from all schools of your kids and put them in one single place
+                                MyKids collects data from all schools of your kids and put them in one single place
                                 for you to follow.
                                 You can get someone else to follow them by adding the person to the parent list. This
                                 is perfect to add the child's uncle or grand-father.
@@ -405,11 +405,11 @@
                                 <p>{% trans "Take your school on this awesome platform in no time." %}</p>
                                 <a href="{% url 'foulassi:home_saas' %}" style="color: #319dd5; font-size: 16px; font-weight: 700">
                                     <span class="visible-md visible-lg">
-                                        {% trans "Discover Foulassi for schools" %}
+                                        {% trans "Discover ScolarFleet" %}
                                         <i class="fa fa-arrow-circle-right"></i>
                                     </span>
                                     <span class="visible-xs visible-sm">
-                                        {% trans "Discover" context "Discover foulassi for schools" %}
+                                        {% trans "Discover" context "Discover ScolarFleet" %}
                                         <i class="fa fa-arrow-circle-right"></i>
                                     </span>
                                 </a>

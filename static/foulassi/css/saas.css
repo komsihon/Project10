@@ -137,7 +137,7 @@ a.btn {padding: 10px 40px; text-align: center; width: 300px}
     section.site.banner h1 {font-size: 42px;font-weight: 700;line-height: 50px;text-align: left;}
     section.site h2 {font-size: 30px;font-weight: 700;line-height: 42px;text-align:left}
     section.site p {margin-top: 25px; text-align: justify; font-size: 18px; font-weight: 400; line-height: 30px;}
-    .img.easy-setup {background-image: url('../img/foulassi-easy-setup-xs.png');}
+    .img.easy-setup {background-image: url('../img/ScolarFleet-easy-setup-xs.png'); background-size: 90%!important;}
     .img.student-follow-up {background-image: url('../img/foulassi-student-follow-up-xs.png');}
     .img.scores-input {background-image: url('../img/foulassi-scores-input-xs.png')}
     .img.assigment {background-image: url('../img/foulassi-assigment-xs.png')}
@@ -145,7 +145,7 @@ a.btn {padding: 10px 40px; text-align: center; width: 300px}
     .img.dashboard {background-image: url('../img/foulassi-dashboard.png')}
     .img.connect-and-share {background-image: url('../img/foulassi-connect-and-share.png')}
     .img.online-payment {background-image: url('../img/foulassi-online-payment.png')}
-    .img.foulassi-pricing {background-image: url('../img/foulassi-pricing.png');background-repeat: no-repeat;background-origin: content-box;background-size: 65%;background-position-x: center;background-position-y: 60%;height: 450px;}
+    .img.foulassi-pricing {background-image: url('../img/ScolarFleet-pricing.png');background-repeat: no-repeat;background-origin: content-box;background-size: 65%;background-position-x: center;background-position-y: 60%;height: 450px;}
     .content-box .desc { padding: 8vh 10px 0 0 !important; }
     section.deploy {font-size: 30px}
     section.price .desc { max-width: 80% !important; }

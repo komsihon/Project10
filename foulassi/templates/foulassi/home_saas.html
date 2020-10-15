@@ -1,20 +1,20 @@
 {% extends "website/base.html" %}
 {% load i18n humanize static auth_tokens  %}
 {% block page_title %}
-    <title>Foulassi - {% trans "Effective school management solution" %} </title>
+    <title>ScolarFleet - {% trans "Effective school management solution" %} </title>
 {% endblock %}
 
 {% block meta %}
-    {% include 'foulassi/snippets/color_and_icons.html' %}
-    <meta name="apple-mobile-web-app-title" content="Foulassi" />
+    {% include 'foulassi/snippets/scolarfleet_color_and_icons.html' %}
+    <meta name="apple-mobile-web-app-title" content="ScolarFleet" />
     <meta name="copyright" content="ikwen." >
 
     <meta name="abstract" content="{% trans "Effective school management solution" %}"/>
-    <meta name="description" content="{% trans "Foulassi lets staffs, teachers and parents connect and work together to manage the school and students." %}"/>
+    <meta name="description" content="{% trans "ScolarFleet lets staffs, teachers and parents connect and work together to manage the school and students." %}"/>
 
-    <meta property="og:title" content="Foulassi - {% trans "Effective school management solution" %}" />
+    <meta property="og:title" content="ScolarFleet - {% trans "Effective school management solution" %}" />
     <meta property="og:image" content="{% static 'foulassi/img/foulassi_splash.png' %}" />
-    <meta property="og:description" content="{% trans "Foulassi lets staffs, teachers and parents connect and work together to manage the school and students." %}" />
+    <meta property="og:description" content="{% trans "ScolarFleet lets staffs, teachers and parents connect and work together to manage the school and students." %}" />
 
     <link rel="manifest" href="{% static 'foulassi/manifest.json' %}">
 {% endblock %}
@@ -23,7 +23,7 @@
     {{ block.super }}
 {#    <link rel='stylesheet' href="{% static 'website/css/apps.css' %}?v=19.9.15" />#}
     <link rel='stylesheet' href="{% static 'website/css/website.css' %}?V=20.8.30.4.37" />
-    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=20.9.9.2.0" />
+    <link rel='stylesheet' href="{% static 'foulassi/css/saas.css' %}?v=20.14.10" />
 {% endblock %}
 
 {% block header_brand %}
@@ -44,7 +44,7 @@
                     <h1 style="color: #201a3a">{% blocktrans %}One Platform<br/>Everybody{% endblocktrans %}</h1>
                     <p>
                         {% blocktrans %}
-                            Built with the idea of collaborative and social platform, Foulassi lets staffs,
+                            Built with the idea of collaborative and social platform, ScolarFleet lets staffs,
                             teachers and parents connect and work together to manage the school and students.
                         {% endblocktrans %}
                     </p>
@@ -92,7 +92,7 @@
             <div class="container">
                 <div class="row features">
                     <div class="col-sm-6 visible-xs">
-                        <img class="img-responsive" src="{% static 'foulassi/img/foulassi-easy-setup-xs.png' %}">
+                        <img class="img-responsive" src="{% static 'foulassi/img/ScolarFleet-easy-setup-xs.png' %}">
                     </div>
                     <div class="col-sm-6 description">
                         <h2>{% trans "Easy Setup and configuration" %}</h2>
@@ -287,7 +287,7 @@
                                 Once connected, they have real-time view on all student data as you put them online.
                                 This can be offered to parent as a paid service. They pay online and money goes to the
                                 school account.{% endblocktrans %}<br>
-                                <a href="{{ details_connect_and_share_url }}">
+                                <a href="{% url 'foulassi:home' %}">
                                     {% trans "See details" %} <i class="fa fa-arrow-circle-right"></i>
                                 </a>
                             </p>
@@ -303,7 +303,7 @@
                                 Once connected, they have real-time view on all student data as you put them online.
                                 This can be offered to parent as a paid service. They pay online and money goes to the
                                 school account.{% endblocktrans %}<br>
-                                <a href="{{ details_connect_and_share_url }}">
+                                <a href="{% url 'foulassi:home' %}">
                                     {% trans "See details" %} <i class="fa fa-arrow-circle-right"></i>
                                 </a>
                             </p>
@@ -350,9 +350,9 @@
     </div>
     <section class="features site why-foulassi listing">
         <div class="container">
-            <h2 style="text-align: center">{% trans "Why use Foulassi ?" %}</h2>
+            <h2 style="text-align: center">{% trans "Why use ScolarFleet ?" %}</h2>
             <p style="font-size: 21px; margin-bottom: 40px; text-align: center">
-                {% trans "Foulassi will set you free from some annoying tasks, while providing you with continuous improvements." %}
+                {% trans "ScolarFleet will set you free from some annoying tasks, while providing you with continuous improvements." %}
             </p>
             <div class="row features">
                 <div class="col-sm-4">
@@ -382,7 +382,7 @@
                         <h3>{% trans "You have a website and blog" %}</h3>
                     </div>
                     <p>{% blocktrans %}
-                        Foulassi gives you a modern and free website on the same platform. You also have a blog to
+                        ScolarFleet gives you a modern and free website on the same platform. You also have a blog to
                         publish daily articles. If you want something like <em style="color: blue">mygreatschool.org</em>,
                         simply buy that domain name and update.
                     {% endblocktrans %}</p>
@@ -403,13 +403,13 @@
                 </div>
                 <div class="row features">
                     <div class="col-sm-6 img foulassi-pricing img-responsive">
-                        <img class="img-responsive visible-xs" src="{% static 'foulassi/img/foulassi-pricing.png' %}">
+                        <img class="img-responsive visible-xs" src="{% static 'foulassi/img/ScolarFleet-pricing.png' %}">
                         {# Force DIV height by putting the same text and set visibility to hidden #}
                         <div class="desc hidden-xs" style="visibility: hidden">
                             {% blocktrans %}
                                 <p class="mobile-center"> Take this offer from <span class="ribbon-price"> <span style="font-size: 2rem">XAF</span> 199,000/year.</span></p>
                                 <p><span class="highlight">Connect</span> staff and parents with the <span class="highlight">student</span>
-                                 and benefit all the features FOULASSI has to offer.</p>
+                                 and benefit all the features ScolarFleet has to offer.</p>
                                 <p class="mobile-center" style="margin-bottom: 3vh">Start your free trial month <span class="highlight">right now!</span> </p>
                              {% endblocktrans %}
                             <a class="btn btn-md cta" href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}" style="margin-bottom: 2vh">{% trans "START" %}</a>
@@ -421,7 +421,7 @@
                              {% blocktrans %}
                                  <p  class="mobile-center"> Take this offer from <span class="ribbon-price"> <span style="font-size: 2rem" >XAF</span>  199,000/year.</span></p>
                                 <p><span class="highlight">Connect</span> staff and parents with the <span class="highlight">student</span>
-                                 and benefit all the features FOULASSI has to offer.</p>
+                                 and benefit all the features ScolarFleet has to offer.</p>
                                 <p class="mobile-center" style="margin-bottom: 3vh">Start your free trial month <span class="highlight">right now!</span> </p>
                              {% endblocktrans %}
                             <a class="btn btn-md cta" href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}" style="margin-bottom: 2vh">{% trans "START" %}</a>
@@ -470,7 +470,7 @@
     </section>
     <section class="features site deploy">
         <div class="container">{% blocktrans %}
-            Deploy your <strong>Foulassi Weblet</strong> now and start collaborating with teachers and thousands of parents.
+            Deploy your <strong>ScolarFleet Weblet</strong> now and start collaborating with teachers and thousands of parents.
         {% endblocktrans %}</div>
         <a class="btn btn-md cta" href="{% url 'ikwen:sign_in' %}?next={% url 'foulassi:deploy_cloud' %}">{% trans "DEPLOY" %}</a>
     </section>
