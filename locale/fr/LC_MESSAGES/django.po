@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-11 16:19+0000\n"
-"PO-Revision-Date: 2020-09-11 17:27+0100\n"
+"PO-Revision-Date: 2020-10-16 20:27+0100\n"
 "Last-Translator: Wilfried FUTCHEA <wilfriedwillend@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1063,7 +1063,6 @@ msgstr "Déploiement et configuration simplifiés"
 
 #: foulassi/templates/foulassi/home_saas.html:100
 #: foulassi/templates/foulassi/home_saas.html:112
-#, fuzzy
 msgid ""
 "\n"
 "                                Deploy in 5 seconds ! Next, the wizard will "
@@ -1094,7 +1093,6 @@ msgstr "Suivi de l’élève"
 
 #: foulassi/templates/foulassi/home_saas.html:132
 #: foulassi/templates/foulassi/home_saas.html:144
-#, fuzzy
 msgid ""
 "\n"
 "                                Powerful Student file management. Easily "
@@ -1109,8 +1107,8 @@ msgid ""
 msgstr ""
 "\n"
 "Un suivi efficace de l’élève. Naviguez simplement entre les informations "
-"personnelles, les notes, la discipline et les états financiers. Ajoutez une "
-"entrée de discipline et cochez <strong>“Envoyer SMS”</strong> pour que le "
+"personnelles, les notes, la discipline et les états financiers. Ajouter une "
+"entrée de discipline et cocher <strong>“Envoyer SMS”</strong> pour que le "
 "parent reçoive l’alerte SMS. Uploadez et conservez les justificatifs "
 "d’absence au même endroit. Vérifiez tout ce qui a été payé et qui reste à "
 "payer dans l’onglet <strong>États financiers</strong>."
@@ -1122,7 +1120,6 @@ msgstr "Saisie des notes par les enseignants"
 
 #: foulassi/templates/foulassi/home_saas.html:164
 #: foulassi/templates/foulassi/home_saas.html:176
-#, fuzzy
 msgid ""
 "\n"
 "                                Let teachers put scores online by themselves "
@@ -1153,7 +1150,6 @@ msgstr " Devoirs en ligne "
 
 #: foulassi/templates/foulassi/home_saas.html:196
 #: foulassi/templates/foulassi/home_saas.html:207
-#, fuzzy
 msgid ""
 "\n"
 "                                Teachers can publish assignments for their "
@@ -1179,7 +1175,6 @@ msgstr "Génération des bulletins"
 
 #: foulassi/templates/foulassi/home_saas.html:226
 #: foulassi/templates/foulassi/home_saas.html:237
-#, fuzzy
 msgid ""
 "\n"
 "                                 Get notified when all teachers have input "
@@ -1212,7 +1207,6 @@ msgid "Dashboard"
 msgstr "Tableau de bord"
 
 #: foulassi/templates/foulassi/home_saas.html:256
-#, fuzzy
 msgid ""
 "\n"
 "                                See detailed statistics on all what is going "
@@ -1227,7 +1221,6 @@ msgstr ""
 "                            "
 
 #: foulassi/templates/foulassi/home_saas.html:266
-#, fuzzy
 msgid ""
 "\n"
 "                                 See detailed statistics on all what is "
@@ -1248,7 +1241,6 @@ msgstr "Échangez directement avec les parents"
 
 #: foulassi/templates/foulassi/home_saas.html:284
 #: foulassi/templates/foulassi/home_saas.html:300
-#, fuzzy
 msgid ""
 "\n"
 "                                Add parents'contacts in students data and "
@@ -1286,7 +1278,6 @@ msgstr "Paiements en ligne"
 
 #: foulassi/templates/foulassi/home_saas.html:325
 #: foulassi/templates/foulassi/home_saas.html:338
-#, fuzzy
 msgid ""
 "\n"
 "                                Yes, your platform accepts online payment "
@@ -1782,7 +1773,7 @@ msgstr "Pas encore de compte ?"
 
 #: foulassi/templates/foulassi/sign_in.html:110
 msgid "Register"
-msgstr "Se connecter"
+msgstr "S'inscrire"
 
 #: foulassi/templates/foulassi/terms_and_conditions.html:6
 #: foulassi/templates/foulassi/terms_and_conditions.html:69
@@ -2309,7 +2300,7 @@ msgstr ""
 #: foulassi/templates/foulassi/mails/submitted_homework.html:237
 #: foulassi/templates/foulassi/mails/unsubmitted_homework.html:246
 msgid "CONFIDENTIALITY"
-msgstr ""
+msgstr "CONFIDENTIALITÉ"
 
 #: foulassi/templates/foulassi/mails/new_assignment.html:250
 #: foulassi/templates/foulassi/mails/submitted_homework.html:239
