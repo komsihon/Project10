@@ -116,7 +116,7 @@ class ChangeSubject(ChangeObjectBase):
 
 
 class SessionGroupList(HybridListView):
-    model = Session
+    model = SessionGroup
     ordering = ('id', )
 
     def get_queryset(self):
