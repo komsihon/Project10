@@ -4,6 +4,7 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.defaultfilters import slugify
@@ -13,7 +14,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import TemplateView
 from ikwen.accesscontrol.models import Member
-from ikwen.core.utils import get_model_admin_instance, get_preview_from_extension, get_service_instance
+from ikwen.core.utils import get_model_admin_instance, get_preview_from_extension, get_service_instance, add_database
 from ikwen.core.views import HybridListView, ChangeObjectBase, ServiceDetail
 from ikwen_foulassi.foulassi.models import Teacher, get_school_year, Event, SchoolConfig
 from ikwen_foulassi.school.admin import LevelAdmin, SubjectAdmin, SessionGroupAdmin, SessionAdmin, DisciplineItemAdmin
@@ -333,6 +334,8 @@ class SchoolDetail(ServiceDetail):
             'help_text': field.field.help_text,
             'counter': 0
         }
-        media_field_list = [media_obj]
-        context['media_field_list'] = media_field_list
+        context['media_obj'] = media_obj
+        context['model'] = 'foulassi.SchoolConfig'
+        context['obj'] = model_obj
+
         return context
