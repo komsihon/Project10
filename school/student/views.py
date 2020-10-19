@@ -270,20 +270,21 @@ class StudentDetail(ChangeObjectBase):
                 asm.homework = Homework.objects.using(db).select_related('assignment', 'student').get(assignment=asm, student=student)
             except Homework.DoesNotExist:
                 pass
-            for rsp in TeacherResponsibility.objects.using(db).select_related('teacher', 'subject').filter(
-                    subject=asm.subject):
-                if classroom.id in rsp.classroom_fk_list:
-                    asm.classroom_fk_list = rsp.classroom_fk_list
-                    try:
-                        teacher = rsp.teacher
-                    except:
-                        teacher = asm.subject.get_teacher(classroom)
-                    asm.teacher = teacher
-                    full_name = teacher.member.full_name
-                    tokens = full_name.split(' ')
-                    asm.teacher.initials = tokens[0][0] + tokens[1][0]
-                    break
-            assignment_list.append(asm)
+            responsibilities = TeacherResponsibility.objects.using(db).select_related('teacher', 'subject').filter(subject=asm.subject)
+            if responsibilities:
+                for rsp in responsibilities:
+                    if classroom.id in rsp.classroom_fk_list:
+                        asm.classroom_fk_list = rsp.classroom_fk_list
+                        try:
+                            teacher = rsp.teacher
+                        except:
+                            teacher = asm.subject.get_teacher(classroom)
+                        asm.teacher = teacher
+                        full_name = teacher.member.full_name
+                        tokens = full_name.split(' ')
+                        asm.teacher.initials = tokens[0][0] + tokens[1][0]
+                        break
+                assignment_list.append(asm)
         context['assignment_list'] = assignment_list
         context['classroom'] = classroom
         return render(self.request, 'school/snippets/student/assignments.html', context)

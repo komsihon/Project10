@@ -1,7 +1,10 @@
 from django.conf.urls import patterns, include, url
 
+from django.contrib.auth.decorators import permission_required
 from django.contrib import admin
+
 from ikwen_webnode.webnode.views import Home, FlatPageView
+from ikwen_foulassi.school.views import SchoolDetail
 
 admin.autodiscover()
 
@@ -24,6 +27,10 @@ urlpatterns = patterns(
     url(r'^reporting/', include('ikwen_foulassi.reporting.urls', namespace='reporting')),
     url(r'^school/', include('ikwen_foulassi.school.urls', namespace='school')),
     url(r'^foulassi/', include('ikwen_foulassi.foulassi.urls', namespace='foulassi')),
+
+    url(r'^schoolDetail/$', permission_required('accesscontrol.sudo')(SchoolDetail.as_view()), name='school_detail'),
+    url(r'^schoolDetail/(?P<service_id>[-\w]+)/$', permission_required('accesscontrol.sudo')(SchoolDetail.as_view()),
+        name='school_detail'),
 
     url(r'^', include('ikwen_webnode.webnode.urls', namespace='webnode')),
 )

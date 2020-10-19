@@ -13,9 +13,9 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import TemplateView
 from ikwen.accesscontrol.models import Member
-from ikwen.core.utils import get_model_admin_instance
-from ikwen.core.views import HybridListView, ChangeObjectBase
-from ikwen_foulassi.foulassi.models import Teacher, get_school_year, Event
+from ikwen.core.utils import get_model_admin_instance, get_preview_from_extension, get_service_instance
+from ikwen.core.views import HybridListView, ChangeObjectBase, ServiceDetail
+from ikwen_foulassi.foulassi.models import Teacher, get_school_year, Event, SchoolConfig
 from ikwen_foulassi.school.admin import LevelAdmin, SubjectAdmin, SessionGroupAdmin, SessionAdmin, DisciplineItemAdmin
 from ikwen_foulassi.school.models import Level, Session, Subject, DisciplineItem, TeacherResponsibility, Classroom, \
     get_subject_list, SubjectCoefficient, SessionGroup, Score
@@ -269,7 +269,7 @@ class TeacherDetail(TemplateView):
             context = {'subject': subject, 'level_classroom_list': level_classroom_list}
             return render(request, 'school/snippets/teacher_responsibility_list.html', context)
         except:
-            response = {'error': "Server error occured."}
+            response = {'error': "Server error occurred."}
             return HttpResponse(json.dumps(response))
 
     def remove_subject(self, request, teacher):
@@ -280,7 +280,7 @@ class TeacherDetail(TemplateView):
             response = {'success': True}
             return HttpResponse(json.dumps(response))
         except:
-            response = {'error': "Server error occured."}
+            response = {'error': "Server error occurred."}
             return HttpResponse(json.dumps(response))
 
     def save_responsibilities(self, request, teacher):
@@ -315,3 +315,24 @@ def close_session(request, *args, **kwargs):
     except IndexError:
         pass
     return HttpResponse(json.dumps({'success': True}, 'content-type: text/json'))
+
+
+class SchoolDetail(ServiceDetail):
+
+    def get_context_data(self, **kwargs):
+        context = super(SchoolDetail, self).get_context_data(**kwargs)
+        service = get_service_instance()
+        model_obj = service.config
+        field = model_obj.contract
+        preview = get_preview_from_extension(field.name) if field.name else ''
+        media_obj = {
+            'image': field,
+            'media': field,
+            'preview': preview,
+            'field': 'contract',
+            'help_text': field.field.help_text,
+            'counter': 0
+        }
+        media_field_list = [media_obj]
+        context['media_field_list'] = media_field_list
+        return context

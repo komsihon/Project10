@@ -16,7 +16,7 @@ from ikwen.accesscontrol.models import Member
 from ikwen.core.constants import GENDER_CHOICES
 from ikwen.core.utils import get_service_instance, add_database
 from ikwen.core.models import Model, AbstractConfig, Service
-from ikwen.core.fields import MultiImageField
+from ikwen.core.fields import MultiImageField, FileField
 from ikwen.theming.models import Theme
 from ikwen.billing.models import AbstractInvoice, AbstractPayment
 from permission_backend_nonrel.models import UserPermissionList
@@ -336,7 +336,8 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                                                          help_text=_("Check whether school subscribed "
                                                                      "to website service or not"))
 
-    contract = models.FileField(_("School contract"), help_text=_("Upload your signed contract in a single PDF file"))
+    contract = FileField(_("School contract"), allowed_extensions=['pdf', 'doc', 'docx'],
+                         help_text=_("Upload your signed contract in a single PDF file"), upload_to='Contracts')
     last_setup_status_check = models.DateTimeField(default=datetime.now)
 
     def __unicode__(self):

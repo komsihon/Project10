@@ -6,8 +6,10 @@
 {% endblock %}
 {% block head_style %}
     {{ block.super }}
+    <link href="{% static 'ikwen/css/uploader-single.css' %}?v=20.8.17" media="screen" rel="stylesheet" type="text/css" />
     <style type="text/css">
         section {border: 1px solid #ddd}
+        section.photos .image {width: 280px!important;}
         section div.row {height: 30px}
         section label+span {color: #888}
         section em {font-size: 12px}
@@ -17,6 +19,12 @@
         section.photos p.help.clear>span {padding-left: 0!important;}
     </style>
 {% endblock %}
+
+{% block head_js %}
+    {{ block.super }}
+    <script src="{% static 'ikwen/ajaxuploader/js/fileuploader.js' %}"></script>
+{% endblock %}
+
 
 {% block breadcrumb_location %}
     <li>{% trans "Info & Billing" %}</li>
