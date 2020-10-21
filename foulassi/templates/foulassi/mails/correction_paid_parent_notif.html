@@ -139,7 +139,7 @@ table.center-on-narrow {
         <!-- Visually Hidden Preheader Text : BEGIN -->
         <div style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;mso-hide:all;font-family:'Myriad Pro','Lucida Sans Unicode' ,Verdana, Helvetica, Arial, sans-serif;" >
             {% blocktrans with assignment_subject=assignment.subject assignment_title=assignment.title %}
-                A student from <strong>{{ classroom }}</strong> just paid his assignment on <strong>{{ assignment_title }}</strong>.
+                You just pay the correction of <strong>{{ assignment_title }}</strong> from <strong>{{ assignment_subject }}</strong>.
             {% endblocktrans %}
         </div>
         <!-- Visually Hidden Preheader Text : END -->
@@ -202,23 +202,11 @@ table.center-on-narrow {
                          <div style="padding: 15px; font-size:15px; margin-bottom: 20px;">
                               <p style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color:#555; overflow-wrap: break-word; text-align: justify" >
                                 {% blocktrans with assignment_subject=assignment.subject assignment_title=assignment.title %}
-                                    Dear <strong>{{ teacher }}</strong>,<br style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >A student from <strong>{{ classroom }}</strong> just paid his correction of <strong>{{ assignment_subject }}</strong> on <strong>{{ assignment_title }}</strong>.<br>
-                                    Click the buton below to see your new balance
+                                    Dear <strong>{{ parent_name }}</strong>,<br style="-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;" >
+                                    You just pay the correction of <strong>{{ assignment_title }}</strong> from <strong>{{ assignment_subject }}</strong>.
                                 {% endblocktrans%}
                               </p>
                          </div>
-                      <!-- Button : Begin -->
-                        <table cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto; max-width: 300px">
-                            <tr>
-                                <td style="border-radius: 3px; text-align: center;" class="button-td">
-                                    <a target="_blank" href="{{ cta_url }}" style="background: #f38e42; border: 15px solid #f38e42	; padding: 0 10px;color: #ffffff;font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px;" class="button-a">
-                                  <!--[if mso]>&nbsp;&nbsp;&nbsp;&nbsp;<![endif]-->{% blocktrans %}See dashboard{% endblocktrans %}<!--[if mso]>&nbsp;&nbsp;&nbsp;&nbsp;<![endif]-->
-                                  </a>
-                                </td>
-                            </tr>
-                        </table>
-                        <br>
-                    <!-- Button : END -->
                       </td>
                     </tr>
                 </table>

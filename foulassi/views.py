@@ -267,6 +267,9 @@ class KidDetail(StudentDetail):
         context['subject_list'] = subject_list
         kid_list = parent_profile.student_list
         now = datetime.now()
+        end_year_date = datetime(day=31, month=8, year=get_school_year() + 1)
+        month_expiry = now + timedelta(days=30)
+        term_expiry = now + timedelta(days=90)
         # kid_list.remove(student)
         context['kid_list'] = kid_list
         context['using'] = db
@@ -276,6 +279,9 @@ class KidDetail(StudentDetail):
         context['has_pending_invoice'] = Invoice.objects.using(db).filter(student=student, status=Invoice.PENDING).count() > 0
         context['has_pending_disc'] = DisciplineLogEntry.objects.using(db).filter(student=student, was_viewed=False).count() > 0
         context['has_new_score'] = Score.objects.using(db).filter(student=student, was_viewed=False).count() > 0
+        context['month_expiry'] = min(month_expiry, end_year_date)
+        context['term_expiry'] = min(term_expiry, end_year_date)
+        context['year_expiry'] = end_year_date
         return context
 
     def get(self, request, *args, **kwargs):

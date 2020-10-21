@@ -336,7 +336,7 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                                                          help_text=_("Check whether school subscribed "
                                                                      "to website service or not"))
 
-    contract = FileField(_("School contract"), allowed_extensions=['pdf', 'doc', 'docx'],
+    contract = FileField(_("School contract"), allowed_extensions=['pdf', 'doc', 'docx', 'odt'],
                          help_text=_("Upload your signed contract in a single PDF file"), upload_to='Contracts')
     last_setup_status_check = models.DateTimeField(default=datetime.now)
 
@@ -402,7 +402,7 @@ class Invoice(AbstractInvoice):
 
 
 class Payment(AbstractPayment):
-    invoice = models.ForeignKey(Invoice)
+    invoice = models.ForeignKey(Invoice, blank=True, null=True)
 
 
 class KidRequest(Model):

@@ -37,7 +37,6 @@
 </div>
 <script>
     (() => {
-        $('<input type="hidden" name="ikwen_name" value="{{ ikwen_name }}">').appendTo('#payment-start-flow');
         $('#selection-control').addClass('back');
         $('#selection-control .clear-selection').attr('title', "{% trans 'Back' %}");
         $('#selection-control .select-count').html("{% trans 'Back' %}");

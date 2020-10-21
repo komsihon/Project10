@@ -21,6 +21,18 @@
 #modal-confirm-accept .modal-body, #modal-confirm-refuse .modal-body {padding-top: 0}
 #modal-confirm-accept h3, #modal-confirm-refuse h3 {margin-top: -15px}
 #modal-confirm-accept .notice, #modal-confirm-refuse .notice {margin-bottom: 42px}
+#admin-content .banner {background: rgb(2,0,36);}
+#admin-content .banner h1 {color: #fff; padding-top: 70px; padding-bottom: 60px; margin-top: 0}
+#admin-content .banner ~ div {float: none; margin: auto}
+#admin-content .banner ~ div .title {margin: 40px}
+#admin-content .banner ~ div .title p {font-size: 18px; line-height: 35px}
+#admin-content .banner ~ div #bundles {float: none; margin: auto}
+#admin-content .banner ~ div #bundles h2 {color: #fff}
+#admin-content .banner ~ div #bundles .table-bordered {min-height: 300px}
+#admin-content .banner ~ div #bundles .table-bordered .bundle {margin: 20px auto}
+#admin-content .banner ~ div #bundles .table-bordered .due-date {margin: 20px auto}
+#admin-content .banner ~ div #bundles .table-bordered .bundle sup {font-size: 20px}
+#admin-content .banner ~ div #bundles .table-bordered .bundle span {font-weight: 800; font-size: 40px}
 #admin-nav .ik-li .info {width: 167px;}
 .title-brand {font-weight: 600;padding: 0 10px;font-size: 21px}
 .title-brand:hover {text-decoration:none}
@@ -44,6 +56,8 @@
     .suggestion-list .ik-li:not(.selected):hover .actions {bottom: 0;position: fixed;height: 30vh;right: 0;width: 100%;z-index: 1000}
     .suggestion-list.school-list .ik-li:not(.selected):hover .actions {height: 15vh}
     .school-list {margin: 0 -12px}
+    #admin-content .banner ~ div .title {margin-left: auto!important; margin-right: auto!important;}
+    #admin-content .banner ~ div #bundles .table-bordered  {margin-bottom: 30px}
 }
 
 @media (min-width: 768px) {

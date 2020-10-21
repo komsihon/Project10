@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from ikwen_foulassi.foulassi.views import KidList, KidDetail, ShowJustificatory, AccessDenied, \
     Home, HomeSaaS, SearchSchool, EventList, DeployCloud, SuccessfulDeployment, AdminHome, ChangeHomework, \
     DownloadApp, TermsAndConditions, DownloadCorrection, BuyWebsite
-from ikwen_foulassi.foulassi.cash_in import confirm_invoice_payment, confirm_my_kids_payment, confirm_correction_payment
+from ikwen_foulassi.foulassi.cash_in import confirm_invoice_payment, confirm_my_kids_payment,\
+    confirm_correction_payment
 
 urlpatterns = patterns(
     '',

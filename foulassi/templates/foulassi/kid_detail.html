@@ -17,147 +17,235 @@
 {% block admin_content %}
     <div id="admin-content" class="change-form">
         <div class="container-fluid">
-            <div class="content-tab-list ceil">
-                <div class="swiper-container">
-                    <div class="nav nav-tabs" role="tablist">
-                        <div role="presentation" class="tab active" data-tab="details">
-                            <a href="#student-details" aria-controls="student-details" role="tab" data-toggle="tab">{% trans "Details" %}</a>
-                        </div>
-                        <div role="presentation" class="tab assignments" data-tab="assignments">
-                            <a href="#student-assignments" aria-controls="student-assignments" role="tab" data-toggle="tab">
-                                {% if has_pending_assignment %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
-                                <span class="title-sm">{% trans "Assignments" %}</span>
-                                <span class="title-xs">{% trans "Assign." %}</span>
-                            </a>
-                        </div>
-                        <div role="presentation" class="tab scores" data-tab="scores">
-                            <a href="#student-scores" aria-controls="student-scores" role="tab" data-toggle="tab">
-                                {% if has_new_score > 0 %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
-                                <span>{% trans "Scores" %}</span>
-                            </a>
-                        </div>
-                        <div role="presentation" class="tab discipline" data-tab="discipline">
-                            <a href="#student-discipline" aria-controls="student-discipline" role="tab" data-toggle="tab">
-                                {% if has_pending_disc > 0 %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
-                                <span>{% trans "Discipline" %}</span>
-                            </a>
-                        </div>
-                        <div role="presentation" class="tab billing" data-tab="billing">
-                            <a href="#student-billing" aria-controls="student-billing" role="tab" data-toggle="tab">
-                                {% if has_pending_invoice > 0 %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
-                                <span>{% trans "Billing" context 'Financial status' %}</span>
-                            </a>
+            {% if not student.my_kids_expired %}
+                <div class="content-tab-list ceil">
+                    <div class="swiper-container">
+                        <div class="nav nav-tabs" role="tablist">
+                            <div role="presentation" class="tab active" data-tab="details">
+                                <a href="#student-details" aria-controls="student-details" role="tab" data-toggle="tab">{% trans "Details" %}</a>
+                            </div>
+                            <div role="presentation" class="tab assignments" data-tab="assignments">
+                                <a href="#student-assignments" aria-controls="student-assignments" role="tab" data-toggle="tab">
+                                    {% if has_pending_assignment %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
+                                    <span class="title-sm">{% trans "Assignments" %}</span>
+                                    <span class="title-xs">{% trans "Assign." %}</span>
+                                </a>
+                            </div>
+                            <div role="presentation" class="tab scores" data-tab="scores">
+                                <a href="#student-scores" aria-controls="student-scores" role="tab" data-toggle="tab">
+                                    {% if has_new_score > 0 %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
+                                    <span>{% trans "Scores" %}</span>
+                                </a>
+                            </div>
+                            <div role="presentation" class="tab discipline" data-tab="discipline">
+                                <a href="#student-discipline" aria-controls="student-discipline" role="tab" data-toggle="tab">
+                                    {% if has_pending_disc > 0 %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
+                                    <span>{% trans "Discipline" %}</span>
+                                </a>
+                            </div>
+                            <div role="presentation" class="tab billing" data-tab="billing">
+                                <a href="#student-billing" aria-controls="student-billing" role="tab" data-toggle="tab">
+                                    {% if has_pending_invoice > 0 %}<sup><i class="fa fa-circle attention text-danger"></i></sup>{% endif %}
+                                    <span>{% trans "Billing" context 'Financial status' %}</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="tab-content student-tab-panel">
-                <div id="student-details" class="tab-pane active admin-form" role="tabpanel" style="padding-top: 15px; padding-bottom: 90px">
-                    {% if is_first_parent %}  {# First parent can change student photo #}
-                        <div class="col-sm-4 col-lg-3 student-photo">
-                            {% with model_name='foulassi.Student' image=obj.photo image_field_name='photo' label_field_name='last_name' img_help_text='Student photo: 560px x 480px' upload_to_ikwen='yes' %}
-                                {% include 'core/snippets/uploader_single.html' %}
-                            {% endwith %}
+                <div class="tab-content student-tab-panel">
+                    <div id="student-details" class="tab-pane active admin-form" role="tabpanel" style="padding-top: 15px; padding-bottom: 90px">
+                        {% if is_first_parent %}  {# First parent can change student photo #}
+                            <div class="col-sm-4 col-lg-3 student-photo">
+                                {% with model_name='foulassi.Student' image=obj.photo image_field_name='photo' label_field_name='last_name' img_help_text='Student photo: 560px x 480px' upload_to_ikwen='yes' %}
+                                    {% include 'core/snippets/uploader_single.html' %}
+                                {% endwith %}
+                            </div>
+                        {% else %}
+                            <div class="col-sm-4 col-lg-3 student-photo">
+                                <section class="photos" style="width: 100%">
+                                    <div class="upload-container">
+                                        <div class="image" style="background-image: url('{{ settings.IKWEN_MEDIA_URL }}{{ obj.photo.name }}')"></div>
+                                    </div>
+                                </section>
+                            </div>
+                        {% endif %}
+                        <div class="col-sm-8 col-lg-9">
+                            <input type="hidden" id="dob-alt" name="dob" value="{{ student.dob|date:"Y-m-d" }}" />
+                            <div class="basic">
+                                {% include 'core/snippets/model_admin_form.html' %}
+                            </div>
+                            <div class="divider row"></div>
+                            <div class="people-in-charge">
+                                <h5>{% trans "Parents" %}</h5>
+                                <ul class="list-group" style="padding: 0">
+                                    {% for parent in student.parent_set.all %}
+                                    <li class="list-group-item ik-li parent" id="{{ parent.id }}" data-id="{{ parent.id }}" data-model-name="foulassi.Parent">
+                                        <div class="parent-title">
+                                            <span class="name">{{ parent.name }}</span>:
+                                            <span class="relation text-muted">{{ parent.relation }}</span>
+                                        </div>
+                                        <div class="parent-contact text-muted">
+                                            <span class="phone">{{ parent.phone }}</span>{% if parent.email %}, <span class="email">{{ parent.email }}</span>{% endif %}
+                                        </div>
+                                        {% if is_first_parent and forloop.counter > 1 %}
+                                        <div class="actions">
+                                            <i class="glyphicon glyphicon-edit edit-parent" title="{% trans "Change item" %}"></i>
+                                            <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
+                                        </div>
+                                        {% endif %}
+                                    </li>
+                                    {% endfor %}
+                                    <li class="list-group-item ik-li parent tpl" style="display: none">
+                                        <div class="parent-title">
+                                            <span class="name"></span>: <span class="relation text-muted"></span></div>
+                                        <div class="parent-contact text-muted">
+                                            <span class="phone"></span>
+                                            <span class="email"></span>
+                                        </div>
+                                        <div class="actions">
+                                            <i class="glyphicon glyphicon-edit" title="{% trans "Change item" %}"></i>
+                                            <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item add-parent-form" style="border: none; clear: both; display: none">
+                                        <input type="hidden" id="parent-id" />
+                                        <div class="row">
+                                            <div class="col-sm-4 form-group">
+                                                <input id="parent-name" class="form-control input-sm" placeholder="{% trans "Name" %}" />
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <input id="parent-relation" class="form-control input-sm" placeholder="{% trans "Relationship, Ex: Father" %}" />
+                                            </div>
+                                            <div class="col-sm-3 form-group">
+                                                <input id="parent-phone" class="form-control input-sm" placeholder="{% trans "Phone" %}" />
+                                            </div>
+                                            <div class="col-sm-4 form-group">
+                                                <input id="parent-email" type="email" class="form-control input-sm" placeholder="{% trans "Email" %}" />
+                                            </div>
+                                            <div class="col-sm-2 form-group">
+                                                <button type="button" class="btn btn-sm btn-success save-parent">
+                                                    {% include 'core/snippets/button_spinner.html' %}
+                                                    <span>OK</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                {% if is_first_parent %}
+                                <button type="button" class="btn btn-xs btn-default add-parent" title="{% trans "Add a person in charge" %}">
+                                    <i class="fa fa-plus"></i> {% trans "Add" %}
+                                </button>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% else %}
-                        <div class="col-sm-4 col-lg-3 student-photo">
-                            <section class="photos" style="width: 100%">
-                                <div class="upload-container">
-                                    <div class="image" style="background-image: url('{{ settings.IKWEN_MEDIA_URL }}{{ obj.photo.name }}')"></div>
-                                </div>
-                            </section>
-                        </div>
-                    {% endif %}
-                    <div class="col-sm-8 col-lg-9">
-                        <input type="hidden" id="dob-alt" name="dob" value="{{ student.dob|date:"Y-m-d" }}" />
-                        <div class="basic">
-                            {% include 'core/snippets/model_admin_form.html' %}
-                        </div>
-                        <div class="divider row"></div>
-                        <div class="people-in-charge">
-                            <h5>{% trans "Parents" %}</h5>
-                            <ul class="list-group" style="padding: 0">
-                                {% for parent in student.parent_set.all %}
-                                <li class="list-group-item ik-li parent" id="{{ parent.id }}" data-id="{{ parent.id }}" data-model-name="foulassi.Parent">
-                                    <div class="parent-title">
-                                        <span class="name">{{ parent.name }}</span>:
-                                        <span class="relation text-muted">{{ parent.relation }}</span>
-                                    </div>
-                                    <div class="parent-contact text-muted">
-                                        <span class="phone">{{ parent.phone }}</span>{% if parent.email %}, <span class="email">{{ parent.email }}</span>{% endif %}
-                                    </div>
-                                    {% if is_first_parent and forloop.counter > 1 %}
-                                    <div class="actions">
-                                        <i class="glyphicon glyphicon-edit edit-parent" title="{% trans "Change item" %}"></i>
-                                        <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
-                                    </div>
-                                    {% endif %}
-                                </li>
-                                {% endfor %}
-                                <li class="list-group-item ik-li parent tpl" style="display: none">
-                                    <div class="parent-title">
-                                        <span class="name"></span>: <span class="relation text-muted"></span></div>
-                                    <div class="parent-contact text-muted">
-                                        <span class="phone"></span>
-                                        <span class="email"></span>
-                                    </div>
-                                    <div class="actions">
-                                        <i class="glyphicon glyphicon-edit" title="{% trans "Change item" %}"></i>
-                                        <i class="glyphicon glyphicon-trash trash" title="{% trans "Delete item" %}"></i>
-                                    </div>
-                                </li>
-                                <li class="list-group-item add-parent-form" style="border: none; clear: both; display: none">
-                                    <input type="hidden" id="parent-id" />
-                                    <div class="row">
-                                        <div class="col-sm-4 form-group">
-                                            <input id="parent-name" class="form-control input-sm" placeholder="{% trans "Name" %}" />
-                                        </div>
-                                        <div class="col-sm-3 form-group">
-                                            <input id="parent-relation" class="form-control input-sm" placeholder="{% trans "Relationship, Ex: Father" %}" />
-                                        </div>
-                                        <div class="col-sm-3 form-group">
-                                            <input id="parent-phone" class="form-control input-sm" placeholder="{% trans "Phone" %}" />
-                                        </div>
-                                        <div class="col-sm-4 form-group">
-                                            <input id="parent-email" type="email" class="form-control input-sm" placeholder="{% trans "Email" %}" />
-                                        </div>
-                                        <div class="col-sm-2 form-group">
-                                            <button type="button" class="btn btn-sm btn-success save-parent">
-                                                {% include 'core/snippets/button_spinner.html' %}
-                                                <span>OK</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            {% if is_first_parent %}
-                            <button type="button" class="btn btn-xs btn-default add-parent" title="{% trans "Add a person in charge" %}">
-                                <i class="fa fa-plus"></i> {% trans "Add" %}
-                            </button>
-                            {% endif %}
-                        </div>
+                        <div class="clearfix"></div>
                     </div>
+
+                    <div id="student-assignments" class="tab-pane student-info-tab" role="tabpanel">
+                        {% include 'core/snippets/spinner.html' %}
+                    </div>
+
+                    <div id="student-scores" class="tab-pane student-info-tab" role="tabpanel">
+                        {% include 'core/snippets/spinner.html' %}
+                    </div>
+
+                    <div id="student-discipline" class="tab-pane student-info-tab" role="tabpanel">
+                        {% include 'core/snippets/spinner.html' %}
+                    </div>
+
+                    <div id="student-billing" class="tab-pane student-info-tab" role="tabpanel">
+                        {% include 'core/snippets/spinner.html' %}
+                    </div>
+                    {% include 'core/snippets/spinner.html' %}
                     <div class="clearfix"></div>
                 </div>
-
-                <div id="student-assignments" class="tab-pane student-info-tab" role="tabpanel">
-                    {% include 'core/snippets/spinner.html' %}
+            {% else %}
+                <div class="banner" style="background: url({% static 'foulassi/img/beautiful-background-of-lines-with-gradients-vector.jpg' %}); background-size: cover; background-position: center center">
+                    <h1 class="header h1 text-center">{% trans 'Renew MyKids fees' %}</h1>
                 </div>
-
-                <div id="student-scores" class="tab-pane student-info-tab" role="tabpanel">
-                    {% include 'core/snippets/spinner.html' %}
+                <div class="col-sm-12">
+                    <div class="text-center title">
+                        {% if student.my_kids_expiry %}
+                            {% blocktrans %}
+                            <p>
+                                <strong>MyKids</strong> expired since: {{ student.my_kids_expiry }} !!!<br>
+                                Choose a pack below to renew MyKids fees for your child <strong>{{ student }}</strong>
+                            </p>
+                            {% endblocktrans %}
+                        {% else %}
+                            {% blocktrans %}
+                            <p>
+                                You ran out your 2 months <strong>MyKids</strong> trial  !!!<br>
+                                Choose a pack below to renew this service for your child <strong>{{ student }}</strong>
+                            </p>
+                            {% endblocktrans %}
+                        {% endif %}
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div id="bundles">
+                        <div class="col-sm-3 table-bordered has-shade">
+                            <div class="row" style="background: url({% static 'foulassi/img/silver.jpg' %}); background-size: cover; background-position: center center">
+                                <h2 class="text-has-shade text-center">{% trans 'Month' %}</h2>
+                            </div>
+                            <div class="clearfix"></div>
+                            <p class="bundle">
+                                <sup>{{ config.currency_symbol }}</sup>
+                                <span> {{ config.my_kids_fees_month|intcomma }}</span>
+                                <div class="clearfix"></div>
+                            </p>
+                            <p class="due-date">
+                                {% trans 'Expires on:' %}
+                                <span class="pull-right">{{ month_expiry|date:"d/m/Y" }}</span>
+                                <div class="clearfix"></div>
+                            </p>
+                            <button class="btn btn-block btn-outline-success payment-start my-kids" data-cycle="Monthly">
+                                {% trans 'Renew' %}
+                            </button>
+                        </div>
+                        <div class="col-sm-3 col-sm-offset-1 table-bordered has-shade">
+                            <div class="row" style="background: url({% static 'foulassi/img/gold.jpg' %}); background-size: cover; background-position: center center">
+                                <h2 class="text-has-shade text-center">{% trans 'Term' %}</h2>
+                            </div>
+                            <div class="clearfix"></div>
+                            <p class="bundle">
+                                <sup>{{ config.currency_symbol }}</sup>
+                                <span>
+                                    {{ config.my_kids_fees_term|intcomma }}
+                                </span>
+                                <div class="clearfix"></div>
+                            </p>
+                            <p class="due-date">
+                                {% trans 'Expires on:' %}
+                                <span class="pull-right">{{ term_expiry|date:"d/m/Y" }}</span>
+                                <div class="clearfix"></div>
+                            </p>
+                            <button class="btn btn-block btn-outline-success payment-start my-kids" data-cycle="Quarterly">
+                                {% trans 'Renew' %}
+                            </button>
+                        </div>
+                        <div class="col-sm-3 col-sm-offset-1 table-bordered has-shade">
+                            <div class="row" style="background: url({% static 'foulassi/img/diamond.jpeg' %}); background-size: cover; background-position: center center; padding: 0">
+                                <h2 class="text-has-shade text-center">{% trans 'Year' %}</h2>
+                            </div>
+                            <div class="clearfix"></div>
+                            <p class="bundle">
+                                <sup>{{ config.currency_symbol }}</sup>
+                                <span> {{ config.my_kids_fees|intcomma }}</span>
+                                <div class="clearfix"></div>
+                            </p>
+                            <p class="due-date">
+                                {% trans 'Expires on:' %}
+                                <span class="pull-right">{{ year_expiry|date:"d/m/Y" }}</span>
+                                <div class="clearfix"></div>
+                            </p>
+                            <button class="btn btn-block btn-outline-success payment-start my-kids" data-cycle="Yearly">
+                                {% trans 'Renew' %}
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
-                <div id="student-discipline" class="tab-pane student-info-tab" role="tabpanel">
-                    {% include 'core/snippets/spinner.html' %}
-                </div>
-
-                <div id="student-billing" class="tab-pane student-info-tab" role="tabpanel">
-                    {% include 'core/snippets/spinner.html' %}
-                </div>
-                {% include 'core/snippets/spinner.html' %}
-                <div class="clearfix"></div>
-            </div>
+            {% endif %}
         </div>
     </div>
     {% with payment_cancel_default='yes' %}
