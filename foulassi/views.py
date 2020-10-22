@@ -282,6 +282,7 @@ class KidDetail(StudentDetail):
         context['month_expiry'] = min(month_expiry, end_year_date)
         context['term_expiry'] = min(term_expiry, end_year_date)
         context['year_expiry'] = end_year_date
+        context['school_config'] = SchoolConfig.objects.using(db).get(service=student.school)
         return context
 
     def get(self, request, *args, **kwargs):

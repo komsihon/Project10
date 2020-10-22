@@ -179,7 +179,7 @@ def set_my_kids_payment(request, *args, **kwargs):
     cycle = request.POST['my_kids_cycle']
     school = Service.objects.get(pk=school_id)
     student = Student.objects.get(pk=student_id)
-    school_config = school.config
+    school_config = SchoolConfig.objects.get(service=school)
     Invoice.objects.filter(student=student, is_my_kids=True, status=Invoice.PENDING).delete()
     max_expiry = datetime(day=31, month=8, year=get_school_year() + 1)
     if cycle == Service.YEARLY:

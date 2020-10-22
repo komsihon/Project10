@@ -191,7 +191,7 @@
                             <div class="clearfix"></div>
                             <p class="bundle">
                                 <sup>{{ config.currency_symbol }}</sup>
-                                <span> {{ config.my_kids_fees_month|intcomma }}</span>
+                                <span> {{ school_config.my_kids_fees_month|intcomma }}</span>
                                 <div class="clearfix"></div>
                             </p>
                             <p class="due-date">
@@ -211,7 +211,7 @@
                             <p class="bundle">
                                 <sup>{{ config.currency_symbol }}</sup>
                                 <span>
-                                    {{ config.my_kids_fees_term|intcomma }}
+                                    {{ school_config.my_kids_fees_term|intcomma }}
                                 </span>
                                 <div class="clearfix"></div>
                             </p>
@@ -231,7 +231,7 @@
                             <div class="clearfix"></div>
                             <p class="bundle">
                                 <sup>{{ config.currency_symbol }}</sup>
-                                <span> {{ config.my_kids_fees|intcomma }}</span>
+                                <span> {{ school_config.my_kids_fees|intcomma }}</span>
                                 <div class="clearfix"></div>
                             </p>
                             <p class="due-date">
@@ -257,7 +257,7 @@
     {{ block.super }}
     <script>
         (() => {
-            $('<input type="hidden" name="school_id" value="{{ service.id }}">').appendTo('#payment-start-flow');
+            $('<input type="hidden" name="school_id" value="{{ student.school.id }}">').appendTo('#payment-start-flow');
             $('<input type="hidden" name="student_id" value="{{ student.id }}">').appendTo('#payment-start-flow');
             $('<input type="hidden" name="my_kids_cycle">').appendTo('#payment-start-flow');
             $('body').on('click', 'li.assignment a', (e) => {
