@@ -27,8 +27,8 @@
 #admin-content .banner ~ div .title {margin: 40px}
 #admin-content .banner ~ div .title p {font-size: 18px; line-height: 35px}
 #admin-content .banner ~ div #bundles {float: none; margin: auto}
-#admin-content .banner ~ div #bundles h2 {color: #fff}
-#admin-content .banner ~ div #bundles .table-bordered {min-height: 300px}
+#admin-content .banner ~ div #bundles h2 {color: #fff; margin: 30px auto}
+#admin-content .banner ~ div #bundles .table-bordered {min-height: 350px;}
 #admin-content .banner ~ div #bundles .table-bordered .bundle {margin: 20px auto}
 #admin-content .banner ~ div #bundles .table-bordered .due-date {margin: 20px auto}
 #admin-content .banner ~ div #bundles .table-bordered .bundle sup {font-size: 20px}

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-21 20:40+0000\n"
-"PO-Revision-Date: 2020-10-21 23:05+0100\n"
+"PO-Revision-Date: 2020-10-22 01:38+0100\n"
 "Last-Translator: Wilfried FUTCHEA <wilfriedwillend@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -2626,7 +2626,7 @@ msgstr ""
 
 #: foulassi/templates/foulassi/mails/new_assignment.html:215
 msgid "See homework"
-msgstr ""
+msgstr "Voir détails"
 
 #: foulassi/templates/foulassi/mails/new_correction.html:142
 #, python-format
@@ -2636,6 +2636,10 @@ msgid ""
 "<sup>XAF</sup><strong>%(cost)s</strong>\n"
 "            "
 msgstr ""
+"\n"
+"                Téléchargez la correction de %(subject)s sur %(title)s  à "
+"<sup>XAF</sup><strong>%(cost)s</strong>\n"
+"            "
 
 #: foulassi/templates/foulassi/mails/new_correction.html:146
 #, python-format
@@ -2645,6 +2649,10 @@ msgid ""
 "<strong>free</strong>\n"
 "            "
 msgstr ""
+"\n"
+"                Téléchargez <strong>gratuitement</strong> la correction de "
+"%(subject)s sur %(title)s\n"
+"            "
 
 #: foulassi/templates/foulassi/mails/new_correction.html:210
 #, python-format
