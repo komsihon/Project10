@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-21 20:40+0000\n"
-"PO-Revision-Date: 2020-10-22 01:38+0100\n"
+"PO-Revision-Date: 2020-10-27 17:01+0100\n"
 "Last-Translator: Wilfried FUTCHEA <wilfriedwillend@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -36,9 +36,8 @@ msgid "Date of birth"
 msgstr "Date de naissance"
 
 #: foulassi/admin.py:16 foulassi/models.py:83
-#, fuzzy
 msgid "Place of birth"
-msgstr "Date de naissance"
+msgstr "Lieu de naissance"
 
 #: foulassi/admin.py:17 foulassi/models.py:87
 #: reporting/templates/reporting/discipline_detail.html:39
@@ -803,14 +802,12 @@ msgstr ""
 "votre facture et commencez à l'utiliser"
 
 #: foulassi/templates/foulassi/buy_website.html:80
-#, fuzzy
 msgid "Pay invoice"
-msgstr "Nouvelle facture"
+msgstr "Payer facture"
 
 #: foulassi/templates/foulassi/buy_website.html:81
-#, fuzzy
 msgid "Later"
-msgstr "Retard"
+msgstr "Plus tard"
 
 #: foulassi/templates/foulassi/change_homework.html:11
 #: foulassi/templates/foulassi/snippets/change_homework.html:10
@@ -923,16 +920,14 @@ msgstr ""
 #: foulassi/templates/foulassi/home.html:16
 #: foulassi/templates/foulassi/sign_in.html:11
 #: foulassi/templates/foulassi/sign_in.html:15
-#, fuzzy
 msgid ""
 "MyKids is a social platform that connects with schools of your kids to give "
 "you information on their results, discipline and financial status."
 msgstr ""
-"Foulassi est une plateforme sociale qui se connecte aux écoles de vos "
-"enfants pour vous donner leurs résultats, discipline et états financiers."
+"MyKids est une plateforme sociale qui se connecte aux écoles de vos enfants "
+"pour vous donner leurs résultats, discipline et états financiers."
 
 #: foulassi/templates/foulassi/home.html:223
-#, fuzzy
 msgid ""
 "\n"
 "                                MyKids is a social platform that connects "
@@ -942,9 +937,8 @@ msgid ""
 "                            "
 msgstr ""
 "\n"
-"Foulassi est une plateforme sociale qui se connecte aux écoles de vos "
-"enfants pour vous donner leurs résultats, états disciplinaires et états "
-"financiers.\n"
+"MyKids est une plateforme sociale qui se connecte aux écoles de vos enfants "
+"pour vous donner leurs résultats, états disciplinaires et états financiers.\n"
 "                            "
 
 #: foulassi/templates/foulassi/home.html:231
@@ -959,7 +953,6 @@ msgstr "Suivez-les tous en un seul endroit"
 
 #: foulassi/templates/foulassi/home.html:247
 #: foulassi/templates/foulassi/home.html:259
-#, fuzzy
 msgid ""
 "\n"
 "                                MyKids collects data from all schools of "
@@ -972,7 +965,7 @@ msgid ""
 "                            "
 msgstr ""
 "\n"
-"                                Foulassi collecte les données de toutes les "
+"                                MyKids collecte les données de toutes les "
 "écoles de vos enfants et les regroupe en un seul endroit\n"
 "                                pour un suivi aisé.\n"
 "                               Vous pouvez autoriser une tierce personne à "
@@ -1149,20 +1142,18 @@ msgstr "Mentions légales"
 
 #: foulassi/templates/foulassi/home_saas.html:13
 #: foulassi/templates/foulassi/home_saas.html:17
-#, fuzzy
 msgid ""
 "ScolarFleet lets staffs, teachers and parents connect and work together to "
 "manage the school and students."
 msgstr ""
-"Foulassi permet au personnel d’établissement, aux enseignants et aux parents "
-"d’être connectés et collaborer pour gérer l’école et ses élèves."
+"ScolarFleet permet au personnel d’établissement, aux enseignants et aux "
+"parents d’être connectés et collaborer pour gérer l’école et ses élèves."
 
 #: foulassi/templates/foulassi/home_saas.html:44
 msgid "One Platform<br/>Everybody"
 msgstr "Une plateforme<br/>Tout le monde"
 
 #: foulassi/templates/foulassi/home_saas.html:46
-#, fuzzy
 msgid ""
 "\n"
 "                            Built with the idea of collaborative and social "
@@ -1172,7 +1163,7 @@ msgid ""
 "                        "
 msgstr ""
 "\n"
-"Partie sur l’ambition d’une plateforme sociale et collaborative, Foulassi "
+"Partie sur l’ambition d’une plateforme sociale et collaborative, ScolarFleet "
 "permet au personnel d’établissement, aux enseignants et aux parents d’être "
 "connectés et collaborer pour gérer l’école et ses élèves.\n"
 "                            "
@@ -1451,18 +1442,16 @@ msgstr ""
 "de vos encaissements en ligne."
 
 #: foulassi/templates/foulassi/home_saas.html:353
-#, fuzzy
 msgid "Why use ScolarFleet ?"
-msgstr "Pourquoi passer à Foulassi ?"
+msgstr "Pourquoi passer à ScolarFleet ?"
 
 #: foulassi/templates/foulassi/home_saas.html:355
-#, fuzzy
 msgid ""
 "ScolarFleet will set you free from some annoying tasks, while providing you "
 "with continuous improvements."
 msgstr ""
-"Foulassi va vous décharger de bien de tâches ennuyeuses, en vous apportant "
-"des améliorations en continu."
+"ScolarFleet va vous décharger de bien des tâches ennuyeuses, en vous "
+"apportant des améliorations en continu."
 
 #: foulassi/templates/foulassi/home_saas.html:361
 msgid "Back-up and archiving"
@@ -1508,7 +1497,6 @@ msgid "You have a website and blog"
 msgstr "Un site internet et un blog en cadeau"
 
 #: foulassi/templates/foulassi/home_saas.html:384
-#, fuzzy
 msgid ""
 "\n"
 "                        ScolarFleet gives you a modern and free website on "
@@ -1519,8 +1507,8 @@ msgid ""
 "                    "
 msgstr ""
 "\n"
-"Foulassi vous donne directement et gratuitement un site web moderne sur la "
-"même plateforme. Vous avez aussi un blog pour publier les articles chaque "
+"ScolarFleet vous donne directement et gratuitement un site web moderne sur "
+"la même plateforme. Vous avez aussi un blog pour publier les articles chaque "
 "jour. Si vous souhaitez quelque-chose du genre <em style=\"color: blue"
 "\">monetablissement.org</em>, achetez simplement ce nom de domaine là et "
 "remplacez celui par défaut."
@@ -1535,7 +1523,6 @@ msgid "START YOUR FREE TRIAL"
 msgstr "ESSAYER GRATUITEMENT"
 
 #: foulassi/templates/foulassi/home_saas.html:409
-#, fuzzy
 msgid ""
 "\n"
 "                                <p class=\"mobile-center\"> Take this offer "
@@ -1557,7 +1544,7 @@ msgstr ""
 "                                <p><span class=\"highlight\">Connectez  "
 "enseignants et parents avec les élèves</span>\n"
 "                                 et bénéficiez de toutes les fonctionnalités "
-"offertes par FOULASSI.</p>\n"
+"offertes par ScolarFleet.</p>\n"
 "                                <p class=\"mobile-center\" style=\"margin-"
 "bottom: 3vh\">Commencez votre mois d'essai gratuit !</p>\n"
 "                             "
@@ -1568,7 +1555,6 @@ msgid "START"
 msgstr "COMMENCER"
 
 #: foulassi/templates/foulassi/home_saas.html:421
-#, fuzzy
 msgid ""
 "\n"
 "                                 <p  class=\"mobile-center\"> Take this "
@@ -1590,7 +1576,7 @@ msgstr ""
 "                                <p><span class=\"highlight\">Connectez  "
 "enseignants et parents avec les élèves</span>\n"
 "                                 et bénéficiez de toutes les fonctionnalités "
-"offertes par FOULASSI.</p>\n"
+"offertes par ScolarFleet.</p>\n"
 "                                <p class=\"mobile-center\" style=\"margin-"
 "bottom: 3vh\">Commencez votre mois d'essai gratuit !</p>\n"
 "                             "
@@ -1616,7 +1602,6 @@ msgstr ""
 "Rejoignez ces organisations en toute quiétude."
 
 #: foulassi/templates/foulassi/home_saas.html:472
-#, fuzzy
 msgid ""
 "\n"
 "            Deploy your <strong>ScolarFleet Weblet</strong> now and start "
@@ -1624,7 +1609,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Déployez maintenant votre <strong>Weblet Foulassi</strong> et commencez à "
+"Déployez maintenant votre <strong>Weblet ScolarFleet</strong> et commencez à "
 "collaborer avec les enseignants et des milliers de parents."
 
 #: foulassi/templates/foulassi/kid_detail.html:25
@@ -1777,9 +1762,8 @@ msgstr "Mois"
 #: foulassi/templates/foulassi/kid_detail.html:198
 #: foulassi/templates/foulassi/kid_detail.html:219
 #: foulassi/templates/foulassi/kid_detail.html:238
-#, fuzzy
 msgid "Expires on:"
-msgstr "Expiré"
+msgstr "Expire le:"
 
 #: foulassi/templates/foulassi/kid_detail.html:203
 #: foulassi/templates/foulassi/kid_detail.html:224
@@ -2285,9 +2269,8 @@ msgid "Limitation of liability"
 msgstr ""
 
 #: foulassi/templates/foulassi/cloud_setup/deploy.html:5
-#, fuzzy
 msgid "Deploy ScolarFleet"
-msgstr "Déployez Foulassi"
+msgstr "Déployez ScolarFleet"
 
 #: foulassi/templates/foulassi/cloud_setup/deploy.html:28
 msgctxt "Deployment: school name"
@@ -2668,9 +2651,8 @@ msgstr ""
 
 #: foulassi/templates/foulassi/mails/new_correction.html:220
 #: school/templates/school/snippets/student/assignments.html:87
-#, fuzzy
 msgid "Download correction"
-msgstr "Télécharger les bulletins"
+msgstr "Télécharger le correction"
 
 #: foulassi/templates/foulassi/mails/school_setup_reminder.html:143
 #, python-format
@@ -2771,9 +2753,8 @@ msgid "Back"
 msgstr "Retour"
 
 #: foulassi/templates/foulassi/snippets/download_correction.html:11
-#, fuzzy
 msgid "Correction"
-msgstr "Annuler la sélection"
+msgstr "Correction"
 
 #: foulassi/templates/foulassi/snippets/download_correction.html:14
 #: school/templates/school/student/view_correction.html:15
@@ -3914,9 +3895,8 @@ msgstr "Salles de classe"
 
 #: school/templates/school/classroom/assignment_correction_list.html:15
 #: school/templates/school/classroom/change_assignment_correction.html:17
-#, fuzzy
 msgid "Corrections"
-msgstr "Annuler la sélection"
+msgstr "Corrections"
 
 #: school/templates/school/classroom/assignment_correction_list.html:27
 #: school/templates/school/classroom/assignment_list.html:21
@@ -4537,15 +4517,13 @@ msgid "Paid to"
 msgstr "Payé pour"
 
 #: templates/billing/invoice_detail.html:114
-#, fuzzy
 msgid "Pay to"
-msgstr "Payer maintenant"
+msgstr "Payer à"
 
 #: templates/billing/invoice_detail.html:120
-#, fuzzy
 msgctxt "Company registration No"
 msgid "Registration"
-msgstr "Frais d'inscription"
+msgstr "Enregistrement"
 
 #: templates/billing/invoice_detail.html:126
 msgid "Taxpayer"
@@ -4556,14 +4534,12 @@ msgid "Description"
 msgstr "Description"
 
 #: templates/billing/invoice_detail.html:178
-#, fuzzy
 msgid "Extend till"
-msgstr "Envoi de Mail"
+msgstr "Étendre jusqu'a"
 
 #: templates/billing/invoice_detail.html:183
-#, fuzzy
 msgid "Month(s)"
-msgstr "Coût mensuel"
+msgstr "Mois"
 
 #: templates/billing/invoice_detail.html:203
 #: templates/billing/invoice_detail.html:214
@@ -4576,9 +4552,8 @@ msgid "Payments"
 msgstr "Paiements"
 
 #: templates/billing/invoice_detail.html:228
-#, fuzzy
 msgid "Transaction date"
-msgstr "Transactions"
+msgstr "Date de transaction"
 
 #: templates/billing/invoice_detail.html:229
 #: templates/billing/invoice_detail.html:243
@@ -4587,9 +4562,8 @@ msgid "Method"
 msgstr "Moyen de paiement"
 
 #: templates/billing/invoice_detail.html:230
-#, fuzzy
 msgid "Transaction ID"
-msgstr "Transactions"
+msgstr "ID de transactions"
 
 #: templates/billing/invoice_detail.html:248
 #: templates/billing/invoice_detail.html:279
@@ -4601,18 +4575,16 @@ msgid "Back to Client Area"
 msgstr ""
 
 #: templates/billing/invoice_detail.html:362
-#, fuzzy
 msgid "Successful cash in"
-msgstr "créé avec succès"
+msgstr "Dépôt effectué"
 
 #: templates/billing/snippets/payment_list_results.html:24
 msgid "Bank card"
 msgstr "Carte bancaire"
 
 #: templates/core/app_base_admin.html:19
-#, fuzzy
 msgid "Finance Dashboard"
-msgstr "Voir le tableau de bord"
+msgstr "Tableau de bord financier"
 
 #: templates/core/app_base_admin.html:34
 msgid "Levels"
@@ -4660,9 +4632,8 @@ msgid "Items"
 msgstr "Articles"
 
 #: templates/core/app_base_admin.html:118
-#, fuzzy
 msgid "Website"
-msgstr "Administration site web"
+msgstr " Site Web"
 
 #: templates/core/app_base_admin.html:134
 msgid "Blog categories"
@@ -4838,7 +4809,6 @@ msgid "Ownership"
 msgstr "Propriété"
 
 #: templates/core/service_detail.html:163
-#, fuzzy
 msgid ""
 "\n"
 "                        You can transfer the ownership of the platform to "
@@ -4854,8 +4824,8 @@ msgstr ""
 "\n"
 "                        Vous pouvez transférer la propriété de cette plate-"
 "forme à quelqu'un d'autre. Entrez simplement\n"
-"                        l'email du concerné ici et il recevra une invitation "
-"pour cela. Une fois\n"
+"                        l'adresse email du concerné ici et il recevra une "
+"invitation pour cela. Une fois\n"
 "                        que la propriété est transférée à une autre "
 "personne, il a le plein contrôle sur la plate-forme et vous ne pourrez plus "
 "accéder aux fonctionnalités d'administration\n"
@@ -4872,9 +4842,8 @@ msgstr "Transférer"
 
 #: templates/core/service_detail.html:185
 #: templates/core/service_detail.html:186
-#, fuzzy
 msgid "Agreement"
-msgstr "Devoir"
+msgstr "Contrat"
 
 #: templates/core/service_detail.html:189
 msgid ""

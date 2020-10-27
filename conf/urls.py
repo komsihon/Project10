@@ -5,6 +5,7 @@ from django.contrib import admin
 
 from ikwen_webnode.webnode.views import Home, FlatPageView
 from ikwen_foulassi.school.views import SchoolDetail
+from ikwen_foulassi.foulassi.views import HomeSaaS as scolarfleet
 
 admin.autodiscover()
 
@@ -27,6 +28,8 @@ urlpatterns = patterns(
     url(r'^web/', include('ikwen_webnode.web.urls', namespace='web')),
     url(r'^items/', include('ikwen_webnode.items.urls', namespace='items')),
     url(r'^echo/', include('echo.urls', namespace='echo')),
+
+    url(r'^scolarfleet$', scolarfleet.as_view(), name='scolarfleet'),
 
     url(r'^reporting/', include('ikwen_foulassi.reporting.urls', namespace='reporting')),
     url(r'^school/', include('ikwen_foulassi.school.urls', namespace='school')),
