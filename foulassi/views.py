@@ -152,7 +152,10 @@ class KidList(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(KidList, self).get_context_data(**kwargs)
         user = self.request.user
-        parent_profile, update = ParentProfile.objects.get_or_create(member=user)
+        try:
+            parent_profile = ParentProfile.objects.get(member=user)
+        except:
+            parent_profile = ParentProfile.objects.create(member=user)
         kid_list = parent_profile.student_list
         suggestion_key = 'kid_list:suggestion_list:' + user.username
         suggestion_list = cache.get(suggestion_key)
@@ -206,7 +209,10 @@ class KidList(TemplateView):
         add_database(db)
         user.save(using=db)
         Parent.objects.using(db).filter(Q(email=user.email) | Q(phone=user.phone), student=student).update(member=user)
-        parent_profile, update = ParentProfile.objects.get_or_create(member=user)
+        try:
+            parent_profile = ParentProfile.objects.get(member=user)
+        except:
+            parent_profile = ParentProfile.objects.create(member=user)
         if student_id not in parent_profile.student_fk_list:
             parent_profile.student_fk_list.insert(0, student_id)
             parent_profile.save()
@@ -344,12 +350,17 @@ class ChangeHomework(ChangeObjectBase):
         except:
             foulassi = None
         student = obj.student
+        service = student.school
+        db = service.database
+        add_database(db)
         classroom = student.classroom
-        assignment = obj.assignment
+        assignment_id = request.POST['assignment']
+        try:
+            assignment = Assignment.objects.using(db).get(pk=assignment_id)
+        except:
+            raise Http404("Data have been altered")
         assignment_subject = assignment.subject
-
         teacher = assignment_subject.get_teacher(classroom)  # Retrieve the teacher who gives assignment
-        service = get_service_instance()
         school_config = service.config
         company_name = school_config.company_name
         classroom_name = classroom.name
@@ -363,8 +374,9 @@ class ChangeHomework(ChangeObjectBase):
         if teacher.member:
             activate(teacher.member.language)
         student_name = student.first_name
+        cta_url = service.url + reverse('school:assignment_reply_list', args=(classroom.pk, assignment.pk))
         subject = _(" New homework sent")
-        extra_context = {'subject': subject, 'teacher': teacher, 'school_name': company_name,
+        extra_context = {'subject': subject, 'teacher': teacher, 'school_name': company_name, 'cta_url': cta_url,
                          'student_name': student_name, 'assignment': assignment, 'classroom': classroom_name}
 
         try:
@@ -386,6 +398,9 @@ class ChangeHomework(ChangeObjectBase):
                  % {'student_name': student_name, 'classroom': classroom_name,
                     'subject': assignment_subject, 'assignment_name': assignment.title})
         send_push(foulassi, teacher.member, subject, body)
+
+        return HttpResponseRedirect(reverse("foulassi:kid_detail", args=(kwargs['ikwen_name'], student.pk)) +
+                                    "?showTab=assignments")
 
 
 class DownloadCorrection(TemplateView):
