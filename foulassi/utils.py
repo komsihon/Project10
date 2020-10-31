@@ -81,7 +81,10 @@ def can_access_kid_detail(request, **kwargs):
     if user.is_anonymous():
         return False
     student_id = kwargs['student_id']
-    parent_profile, update = ParentProfile.objects.get_or_create(member=user)
+    try:
+        parent_profile = ParentProfile.objects.get(member=user)
+    except:
+        parent_profile = ParentProfile.objects.create(member=user)
     if student_id in parent_profile.student_fk_list:
         return True
     return False
