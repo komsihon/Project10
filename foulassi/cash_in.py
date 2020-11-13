@@ -15,6 +15,7 @@ from django.utils.translation import ugettext as _
 
 from currencies.models import Currency
 from ikwen.accesscontrol.backends import UMBRELLA
+from ikwen.billing.collect import momo_gateway_callback
 from ikwen.conf.settings import WALLETS_DB_ALIAS
 from ikwen.core.models import Service, Application
 from ikwen.core.utils import add_database, get_service_instance, get_mail_content, XEmailMessage, set_counters, \
@@ -90,44 +91,13 @@ def set_invoice_checkout(request, *args, **kwargs):
     return HttpResponseRedirect(next_url)
 
 
+@momo_gateway_callback
 def confirm_invoice_payment(request, *args, **kwargs):
-    status = request.GET['status']
-    message = request.GET['message']
-    operator_tx_id = request.GET['operator_tx_id']
-    phone = request.GET['phone']
-    tx_id = kwargs['tx_id']
-    try:
-        tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS).get(pk=tx_id)
-        if not getattr(settings, 'DEBUG', False):
-            tx_timeout = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_TIMEOUT', 15) * 60
-            expiry = tx.created_on + timedelta(seconds=tx_timeout)
-            if datetime.now() > expiry:
-                return HttpResponse("Transaction %s timed out." % tx_id)
-    except:
-        raise Http404("Transaction %s not found" % tx_id)
-
-    callback_signature = kwargs.get('signature')
-    no_check_signature = request.GET.get('ncs')
-    if getattr(settings, 'DEBUG', False):
-        if not no_check_signature:
-            if callback_signature != tx.task_id:
-                return HttpResponse('Invalid transaction signature')
-    else:
-        if callback_signature != tx.task_id:
-            return HttpResponse('Invalid transaction signature')
-
-    if status != MoMoTransaction.SUCCESS:
-        return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
-
+    tx = kwargs['tx']  # Decoration with @momo_gateway_callback makes 'tx' available in kwargs
     school = Service.objects.get(pk=tx.service_id)
     school_config = SchoolConfig.objects.get(service=school)
     ikwen_charges = tx.amount * school_config.ikwen_share_rate / 100
 
-    tx.status = status
-    tx.message = message
-    tx.processor_tx_id = operator_tx_id
-    tx.phone = phone
-    tx.is_running = False
     tx.fees = ikwen_charges
     tx.save()
     mean = tx.wallet
@@ -135,7 +105,7 @@ def confirm_invoice_payment(request, *args, **kwargs):
     add_database(db)
     invoice = Invoice.objects.using(db).get(pk=tx.object_id)
     payment = Payment.objects.using(db).create(invoice=invoice, method=Payment.MOBILE_MONEY,
-                                               amount=tx.amount, processor_tx_id=operator_tx_id)
+                                               amount=tx.amount, processor_tx_id=tx.processor_tx_id)
     invoice.paid = tx.amount
     invoice.status = Invoice.PAID
     invoice.save()
@@ -143,8 +113,16 @@ def confirm_invoice_payment(request, *args, **kwargs):
     if not school_config.is_public or (school_config.is_public and not invoice.is_tuition):
         amount = tx.amount - ikwen_charges
         school.raise_balance(amount, provider=mean)
+    else:
+        amount = tx.amount
     student.set_has_new(using=school.database)
     student.save(using='default')
+
+    set_counters(school)
+    increment_history_field(school, 'turnover_history', tx.amount)
+    increment_history_field(school, 'earnings_history', amount)
+    increment_history_field(school, 'transaction_count_history')
+    increment_history_field(school, 'transaction_earnings_history', amount)
 
     member = invoice.member
     if member.email:
@@ -170,7 +148,7 @@ def confirm_invoice_payment(request, *args, **kwargs):
             msg.attach_file(invoice_pdf_file)
         except:
             pass
-    return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
+    return HttpResponse("Notification for transaction %s received with status %s" % (tx.id, tx.status))
 
 
 def set_my_kids_payment(request, *args, **kwargs):
@@ -243,45 +221,13 @@ def set_my_kids_payment(request, *args, **kwargs):
     return HttpResponseRedirect(next_url)
 
 
+@momo_gateway_callback
 def confirm_my_kids_payment(request, *args, **kwargs):
-    status = request.GET['status']
-    message = request.GET['message']
-    operator_tx_id = request.GET['operator_tx_id']
-    phone = request.GET['phone']
-    tx_id = kwargs['tx_id']
-    try:
-        tx = MoMoTransaction.objects.using(WALLETS_DB_ALIAS).get(pk=tx_id)
-        if not getattr(settings, 'DEBUG', False):
-            tx_timeout = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_TIMEOUT', 15) * 60
-            expiry = tx.created_on + timedelta(seconds=tx_timeout)
-            if datetime.now() > expiry:
-                return HttpResponse("Transaction %s timed out." % tx_id)
-    except:
-        raise Http404("Transaction %s not found" % tx_id)
-
-    callback_signature = kwargs.get('signature')
-    no_check_signature = request.GET.get('ncs')
-    if getattr(settings, 'DEBUG', False):
-        if not no_check_signature:
-            if callback_signature != tx.task_id:
-                return HttpResponse('Invalid transaction signature')
-    else:
-        if callback_signature != tx.task_id:
-            return HttpResponse('Invalid transaction signature')
-
-    if status != MoMoTransaction.SUCCESS:
-        return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
-
+    tx = kwargs['tx']
     invoice = Invoice.objects.get(pk=tx.object_id)
     school = invoice.school
     school_config = SchoolConfig.objects.get(service=school)
     ikwen_charges = tx.amount * school_config.my_kids_share_rate / 100
-
-    tx.status = status
-    tx.message = message
-    tx.processor_tx_id = operator_tx_id
-    tx.phone = phone
-    tx.is_running = False
     tx.fees = ikwen_charges
     tx.save()
     mean = tx.wallet
@@ -307,7 +253,8 @@ def confirm_my_kids_payment(request, *args, **kwargs):
     db = school.database
     add_database(db)
     invoice.save(using=db)
-    payment = Payment(invoice=invoice, method=Payment.MOBILE_MONEY, amount=tx.amount, processor_tx_id=operator_tx_id)
+    payment = Payment(invoice=invoice, method=Payment.MOBILE_MONEY, amount=tx.amount,
+                      processor_tx_id=tx.processor_tx_id)
     if school_config.my_kids_share_rate < 100:
         # Payment appears in school log panel only if the have something to collect out of that
         payment.save(using=db)
@@ -332,7 +279,7 @@ def confirm_my_kids_payment(request, *args, **kwargs):
             msg.attach_file(invoice_pdf_file)
         except:
             pass
-    return HttpResponse("Notification for transaction %s received with status %s" % (tx_id, status))
+    return HttpResponse("Notification for transaction %s received with status %s" % (tx.id, tx.status))
 
 
 def set_correction_payment(request, *args, **kwargs):

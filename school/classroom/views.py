@@ -27,7 +27,7 @@ from ikwen.billing.models import InvoiceItem, InvoiceEntry
 from ikwen.billing.utils import get_next_invoice_number
 from ikwen.core.constants import MALE, FEMALE
 from ikwen.core.utils import get_model_admin_instance, increment_history_field, DefaultUploadBackend, \
-    get_service_instance, get_mail_content, send_push
+    get_service_instance, get_mail_content, send_push, convert_file_to_utf8
 from ikwen.core.templatetags.url_utils import strip_base_alias
 from ikwen.core.models import Service, Application
 from ikwen.core.views import HybridListView, ChangeObjectBase
@@ -53,6 +53,11 @@ logger = logging.getLogger('ikwen')
 
 def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
     abs_path = getattr(settings, 'MEDIA_ROOT') + filename
+    try:
+        convert_file_to_utf8(abs_path)
+    except:
+        error = "Failed to convert file to UTF-8"
+        return error
     fh = open(abs_path, 'r')
     line = fh.readline()
     fh.close()
@@ -80,9 +85,6 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                           "but %(expected)d expected." % {'line': i + 1, 'found': len(row), 'expected': expected})
                 break
             reg_num = row[0].strip()
-            if not reg_num:
-                error = _("Missing registration number on line %d" % (i + 1))
-                break
             last_name = row[1].strip()
             if not last_name:
                 error = _("Missing last name on line %d" % (i + 1))
@@ -123,6 +125,12 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
             place_of_birth = row[5].strip()
             if not place_of_birth:
                 error = _("Missing place of birth on line %d" % (i + 1))
+                break
+            try:
+                place_of_birth.decode('utf8')
+            except:
+                error = _("Unreadable student name on line %d. Please replace or remove all suspect "
+                          "whitespaces and special characters in cells to avoid malicious symbols." % (i + 1))
                 break
             is_repeating = row[6].strip()
             if is_repeating.capitalize() not in ("Yes", "Y", "No", "N", "Oui", "O", "Non"):
@@ -232,7 +240,9 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                     break
             if not dry_run:
                 try:
-                    Student.objects.get(registration_number=reg_num)
+                    if reg_num:
+                        Student.objects.get(registration_number=reg_num)
+                    Student.objects.get(classroom=classroom, first_name=first_name, last_name=last_name, dob=dob)
                 except Student.DoesNotExist:
                     try:
                         tags = slugify(last_name + ' ' + first_name).replace('-', ' ')
@@ -240,8 +250,9 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
                             .create(classroom=classroom, registration_number=reg_num, first_name=first_name,
                                     last_name=last_name, gender=gender, dob=dob, pob=place_of_birth,
                                     is_repeating=is_repeating, year_joined=year_joined, tags=tags)
+                        student.generate_registration_number()  # Does nothing if registration_number already existing
                         student_u = Student.objects.using(UMBRELLA)\
-                            .create(id=student.id, classroom=classroom, registration_number=reg_num,
+                            .create(id=student.id, classroom=classroom, registration_number=student.registration_number,
                                     first_name=first_name, last_name=last_name, gender=gender, dob=dob,
                                     pob=place_of_birth, is_repeating=is_repeating, year_joined=year_joined, tags=tags)
                         if parent1_is_set:
