@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-21 20:40+0000\n"
-"PO-Revision-Date: 2020-10-27 17:01+0100\n"
+"POT-Creation-Date: 2020-11-16 20:48+0000\n"
+"PO-Revision-Date: 2020-11-16 21:54+0100\n"
 "Last-Translator: Wilfried FUTCHEA <wilfriedwillend@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -98,15 +98,15 @@ msgstr "Social"
 msgid "External scripts"
 msgstr "Scripts externes"
 
-#: foulassi/cash_in.py:159 foulassi/cash_in.py:324
+#: foulassi/cash_in.py:137 foulassi/cash_in.py:271
 msgid "View invoice"
 msgstr "Voir la facture"
 
-#: foulassi/cash_in.py:192
+#: foulassi/cash_in.py:170
 msgid "MyKids fees"
 msgstr "Frais de MyKids"
 
-#: foulassi/cash_in.py:466
+#: foulassi/cash_in.py:413
 #, python-format
 msgid ""
 "A student just purchase the correction of %(assignment_title)s in "
@@ -115,12 +115,12 @@ msgstr ""
 "Un élève vient de télécharger la correction de %(assignment_title)s de "
 "%(subject_name)s"
 
-#: foulassi/cash_in.py:470
+#: foulassi/cash_in.py:417
 #, python-format
 msgid "New correction of %s paid"
 msgstr "Un nouveau paiement de la correction de %s  effectué"
 
-#: foulassi/cash_in.py:489
+#: foulassi/cash_in.py:436
 #, python-format
 msgid ""
 "You just pay the correction of %(assignment_title)s from %(subject_name)s "
@@ -128,7 +128,7 @@ msgstr ""
 "Vous venez de payer la correction de %(assignment_title)s en "
 "%(subject_name)s "
 
-#: foulassi/cash_in.py:492
+#: foulassi/cash_in.py:439
 msgid "New correction paid"
 msgstr "Un nouveau paiement de correction effectué"
 
@@ -274,6 +274,49 @@ msgstr "Contrat scolaire"
 msgid "Upload your signed contract in a single PDF file"
 msgstr "Téléchargez le contrat que vous avez signé en fichier PDF"
 
+#: foulassi/my_kids.py:225 foulassi/views.py:378
+msgid " New homework sent"
+msgstr "Nouveau devoir envoyé"
+
+#: foulassi/my_kids.py:250 foulassi/views.py:397
+#, python-format
+msgid ""
+"%(student_name)s from %(classroom)s sent his assignment of %(subject)s about "
+"%(assignment_name)s"
+msgstr ""
+"%(student_name)s  de %(classroom)s a soumis son devoir de %(subject)s sur "
+"%(assignment_name)s"
+
+#: foulassi/my_kids.py:313 foulassi/views.py:486
+#, python-format
+msgid "Mrs %s"
+msgstr "Mme %s"
+
+#: foulassi/my_kids.py:315 foulassi/views.py:488
+#, python-format
+msgid "Mr %s"
+msgstr "M. %s"
+
+#: foulassi/my_kids.py:317 foulassi/views.py:490
+#, python-format
+msgid "The parent %s"
+msgstr "Le parent %s"
+
+#: foulassi/my_kids.py:318 foulassi/views.py:491
+msgid "I would like to follow my kids in your school on Foulassi."
+msgstr ""
+"J'aimerais pouvoir suivre mes enfants dans votre établissement sur Foulassi."
+
+#: foulassi/my_kids.py:331 foulassi/views.py:504
+#, python-format
+msgid ""
+"%(parent_name)s would like to follow his kid(s) below on ikwen Foulassi:\n"
+"%(kids_details)s"
+msgstr ""
+"%(parent_name)s aimerait pouvoir suivre ses enfants ci-dessous sur ikwen "
+"Foulassi:\n"
+"%(kids_details)s"
+
 #: foulassi/school_setup_reminder.py:61
 msgid "Complete your school setup"
 msgstr "Configurez votre établissement"
@@ -297,10 +340,12 @@ msgid "Parent Convocation"
 msgstr "Convocation de parent"
 
 #: foulassi/scripts.py:13 reporting/utils.py:428 reporting/utils.py:697
+#: reporting/utils1.py:427 reporting/utils1.py:689
 msgid "Exclusion"
 msgstr "Exclusion"
 
 #: foulassi/scripts.py:14 reporting/utils.py:416 reporting/utils.py:685
+#: reporting/utils1.py:415 reporting/utils1.py:677
 msgid "Lateness"
 msgstr "Retard"
 
@@ -310,10 +355,12 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #: foulassi/scripts.py:16 reporting/utils.py:424 reporting/utils.py:693
+#: reporting/utils1.py:423 reporting/utils1.py:685
 msgid "Censure"
 msgstr "Blâme conduite"
 
 #: foulassi/scripts.py:17 reporting/utils.py:412 reporting/utils.py:681
+#: reporting/utils1.py:411 reporting/utils1.py:673
 msgid "Absence"
 msgstr "Absence"
 
@@ -394,54 +441,12 @@ msgstr ""
 "Confirmation de paiement de %(amount).2f %(currency)s pour les frais "
 "scolaires de l'élève %(student_name)s. Merci."
 
-#: foulassi/views.py:365
-msgid " New homework sent"
-msgstr "Nouveau devoir envoyé"
-
-#: foulassi/views.py:384
-#, python-format
-msgid ""
-"%(student_name)s from %(classroom)s sent his assignment of %(subject)s about "
-"%(assignment_name)s"
-msgstr ""
-"%(student_name)s  de %(classroom)s a soumis son devoir de %(subject)s sur "
-"%(assignment_name)s"
-
-#: foulassi/views.py:470
-#, python-format
-msgid "Mrs %s"
-msgstr "Mme %s"
-
-#: foulassi/views.py:472
-#, python-format
-msgid "Mr %s"
-msgstr "M. %s"
-
-#: foulassi/views.py:474
-#, python-format
-msgid "The parent %s"
-msgstr "Le parent %s"
-
-#: foulassi/views.py:475
-msgid "I would like to follow my kids in your school on Foulassi."
-msgstr ""
-"J'aimerais pouvoir suivre mes enfants dans votre établissement sur Foulassi."
-
-#: foulassi/views.py:488
-#, python-format
-msgid ""
-"%(parent_name)s would like to follow his kid(s) below on ikwen Foulassi:\n"
-"%(kids_details)s"
-msgstr ""
-"%(parent_name)s aimerait pouvoir suivre ses enfants ci-dessous sur ikwen "
-"Foulassi:\n"
-"%(kids_details)s"
-
-#: foulassi/views.py:565
-msgid "Foulassi deployment"
+#: foulassi/views.py:581
+#, fuzzy
+msgid "ScolarFleet deployment"
 msgstr "Déploiement Foulassi"
 
-#: foulassi/views.py:569
+#: foulassi/views.py:585
 msgid "Website theme"
 msgstr "Thème du site web"
 
@@ -513,7 +518,8 @@ msgstr ""
 
 #: foulassi/templates/foulassi/admin_home.html:5
 #: foulassi/templates/foulassi/admin_home.html:15
-#: templates/core/app_base_admin.html:8
+#: templates/core/app_base_admin.html:8 templates/webnode/dreamer/base.html:230
+#: templates/webnode/dreamer/home.html:8
 msgid "Home"
 msgstr "Accueil"
 
@@ -1129,6 +1135,7 @@ msgstr "Support"
 
 #: foulassi/templates/foulassi/home.html:434
 #: templates/core/app_base_admin.html:128
+#: templates/webnode/dreamer/base.html:256
 msgid "Blog"
 msgstr "Blog"
 
@@ -1137,6 +1144,7 @@ msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
 #: foulassi/templates/foulassi/home.html:440 templates/core/base_admin.html:199
+#: templates/webnode/dreamer/base.html:275
 msgid "Legal mentions"
 msgstr "Mentions légales"
 
@@ -2420,7 +2428,8 @@ msgid "Close session"
 msgstr "Boucler cette séquence"
 
 #: foulassi/templates/foulassi/events/report_cards_generated.html:34
-#: reporting/utils.py:420 reporting/utils.py:689
+#: reporting/utils.py:420 reporting/utils.py:689 reporting/utils1.py:419
+#: reporting/utils1.py:681
 msgid "Warning"
 msgstr "Attention"
 
@@ -2848,7 +2857,7 @@ msgstr "Langue"
 msgid "Student name"
 msgstr "Nom de l'élève"
 
-#: reporting/utils.py:607 reporting/utils.py:884 school/classroom/views.py:764
+#: reporting/utils.py:607 reporting/utils.py:884 school/classroom/views.py:775
 #: school/templates/school/change_level.html:11
 #: school/templates/school/classroom/change_classroom.html:12
 #: templates/core/app_base_admin.html:28
@@ -2863,12 +2872,24 @@ msgstr "Résultats"
 msgid "Council decision"
 msgstr "Décisions du conseil de classe"
 
+#: reporting/utils1.py:608 reporting/utils1.py:878
+msgid "REPUBLIC OF CAMEROON"
+msgstr "RÉPUBLIQUE DU CAMEROUN"
+
+#: reporting/utils1.py:609 reporting/utils1.py:879
+msgid "Peace - Work - Fatherland"
+msgstr "Paix - Travail - Patrie"
+
+#: reporting/utils1.py:610 reporting/utils1.py:880
+msgid "MINISTRY OF SECONDARY EDUCATION"
+msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
+
 #: reporting/views.py:243
 #, python-format
 msgid "Report card header not configured for %s."
 msgstr "En-tête de bulletins non configurée pour la langue: %s."
 
-#: reporting/views.py:244 school/classroom/views.py:652
+#: reporting/views.py:244 school/classroom/views.py:663
 #, python-format
 msgid "Please configure report card header for %s "
 msgstr "Veuillez configurer l'en-tête des bulletins pour la langue: %s"
@@ -3297,7 +3318,7 @@ msgstr "Unité"
 msgid "With counter ?"
 msgstr "Compteur ?"
 
-#: school/views.py:98 school/classroom/views.py:436 school/student/views.py:695
+#: school/views.py:98 school/classroom/views.py:447 school/student/views.py:695
 msgid "successfully updated"
 msgstr "mis à jour avec succès"
 
@@ -3309,7 +3330,7 @@ msgstr "créé avec succès"
 msgid "Teachers"
 msgstr "Enseignants"
 
-#: school/classroom/views.py:79
+#: school/classroom/views.py:84
 #, python-format
 msgid ""
 "Missing information at line %(line)d. %(found)d tokens found, but "
@@ -3318,22 +3339,17 @@ msgstr ""
 "Information manquante à la ligne %(line)d. %(found)d infos trouvées, mais "
 "%(expected)d étaient attendues ."
 
-#: school/classroom/views.py:84
-#, python-format
-msgid "Missing registration number on line %d"
-msgstr "Matricule manquant à la ligne %d"
-
-#: school/classroom/views.py:88
+#: school/classroom/views.py:90
 #, python-format
 msgid "Missing last name on line %d"
 msgstr "Nom manquant à la ligne %d"
 
-#: school/classroom/views.py:92
+#: school/classroom/views.py:94
 #, python-format
 msgid "Missing first name on line %d"
 msgstr "Prénom manquant à la ligne %d"
 
-#: school/classroom/views.py:98
+#: school/classroom/views.py:100 school/classroom/views.py:132
 #, python-format
 msgid ""
 "Unreadable student name on line %d. Please replace or remove all suspect "
@@ -3342,7 +3358,7 @@ msgstr ""
 "Nom d'élève illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:108
+#: school/classroom/views.py:110
 #, python-format
 msgid ""
 "Unknown gender <strong>%(gender)s</strong> on line %(line)s. Must be either "
@@ -3351,7 +3367,7 @@ msgstr ""
 "Le sexe <strong>%(gender)s</strong> à la ligne %(line)s est inconnu. Ce "
 "devrait être <b>Masculin</b> ou <b>Féminin</b>"
 
-#: school/classroom/views.py:120
+#: school/classroom/views.py:122
 #, python-format
 msgid ""
 "Incorrect date of birth <strong>%(dob)s</strong> on line %(line)d. Must be "
@@ -3360,12 +3376,12 @@ msgstr ""
 "Date de naissance incorrecte <strong>%(dob)s</strong> à la ligne %(line)d. "
 "Cela doit être en format <b>Jour-Mois-Année</b>"
 
-#: school/classroom/views.py:125
+#: school/classroom/views.py:127
 #, fuzzy, python-format
 msgid "Missing place of birth on line %d"
 msgstr "Prénom manquant à la ligne %d"
 
-#: school/classroom/views.py:129
+#: school/classroom/views.py:137
 #, python-format
 msgid ""
 "Incorrect Repetition <strong>%(rep)s</strong> on line %(line)d. Must be "
@@ -3374,7 +3390,7 @@ msgstr ""
 "\"Répétition\" incorrecte <strong>%(rep)s</strong> à la ligne %(line)d. Doit "
 "être <b>Oui</b> ou <b>Non</b>"
 
-#: school/classroom/views.py:137
+#: school/classroom/views.py:145
 #, python-format
 msgid ""
 "Year joined <strong>%(year_joined)s</strong> on line %(line)d is incorrect. "
@@ -3383,7 +3399,7 @@ msgstr ""
 "Année d'entrée <strong>%(year_joined)s</strong> à la ligne %(line)d "
 "incorrecte. Veuillez vérifiez."
 
-#: school/classroom/views.py:142
+#: school/classroom/views.py:150
 #, python-format
 msgid ""
 "Year joined <strong>%(year_joined)s</strong> on line %(line)d seems "
@@ -3392,7 +3408,7 @@ msgstr ""
 "Année d'entrée <strong>%(year_joined)s</strong> à la ligne %(line)d semble "
 "incorrect. Veuillez vérifier."
 
-#: school/classroom/views.py:155
+#: school/classroom/views.py:163
 #, python-format
 msgid ""
 "Unreadable Parent 1 name on line %d. Please replace or remove all suspect "
@@ -3401,7 +3417,7 @@ msgstr ""
 "Nom du parent 1 illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:160
+#: school/classroom/views.py:168
 #, python-format
 msgid ""
 "Missing parent 1 relationship on line %d. Use one of <strong>Father</"
@@ -3411,7 +3427,7 @@ msgstr ""
 "propositions suivantes <strong>Papa</strong>, <strong>Maman</strong>, "
 "<strong> Oncle</strong>, etc"
 
-#: school/classroom/views.py:166
+#: school/classroom/views.py:174
 #, python-format
 msgid ""
 "Unreadable parent 1 relationship on line %d. Please replace or remove all "
@@ -3421,13 +3437,13 @@ msgstr ""
 "les espaces et caractères spéciaux suspects pour éviter tout symbole "
 "malicieux."
 
-#: school/classroom/views.py:174
+#: school/classroom/views.py:182
 #, python-format
 msgid "Incorrect parent 1 email <strong>%(email)s</strong> on line %(line)d"
 msgstr ""
 "Email du parent 1 incorrect <strong>%(email)s</strong> à la ligne %(line)d"
 
-#: school/classroom/views.py:179
+#: school/classroom/views.py:187
 #, python-format
 msgid ""
 "Missing or incorrect parent 1 phone <strong>%(phone)s</strong> on line "
@@ -3437,7 +3453,7 @@ msgstr ""
 "%(line)d est absent ou incorrect. Le numéro de téléphone doit être composé "
 "de 9 chiffres."
 
-#: school/classroom/views.py:189
+#: school/classroom/views.py:197
 #, python-format
 msgid ""
 "Unreadable Parent 2 name on line %d. Please replace or remove all suspect "
@@ -3446,7 +3462,7 @@ msgstr ""
 "Nom du parent 2 illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:193
+#: school/classroom/views.py:201
 #, python-format
 msgid ""
 "1st and 2nd parent have the same name <strong>%(name)s</strong> on line "
@@ -3455,7 +3471,7 @@ msgstr ""
 "Les 1er et 2ème parents ont le même nom <strong>%(name)s</strong>à la ligne "
 "%(line)d,. Veuillez rectifier."
 
-#: school/classroom/views.py:198
+#: school/classroom/views.py:206
 #, python-format
 msgid ""
 "2nd parent parent relationship missing on line %d. Use one of "
@@ -3465,7 +3481,7 @@ msgstr ""
 "des propositions suivantes <strong>Père</strong>, <strong>Mère</strong>, "
 "<strong> Oncle</strong>, etc"
 
-#: school/classroom/views.py:202
+#: school/classroom/views.py:210
 #, python-format
 msgid ""
 "1st and 2nd parent have the same relationship <strong>%(relation)s</strong> "
@@ -3474,7 +3490,7 @@ msgstr ""
 "Les 1er et 2nd parent ont la même relation <strong>%(relation)s</strong> à "
 "la ligne %(line)d. Veuillez rectifier."
 
-#: school/classroom/views.py:208
+#: school/classroom/views.py:216
 #, python-format
 msgid ""
 "Unreadable parent 2 relationship on line %d. Please replace or remove all "
@@ -3483,14 +3499,14 @@ msgstr ""
 "Nom d'élève illisible à la ligne %d. Veuillez remplacer ou retirer les "
 "espaces et caractères spéciaux suspects pour éviter tout symbole malicieux."
 
-#: school/classroom/views.py:216
+#: school/classroom/views.py:224
 #, python-format
 msgid "2nd parent email <strong>%(email)s</strong> incorrect on line %(line)d"
 msgstr ""
 "L' email du 2nd parent <strong>%(email)s</strong> à la ligne %(line)d est "
 "incorrect"
 
-#: school/classroom/views.py:220
+#: school/classroom/views.py:228
 #, python-format
 msgid ""
 "1st and 2nd parent have the same email <strong>%(email)s</strong> on line "
@@ -3499,7 +3515,7 @@ msgstr ""
 "Les 1er et 2ème parents ont le même email <strong>%(email)s</strong> à la "
 "ligne %(line)d. Veuillez changer."
 
-#: school/classroom/views.py:226
+#: school/classroom/views.py:234
 #, python-format
 msgid ""
 "2nd parent phone <strong>%(phone)s</strong> missing or incorrect on line "
@@ -3509,7 +3525,7 @@ msgstr ""
 "ou incorrect à la ligne %(line)d. Le numéro de téléphone doit être composé "
 "de 9 chiffres."
 
-#: school/classroom/views.py:230
+#: school/classroom/views.py:238
 #, python-format
 msgid ""
 "1st and 2nd parent have the same phone <strong>%(phone)s</strong> on line "
@@ -3518,7 +3534,7 @@ msgstr ""
 "Les 1er et 2ème parents ont le même numéro de téléphone <strong>%(phone)s</"
 "strong> à la ligne %(line)d. Veuillez changer."
 
-#: school/classroom/views.py:281
+#: school/classroom/views.py:292
 #, python-format
 msgid ""
 "We are kindly informing you that a new payment of %(amount)s is expected for "
@@ -3527,43 +3543,43 @@ msgstr ""
 "Nous vous informons qu'un nouveau paiement de %(amount)s est attendu pour "
 "%(invoice_title)s de %(student)s."
 
-#: school/classroom/views.py:328
+#: school/classroom/views.py:339
 msgid "All your classrooms"
 msgstr "Toutes vos classes"
 
-#: school/classroom/views.py:438
+#: school/classroom/views.py:449
 #, fuzzy
 msgid "successfully changed"
 msgstr "créé avec succès"
 
-#: school/classroom/views.py:494
+#: school/classroom/views.py:505
 msgid "No session created. Create sessions first."
 msgstr "Aucune séquence créée. Veuillez d'abord créer des séquences."
 
-#: school/classroom/views.py:497
+#: school/classroom/views.py:508
 msgid "Cannot mark on a terminated session."
 msgstr "Vous ne pouvez pas noter sur une séquence bouclée."
 
-#: school/classroom/views.py:555
+#: school/classroom/views.py:566
 #, python-format
 msgid ""
 "Your kid %(student)s scored %(score)s in %(subject)s for the last evaluation."
 msgstr ""
 "Votre enfant %(student)s a eu %(score)s en %(subject)s à l'évaluation passée."
 
-#: school/classroom/views.py:644
+#: school/classroom/views.py:655
 msgid ""
 "Report card cannot be generated for classroom where students are not marked."
 msgstr ""
 "Les bulletins ne peuvent être générés pour une classe où les élèves ne sont "
 "pas notés."
 
-#: school/classroom/views.py:651
+#: school/classroom/views.py:662
 #, python-format
 msgid "Report card header not configured for %s"
 msgstr "En-tête de bulletins non configurée pour la langue: %s"
 
-#: school/classroom/views.py:667
+#: school/classroom/views.py:678
 #, python-format
 msgid ""
 "Cannot delete a confirmed student: %s. Exclude instead, only the head of "
@@ -3572,35 +3588,35 @@ msgstr ""
 "Vous ne pouvez pas supprimer l'élève inscrit: %s ; exclure plutôt. Seul, le "
 "chef d'établissement peut le faire."
 
-#: school/classroom/views.py:681
+#: school/classroom/views.py:692
 #, python-format
 msgid "%d item(s) deleted."
 msgstr "%d élément(s) supprimé(s)."
 
-#: school/classroom/views.py:697
+#: school/classroom/views.py:708
 #, python-format
 msgid "Class leader correctly set to %s"
 msgstr "%s a été choisi comme chef de classe"
 
-#: school/classroom/views.py:724
+#: school/classroom/views.py:735
 msgid "Lesson successfully added."
 msgstr "Leçon ajoutée avec succès."
 
-#: school/classroom/views.py:765
+#: school/classroom/views.py:776
 msgid "Deadlines"
 msgstr "Dates limites"
 
-#: school/classroom/views.py:869
+#: school/classroom/views.py:880
 #, python-format
 msgid "New assignment in %s"
 msgstr "Nouveau devoir en %s"
 
-#: school/classroom/views.py:892
+#: school/classroom/views.py:903
 #, python-format
 msgid "Your child has a new assignment in %(subject)s about %(title)s"
 msgstr "Votre enfant a un nouveau devoir en %(subject)s sur %(title)s"
 
-#: school/classroom/views.py:967
+#: school/classroom/views.py:978
 #, python-format
 msgid "A new correction in %(subject)s for %(student)s is available"
 msgstr ""
@@ -4553,17 +4569,17 @@ msgstr "Paiements"
 
 #: templates/billing/invoice_detail.html:228
 msgid "Transaction date"
-msgstr "Date de transaction"
+msgstr "Date transaction"
 
 #: templates/billing/invoice_detail.html:229
 #: templates/billing/invoice_detail.html:243
 #: templates/billing/invoice_detail.html:274
 msgid "Method"
-msgstr "Moyen de paiement"
+msgstr "Méthode"
 
 #: templates/billing/invoice_detail.html:230
 msgid "Transaction ID"
-msgstr "ID de transactions"
+msgstr "ID Transaction"
 
 #: templates/billing/invoice_detail.html:248
 #: templates/billing/invoice_detail.html:279
@@ -4874,6 +4890,46 @@ msgstr "Vous êtes sur le point de transférer votre propriété à "
 msgid "Ownership transfer invitation sent."
 msgstr "L' invitation de transfert de propriété a été envoyée."
 
+#: templates/webnode/dreamer/base.html:92
+#: templates/webnode/dreamer/base.html:193
+msgid "Account setup"
+msgstr "Infos compte"
+
+#: templates/webnode/dreamer/base.html:94
+#: templates/webnode/dreamer/base.html:195
+#: templates/webnode/dreamer/base.html:241
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: templates/webnode/dreamer/base.html:100
+#: templates/webnode/dreamer/base.html:239
+msgid "Login"
+msgstr "Connexion"
+
+#: templates/webnode/dreamer/base.html:246
+msgid "Contacts"
+msgstr "Contacts"
+
+#: templates/webnode/dreamer/base.html:274
+msgid "All rights reserved"
+msgstr "Tous droits réservés"
+
+#: templates/webnode/dreamer/detail.html:6
+#, fuzzy
+msgid "sur"
+msgstr "Blâme conduite"
+
+#: templates/webnode/dreamer/detail.html:42
+msgid "Related posts"
+msgstr "Articles liés"
+
+#: templates/webnode/dreamer/detail.html:54
+msgid "Share"
+msgstr "Partager"
+
+#~ msgid "Missing registration number on line %d"
+#~ msgstr "Matricule manquant à la ligne %d"
+
 #~ msgid "Configure fees"
 #~ msgstr "Configurez les frais"
 
@@ -4913,40 +4969,6 @@ msgstr "L' invitation de transfert de propriété a été envoyée."
 
 #~ msgid " Online assignments"
 #~ msgstr " Devoirs en ligne"
-
-#~ msgid "REPUBLIC OF CAMEROON"
-#~ msgstr "RÉPUBLIQUE DU CAMEROUN"
-
-#~ msgid "Peace - Work - Fatherland"
-#~ msgstr "Paix - Travail - Patrie"
-
-#~ msgid "MINISTRY OF SECONDARY EDUCATION"
-#~ msgstr "MINISTÈRE DE L'ÉDUCATION SECONDAIRE"
-
-#~ msgid "Account setup"
-#~ msgstr "Infos compte"
-
-#~ msgid "Logout"
-#~ msgstr "Déconnexion"
-
-#~ msgid "Login"
-#~ msgstr "Connexion"
-
-#~ msgid "Contacts"
-#~ msgstr "Contacts"
-
-#~ msgid "All rights reserved"
-#~ msgstr "Tous droits réservés"
-
-#, fuzzy
-#~ msgid "sur"
-#~ msgstr "Blâme conduite"
-
-#~ msgid "Related posts"
-#~ msgstr "Articles liés"
-
-#~ msgid "Share"
-#~ msgstr "Partager"
 
 #~ msgid "And be next to them everyday for success."
 #~ msgstr "Et restez proche d'eux chaque jour pour atteindre le succès"

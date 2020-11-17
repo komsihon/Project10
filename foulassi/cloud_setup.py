@@ -259,7 +259,7 @@ def deploy(member, project_name, billing_plan, theme, monthly_cost, invoice_entr
     now = datetime.now()
     invoice_total = 0
     for entry in invoice_entries:
-        invoice_total += entry.item.amount * entry.quantity
+        invoice_total += entry.total
     invoice = Invoice(subscription=service, member=member, amount=invoice_total, number=number, due_date=expiry,
                       last_reminder=now, reminders_sent=1, is_one_off=True, entries=invoice_entries,
                       months_count=billing_plan.setup_months_count)
