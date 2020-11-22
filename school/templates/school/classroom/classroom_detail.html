@@ -320,8 +320,9 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="border: none; padding-top: 0;text-align: center">
-                    <button class="btn btn-success btn-sm confirm-import" style="display: none; min-width: 200px">
-                        {% trans "Confirm" %}
+                    <button class="btn btn-success btn-md confirm-import" style="display: none; min-width: 200px">
+                        {% include 'core/snippets/button_spinner.html' %}
+                        <span>{% trans "Confirm" %}</span>
                     </button>
                 </div>
             </div>
@@ -458,8 +459,10 @@
                 }).fail(function() {
                     ikwen.showFloatingNotice("{% trans "Ooops! Something wrong happened. Please check your internet." %}")
                 })
-            }).on('click', '#modal-import .confirm-import', function() {
-                var setInvoices = $('#set-invoices').prop('checked') ? 'yes' : '';
+            }).on('click', '#modal-import .confirm-import:not(.processing)', function() {
+                let _$btn = $(this),
+                    setInvoices = $('#set-invoices').prop('checked') ? 'yes' : '';
+                _$btn.addClass('processing');
                 $.ajax({
                     data: {action: 'import_student_file', filename: $("#student-file-url").val(), set_invoices: setInvoices},
                     error: function() {
@@ -473,6 +476,9 @@
                             $('.tab-pane.student-list').html(response);
                             $('#modal-import').modal('hide');
                         }
+                    },
+                    complete: function() {
+                        _$btn.removeClass('processing')
                     }
                 });
             });

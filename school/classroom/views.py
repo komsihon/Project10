@@ -74,6 +74,9 @@ def import_students(filename, classroom=None, dry_run=True, set_invoices=False):
             i += 1
             if i == 0:
                 continue
+            line = ''.join([elt.strip() for elt in row[:]])
+            if not line:
+                continue
             if len(row) < row_length or row_length + 1 <= len(row) < row_length2 or row_length2 + 1 <= len(row) < row_length3:
                 if len(row) > row_length2:
                     expected = row_length3
@@ -612,7 +615,9 @@ class ClassroomDetail(ChangeObjectBase):
         error = import_students(filename)
         if error:
             return HttpResponse(json.dumps({'error': error}))
-        import_students(filename, classroom, dry_run=False, set_invoices=set_invoices)
+        error = import_students(filename, classroom, dry_run=False, set_invoices=set_invoices)
+        if error:
+            return HttpResponse(json.dumps({'error': error}))
         Thread(target=set_student_counts).start()
         context['student_list'] = classroom.student_set.filter(is_excluded=False)
         return render(self.request, 'school/snippets/classroom/student_list.html', context)
