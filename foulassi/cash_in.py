@@ -16,6 +16,7 @@ from django.utils.translation import ugettext as _
 from currencies.models import Currency
 from ikwen.accesscontrol.backends import UMBRELLA
 from ikwen.billing.collect import momo_gateway_callback
+from ikwen.billing.decorators import momo_gateway_request
 from ikwen.conf.settings import WALLETS_DB_ALIAS
 from ikwen.core.models import Service, Application
 from ikwen.core.utils import add_database, get_service_instance, get_mail_content, XEmailMessage, set_counters, \
@@ -31,6 +32,7 @@ from ikwen_foulassi.school.models import AssignmentCorrection, Assignment
 logger = logging.getLogger('ikwen')
 
 
+@momo_gateway_request
 def set_invoice_checkout(request, *args, **kwargs):
     invoice_id = request.POST['product_id']
     school_id = request.POST['school_id']
@@ -64,31 +66,7 @@ def set_invoice_checkout(request, *args, **kwargs):
     notification_url = service.url + reverse('foulassi:confirm_invoice_payment', args=(tx.id, signature))
     cancel_url = request.META['HTTP_REFERER']
     return_url = request.META['HTTP_REFERER']
-    gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'http://payment.ikwen.com/v1')
-    endpoint = gateway_url + '/request_payment'
-    params = {
-        'username': getattr(settings, 'IKWEN_PAYMENT_GATEWAY_USERNAME', service.project_name_slug),
-        'amount': amount,
-        'merchant_name': school.project_name,
-        'notification_url': notification_url,
-        'return_url': return_url,
-        'cancel_url': cancel_url,
-        'payer_id': request.user.username
-    }
-    try:
-        r = requests.get(endpoint, params)
-        resp = r.json()
-        token = resp.get('token')
-        if token:
-            next_url = gateway_url + '/checkoutnow/' + resp['token'] + '?mean=' + mean
-        else:
-            logger.error("%s - Init payment flow failed with URL %s and message %s" % (service.project_name, r.url, resp['errors']))
-            messages.error(request, resp['errors'])
-            next_url = cancel_url
-    except:
-        logger.error("%s - Init payment flow failed with URL." % service.project_name, exc_info=True)
-        next_url = cancel_url
-    return HttpResponseRedirect(next_url)
+    return amount, notification_url, return_url, cancel_url
 
 
 @momo_gateway_callback
@@ -151,6 +129,7 @@ def confirm_invoice_payment(request, *args, **kwargs):
     return HttpResponse("Notification for transaction %s received with status %s" % (tx.id, tx.status))
 
 
+@momo_gateway_request
 def set_my_kids_payment(request, *args, **kwargs):
     school_id = request.POST['school_id']
     student_id = request.POST['student_id']
@@ -194,31 +173,7 @@ def set_my_kids_payment(request, *args, **kwargs):
     notification_url = foulassi_weblet.url + reverse('foulassi:confirm_my_kids_payment', args=(tx.id, signature))
     cancel_url = request.META['HTTP_REFERER']
     return_url = request.META['HTTP_REFERER']
-    gateway_url = getattr(settings, 'IKWEN_PAYMENT_GATEWAY_URL', 'http://payment.ikwen.com/v1')
-    endpoint = gateway_url + '/request_payment'
-    params = {
-        'username': getattr(settings, 'IKWEN_PAYMENT_GATEWAY_USERNAME', foulassi_weblet.project_name_slug),
-        'amount': amount,
-        'merchant_name': 'MyKids',
-        'notification_url': notification_url,
-        'return_url': return_url,
-        'cancel_url': cancel_url,
-        'payer_id': request.user.username
-    }
-    try:
-        r = requests.get(endpoint, params)
-        resp = r.json()
-        token = resp.get('token')
-        if token:
-            next_url = gateway_url + '/checkoutnow/' + resp['token'] + '?mean=' + mean
-        else:
-            logger.error("%s - Init payment flow failed with URL %s and message %s" % (foulassi_weblet.project_name, r.url, resp['errors']))
-            messages.error(request, resp['errors'])
-            next_url = cancel_url
-    except:
-        logger.error("%s - Init payment flow failed with URL." % foulassi_weblet.project_name, exc_info=True)
-        next_url = cancel_url
-    return HttpResponseRedirect(next_url)
+    return amount, notification_url, return_url, cancel_url
 
 
 @momo_gateway_callback
@@ -229,12 +184,12 @@ def confirm_my_kids_payment(request, *args, **kwargs):
     school_config = SchoolConfig.objects.get(service=school)
     ikwen_charges = tx.amount * school_config.my_kids_share_rate / 100
     tx.fees = ikwen_charges
-    tx.save()
+    tx.save(using='wallets')
     mean = tx.wallet
 
     amount = tx.amount - ikwen_charges
     school.raise_balance(amount, provider=mean)
-    share_payment_and_set_stats(invoice, mean)
+    share_payment_and_set_stats(invoice, mean, tx)
 
     invoice.paid = invoice.amount
     invoice.status = Invoice.PAID

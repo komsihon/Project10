@@ -65,6 +65,7 @@ if getattr(settings, 'IS_IKWEN', False):
         (None, {'fields': ('service', )}),
         (_('School'), {'fields': ('company_name', 'short_description', 'slogan', 'latitude', 'longitude',
                                   'description', 'is_pro_version')}),
+        (_('Online payment'), {'fields': ('ikwen_share_fixed', 'ikwen_share_rate', 'cash_out_min', 'cash_out_rate')}),
         (_('My Kids'), {'fields': ('my_kids_fees', 'my_kids_fees_term', 'my_kids_fees_month', )}),
         (_('Messaging'), {'fields': ('sms_api_script_url', 'welcome_message', 'signature',)})
     ]

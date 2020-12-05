@@ -322,8 +322,6 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                                                  help_text=_("Number of days left for parent to pay for the service."))
     my_kids_share_rate = models.IntegerField(default=70,
                                              help_text="Percentage ikwen collects on MyKids fees payments")
-    ikwen_share_rate = models.FloatField(default=2.4,
-                                         help_text="Percentage ikwen collects for other transactions")
     expected_student_count = models.IntegerField(_("Expected students count"), default=0,
                                                  help_text='Total number of students (registered or not) of the school')
     # This must not be editable in the Admin
@@ -356,6 +354,8 @@ class SchoolConfig(AbstractConfig, ResultsTracker):
                 obj_mirror.my_kids_payment_period = self.my_kids_payment_period
                 obj_mirror.my_kids_share_rate = self.my_kids_share_rate
                 obj_mirror.ikwen_share_rate = self.ikwen_share_rate
+                obj_mirror.ikwen_share_fixed = self.ikwen_share_fixed
+                obj_mirror.cash_out_rate = self.cash_out_rate
                 super(SchoolConfig, obj_mirror).save(using=db)
             except SchoolConfig.DoesNotExist:
                 pass

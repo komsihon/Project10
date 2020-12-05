@@ -6,7 +6,7 @@ from threading import Thread
 from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from django.db import transaction
+from django.db import transaction as db_transaction
 from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _, activate
@@ -243,7 +243,7 @@ def check_setup_status(school):
     return parents_reminder, students_reminder, estimated_loss
 
 
-def share_payment_and_set_stats(invoice, payment_mean_slug):
+def share_payment_and_set_stats(invoice, payment_mean_slug, transaction):
     from daraja.models import DARAJA, Dara
     school = invoice.school
     service_umbrella = Service.objects.get(pk=school.id)
@@ -265,6 +265,13 @@ def share_payment_and_set_stats(invoice, payment_mean_slug):
     partner_original = Service.objects.select_related('member').using(partner.database).get(pk=partner.id)
 
     partner.raise_balance(partner_earnings, payment_mean_slug)
+    try:
+        dara = Dara.objects.get(member=partner.member)
+        transaction.dara_id = dara.id
+        transaction.dara_fees = partner_earnings
+        transaction.save(using='wallets')
+    except:
+        pass
     from ikwen.conf.settings import IKWEN_SERVICE_ID
     service_partner = Service.objects.using(partner.database).get(pk=IKWEN_SERVICE_ID)
     set_dara_stats(partner_original, service_partner, invoice, partner_earnings)
@@ -284,7 +291,7 @@ def send_billed_sms(weblet, parent_list, text):
         if len(phone) == 9:
             phone = '237' + phone
         try:
-            with transaction.atomic(using='wallets'):
+            with db_transaction.atomic(using='wallets'):
                 balance.sms_count -= page_count
                 balance.save()
                 send_sms(phone, text, get_sms_label(config))
