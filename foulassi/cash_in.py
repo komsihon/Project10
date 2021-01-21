@@ -66,7 +66,7 @@ def set_invoice_checkout(request, *args, **kwargs):
     notification_url = service.url + reverse('foulassi:confirm_invoice_payment', args=(tx.id, signature))
     cancel_url = request.META['HTTP_REFERER']
     return_url = request.META['HTTP_REFERER']
-    return amount, notification_url, return_url, cancel_url
+    return invoice, amount, notification_url, return_url, cancel_url
 
 
 @momo_gateway_callback
@@ -173,7 +173,7 @@ def set_my_kids_payment(request, *args, **kwargs):
     notification_url = foulassi_weblet.url + reverse('foulassi:confirm_my_kids_payment', args=(tx.id, signature))
     cancel_url = request.META['HTTP_REFERER']
     return_url = request.META['HTTP_REFERER']
-    return amount, notification_url, return_url, cancel_url
+    return invoice, amount, notification_url, return_url, cancel_url
 
 
 @momo_gateway_callback
